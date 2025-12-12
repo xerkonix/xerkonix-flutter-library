@@ -1,5 +1,3 @@
-library xerkonix_design_system;
-
 /// Color System - The Layers of Ink (잉크의 농담)
 export 'src/palette/color.dart';
 

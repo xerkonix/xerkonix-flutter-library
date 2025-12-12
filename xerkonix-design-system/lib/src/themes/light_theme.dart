@@ -68,11 +68,11 @@ class XkLightTheme extends XkTheme {
             return XkColor.textDisabled;
           }
           if (states.contains(MaterialState.pressed)) {
-            return XkColor.identity.withOpacity(0.75);
+            return XkColor.identity.withValues(alpha: 0.75);
           }
           if (states.contains(MaterialState.hovered) ||
               states.contains(MaterialState.focused)) {
-            return XkColor.identity.withOpacity(0.9);
+            return XkColor.identity.withValues(alpha: 0.9);
           }
           return XkColor.identity;
         }),
@@ -84,10 +84,10 @@ class XkLightTheme extends XkTheme {
         }),
         overlayColor: MaterialStateProperty.resolveWith((states) {
           if (states.contains(MaterialState.pressed)) {
-            return XkColor.pulse.withOpacity(0.18);
+            return XkColor.pulse.withValues(alpha: 0.18);
           }
           if (states.contains(MaterialState.hovered)) {
-            return XkColor.identity.withOpacity(0.12);
+            return XkColor.identity.withValues(alpha: 0.12);
           }
           return null;
         }),
@@ -112,14 +112,14 @@ class XkLightTheme extends XkTheme {
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.resolveWith((states) {
           if (states.contains(MaterialState.disabled)) {
-            return XkColor.textDisabled.withOpacity(0.1);
+            return XkColor.textDisabled.withValues(alpha: 0.1);
           }
           if (states.contains(MaterialState.pressed)) {
-            return XkColor.identity.withOpacity(0.1);
+            return XkColor.identity.withValues(alpha: 0.1);
           }
           if (states.contains(MaterialState.hovered) ||
               states.contains(MaterialState.focused)) {
-            return XkColor.identity.withOpacity(0.05);
+            return XkColor.identity.withValues(alpha: 0.05);
           }
           return Colors.transparent; // 투명 배경
         }),
@@ -134,7 +134,7 @@ class XkLightTheme extends XkTheme {
             return BorderSide(color: XkColor.textDisabled, width: 1);
           }
           if (states.contains(MaterialState.pressed)) {
-            return BorderSide(color: XkColor.identity.withOpacity(0.7), width: 1.5);
+            return BorderSide(color: XkColor.identity.withValues(alpha: 0.7), width: 1.5);
           }
           return BorderSide(color: XkColor.identity, width: 1.5); // Identity 테두리
         }),
@@ -158,14 +158,14 @@ class XkLightTheme extends XkTheme {
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.resolveWith((states) {
           if (states.contains(MaterialState.disabled)) {
-            return XkColor.textDisabled.withOpacity(0.2);
+            return XkColor.textDisabled.withValues(alpha: 0.2);
           }
           if (states.contains(MaterialState.pressed)) {
-            return XkColor.structure.withOpacity(0.9);
+            return XkColor.structure.withValues(alpha: 0.9);
           }
           if (states.contains(MaterialState.hovered) ||
               states.contains(MaterialState.focused)) {
-            return XkColor.structure.withOpacity(0.95);
+            return XkColor.structure.withValues(alpha: 0.95);
           }
           return XkColor.structure; // Deep Charcoal 배경
         }),
@@ -195,11 +195,11 @@ class XkLightTheme extends XkTheme {
       fillColor: Colors.white,
       border: OutlineInputBorder(
         borderRadius: XkShape.defaultBorderRadius,
-        borderSide: BorderSide(color: XkColor.structure.withOpacity(0.2)),
+        borderSide: BorderSide(color: XkColor.structure.withValues(alpha: 0.2)),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: XkShape.defaultBorderRadius,
-        borderSide: BorderSide(color: XkColor.structure.withOpacity(0.2)),
+        borderSide: BorderSide(color: XkColor.structure.withValues(alpha: 0.2)),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: XkShape.defaultBorderRadius,

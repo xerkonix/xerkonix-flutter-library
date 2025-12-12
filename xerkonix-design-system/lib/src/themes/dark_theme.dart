@@ -55,7 +55,7 @@ class XkDarkTheme extends XkTheme {
     // 스크롤 시: Structure (#2D2D2D) → 약간 밝은 색으로 변경
     appBarTheme: AppBarTheme(
       backgroundColor: XkColor.structure,
-      surfaceTintColor: XkColor.structure.withOpacity(0.95), // 스크롤 시 약간 밝은 색
+      surfaceTintColor: XkColor.structure.withValues(alpha: 0.95), // 스크롤 시 약간 밝은 색
       scrolledUnderElevation: 0.5, // 스크롤 시 elevation
       elevation: 0,
       centerTitle: true,
@@ -67,14 +67,14 @@ class XkDarkTheme extends XkTheme {
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.resolveWith((states) {
           if (states.contains(MaterialState.disabled)) {
-            return XkColor.textDisabled.withOpacity(0.4);
+            return XkColor.textDisabled.withValues(alpha: 0.4);
           }
           if (states.contains(MaterialState.pressed)) {
-            return XkColor.identity.withOpacity(0.75);
+            return XkColor.identity.withValues(alpha: 0.75);
           }
           if (states.contains(MaterialState.hovered) ||
               states.contains(MaterialState.focused)) {
-            return XkColor.identity.withOpacity(0.9);
+            return XkColor.identity.withValues(alpha: 0.9);
           }
           return XkColor.identity;
         }),
@@ -86,10 +86,10 @@ class XkDarkTheme extends XkTheme {
         }),
         overlayColor: MaterialStateProperty.resolveWith((states) {
           if (states.contains(MaterialState.pressed)) {
-            return XkColor.pulse.withOpacity(0.25);
+            return XkColor.pulse.withValues(alpha: 0.25);
           }
           if (states.contains(MaterialState.hovered)) {
-            return XkColor.identity.withOpacity(0.18);
+            return XkColor.identity.withValues(alpha: 0.18);
           }
           return null;
         }),
@@ -114,14 +114,14 @@ class XkDarkTheme extends XkTheme {
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.resolveWith((states) {
           if (states.contains(MaterialState.disabled)) {
-            return XkColor.textDisabled.withOpacity(0.1);
+            return XkColor.textDisabled.withValues(alpha: 0.1);
           }
           if (states.contains(MaterialState.pressed)) {
-            return XkColor.identity.withOpacity(0.15);
+            return XkColor.identity.withValues(alpha: 0.15);
           }
           if (states.contains(MaterialState.hovered) ||
               states.contains(MaterialState.focused)) {
-            return XkColor.identity.withOpacity(0.08);
+            return XkColor.identity.withValues(alpha: 0.08);
           }
           return Colors.transparent; // 투명 배경
         }),
@@ -136,7 +136,7 @@ class XkDarkTheme extends XkTheme {
             return BorderSide(color: XkColor.textDisabled, width: 1);
           }
           if (states.contains(MaterialState.pressed)) {
-            return BorderSide(color: XkColor.identity.withOpacity(0.7), width: 1.5);
+            return BorderSide(color: XkColor.identity.withValues(alpha: 0.7), width: 1.5);
           }
           return BorderSide(color: XkColor.identity, width: 1.5); // Identity 테두리
         }),
@@ -160,14 +160,14 @@ class XkDarkTheme extends XkTheme {
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.resolveWith((states) {
           if (states.contains(MaterialState.disabled)) {
-            return XkColor.textDisabled.withOpacity(0.2);
+            return XkColor.textDisabled.withValues(alpha: 0.2);
           }
           if (states.contains(MaterialState.pressed)) {
-            return XkColor.canvas.withOpacity(0.9);
+            return XkColor.canvas.withValues(alpha: 0.9);
           }
           if (states.contains(MaterialState.hovered) ||
               states.contains(MaterialState.focused)) {
-            return XkColor.canvas.withOpacity(0.95);
+            return XkColor.canvas.withValues(alpha: 0.95);
           }
           return XkColor.canvas; // Canvas 배경 (다크테마에서는 밝은 배경)
         }),
@@ -197,11 +197,11 @@ class XkDarkTheme extends XkTheme {
       fillColor: XkColor.structure,
       border: OutlineInputBorder(
         borderRadius: XkShape.defaultBorderRadius,
-        borderSide: BorderSide(color: XkColor.canvas.withOpacity(0.2)),
+        borderSide: BorderSide(color: XkColor.canvas.withValues(alpha: 0.2)),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: XkShape.defaultBorderRadius,
-        borderSide: BorderSide(color: XkColor.canvas.withOpacity(0.2)),
+        borderSide: BorderSide(color: XkColor.canvas.withValues(alpha: 0.2)),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: XkShape.defaultBorderRadius,

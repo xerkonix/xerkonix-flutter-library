@@ -16,16 +16,16 @@ import '../shape/xerkonix_shape.dart';
 /// ```
 class XkButton extends StatelessWidget {
   const XkButton._({
-    Key? key,
+    super.key,
     required this.onPressed,
     required this.child,
     required this.buttonType,
     this.semanticColor,
-  }) : super(key: key);
+  });
 
   final VoidCallback? onPressed;
   final Widget child;
-  final _ButtonType buttonType;
+  final ButtonType buttonType;
   final Color? semanticColor; // Success, Warning, Error, Info용
 
   /// Primary Button
@@ -40,7 +40,7 @@ class XkButton extends StatelessWidget {
       key: key,
       onPressed: onPressed,
       child: child,
-      buttonType: _ButtonType.primary,
+      buttonType: ButtonType.primary,
     );
   }
 
@@ -55,7 +55,7 @@ class XkButton extends StatelessWidget {
       key: key,
       onPressed: onPressed,
       child: child,
-      buttonType: _ButtonType.outlined,
+      buttonType: ButtonType.outlined,
     );
   }
 
@@ -70,7 +70,7 @@ class XkButton extends StatelessWidget {
       key: key,
       onPressed: onPressed,
       child: child,
-      buttonType: _ButtonType.semantic,
+      buttonType: ButtonType.semantic,
       semanticColor: XkColor.success,
     );
   }
@@ -86,7 +86,7 @@ class XkButton extends StatelessWidget {
       key: key,
       onPressed: onPressed,
       child: child,
-      buttonType: _ButtonType.semantic,
+      buttonType: ButtonType.semantic,
       semanticColor: XkColor.warning,
     );
   }
@@ -102,7 +102,7 @@ class XkButton extends StatelessWidget {
       key: key,
       onPressed: onPressed,
       child: child,
-      buttonType: _ButtonType.semantic,
+      buttonType: ButtonType.semantic,
       semanticColor: XkColor.error,
     );
   }
@@ -119,7 +119,7 @@ class XkButton extends StatelessWidget {
       key: key,
       onPressed: onPressed,
       child: child,
-      buttonType: _ButtonType.semantic,
+      buttonType: ButtonType.semantic,
       semanticColor: XkColor.info,
     );
   }
@@ -131,19 +131,19 @@ class XkButton extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     switch (buttonType) {
-      case _ButtonType.primary:
+      case ButtonType.primary:
         return ElevatedButton(
           onPressed: onPressed,
           style: _buildPrimaryStyle(isDark),
           child: child,
         );
-      case _ButtonType.outlined:
+      case ButtonType.outlined:
         return OutlinedButton(
           onPressed: onPressed,
           style: _buildOutlinedStyle(),
           child: child,
         );
-      case _ButtonType.semantic:
+      case ButtonType.semantic:
         return ElevatedButton(
           onPressed: onPressed,
           style: _buildSemanticStyle(semanticColor!),
@@ -157,15 +157,15 @@ class XkButton extends StatelessWidget {
       backgroundColor: MaterialStateProperty.resolveWith((states) {
         if (states.contains(MaterialState.disabled)) {
           return isDark
-              ? XkColor.textDisabled.withOpacity(0.4)
+              ? XkColor.textDisabled.withValues(alpha: 0.4)
               : XkColor.textDisabled;
         }
         if (states.contains(MaterialState.pressed)) {
-          return XkColor.identity.withOpacity(0.75);
+          return XkColor.identity.withValues(alpha: 0.75);
         }
         if (states.contains(MaterialState.hovered) ||
             states.contains(MaterialState.focused)) {
-          return XkColor.identity.withOpacity(0.9);
+          return XkColor.identity.withValues(alpha: 0.9);
         }
         return XkColor.identity;
       }),
@@ -179,10 +179,10 @@ class XkButton extends StatelessWidget {
       }),
       overlayColor: MaterialStateProperty.resolveWith((states) {
         if (states.contains(MaterialState.pressed)) {
-          return XkColor.pulse.withOpacity(isDark ? 0.25 : 0.18);
+          return XkColor.pulse.withValues(alpha: isDark ? 0.25 : 0.18);
         }
         if (states.contains(MaterialState.hovered)) {
-          return XkColor.identity.withOpacity(isDark ? 0.18 : 0.12);
+          return XkColor.identity.withValues(alpha: isDark ? 0.18 : 0.12);
         }
         return null;
       }),
@@ -205,14 +205,14 @@ class XkButton extends StatelessWidget {
     return ButtonStyle(
       backgroundColor: MaterialStateProperty.resolveWith((states) {
         if (states.contains(MaterialState.disabled)) {
-          return XkColor.textDisabled.withOpacity(0.1);
+          return XkColor.textDisabled.withValues(alpha: 0.1);
         }
         if (states.contains(MaterialState.pressed)) {
-          return XkColor.identity.withOpacity(0.1);
+          return XkColor.identity.withValues(alpha: 0.1);
         }
         if (states.contains(MaterialState.hovered) ||
             states.contains(MaterialState.focused)) {
-          return XkColor.identity.withOpacity(0.05);
+          return XkColor.identity.withValues(alpha: 0.05);
         }
         return Colors.transparent;
       }),
@@ -227,7 +227,7 @@ class XkButton extends StatelessWidget {
           return BorderSide(color: XkColor.textDisabled, width: 1);
         }
         if (states.contains(MaterialState.pressed)) {
-          return BorderSide(color: XkColor.identity.withOpacity(0.7), width: 1.5);
+          return BorderSide(color: XkColor.identity.withValues(alpha: 0.7), width: 1.5);
         }
         return BorderSide(color: XkColor.identity, width: 1.5);
       }),
@@ -252,11 +252,11 @@ class XkButton extends StatelessWidget {
           return XkColor.textDisabled;
         }
         if (states.contains(MaterialState.pressed)) {
-          return color.withOpacity(0.8);
+          return color.withValues(alpha: 0.8);
         }
         if (states.contains(MaterialState.hovered) ||
             states.contains(MaterialState.focused)) {
-          return color.withOpacity(0.9);
+          return color.withValues(alpha: 0.9);
         }
         return color;
       }),
@@ -268,10 +268,10 @@ class XkButton extends StatelessWidget {
       }),
       overlayColor: MaterialStateProperty.resolveWith((states) {
         if (states.contains(MaterialState.pressed)) {
-          return Colors.white.withOpacity(0.1);
+          return Colors.white.withValues(alpha: 0.1);
         }
         if (states.contains(MaterialState.hovered)) {
-          return Colors.white.withOpacity(0.05);
+          return Colors.white.withValues(alpha: 0.05);
         }
         return null;
       }),
@@ -291,7 +291,7 @@ class XkButton extends StatelessWidget {
   }
 }
 
-enum _ButtonType {
+enum ButtonType {
   primary,
   outlined,
   semantic,

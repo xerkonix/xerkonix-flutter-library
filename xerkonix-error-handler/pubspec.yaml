@@ -1,0 +1,19 @@
+name: xerkonix_error_handler
+description: A comprehensive error and exception handling package for Flutter applications. Provides structured error types, custom exceptions, error message handlers, and UI components (dialogs, toasts) for consistent error management across applications.
+version: 1.0.0
+
+environment:
+  sdk: ">=3.5.0 <4.0.0"
+  flutter: ">=3.24.0"
+
+dependencies:
+  xerkonix_logger: ^1.0.0
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:

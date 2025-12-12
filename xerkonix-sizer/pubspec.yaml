@@ -1,0 +1,19 @@
+name: xerkonix_sizer
+description: A responsive sizing utility package for Flutter applications that provides adaptive layout calculations based on screen dimensions. Supports both fixed and responsive sizing with logical pixel (lp) calculations for consistent UI scaling across different device sizes.
+version: 1.0.0
+
+environment:
+  sdk: '>=3.5.0 <4.0.0'
+  flutter: ">=3.24.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true

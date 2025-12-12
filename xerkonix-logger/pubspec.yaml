@@ -1,0 +1,20 @@
+name: xerkonix_logger
+description: A feature-rich logging package for Flutter applications with multiple log levels (log, debug, info, warning, error, exception), emoji-based visual indicators, and fun logger support. Integrates seamlessly with HTTP requests and provides structured logging capabilities.
+version: 1.0.0
+
+environment:
+  sdk: ">=3.5.0 <4.0.0"
+  flutter: ">=3.24.0"
+
+dependencies:
+  logger: ^2.4.0
+  http: ^1.2.2
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:

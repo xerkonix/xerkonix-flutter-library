@@ -1,0 +1,82 @@
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
+
+import '../constant/http_constant.dart';
+import '../http_utils/xerkonix_http_config.dart';
+
+class XkHttpRequest {
+  XkHttpRequest({required this.httpConfig});
+
+  final XkHttpConfig httpConfig;
+
+  Map<String, String> _generateBaseHeaders() {
+    final Map<String, String> baseHeaders = {
+      'Content-Type': httpConfig.contentType,
+    };
+    return baseHeaders;
+  }
+
+  Map<String, String> _generateAuthorizationHeader(String token) {
+    final Map<String, String> authorizationHeader = {'Authorization': "${XkHttpConst.tokenType.bearer} $token"};
+    return authorizationHeader;
+  }
+
+  Map<String, String> generateHeaders({String? token, List<Map<String, String>>? headerList}) {
+    final result = _generateBaseHeaders();
+    if (token != null) {
+      result.addAll(_generateAuthorizationHeader(token));
+    }
+    if (headerList != null) {
+      for (final header in headerList) {
+        result.addAll(header);
+      }
+    }
+    return result;
+  }
+
+  Map<String, String> generateMultipartHeaders({String? token, List<Map<String, String>>? headerList}) {
+    final result = <String, String>{'Content-Type': 'multipart/form-data'};
+    if (token != null) {
+      result.addAll(_generateAuthorizationHeader(token));
+    }
+    if (headerList != null) {
+      for (final header in headerList) {
+        result.addAll(header);
+      }
+    }
+    return result;
+  }
+
+  Uri generateUri(
+      {String? scheme,
+      String? host,
+      int? port,
+      required String path,
+      Map<String, dynamic>? queryParameters,
+      String? query}) {
+    return Uri(
+        scheme: scheme ?? httpConfig.scheme,
+        host: host ?? httpConfig.host,
+        port: port ?? httpConfig.port,
+        path: path,
+        queryParameters: queryParameters,
+        query: query);
+  }
+
+  Uri custom({required String uriAddress, Map<String, dynamic>? queryParameters}) {
+    return queryParameters == null
+        ? Uri.parse(uriAddress)
+        : Uri(path: uriAddress, queryParameters: queryParameters);
+  }
+
+  http.Request generateRequest(
+      {required String method, required Map<String, String> headers, required Uri uri, Map<String, dynamic>? body}) {
+    http.Request request = http.Request(method, uri);
+    if (body != null) {
+      request.body = jsonEncode(body);
+    }
+    request.headers.addAll(headers);
+    return request;
+  }
+}

@@ -1,0 +1,211 @@
+import 'package:flutter/material.dart';
+
+import '../palette/color.dart';
+import '../shape/xerkonix_shape.dart';
+import '../typography/xerkonix_typography.dart';
+import 'color_schemes/light_color_scheme.dart';
+import 'xerkonix_theme.dart';
+
+/// Light Theme - Warm Intelligence (따뜻한 지성)
+/// Materiality: High-end Matte Paper (물성)
+/// 빛을 머금는 최고급 무광 종이의 질감
+class XkLightTheme extends XkTheme {
+  XkLightTheme._();
+
+  static ThemeData themeData = ThemeData(
+    useMaterial3: true,
+    colorScheme: lightColorScheme,
+    
+    // Materiality: High-end Matte Paper
+    // No Glassmorphism - 눈을 찌르는 빛 반사나 유광 질감을 절대적으로 지양
+    scaffoldBackgroundColor: XkColor.canvas, // Warm Off-white
+    
+    // Typography - IBM Plex Sans with generous spacing
+    // Light theme: Structure (#2D2D2D) for headings, Body Text (#4A4A4A) for body
+    textTheme: TextTheme(
+      displayLarge: XkTypo.largeTitle.copyWith(color: XkColor.textPrimary),
+      displayMedium: XkTypo.title1.copyWith(color: XkColor.textPrimary),
+      displaySmall: XkTypo.title2.copyWith(color: XkColor.textPrimary),
+      headlineLarge: XkTypo.headline.copyWith(color: XkColor.textPrimary),
+      headlineMedium: XkTypo.title3.copyWith(color: XkColor.textPrimary),
+      titleLarge: XkTypo.title1.copyWith(color: XkColor.textPrimary),
+      titleMedium: XkTypo.title2.copyWith(color: XkColor.textPrimary),
+      titleSmall: XkTypo.title3.copyWith(color: XkColor.textPrimary),
+      bodyLarge: XkTypo.body.copyWith(color: XkColor.bodyText),
+      bodyMedium: XkTypo.body.copyWith(color: XkColor.bodyText),
+      bodySmall: XkTypo.caption1.copyWith(color: XkColor.bodyText),
+      labelLarge: XkTypo.callout.copyWith(color: XkColor.bodyText),
+      labelMedium: XkTypo.footnote.copyWith(color: XkColor.bodyText),
+      labelSmall: XkTypo.caption2.copyWith(color: XkColor.bodyText),
+    ),
+    
+    // Card Theme - Sophisticated Round (R8-R12)
+    cardTheme: const CardThemeData(
+      color: Colors.white,
+      elevation: 0, // No shadow for matte paper feel
+      shape: RoundedRectangleBorder(
+        borderRadius: XkShape.defaultBorderRadius,
+      ),
+      margin: const EdgeInsets.symmetric(
+        horizontal: XkLayout.spacingMedium,
+        vertical: XkLayout.spacingSmall,
+      ),
+    ),
+    
+    // AppBar Theme
+    appBarTheme: AppBarTheme(
+      backgroundColor: XkColor.canvas,
+      elevation: 0,
+      centerTitle: true,
+      titleTextStyle: XkTypo.title2.copyWith(color: XkColor.structure),
+    ),
+    
+    // Button Theme - Sophisticated Round + States (hover, pressed, disabled)
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.disabled)) {
+            return XkColor.textDisabled;
+          }
+          if (states.contains(MaterialState.pressed)) {
+            return XkColor.identity.withOpacity(0.75);
+          }
+          if (states.contains(MaterialState.hovered) ||
+              states.contains(MaterialState.focused)) {
+            return XkColor.identity.withOpacity(0.9);
+          }
+          return XkColor.identity;
+        }),
+        foregroundColor: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.disabled)) {
+            return XkColor.textTertiary; // Disabled 버튼 텍스트는 더 어두운 색으로
+          }
+          return XkColor.structure; // Deep Charcoal 텍스트
+        }),
+        overlayColor: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.pressed)) {
+            return XkColor.pulse.withOpacity(0.18);
+          }
+          if (states.contains(MaterialState.hovered)) {
+            return XkColor.identity.withOpacity(0.12);
+          }
+          return null;
+        }),
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+            borderRadius: XkShape.defaultBorderRadius,
+          ),
+        ),
+        padding: MaterialStateProperty.all<EdgeInsets>(
+          const EdgeInsets.symmetric(
+            horizontal: XkLayout.spacingLarge,
+            vertical: XkLayout.spacingMedium,
+          ),
+        ),
+        elevation: MaterialStateProperty.all<double>(0),
+      ),
+    ),
+    
+    // OutlinedButton Theme - Outlined Style (투명 배경 + Identity 테두리)
+    // Secondary Button: 투명 배경 + Identity 테두리 + Identity 텍스트
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.disabled)) {
+            return XkColor.textDisabled.withOpacity(0.1);
+          }
+          if (states.contains(MaterialState.pressed)) {
+            return XkColor.identity.withOpacity(0.1);
+          }
+          if (states.contains(MaterialState.hovered) ||
+              states.contains(MaterialState.focused)) {
+            return XkColor.identity.withOpacity(0.05);
+          }
+          return Colors.transparent; // 투명 배경
+        }),
+        foregroundColor: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.disabled)) {
+            return XkColor.textDisabled;
+          }
+          return XkColor.identity; // Identity 텍스트
+        }),
+        side: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.disabled)) {
+            return BorderSide(color: XkColor.textDisabled, width: 1);
+          }
+          if (states.contains(MaterialState.pressed)) {
+            return BorderSide(color: XkColor.identity.withOpacity(0.7), width: 1.5);
+          }
+          return BorderSide(color: XkColor.identity, width: 1.5); // Identity 테두리
+        }),
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+            borderRadius: XkShape.defaultBorderRadius,
+          ),
+        ),
+        padding: MaterialStateProperty.all<EdgeInsets>(
+          const EdgeInsets.symmetric(
+            horizontal: XkLayout.spacingLarge,
+            vertical: XkLayout.spacingMedium,
+          ),
+        ),
+      ),
+    ),
+    
+    // TextButton Theme - CTA Style (라이트테마)
+    // CTA: Deep Charcoal(#2D2D2D) 배경 + Muted Gold(#C0A062) 텍스트
+    textButtonTheme: TextButtonThemeData(
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.disabled)) {
+            return XkColor.textDisabled.withOpacity(0.2);
+          }
+          if (states.contains(MaterialState.pressed)) {
+            return XkColor.structure.withOpacity(0.9);
+          }
+          if (states.contains(MaterialState.hovered) ||
+              states.contains(MaterialState.focused)) {
+            return XkColor.structure.withOpacity(0.95);
+          }
+          return XkColor.structure; // Deep Charcoal 배경
+        }),
+        foregroundColor: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.disabled)) {
+            return XkColor.textDisabled;
+          }
+          return XkColor.identity; // Muted Gold 텍스트
+        }),
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+            borderRadius: XkShape.defaultBorderRadius,
+          ),
+        ),
+        padding: MaterialStateProperty.all<EdgeInsets>(
+          const EdgeInsets.symmetric(
+            horizontal: XkLayout.spacingLarge,
+            vertical: XkLayout.spacingMedium,
+          ),
+        ),
+      ),
+    ),
+    
+    // Input Decoration Theme
+    inputDecorationTheme: InputDecorationTheme(
+      filled: true,
+      fillColor: Colors.white,
+      border: OutlineInputBorder(
+        borderRadius: XkShape.defaultBorderRadius,
+        borderSide: BorderSide(color: XkColor.structure.withOpacity(0.2)),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: XkShape.defaultBorderRadius,
+        borderSide: BorderSide(color: XkColor.structure.withOpacity(0.2)),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: XkShape.defaultBorderRadius,
+        borderSide: BorderSide(color: XkColor.identity, width: 2),
+      ),
+      contentPadding: const EdgeInsets.all(XkLayout.spacingMedium),
+    ),
+  );
+}

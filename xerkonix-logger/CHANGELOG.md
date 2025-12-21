@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.0.1
+
+### Changes
+- Fixed Pub Points: Reduced description length to meet pub.dev requirements
+- Fixed test errors: Exported internal logger classes for testing
+- Updated all code comments to English
+
 ## 1.0.0
 
 ### Initial Release

@@ -13,7 +13,7 @@ A feature-rich logging package for Flutter applications with multiple log levels
 
 ## Version
 
-**Current version: v1.0.0**
+**Current version: v1.0.1**
 
 ## Getting Started
 
@@ -21,7 +21,7 @@ Add this package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  xerkonix_logger: ^1.0.0
+  xerkonix_logger: ^1.0.1
   logger: ^2.4.0
   http: ^1.2.2
 ```
@@ -105,5 +105,5 @@ Logger.build("build start\nbuilding...\nbuild done");
 
 ## Additional Information
 
-- Version: v1.0.0
+- Version: v1.0.1
 - License: Apache License, Version 2.0 (see [LICENSE](LICENSE) file)

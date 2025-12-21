@@ -13,7 +13,7 @@ A comprehensive design system package for Flutter applications, providing consis
 
 ## Version
 
-Current version: **1.0.0**
+Current version: **1.0.1**
 
 ## Getting Started
 
@@ -23,7 +23,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  xerkonix_design_system: ^1.0.0
+  xerkonix_design_system: ^1.0.1
 ```
 
 ### Requirements
@@ -144,5 +144,5 @@ AnimatedBuilder(
 
 ## Additional Information
 
-- Version: v1.0.0
+- Version: v1.0.1
 - License: Apache License 2.0 (see [LICENSE](LICENSE) file)

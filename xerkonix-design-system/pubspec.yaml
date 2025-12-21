@@ -1,6 +1,6 @@
 name: xerkonix_design_system
-description: A comprehensive design system package for Flutter applications, providing consistent colors, typography, themes, shapes, and motion components based on the Visual Identity System with warm intelligence and minimal design philosophy.
-version: 1.0.0
+description: Flutter design system with colors, typography, and themes.
+version: 1.0.1
 repository: https://github.com/xerkonix/xerkonix-flutter-library/tree/main/xerkonix-design-system
 issue_tracker: https://github.com/xerkonix/xerkonix-flutter-library/issues
 

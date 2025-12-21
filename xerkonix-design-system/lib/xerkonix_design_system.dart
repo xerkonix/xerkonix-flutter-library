@@ -1,17 +1,17 @@
-/// Color System - The Layers of Ink (잉크의 농담)
+/// Color System - Color palette with various shades
 export 'src/palette/color.dart';
 
-/// Theme - Warm Intelligence (따뜻한 지성)
+/// Theme - Light and dark theme support
 export 'src/themes/dark_theme.dart';
 export 'src/themes/light_theme.dart';
 
-/// Typography - Sophisticated Round
+/// Typography - Typography system
 export 'src/typography/xerkonix_typography.dart';
 
-/// Shape & Layout - "여백이 곧 콘텐츠"
+/// Shape & Layout - Shape and layout utilities
 export 'src/shape/xerkonix_shape.dart';
 
-/// Motion - The Pulse (호흡)
+/// Motion - Animation components
 export 'src/motion/xerkonix_motion.dart';
 
 /// Components - Reusable UI Components

@@ -3,20 +3,19 @@ import 'package:flutter/painting.dart';
 import 'typo_constants.dart';
 
 /// XkTypo - Main Typography System
-/// Warm Intelligence: 시집을 읽는 듯한 넉넉한 행간과 자간
-/// "여백이 곧 콘텐츠"
+/// Provides generous line height and letter spacing for comfortable reading.
 class XkTypo {
   XkTypo._();
 
   // Typography Rules: IBM Plex Sans
-  // 자간(Tracking): -0.01em ~ -0.02em로 좁게 설정하여 단단한 인상을 줄 것
-  // 행간(Line Height): 150% 이상으로 설정하여 여유로운 호흡을 줄 것
-  static const double _lineHeight = 1.5; // 150% 이상 (여유로운 호흡)
-  static const double _letterSpacing = -0.015; // -0.01em ~ -0.02em (단단한 인상)
+  // Letter spacing: -0.01em ~ -0.02em for a solid impression
+  // Line height: 150% or more for comfortable reading
+  static const double _lineHeight = 1.5; // 150% or more
+  static const double _letterSpacing = -0.015; // -0.01em ~ -0.02em
 
-  // 색상은 ThemeData의 textTheme에서 설정되므로 여기서는 null로 설정
+  // Colors are set in ThemeData's textTheme, so null here
   // Light theme: Structure (#2D2D2D) / Body Text (#4A4A4A)
-  // Dark theme: Canvas (#F5F5F5)로 자동 반전
+  // Dark theme: Canvas (#F5F5F5) automatically inverted
   static final TextStyle largeTitle = TextStyle(
       fontFamily: IBMPlexSans.fontFamily,
       fontFamilyFallback: const [NotoSansKR.fontFamily],

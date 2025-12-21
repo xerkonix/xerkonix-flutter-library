@@ -6,9 +6,8 @@ import '../typography/xerkonix_typography.dart';
 import 'color_schemes/dark_color_scheme.dart';
 import 'xerkonix_theme.dart';
 
-/// Dark Theme - Warm Intelligence (따뜻한 지성)
-/// Materiality: High-end Matte Paper (물성)
-/// Background와 Structure를 반전하여 사용
+/// Dark Theme
+/// Provides a dark theme with inverted background and structure colors
 class XkDarkTheme extends XkTheme {
   XkDarkTheme._();
 
@@ -38,9 +37,9 @@ class XkDarkTheme extends XkTheme {
     ),
 
     // Card Theme - Sophisticated Round (R8-R12)
-    // 다크테마: 배경(Structure)보다 약간 밝은 색으로 구분
+    // Dark theme: Slightly brighter color than background (Structure) for distinction
     cardTheme: const CardThemeData(
-      color: XkColor.darkSurface, // #3A3A3A - 배경과 구분되는 약간 밝은 색
+      color: XkColor.darkSurface, // #3A3A3A - Slightly brighter than background
       elevation: 0, // No shadow for matte paper feel
       shape: RoundedRectangleBorder(
         borderRadius: XkShape.defaultBorderRadius,
@@ -52,11 +51,11 @@ class XkDarkTheme extends XkTheme {
     ),
 
     // AppBar Theme
-    // 스크롤 시: Structure (#2D2D2D) → 약간 밝은 색으로 변경
+    // On scroll: Structure (#2D2D2D) changes to slightly brighter color
     appBarTheme: AppBarTheme(
       backgroundColor: XkColor.structure,
-      surfaceTintColor: XkColor.structure.withValues(alpha: 0.95), // 스크롤 시 약간 밝은 색
-      scrolledUnderElevation: 0.5, // 스크롤 시 elevation
+      surfaceTintColor: XkColor.structure.withValues(alpha: 0.95), // Slightly brighter on scroll
+      scrolledUnderElevation: 0.5, // Elevation on scroll
       elevation: 0,
       centerTitle: true,
       titleTextStyle: XkTypo.title2.copyWith(color: XkColor.canvas),
@@ -82,7 +81,7 @@ class XkDarkTheme extends XkTheme {
           if (states.contains(MaterialState.disabled)) {
             return XkColor.textDisabled;
           }
-          return XkColor.canvas; // Canvas 텍스트 (다크테마에서는 밝은 텍스트)
+          return XkColor.canvas; // Canvas text (bright text in dark theme)
         }),
         overlayColor: MaterialStateProperty.resolveWith((states) {
           if (states.contains(MaterialState.pressed)) {
@@ -108,8 +107,8 @@ class XkDarkTheme extends XkTheme {
       ),
     ),
     
-    // OutlinedButton Theme - Outlined Style (다크테마)
-    // Secondary Button: 투명 배경 + Identity 테두리 + Identity 텍스트
+    // OutlinedButton Theme - Outlined Style (Dark Theme)
+    // Secondary Button: Transparent background with Identity border and text
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.resolveWith((states) {
@@ -123,13 +122,13 @@ class XkDarkTheme extends XkTheme {
               states.contains(MaterialState.focused)) {
             return XkColor.identity.withValues(alpha: 0.08);
           }
-          return Colors.transparent; // 투명 배경
+          return Colors.transparent; // Transparent background
         }),
         foregroundColor: MaterialStateProperty.resolveWith((states) {
           if (states.contains(MaterialState.disabled)) {
             return XkColor.textDisabled;
           }
-          return XkColor.identity; // Identity 텍스트
+          return XkColor.identity; // Identity text
         }),
         side: MaterialStateProperty.resolveWith((states) {
           if (states.contains(MaterialState.disabled)) {
@@ -138,7 +137,7 @@ class XkDarkTheme extends XkTheme {
           if (states.contains(MaterialState.pressed)) {
             return BorderSide(color: XkColor.identity.withValues(alpha: 0.7), width: 1.5);
           }
-          return BorderSide(color: XkColor.identity, width: 1.5); // Identity 테두리
+          return BorderSide(color: XkColor.identity, width: 1.5); // Identity border
         }),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
@@ -154,8 +153,8 @@ class XkDarkTheme extends XkTheme {
       ),
     ),
 
-    // TextButton Theme - CTA Style (다크테마)
-    // CTA: Canvas (#F5F5F5) 배경 + Identity (#C0A062) 텍스트
+    // TextButton Theme - CTA Style (Dark Theme)
+    // CTA: Canvas (#F5F5F5) background with Identity (#C0A062) text
     textButtonTheme: TextButtonThemeData(
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.resolveWith((states) {
@@ -169,13 +168,13 @@ class XkDarkTheme extends XkTheme {
               states.contains(MaterialState.focused)) {
             return XkColor.canvas.withValues(alpha: 0.95);
           }
-          return XkColor.canvas; // Canvas 배경 (다크테마에서는 밝은 배경)
+          return XkColor.canvas; // Canvas background (bright background in dark theme)
         }),
         foregroundColor: MaterialStateProperty.resolveWith((states) {
           if (states.contains(MaterialState.disabled)) {
             return XkColor.textDisabled;
           }
-          return XkColor.identity; // Muted Gold 텍스트
+          return XkColor.identity; // Muted Gold text
         }),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(

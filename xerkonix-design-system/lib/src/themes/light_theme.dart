@@ -6,9 +6,8 @@ import '../typography/xerkonix_typography.dart';
 import 'color_schemes/light_color_scheme.dart';
 import 'xerkonix_theme.dart';
 
-/// Light Theme - Warm Intelligence (따뜻한 지성)
-/// Materiality: High-end Matte Paper (물성)
-/// 빛을 머금는 최고급 무광 종이의 질감
+/// Light Theme
+/// Provides a light theme with matte paper-like appearance
 class XkLightTheme extends XkTheme {
   XkLightTheme._();
 
@@ -78,9 +77,9 @@ class XkLightTheme extends XkTheme {
         }),
         foregroundColor: MaterialStateProperty.resolveWith((states) {
           if (states.contains(MaterialState.disabled)) {
-            return XkColor.textTertiary; // Disabled 버튼 텍스트는 더 어두운 색으로
+            return XkColor.textTertiary; // Disabled button text uses darker color
           }
-          return XkColor.structure; // Deep Charcoal 텍스트
+          return XkColor.structure; // Deep Charcoal text
         }),
         overlayColor: MaterialStateProperty.resolveWith((states) {
           if (states.contains(MaterialState.pressed)) {
@@ -106,8 +105,8 @@ class XkLightTheme extends XkTheme {
       ),
     ),
     
-    // OutlinedButton Theme - Outlined Style (투명 배경 + Identity 테두리)
-    // Secondary Button: 투명 배경 + Identity 테두리 + Identity 텍스트
+    // OutlinedButton Theme - Outlined Style
+    // Secondary Button: Transparent background with Identity border and text
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.resolveWith((states) {
@@ -121,13 +120,13 @@ class XkLightTheme extends XkTheme {
               states.contains(MaterialState.focused)) {
             return XkColor.identity.withValues(alpha: 0.05);
           }
-          return Colors.transparent; // 투명 배경
+          return Colors.transparent; // Transparent background
         }),
         foregroundColor: MaterialStateProperty.resolveWith((states) {
           if (states.contains(MaterialState.disabled)) {
             return XkColor.textDisabled;
           }
-          return XkColor.identity; // Identity 텍스트
+          return XkColor.identity; // Identity text
         }),
         side: MaterialStateProperty.resolveWith((states) {
           if (states.contains(MaterialState.disabled)) {
@@ -136,7 +135,7 @@ class XkLightTheme extends XkTheme {
           if (states.contains(MaterialState.pressed)) {
             return BorderSide(color: XkColor.identity.withValues(alpha: 0.7), width: 1.5);
           }
-          return BorderSide(color: XkColor.identity, width: 1.5); // Identity 테두리
+          return BorderSide(color: XkColor.identity, width: 1.5); // Identity border
         }),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
@@ -152,8 +151,8 @@ class XkLightTheme extends XkTheme {
       ),
     ),
     
-    // TextButton Theme - CTA Style (라이트테마)
-    // CTA: Deep Charcoal(#2D2D2D) 배경 + Muted Gold(#C0A062) 텍스트
+    // TextButton Theme - CTA Style (Light Theme)
+    // CTA: Deep Charcoal (#2D2D2D) background with Muted Gold (#C0A062) text
     textButtonTheme: TextButtonThemeData(
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.resolveWith((states) {
@@ -167,13 +166,13 @@ class XkLightTheme extends XkTheme {
               states.contains(MaterialState.focused)) {
             return XkColor.structure.withValues(alpha: 0.95);
           }
-          return XkColor.structure; // Deep Charcoal 배경
+          return XkColor.structure; // Deep Charcoal background
         }),
         foregroundColor: MaterialStateProperty.resolveWith((states) {
           if (states.contains(MaterialState.disabled)) {
             return XkColor.textDisabled;
           }
-          return XkColor.identity; // Muted Gold 텍스트
+          return XkColor.identity; // Muted Gold text
         }),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(

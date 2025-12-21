@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.0.1
+
+### Changes
+- Fixed Pub Points: Reduced description length to meet pub.dev requirements
+- Fixed static analysis: Moved `child` parameter to last position in widget constructors
+- Updated all code comments to English
+- Removed product-specific references from code comments
+
 ## 1.0.0
 
 ### Initial Release

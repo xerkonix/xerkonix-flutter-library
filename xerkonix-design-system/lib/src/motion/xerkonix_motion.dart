@@ -3,19 +3,18 @@ import 'package:flutter/material.dart';
 import '../palette/color.dart';
 
 /// Motion System
-/// The Pulse (호흡) - 생명체가 숨을 쉬듯 부드럽게 명멸
+/// Provides smooth pulsing animations for UI components.
 class XkMotion {
   XkMotion._();
 
   /// Breathing Light Animation
-  /// AI(Cosentio)가 연산을 할 때, Identity Color와 Pulse Color가 섞이며
-  /// 마치 생명체가 숨을 쉬듯 부드럽게 명멸(Pulse)합니다.
+  /// Creates a smooth pulsing opacity animation.
   static Widget breathingLight({
-    required Widget child,
     Duration duration = const Duration(seconds: 2),
     double minOpacity = 0.3,
     double maxOpacity = 1.0,
     Color? color,
+    required Widget child,
   }) {
     return _BreathingLight(
       duration: duration,
@@ -28,10 +27,10 @@ class XkMotion {
 
   /// Pulse Animation (Identity + Pulse Color Blend)
   static Widget pulse({
-    required Widget child,
     Duration duration = const Duration(seconds: 2),
     Color? primaryColor,
     Color? secondaryColor,
+    required Widget child,
   }) {
     return _PulseAnimation(
       duration: duration,
@@ -50,11 +49,11 @@ class _BreathingLight extends StatefulWidget {
   final Color color;
 
   const _BreathingLight({
-    required this.child,
     required this.duration,
     required this.minOpacity,
     required this.maxOpacity,
     required this.color,
+    required this.child,
   });
 
   @override
@@ -110,10 +109,10 @@ class _PulseAnimation extends StatefulWidget {
   final Color secondaryColor;
 
   const _PulseAnimation({
-    required this.child,
     required this.duration,
     required this.primaryColor,
     required this.secondaryColor,
+    required this.child,
   });
 
   @override

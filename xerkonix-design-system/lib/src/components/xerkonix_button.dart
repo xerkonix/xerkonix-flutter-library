@@ -5,9 +5,9 @@ import '../shape/xerkonix_shape.dart';
 
 /// Xerkonix Design System Button Component
 /// 
-/// 테마에 따라 자동으로 색상이 조정되는 버튼 컴포넌트입니다.
+/// A button component that automatically adjusts colors based on the theme.
 /// 
-/// 사용 예시:
+/// Example usage:
 /// ```dart
 /// XkButton.primary(
 ///   onPressed: () {},
@@ -18,19 +18,19 @@ class XkButton extends StatelessWidget {
   const XkButton._({
     super.key,
     required this.onPressed,
-    required this.child,
     required this.buttonType,
     this.semanticColor,
+    required this.child,
   });
 
   final VoidCallback? onPressed;
   final Widget child;
   final ButtonType buttonType;
-  final Color? semanticColor; // Success, Warning, Error, Info용
+  final Color? semanticColor; // For Success, Warning, Error, Info buttons
 
   /// Primary Button
-  /// Light: Identity 배경 + Structure 텍스트
-  /// Dark: Identity 배경 + Canvas 텍스트
+  /// Light theme: Identity background with Structure text
+  /// Dark theme: Identity background with Canvas text
   factory XkButton.primary({
     Key? key,
     required VoidCallback? onPressed,
@@ -39,13 +39,13 @@ class XkButton extends StatelessWidget {
     return XkButton._(
       key: key,
       onPressed: onPressed,
-      child: child,
       buttonType: ButtonType.primary,
+      child: child,
     );
   }
 
   /// Outlined Button
-  /// 투명 배경 + Identity 테두리 + Identity 텍스트
+  /// Transparent background with Identity border and text
   factory XkButton.outlined({
     Key? key,
     required VoidCallback? onPressed,
@@ -54,13 +54,13 @@ class XkButton extends StatelessWidget {
     return XkButton._(
       key: key,
       onPressed: onPressed,
-      child: child,
       buttonType: ButtonType.outlined,
+      child: child,
     );
   }
 
   /// Success Button
-  /// Success 색상 배경 + 흰색 텍스트
+  /// Success color background with white text
   factory XkButton.success({
     Key? key,
     required VoidCallback? onPressed,
@@ -69,14 +69,14 @@ class XkButton extends StatelessWidget {
     return XkButton._(
       key: key,
       onPressed: onPressed,
-      child: child,
       buttonType: ButtonType.semantic,
       semanticColor: XkColor.success,
+      child: child,
     );
   }
 
   /// Warning Button
-  /// Warning 색상 배경 + 흰색 텍스트
+  /// Warning color background with white text
   factory XkButton.warning({
     Key? key,
     required VoidCallback? onPressed,
@@ -85,14 +85,14 @@ class XkButton extends StatelessWidget {
     return XkButton._(
       key: key,
       onPressed: onPressed,
-      child: child,
       buttonType: ButtonType.semantic,
       semanticColor: XkColor.warning,
+      child: child,
     );
   }
 
   /// Error Button
-  /// Error 색상 배경 + 흰색 텍스트
+  /// Error color background with white text
   factory XkButton.error({
     Key? key,
     required VoidCallback? onPressed,
@@ -101,15 +101,15 @@ class XkButton extends StatelessWidget {
     return XkButton._(
       key: key,
       onPressed: onPressed,
-      child: child,
       buttonType: ButtonType.semantic,
       semanticColor: XkColor.error,
+      child: child,
     );
   }
 
   /// Info Button
-  /// Info 색상 배경 + 흰색 텍스트
-  /// Deep Slate (#526875) - 중립적인 정보 안내
+  /// Info color background with white text
+  /// Uses Deep Slate (#526875) for neutral information display
   factory XkButton.info({
     Key? key,
     required VoidCallback? onPressed,
@@ -118,9 +118,9 @@ class XkButton extends StatelessWidget {
     return XkButton._(
       key: key,
       onPressed: onPressed,
-      child: child,
       buttonType: ButtonType.semantic,
       semanticColor: XkColor.info,
+      child: child,
     );
   }
 

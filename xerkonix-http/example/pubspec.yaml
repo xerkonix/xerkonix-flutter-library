@@ -14,7 +14,7 @@ dependencies:
     sdk: flutter
 
   xerkonix_error_handler: ^1.0.0
-  xerkonix_design_system: ^1.0.0
+  xerkonix_design_system: ^1.0.1
   xerkonix_http:
     path: ../
   cupertino_icons: ^1.0.8

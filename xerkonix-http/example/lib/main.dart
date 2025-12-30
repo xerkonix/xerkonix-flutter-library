@@ -252,7 +252,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             const SizedBox(height: 24),
             Card(
-              color: XkColor.canvas.withOpacity(0.5),
+              color: XkColor.canvas.withValues(alpha: 0.5),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
@@ -273,18 +273,18 @@ class _MyHomePageState extends State<MyHomePage> {
                       ],
                     ),
                     const SizedBox(height: 12),
-                    _buildInstructionItem('각 버튼을 클릭하여 HTTP 메서드를 테스트합니다'),
-                    _buildInstructionItem('결과는 위의 카드에 표시됩니다'),
-                    _buildInstructionItem('로그는 콘솔에서 확인할 수 있습니다'),
-                    _buildInstructionItem('에러가 발생하면 에러 메시지가 표시됩니다'),
+                    _buildInstructionItem('Click buttons to test HTTP methods'),
+                    _buildInstructionItem('Results are displayed in the card above'),
+                    _buildInstructionItem('Logs can be viewed in the console'),
+                    _buildInstructionItem('Error messages are displayed when errors occur'),
                     const SizedBox(height: 8),
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: XkColor.identity.withOpacity(0.1),
+                        color: XkColor.identity.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(4),
                         border: Border.all(
-                          color: XkColor.identity.withOpacity(0.3),
+                          color: XkColor.identity.withValues(alpha: 0.3),
                           width: 1,
                         ),
                       ),

@@ -39,6 +39,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   String _testResult = 'No test executed yet. Click buttons to test error handling.';
+  List<String> _consoleLogs = [];
 
   void _testConflictError() {
     try {
@@ -49,9 +50,13 @@ class _MyHomePageState extends State<MyHomePage> {
         detail: 'The resource you are trying to create already exists',
       );
       throw XkException(xkError);
-    } on XkException {
+    } on XkException catch (e) {
       setState(() {
         _testResult = 'Conflict Error: Dialog shown';
+        _consoleLogs.insert(0, '[ERROR] ${e.xkError.runtimeType}Exception: ${e.xkError.message}');
+        _consoleLogs.insert(1, '[ERROR] Code: ${e.xkError.code ?? "N/A"}, Type: ${e.xkError.type ?? "N/A"}');
+        _consoleLogs.insert(2, '[ERROR] Title: ${e.xkError.title ?? "N/A"}, Detail: ${e.xkError.detail ?? "N/A"}');
+        if (_consoleLogs.length > 20) _consoleLogs = _consoleLogs.take(20).toList();
       });
       XkErrorMessageHandler.showError(
         context: context,
@@ -69,9 +74,13 @@ class _MyHomePageState extends State<MyHomePage> {
         detail: 'Please check your input and try again',
       );
       throw XkException(xkError);
-    } on XkException {
+    } on XkException catch (e) {
       setState(() {
         _testResult = 'Bad Request Error: Dialog shown';
+        _consoleLogs.insert(0, '[ERROR] ${e.xkError.runtimeType}Exception: ${e.xkError.message}');
+        _consoleLogs.insert(1, '[ERROR] Code: ${e.xkError.code ?? "N/A"}, Type: ${e.xkError.type ?? "N/A"}');
+        _consoleLogs.insert(2, '[ERROR] Title: ${e.xkError.title ?? "N/A"}, Detail: ${e.xkError.detail ?? "N/A"}');
+        if (_consoleLogs.length > 20) _consoleLogs = _consoleLogs.take(20).toList();
       });
       XkErrorMessageHandler.showError(
         context: context,
@@ -89,9 +98,13 @@ class _MyHomePageState extends State<MyHomePage> {
         detail: 'Please login to continue',
       );
       throw XkException(xkError);
-    } on XkException {
+    } on XkException catch (e) {
       setState(() {
         _testResult = 'Unauthorized Error: Dialog shown';
+        _consoleLogs.insert(0, '[ERROR] ${e.xkError.runtimeType}Exception: ${e.xkError.message}');
+        _consoleLogs.insert(1, '[ERROR] Code: ${e.xkError.code ?? "N/A"}, Type: ${e.xkError.type ?? "N/A"}');
+        _consoleLogs.insert(2, '[ERROR] Title: ${e.xkError.title ?? "N/A"}, Detail: ${e.xkError.detail ?? "N/A"}');
+        if (_consoleLogs.length > 20) _consoleLogs = _consoleLogs.take(20).toList();
       });
       XkErrorMessageHandler.showError(
         context: context,
@@ -109,9 +122,13 @@ class _MyHomePageState extends State<MyHomePage> {
         detail: 'The requested resource does not exist',
       );
       throw XkException(xkError);
-    } on XkException {
+    } on XkException catch (e) {
       setState(() {
         _testResult = 'Not Found Error: Dialog shown';
+        _consoleLogs.insert(0, '[ERROR] ${e.xkError.runtimeType}Exception: ${e.xkError.message}');
+        _consoleLogs.insert(1, '[ERROR] Code: ${e.xkError.code ?? "N/A"}, Type: ${e.xkError.type ?? "N/A"}');
+        _consoleLogs.insert(2, '[ERROR] Title: ${e.xkError.title ?? "N/A"}, Detail: ${e.xkError.detail ?? "N/A"}');
+        if (_consoleLogs.length > 20) _consoleLogs = _consoleLogs.take(20).toList();
       });
       XkErrorMessageHandler.showError(
         context: context,
@@ -129,9 +146,13 @@ class _MyHomePageState extends State<MyHomePage> {
         detail: 'An internal server error occurred. Please try again later.',
       );
       throw XkException(xkError);
-    } on XkException {
+    } on XkException catch (e) {
       setState(() {
         _testResult = 'Internal Server Error: Dialog shown';
+        _consoleLogs.insert(0, '[ERROR] ${e.xkError.runtimeType}Exception: ${e.xkError.message}');
+        _consoleLogs.insert(1, '[ERROR] Code: ${e.xkError.code ?? "N/A"}, Type: ${e.xkError.type ?? "N/A"}');
+        _consoleLogs.insert(2, '[ERROR] Title: ${e.xkError.title ?? "N/A"}, Detail: ${e.xkError.detail ?? "N/A"}');
+        if (_consoleLogs.length > 20) _consoleLogs = _consoleLogs.take(20).toList();
       });
       XkErrorMessageHandler.showError(
         context: context,
@@ -144,9 +165,13 @@ class _MyHomePageState extends State<MyHomePage> {
     try {
       XkError xkError = CustomError("Custom Error Message");
       throw CustomException(xkError);
-    } on CustomException {
+    } on CustomException catch (e) {
       setState(() {
         _testResult = 'Custom Exception: Dialog shown';
+        _consoleLogs.insert(0, '[ERROR] CustomException: ${e.xkError.message}');
+        _consoleLogs.insert(1, '[ERROR] Code: ${e.xkError.code ?? "N/A"}, Type: ${e.xkError.type ?? "N/A"}');
+        _consoleLogs.insert(2, '[ERROR] Title: ${e.xkError.title ?? "N/A"}, Detail: ${e.xkError.detail ?? "N/A"}');
+        if (_consoleLogs.length > 20) _consoleLogs = _consoleLogs.take(20).toList();
       });
       XkErrorMessageHandler.showError(
         context: context,
@@ -159,9 +184,13 @@ class _MyHomePageState extends State<MyHomePage> {
     try {
       XkError xkError = CustomError("Custom Error Message Dialog");
       throw CustomException(xkError);
-    } on CustomException {
+    } on CustomException catch (e) {
       setState(() {
         _testResult = 'Custom Error Dialog: Custom dialog shown';
+        _consoleLogs.insert(0, '[ERROR] CustomException: ${e.xkError.message}');
+        _consoleLogs.insert(1, '[ERROR] Code: ${e.xkError.code ?? "N/A"}, Type: ${e.xkError.type ?? "N/A"}');
+        _consoleLogs.insert(2, '[ERROR] Title: ${e.xkError.title ?? "N/A"}, Detail: ${e.xkError.detail ?? "N/A"}');
+        if (_consoleLogs.length > 20) _consoleLogs = _consoleLogs.take(20).toList();
       });
       XkErrorMessageHandler.showError(
         context: context,
@@ -304,10 +333,66 @@ class _MyHomePageState extends State<MyHomePage> {
                       ],
                     ),
                     const SizedBox(height: 12),
-                    _buildInstructionItem('각 버튼을 클릭하여 에러 핸들링을 테스트합니다'),
-                    _buildInstructionItem('에러 다이얼로그가 표시됩니다'),
-                    _buildInstructionItem('콘솔에서 에러 로그를 확인할 수 있습니다'),
-                    _buildInstructionItem('Custom Dialog는 커스텀 다이얼로그를 보여줍니다'),
+                    _buildInstructionItem('Click buttons to test error handling'),
+                    _buildInstructionItem('Error dialogs will be displayed'),
+                    _buildInstructionItem('Error logs are shown in the console and below'),
+                    _buildInstructionItem('Custom Dialog shows a custom error dialog'),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.terminal, color: XkColor.pulse),
+                        const SizedBox(width: 8),
+                        const Text(
+                          'Console Logs',
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        const Spacer(),
+                        if (_consoleLogs.isNotEmpty)
+                          TextButton(
+                            onPressed: () {
+                              setState(() {
+                                _consoleLogs.clear();
+                              });
+                            },
+                            child: const Text('Clear'),
+                          ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    if (_consoleLogs.isEmpty)
+                      const Text(
+                        'No error logs yet. Click error buttons to see logs here.',
+                        style: TextStyle(fontSize: 12, color: Colors.grey),
+                      )
+                    else
+                      Container(
+                        constraints: const BoxConstraints(maxHeight: 300),
+                        decoration: BoxDecoration(
+                          color: Colors.black87,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        padding: const EdgeInsets.all(12),
+                        child: SingleChildScrollView(
+                          child: SelectableText(
+                            _consoleLogs.join('\n'),
+                            style: const TextStyle(
+                              fontSize: 11,
+                              fontFamily: 'monospace',
+                              color: Colors.greenAccent,
+                            ),
+                          ),
+                        ),
+                      ),
                   ],
                 ),
               ),

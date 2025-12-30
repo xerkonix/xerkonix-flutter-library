@@ -163,7 +163,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _testCustomException() {
     try {
-      XkError xkError = CustomError("Custom Error Message");
+      XkError xkError = CustomError(
+        "Custom Error Message",
+        code: "CUSTOM_001",
+        type: "CustomError",
+      );
       throw CustomException(xkError);
     } on CustomException catch (e) {
       setState(() {
@@ -182,7 +186,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _testCustomErrorDialog() {
     try {
-      XkError xkError = CustomError("Custom Error Message Dialog");
+      XkError xkError = CustomError(
+        "Custom Error Message Dialog",
+        code: "CUSTOM_002",
+        type: "CustomError",
+      );
       throw CustomException(xkError);
     } on CustomException catch (e) {
       setState(() {
@@ -312,7 +320,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             const SizedBox(height: 24),
             Card(
-              color: XkColor.canvas.withOpacity(0.5),
+              color: XkColor.canvas.withValues(alpha: 0.5),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(

@@ -29,23 +29,23 @@ class XkErrors implements XkError {
 
   factory XkErrors.invalidFormat({String? type, String? message, String? title, String? detail}) = InvalidFormat;
 
-  factory XkErrors.badRequest({String? type, String? message, String? title, String? detail}) = BadRequest;
+  factory XkErrors.badRequest({String? code, String? type, String? message, String? title, String? detail}) = BadRequest;
 
-  factory XkErrors.unauthorized({String? type, String? message, String? title, String? detail}) = Unauthorized;
+  factory XkErrors.unauthorized({String? code, String? type, String? message, String? title, String? detail}) = Unauthorized;
 
-  factory XkErrors.forbidden({String? type, String? message, String? title, String? detail}) = Forbidden;
+  factory XkErrors.forbidden({String? code, String? type, String? message, String? title, String? detail}) = Forbidden;
 
-  factory XkErrors.notFound({String? type, String? message, String? title, String? detail}) = NotFound;
+  factory XkErrors.notFound({String? code, String? type, String? message, String? title, String? detail}) = NotFound;
 
-  factory XkErrors.conflict({String? type, String? message, String? title, String? detail}) = Conflict;
+  factory XkErrors.conflict({String? code, String? type, String? message, String? title, String? detail}) = Conflict;
 
-  factory XkErrors.unprocessableEntity({String? type, String? message, String? title, String? detail}) = UnprocessableEntity;
+  factory XkErrors.unprocessableEntity({String? code, String? type, String? message, String? title, String? detail}) = UnprocessableEntity;
 
-  factory XkErrors.requestTimeout({String? type, String? message, String? title, String? detail}) = RequestTimeout;
+  factory XkErrors.requestTimeout({String? code, String? type, String? message, String? title, String? detail}) = RequestTimeout;
 
-  factory XkErrors.internalServerError({String? type, String? message, String? title, String? detail}) = InternalServerError;
+  factory XkErrors.internalServerError({String? code, String? type, String? message, String? title, String? detail}) = InternalServerError;
 
-  factory XkErrors.serviceUnavailable({String? type, String? message, String? title, String? detail}) = ServiceUnavailable;
+  factory XkErrors.serviceUnavailable({String? code, String? type, String? message, String? title, String? detail}) = ServiceUnavailable;
 
   factory XkErrors.unknownError({String? type, String? message, String? title, String? detail}) = UnknownError;
 

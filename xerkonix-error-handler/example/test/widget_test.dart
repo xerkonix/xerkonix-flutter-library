@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:xerkonix_error_handler_example/main.dart';
+import 'package:example/main.dart';
 
 void main() {
   testWidgets('Error Handler Example app should have error buttons', (WidgetTester tester) async {

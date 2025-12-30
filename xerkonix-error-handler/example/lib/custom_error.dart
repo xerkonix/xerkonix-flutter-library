@@ -1,7 +1,7 @@
 import 'package:xerkonix_error_handler/xerkonix_error_handler.dart';
 
 class CustomError implements XkError {
-  CustomError(this.message);
+  CustomError(this.message, {this.code, this.type});
 
   @override
   String? code;

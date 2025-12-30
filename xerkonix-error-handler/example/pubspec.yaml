@@ -9,8 +9,8 @@ environment:
   sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
-  xerkonix_design_system: ^1.0.0
-  xerkonix_logger: ^1.0.0
+  xerkonix_design_system: ^1.0.1
+  xerkonix_logger: ^1.0.1
   xerkonix_error_handler:
     path: ../
 

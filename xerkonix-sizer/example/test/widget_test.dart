@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:xerkonix_sizer_example/main.dart';
+import 'package:example/home_page.dart';
 
 void main() {
   testWidgets('Sizer Example app should display sizer information', (WidgetTester tester) async {
-    await tester.pumpWidget(const MaterialApp(home: RootPage()));
+    await tester.pumpWidget(const MaterialApp(home: HomePage()));
     
     await tester.pumpAndSettle();
     
@@ -12,7 +12,7 @@ void main() {
   });
 
   testWidgets('Sizer Example should show window dimensions', (WidgetTester tester) async {
-    await tester.pumpWidget(const MaterialApp(home: RootPage()));
+    await tester.pumpWidget(const MaterialApp(home: HomePage()));
     
     await tester.pumpAndSettle();
     
@@ -21,7 +21,7 @@ void main() {
   });
 
   testWidgets('Sizer Example should show LP values', (WidgetTester tester) async {
-    await tester.pumpWidget(const MaterialApp(home: RootPage()));
+    await tester.pumpWidget(const MaterialApp(home: HomePage()));
     
     await tester.pumpAndSettle();
     
@@ -30,7 +30,7 @@ void main() {
   });
 
   testWidgets('Sizer Example should have rebuild button', (WidgetTester tester) async {
-    await tester.pumpWidget(const MaterialApp(home: RootPage()));
+    await tester.pumpWidget(const MaterialApp(home: HomePage()));
     
     await tester.pumpAndSettle();
     

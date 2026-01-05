@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:xerkonix_sizer/xerkonix_sizer.dart';
-import 'package:flutter/widgets.dart';
 
 void main() {
   group('Sizer Tests', () {

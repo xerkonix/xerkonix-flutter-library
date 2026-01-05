@@ -6,6 +6,7 @@ A monorepo structure for managing Xerkonix Flutter packages.
 
 ```
 xerkonix-flutter-library/
+├── xerkonix-design-system/   # Design system package
 ├── xerkonix-error-handler/    # Error handling package
 ├── xerkonix-http/             # HTTP client package
 ├── xerkonix-logger/           # Logging package
@@ -13,6 +14,11 @@ xerkonix-flutter-library/
 ```
 
 ## Packages
+
+### xerkonix-design-system
+A comprehensive design system package providing themes, typography, colors, shapes, and UI components.
+
+**Version: v1.0.1**
 
 ### xerkonix-error-handler
 A package for error and exception handling.
@@ -27,7 +33,7 @@ A package for HTTP client requests.
 ### xerkonix-logger
 A package that provides logging functionality.
 
-**Version: v1.0.0**
+**Version: v1.0.1**
 
 ### xerkonix-sizer
 A package for responsive sizing utilities.

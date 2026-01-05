@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:xerkonix_design_system/xerkonix_design_system.dart';
 
 class ThemeViewModel extends InheritedWidget {
   ThemeViewModel({super.key, required super.child});
-  final ValueNotifier<ThemeData> theme = ValueNotifier(ThemeData.light());
+  final ValueNotifier<ThemeData> theme = ValueNotifier(XkLightTheme.themeData);
 
   void setLightMode() {
-    theme.value = ThemeData.light();
+    theme.value = XkLightTheme.themeData;
   }
 
   void setDarkMode() {
-    theme.value = ThemeData.dark();
+    theme.value = XkDarkTheme.themeData;
   }
 
   static ThemeViewModel? of(BuildContext context) =>

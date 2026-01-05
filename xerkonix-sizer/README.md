@@ -48,7 +48,7 @@ Sizer.init(standardLogicalWidth: 420, standardLogicalHeight: 920);
 double width = Sizer.unitWidth.lp16;
 double height = Sizer.unitHeight.lp24;
 
-// Available logical pixel values: lp1, lp2, lp4, lp8, lp12, lp16, lp20, lp24, lp32, lp40, lp48, lp56, lp64, lp80, lp96, lp128, lp160, lp192, lp224, lp256, lp320, lp384, lp448, lp512
+// Available logical pixel values: lp4, lp8, lp12, lp16, lp20, lp24, lp28, lp32, lp36, lp40, lp44, lp48, lp52, lp56, lp60, lp64, lp68, lp72, lp76, lp80, lp84, lp88, lp92, lp96, lp100, lp104, lp108, lp112, lp116, lp120, lp124, lp128, lp132, lp136, lp140, lp144, lp148, lp152, lp156, lp160, lp164, lp168, lp172, lp176, lp180, lp184, lp188, lp192, lp196, lp200, lp204, lp208, lp212, lp216, lp220, lp224, lp228, lp232, lp236, lp240, lp244, lp248, lp252, lp256, lp260, lp264, lp268, lp272, lp276, lp280, lp284, lp288, lp292, lp296, lp300, lp304, lp308, lp312, lp316, lp320, lp324, lp328, lp332, lp336, lp340, lp344, lp348, lp352, lp356, lp360, lp364, lp368, lp372, lp376, lp380, lp384, lp388, lp392, lp396, lp400, lp404, lp408, lp412, lp416, lp420, lp424, lp428, lp432, lp436, lp440, lp444, lp448, lp452, lp456, lp460, lp464, lp468, lp472, lp476, lp480, lp484, lp488, lp492, lp496, lp500
 Container(
   width: Sizer.unitWidth.lp16,
   height: Sizer.unitHeight.lp24,
@@ -88,11 +88,11 @@ ResponsiveSizer responsiveSizer = ResponsiveSizer(context: context);
 
 ## Logical Pixel Values
 
-The package provides predefined logical pixel values for consistent sizing:
+The package provides predefined logical pixel values from lp4 to lp500 (in increments of 4) for consistent sizing:
 
-- Small: lp1, lp2, lp4, lp8, lp12
-- Medium: lp16, lp20, lp24, lp32, lp40, lp48, lp56, lp64
-- Large: lp80, lp96, lp128, lp160, lp192, lp224, lp256, lp320, lp384, lp448, lp512
+- **Range**: lp4, lp8, lp12, lp16, lp20, lp24, lp28, lp32, ... lp496, lp500
+- **Total**: 125 predefined values (lp4 to lp500, step 4)
+- **Examples**: lp4, lp8, lp16, lp24, lp32, lp64, lp100, lp200, lp300, lp400, lp500
 
 ## Additional Information
 

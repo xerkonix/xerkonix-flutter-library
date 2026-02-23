@@ -514,25 +514,38 @@ class XkHexagonRadar extends StatelessWidget {
     super.key,
     this.values = const [0.86, 0.78, 0.71, 0.84, 0.69, 0.76],
     this.size = 220,
-    this.color = XkColor.identity,
-    this.accentColor = XkColor.action,
+    this.color,
+    this.accentColor,
+    this.gridColor,
   });
 
   final List<double> values;
   final double size;
-  final Color color;
-  final Color accentColor;
+  final Color? color;
+  final Color? accentColor;
+  final Color? gridColor;
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final resolvedColor =
+        color ?? (isDark ? XkColor.darkIdentity : XkColor.identity);
+    final resolvedAccent =
+        accentColor ?? (isDark ? XkColor.darkAction : XkColor.action);
+    final resolvedGrid = gridColor ??
+        (isDark
+            ? XkColor.darkTextSoft.withValues(alpha: 0.55)
+            : XkColor.borderMid.withValues(alpha: 0.5));
+
     return SizedBox(
       width: size,
       height: size * 0.75,
       child: CustomPaint(
         painter: _HexagonRadarPainter(
           values: values,
-          color: color,
-          accentColor: accentColor,
+          color: resolvedColor,
+          accentColor: resolvedAccent,
+          gridColor: resolvedGrid,
         ),
       ),
     );
@@ -544,11 +557,13 @@ class _HexagonRadarPainter extends CustomPainter {
     required this.values,
     required this.color,
     required this.accentColor,
+    required this.gridColor,
   });
 
   final List<double> values;
   final Color color;
   final Color accentColor;
+  final Color gridColor;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -557,7 +572,7 @@ class _HexagonRadarPainter extends CustomPainter {
     final rings = [1.0, 0.72, 0.44];
     final gridPaint = Paint()
       ..style = PaintingStyle.stroke
-      ..color = XkColor.borderMid.withValues(alpha: 0.5)
+      ..color = gridColor
       ..strokeWidth = 1;
 
     for (final ratio in rings) {
@@ -633,7 +648,8 @@ class _HexagonRadarPainter extends CustomPainter {
   bool shouldRepaint(covariant _HexagonRadarPainter oldDelegate) {
     return oldDelegate.values != values ||
         oldDelegate.color != color ||
-        oldDelegate.accentColor != accentColor;
+        oldDelegate.accentColor != accentColor ||
+        oldDelegate.gridColor != gridColor;
   }
 }
 

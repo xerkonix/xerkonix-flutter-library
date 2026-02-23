@@ -414,21 +414,6 @@ class _SignalOverviewPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final grid = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1
-      ..color = (isDark ? XkColor.darkBorderSoft : XkColor.borderSoft)
-          .withValues(alpha: 0.9);
-
-    for (var i = 1; i <= 4; i++) {
-      final y = size.height * i / 5;
-      canvas.drawLine(Offset(0, y), Offset(size.width, y), grid);
-    }
-    for (var i = 1; i <= 5; i++) {
-      final x = size.width * i / 6;
-      canvas.drawLine(Offset(x, 0), Offset(x, size.height), grid);
-    }
-
     final engagementPath = _pathFromPoints(_engagement, size);
     final fillPath = Path.from(engagementPath)
       ..lineTo(size.width, size.height)

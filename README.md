@@ -16,9 +16,9 @@ xerkonix-flutter-library/
 ## Packages
 
 ### xerkonix-design-system
-A comprehensive design system package providing themes, typography, colors, shapes, and UI components.
+A comprehensive design system package providing Weave v1.1 themes, typography, color tokens, shape/layout, motion, and UI components.
 
-**Version: v1.0.1**
+**Version: v1.1.0**
 
 ### xerkonix-error-handler
 A package for error and exception handling.

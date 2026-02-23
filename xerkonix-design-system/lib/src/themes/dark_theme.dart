@@ -6,208 +6,241 @@ import '../typography/xerkonix_typography.dart';
 import 'color_schemes/dark_color_scheme.dart';
 import 'xerkonix_theme.dart';
 
-/// Dark Theme
-/// Provides a dark theme with inverted background and structure colors
+/// Dark Theme (XERKONIX DS v1.1)
 class XkDarkTheme extends XkTheme {
   XkDarkTheme._();
 
   static ThemeData themeData = ThemeData(
     useMaterial3: true,
     colorScheme: darkColorScheme,
-
-    // Materiality: High-end Matte Paper
-    scaffoldBackgroundColor: XkColor.structure, // Structure (swapped)
-
-    // Typography - IBM Plex Sans with generous spacing
+    scaffoldBackgroundColor: XkColor.darkCanvas,
     textTheme: TextTheme(
-      displayLarge: XkTypo.largeTitle.copyWith(color: XkColor.canvas),
-      displayMedium: XkTypo.title1.copyWith(color: XkColor.canvas),
-      displaySmall: XkTypo.title2.copyWith(color: XkColor.canvas),
-      headlineLarge: XkTypo.headline.copyWith(color: XkColor.canvas),
-      headlineMedium: XkTypo.title3.copyWith(color: XkColor.canvas),
-      titleLarge: XkTypo.title1.copyWith(color: XkColor.canvas),
-      titleMedium: XkTypo.title2.copyWith(color: XkColor.canvas),
-      titleSmall: XkTypo.title3.copyWith(color: XkColor.canvas),
-      bodyLarge: XkTypo.body.copyWith(color: XkColor.canvas),
-      bodyMedium: XkTypo.body.copyWith(color: XkColor.canvas),
-      bodySmall: XkTypo.caption1.copyWith(color: XkColor.canvas),
-      labelLarge: XkTypo.callout.copyWith(color: XkColor.canvas),
-      labelMedium: XkTypo.footnote.copyWith(color: XkColor.canvas),
-      labelSmall: XkTypo.caption2.copyWith(color: XkColor.canvas),
+      displayLarge: XkTypo.display.copyWith(color: XkColor.darkText),
+      displayMedium: XkTypo.h1.copyWith(color: XkColor.darkText),
+      displaySmall: XkTypo.h2.copyWith(color: XkColor.darkText),
+      headlineLarge: XkTypo.h1.copyWith(color: XkColor.darkText),
+      headlineMedium: XkTypo.h2.copyWith(color: XkColor.darkText),
+      headlineSmall: XkTypo.h3.copyWith(color: XkColor.darkText),
+      titleLarge: XkTypo.h3.copyWith(color: XkColor.darkText),
+      titleMedium: XkTypo.label.copyWith(color: XkColor.darkTextBody),
+      titleSmall: XkTypo.label.copyWith(color: XkColor.darkTextSoft),
+      bodyLarge: XkTypo.bodyLarge.copyWith(color: XkColor.darkTextBody),
+      bodyMedium: XkTypo.body.copyWith(color: XkColor.darkTextBody),
+      bodySmall: XkTypo.label.copyWith(color: XkColor.darkTextSoft),
+      labelLarge: _buttonLabel.copyWith(color: XkColor.darkText),
+      labelMedium: XkTypo.label.copyWith(color: XkColor.darkTextSoft),
+      labelSmall: XkTypo.metaMono.copyWith(color: XkColor.darkTextSoft),
     ),
-
-    // Card Theme - Sophisticated Round (R8-R12)
-    // Dark theme: Slightly brighter color than background (Structure) for distinction
-    cardTheme: const CardThemeData(
-      color: XkColor.darkSurface, // #3A3A3A - Slightly brighter than background
-      elevation: 0, // No shadow for matte paper feel
+    cardTheme: CardThemeData(
+      color: XkColor.darkSurface,
+      elevation: 0,
       shape: RoundedRectangleBorder(
-        borderRadius: XkShape.defaultBorderRadius,
+        borderRadius: XkShape.xlBorderRadius,
+        side: BorderSide(color: XkColor.darkBorderSoft),
       ),
-      margin: EdgeInsets.symmetric(
-        horizontal: XkLayout.spacingMedium,
-        vertical: XkLayout.spacingSmall,
+      margin: const EdgeInsets.symmetric(
+        horizontal: XkLayout.spacingSm,
+        vertical: XkLayout.spacingXs,
       ),
     ),
-
-    // AppBar Theme
-    // On scroll: Structure (#2D2D2D) changes to slightly brighter color
     appBarTheme: AppBarTheme(
-      backgroundColor: XkColor.structure,
-      surfaceTintColor: XkColor.structure.withValues(alpha: 0.95), // Slightly brighter on scroll
-      scrolledUnderElevation: 0.5, // Elevation on scroll
+      backgroundColor: XkColor.darkCanvas,
+      surfaceTintColor: Colors.transparent,
+      scrolledUnderElevation: 0,
       elevation: 0,
       centerTitle: true,
-      titleTextStyle: XkTypo.title2.copyWith(color: XkColor.canvas),
+      titleTextStyle: XkTypo.h3.copyWith(color: XkColor.darkText),
+      iconTheme: const IconThemeData(color: XkColor.darkText),
     ),
-
-    // Button Theme - Sophisticated Round + States (hover, pressed, disabled)
     elevatedButtonTheme: ElevatedButtonThemeData(
-      style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.disabled)) {
-            return XkColor.textDisabled.withValues(alpha: 0.4);
-          }
-          if (states.contains(MaterialState.pressed)) {
-            return XkColor.identity.withValues(alpha: 0.75);
-          }
-          if (states.contains(MaterialState.hovered) ||
-              states.contains(MaterialState.focused)) {
-            return XkColor.identity.withValues(alpha: 0.9);
-          }
-          return XkColor.identity;
-        }),
-        foregroundColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.disabled)) {
-            return XkColor.textDisabled;
-          }
-          return XkColor.canvas; // Canvas text (bright text in dark theme)
-        }),
-        overlayColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.pressed)) {
-            return XkColor.pulse.withValues(alpha: 0.25);
-          }
-          if (states.contains(MaterialState.hovered)) {
-            return XkColor.identity.withValues(alpha: 0.18);
-          }
-          return null;
-        }),
-        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-          RoundedRectangleBorder(
-            borderRadius: XkShape.defaultBorderRadius,
-          ),
-        ),
-        padding: MaterialStateProperty.all<EdgeInsets>(
-          const EdgeInsets.symmetric(
-            horizontal: XkLayout.spacingLarge,
-            vertical: XkLayout.spacingMedium,
-          ),
-        ),
-        elevation: MaterialStateProperty.all<double>(0),
+      style: _elevatedStyle(
+        baseColor: XkColor.darkIdentity,
+        textColor: XkColor.darkCanvas,
+        disabledColor: XkColor.darkTextFaint,
+        disabledTextColor: XkColor.darkSurface,
       ),
     ),
-    
-    // OutlinedButton Theme - Outlined Style (Dark Theme)
-    // Secondary Button: Transparent background with Identity border and text
     outlinedButtonTheme: OutlinedButtonThemeData(
-      style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.disabled)) {
-            return XkColor.textDisabled.withValues(alpha: 0.1);
-          }
-          if (states.contains(MaterialState.pressed)) {
-            return XkColor.identity.withValues(alpha: 0.15);
-          }
-          if (states.contains(MaterialState.hovered) ||
-              states.contains(MaterialState.focused)) {
-            return XkColor.identity.withValues(alpha: 0.08);
-          }
-          return Colors.transparent; // Transparent background
-        }),
-        foregroundColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.disabled)) {
-            return XkColor.textDisabled;
-          }
-          return XkColor.identity; // Identity text
-        }),
-        side: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.disabled)) {
-            return BorderSide(color: XkColor.textDisabled, width: 1);
-          }
-          if (states.contains(MaterialState.pressed)) {
-            return BorderSide(color: XkColor.identity.withValues(alpha: 0.7), width: 1.5);
-          }
-          return BorderSide(color: XkColor.identity, width: 1.5); // Identity border
-        }),
-        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-          RoundedRectangleBorder(
-            borderRadius: XkShape.defaultBorderRadius,
-          ),
-        ),
-        padding: MaterialStateProperty.all<EdgeInsets>(
-          const EdgeInsets.symmetric(
-            horizontal: XkLayout.spacingLarge,
-            vertical: XkLayout.spacingMedium,
-          ),
-        ),
+      style: _outlinedStyle(
+        borderColor: XkColor.darkBorderMid,
+        textColor: XkColor.darkTextBody,
       ),
     ),
-
-    // TextButton Theme - CTA Style (Dark Theme)
-    // CTA: Canvas (#F5F5F5) background with Identity (#C0A062) text
     textButtonTheme: TextButtonThemeData(
-      style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.disabled)) {
-            return XkColor.textDisabled.withValues(alpha: 0.2);
-          }
-          if (states.contains(MaterialState.pressed)) {
-            return XkColor.canvas.withValues(alpha: 0.9);
-          }
-          if (states.contains(MaterialState.hovered) ||
-              states.contains(MaterialState.focused)) {
-            return XkColor.canvas.withValues(alpha: 0.95);
-          }
-          return XkColor.canvas; // Canvas background (bright background in dark theme)
-        }),
-        foregroundColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.disabled)) {
-            return XkColor.textDisabled;
-          }
-          return XkColor.identity; // Muted Gold text
-        }),
-        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-          RoundedRectangleBorder(
-            borderRadius: XkShape.defaultBorderRadius,
-          ),
-        ),
-        padding: MaterialStateProperty.all<EdgeInsets>(
-          const EdgeInsets.symmetric(
-            horizontal: XkLayout.spacingLarge,
-            vertical: XkLayout.spacingMedium,
-          ),
-        ),
+      style: _tonalStyle(
+        backgroundColor: XkColor.darkSurfaceSoft,
+        textColor: XkColor.darkText,
+        borderColor: XkColor.darkBorderMid,
       ),
     ),
-
-    // Input Decoration Theme
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: XkColor.structure,
+      fillColor: XkColor.darkSurface,
+      hintStyle: XkTypo.metaMono.copyWith(color: XkColor.darkTextSoft),
       border: OutlineInputBorder(
-        borderRadius: XkShape.defaultBorderRadius,
-        borderSide: BorderSide(color: XkColor.canvas.withValues(alpha: 0.2)),
+        borderRadius: XkShape.smBorderRadius,
+        borderSide: BorderSide(color: XkColor.darkBorderMid),
       ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: XkShape.defaultBorderRadius,
-        borderSide: BorderSide(color: XkColor.canvas.withValues(alpha: 0.2)),
+        borderRadius: XkShape.smBorderRadius,
+        borderSide: BorderSide(color: XkColor.darkBorderMid),
       ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: XkShape.defaultBorderRadius,
-        borderSide: BorderSide(color: XkColor.identity, width: 2),
+        borderRadius: XkShape.smBorderRadius,
+        borderSide: const BorderSide(color: XkColor.darkIdentity, width: 1.5),
       ),
-      contentPadding: const EdgeInsets.all(XkLayout.spacingMedium),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
     ),
+    dividerColor: XkColor.darkBorderSoft,
   );
-}
 
+  static final TextStyle _buttonLabel = XkTypo.label.copyWith(
+    fontSize: 13,
+    fontWeight: FontWeight.w500,
+    height: 1.15,
+  );
+
+  static ButtonStyle _elevatedStyle({
+    required Color baseColor,
+    required Color textColor,
+    required Color disabledColor,
+    required Color disabledTextColor,
+  }) {
+    return ButtonStyle(
+      textStyle: WidgetStateProperty.all(_buttonLabel),
+      padding: WidgetStateProperty.all(
+        const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
+      ),
+      minimumSize: WidgetStateProperty.all(const Size(0, 36)),
+      shape: WidgetStateProperty.all(
+        RoundedRectangleBorder(borderRadius: XkShape.smBorderRadius),
+      ),
+      side: WidgetStateProperty.all(BorderSide.none),
+      backgroundColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.disabled)) {
+          return disabledColor;
+        }
+        if (states.contains(WidgetState.pressed)) {
+          return baseColor.withValues(alpha: 0.9);
+        }
+        if (states.contains(WidgetState.hovered) ||
+            states.contains(WidgetState.focused)) {
+          return baseColor.withValues(alpha: 0.96);
+        }
+        return baseColor;
+      }),
+      foregroundColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.disabled)) {
+          return disabledTextColor;
+        }
+        return textColor;
+      }),
+      overlayColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.pressed)) {
+          return XkColor.darkCanvas.withValues(alpha: 0.16);
+        }
+        if (states.contains(WidgetState.hovered)) {
+          return XkColor.darkCanvas.withValues(alpha: 0.1);
+        }
+        return null;
+      }),
+      elevation: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.hovered)) {
+          return 3;
+        }
+        return 0;
+      }),
+      shadowColor: WidgetStateProperty.all(const Color(0x73000000)),
+    );
+  }
+
+  static ButtonStyle _outlinedStyle({
+    required Color borderColor,
+    required Color textColor,
+  }) {
+    return ButtonStyle(
+      textStyle: WidgetStateProperty.all(_buttonLabel),
+      padding: WidgetStateProperty.all(
+        const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
+      ),
+      minimumSize: WidgetStateProperty.all(const Size(0, 36)),
+      shape: WidgetStateProperty.all(
+        RoundedRectangleBorder(borderRadius: XkShape.smBorderRadius),
+      ),
+      side: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.disabled)) {
+          return BorderSide(color: borderColor.withValues(alpha: 0.5));
+        }
+        if (states.contains(WidgetState.pressed)) {
+          return BorderSide(color: borderColor.withValues(alpha: 0.9));
+        }
+        return BorderSide(color: borderColor);
+      }),
+      backgroundColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.pressed)) {
+          return XkColor.darkSurfaceDeep;
+        }
+        if (states.contains(WidgetState.hovered)) {
+          return XkColor.darkSurface.withValues(alpha: 0.85);
+        }
+        return Colors.transparent;
+      }),
+      foregroundColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.disabled)) {
+          return textColor.withValues(alpha: 0.5);
+        }
+        return textColor;
+      }),
+      elevation: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.hovered)) {
+          return 3;
+        }
+        return 0;
+      }),
+      shadowColor: WidgetStateProperty.all(const Color(0x66000000)),
+    );
+  }
+
+  static ButtonStyle _tonalStyle({
+    required Color backgroundColor,
+    required Color textColor,
+    required Color borderColor,
+  }) {
+    return ButtonStyle(
+      textStyle: WidgetStateProperty.all(_buttonLabel),
+      padding: WidgetStateProperty.all(
+        const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
+      ),
+      minimumSize: WidgetStateProperty.all(const Size(0, 36)),
+      shape: WidgetStateProperty.all(
+        RoundedRectangleBorder(borderRadius: XkShape.smBorderRadius),
+      ),
+      side: WidgetStateProperty.all(BorderSide(color: borderColor)),
+      backgroundColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.disabled)) {
+          return backgroundColor.withValues(alpha: 0.5);
+        }
+        if (states.contains(WidgetState.pressed)) {
+          return XkColor.darkSurfaceDeep;
+        }
+        if (states.contains(WidgetState.hovered)) {
+          return XkColor.darkSurfaceSoft.withValues(alpha: 0.9);
+        }
+        return backgroundColor;
+      }),
+      foregroundColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.disabled)) {
+          return textColor.withValues(alpha: 0.45);
+        }
+        return textColor;
+      }),
+      elevation: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.hovered)) {
+          return 3;
+        }
+        return 0;
+      }),
+      shadowColor: WidgetStateProperty.all(const Color(0x66000000)),
+    );
+  }
+}

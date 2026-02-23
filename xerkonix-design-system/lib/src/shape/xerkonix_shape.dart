@@ -1,48 +1,68 @@
 import 'package:flutter/material.dart';
 
-/// Shape & Layout System
-/// Sophisticated Round - 유치하지 않은 부드러움을 유지합니다.
+/// Shape tokens from XERKONIX Design System v1.1
 class XkShape {
   XkShape._();
 
-  /// Corner Radius: R8 ~ R12
-  /// 유치하지 않은 부드러움을 유지합니다.
-  static const double radiusSmall = 8.0;
-  static const double radiusMedium = 10.0;
-  static const double radiusLarge = 12.0;
+  static const double radiusXs = 6.0;
+  static const double radiusSm = 10.0;
+  static const double radiusMd = 14.0;
+  static const double radiusLg = 20.0;
+  static const double radiusXl = 26.0;
+  static const double radiusFull = 999.0;
 
-  /// 기본 Border Radius (R10)
-  static const BorderRadius defaultBorderRadius = BorderRadius.all(Radius.circular(10.0));
-  
-  /// 작은 Border Radius (R8)
-  static const BorderRadius smallBorderRadius = BorderRadius.all(Radius.circular(8.0));
-  
-  /// 큰 Border Radius (R12)
-  static const BorderRadius largeBorderRadius = BorderRadius.all(Radius.circular(12.0));
+  static const BorderRadius xsBorderRadius =
+      BorderRadius.all(Radius.circular(radiusXs));
+  static const BorderRadius smBorderRadius =
+      BorderRadius.all(Radius.circular(radiusSm));
+  static const BorderRadius mdBorderRadius =
+      BorderRadius.all(Radius.circular(radiusMd));
+  static const BorderRadius lgBorderRadius =
+      BorderRadius.all(Radius.circular(radiusLg));
+  static const BorderRadius xlBorderRadius =
+      BorderRadius.all(Radius.circular(radiusXl));
+  static const BorderRadius fullBorderRadius =
+      BorderRadius.all(Radius.circular(radiusFull));
+
+  // Backward-compatible aliases
+  static const double radiusSmall = radiusSm;
+  static const double radiusMedium = radiusMd;
+  static const double radiusLarge = radiusLg;
+
+  static const BorderRadius defaultBorderRadius = smBorderRadius;
+  static const BorderRadius smallBorderRadius = xsBorderRadius;
+  static const BorderRadius largeBorderRadius = mdBorderRadius;
 }
 
-/// Layout System
-/// "여백이 곧 콘텐츠" - 시집을 읽는 듯한 넉넉한 행간과 자간
+/// Layout tokens from XERKONIX Design System v1.1
 class XkLayout {
   XkLayout._();
 
-  /// 넉넉한 여백 (시집을 읽는 듯한 느낌)
-  static const double spacingExtraLarge = 32.0;
-  static const double spacingLarge = 24.0;
-  static const double spacingMedium = 16.0;
-  static const double spacingSmall = 12.0;
-  static const double spacingExtraSmall = 8.0;
+  static const double gridMax = 1400.0;
+  static const double sidebarWidth = 220.0;
 
-  /// 행간 (Line Height) - 넉넉한 간격
+  static const double spacingXxs = 4.0;
+  static const double spacingXs = 8.0;
+  static const double spacingSm = 10.0;
+  static const double spacingMd = 16.0;
+  static const double spacingLg = 20.0;
+  static const double spacingXl = 24.0;
+  static const double spacing2xl = 32.0;
+
+  // Backward-compatible aliases
+  static const double spacingExtraLarge = spacing2xl;
+  static const double spacingLarge = spacingXl;
+  static const double spacingMedium = spacingMd;
+  static const double spacingSmall = spacingSm;
+  static const double spacingExtraSmall = spacingXs;
+
   static const double lineHeightTight = 1.2;
-  static const double lineHeightNormal = 1.5;
+  static const double lineHeightNormal = 1.6;
   static const double lineHeightRelaxed = 1.75;
   static const double lineHeightLoose = 2.0;
 
-  /// 자간 (Letter Spacing) - 시집을 읽는 듯한 느낌
-  static const double letterSpacingTight = -0.5;
+  static const double letterSpacingTight = -0.2;
   static const double letterSpacingNormal = 0.0;
-  static const double letterSpacingWide = 0.5;
-  static const double letterSpacingWider = 1.0;
+  static const double letterSpacingWide = 0.2;
+  static const double letterSpacingWider = 0.6;
 }
-

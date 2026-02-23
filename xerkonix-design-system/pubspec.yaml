@@ -1,6 +1,6 @@
 name: xerkonix_design_system
-description: Flutter design system with colors, typography, and themes.
-version: 1.0.1
+description: Flutter design system package for XERKONIX Weave UI tokens, themes, typography, and components.
+version: 1.1.0
 repository: https://github.com/xerkonix/xerkonix-flutter-library/tree/main/xerkonix-design-system
 issue_tracker: https://github.com/xerkonix/xerkonix-flutter-library/issues
 

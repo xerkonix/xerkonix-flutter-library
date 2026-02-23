@@ -23,20 +23,31 @@ class _FontWeight {
 }
 
 class _FontSize {
-  /// Apple Font Size
-  final double largeTitle = 34;
-  final double title1 = 28;
-  final double title2 = 22;
-  final double title3 = 20;
-  final double headline = 17;
-  final double body = 17;
-  final double callout = 16;
-  final double subhead = 15;
-  final double footnote = 13;
+  // XERKONIX DS v1.1 scale
+  final double displayMin = 32;
+  final double displayMax = 52;
+  final double h1Min = 26;
+  final double h1Max = 38;
+  final double h2 = 28;
+  final double h3 = 22;
+  final double bodyLarge = 17;
+  final double body = 14;
+  final double label = 12;
+  final double meta = 11;
+
+  // Apple alias mapping (backward compatibility)
+  final double largeTitle = 52;
+  final double title1 = 38;
+  final double title2 = 28;
+  final double title3 = 22;
+  final double headline = 22;
+  final double callout = 14;
+  final double subhead = 14;
+  final double footnote = 12;
   final double caption1 = 12;
   final double caption2 = 11;
 
-  /// Material Font Size
+  // Material aliases
   final double displayLarge = 57;
   final double displayMedium = 45;
   final double displaySmall = 36;
@@ -49,7 +60,6 @@ class _FontSize {
   final double labelLarge = 14;
   final double labelMedium = 12;
   final double labelSmall = 11;
-  final double bodyLarge = 16;
   final double bodyMedium = 14;
   final double bodySmall = 12;
 }

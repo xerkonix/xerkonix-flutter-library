@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.1.0
+
+### Added
+- Added XERKONIX DS v1.1 button variants: `brand`, `accent`, `tonal`, and `outline`
+- Added v1.1 token families for light/dark colors, borders, and motion timings
+- Added reduced-motion handling for motion widgets
+
+### Changed
+- Updated `XkColor` palette to align with `weave` design system v1.1 references
+- Updated light/dark color schemes to v1.1 token mapping
+- Updated `XkLightTheme` and `XkDarkTheme` defaults (typography, form, and button styling)
+- Updated typography scale (`display/h1/h2/h3/body/label/meta`) to v1.1
+- Fixed package font style declarations to use correct package names
+- Kept backward-compatible aliases for legacy color and typography APIs
+
 ## 1.0.1
 
 ### Changes

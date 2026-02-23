@@ -1,148 +1,116 @@
 # xerkonix_design_system
 
-A comprehensive design system package for Flutter applications, providing consistent colors, typography, themes, shapes, and motion components based on the Visual Identity System with warm intelligence and minimal design philosophy.
+Flutter design system package for XERKONIX products.
 
-## Features
-
-- 🎨 **Color Palette**: Visual Identity System colors with warm intelligence (Canvas, Structure, Identity, Pulse, and semantic colors)
-- 📝 **Typography**: IBM Plex Sans as main font with NotoSansKR fallback, supporting Material Design 3 (M3Typo) and Human Interface Guidelines (HIGTypo) typography systems
-- 🌓 **Theme Support**: Light and dark theme compatibility with automatic text color inversion
-- 📐 **Shape & Layout**: Consistent corner radius (8px ~ 12px) and spacing system
-- ✨ **Motion**: Breathing Light animation for loading states
-- 📱 **Platform Support**: Full support for all Flutter platforms
+This package provides a reusable token and component layer aligned with the Weave design references (`v1.1`), including colors, typography, themes, shape/layout tokens, motion presets, and button variants.
 
 ## Version
 
-Current version: **1.0.1**
+Current version: **1.1.0**
 
-## Getting Started
+## Installation
 
-### Installation
-
-Add this to your package's `pubspec.yaml` file:
+Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  xerkonix_design_system: ^1.0.1
+  xerkonix_design_system: ^1.1.0
 ```
 
-### Requirements
+Requirements:
 
 - Dart SDK: `>=3.5.0 <4.0.0`
 - Flutter: `>=3.24.0`
 
-## Usage
-
-### Colors
+## Quick Start
 
 ```dart
+import 'package:flutter/material.dart';
 import 'package:xerkonix_design_system/xerkonix_design_system.dart';
 
-// Use Visual Identity System colors
-Container(
-  color: XkColor.canvas,  // Warm Off-white background
-  child: Text(
-    'Deep Charcoal Text',
-    style: TextStyle(color: XkColor.structure),  // Deep Charcoal
-  ),
-);
+class App extends StatelessWidget {
+  const App({super.key});
 
-// Brand colors
-Container(
-  color: XkColor.identity,  // Muted Gold
-  child: Text('Trust', style: TextStyle(color: XkColor.canvas)),
-);
-
-// Semantic colors
-Text('Success', style: TextStyle(color: XkColor.success));
-Text('Warning', style: TextStyle(color: XkColor.warning));
-Text('Error', style: TextStyle(color: XkColor.error));
-Text('Info', style: TextStyle(color: XkColor.info));
-```
-
-### Typography
-
-```dart
-import 'package:xerkonix_design_system/xerkonix_design_system.dart';
-
-// XkTypo - Main typography system (IBM Plex Sans)
-Text('Large Title', style: XkTypo.largeTitle);
-Text('Title 1', style: XkTypo.title1);
-Text('Body Text', style: XkTypo.body);
-
-// Material Design 3 Typography
-Text('Title Large', style: M3Typo.titleLarge);
-Text('Body Medium', style: M3Typo.bodyMedium);
-
-// Human Interface Guidelines Typography
-Text('Title 1', style: HIGTypo.title1);
-Text('Body', style: HIGTypo.body);
-```
-
-### Themes
-
-```dart
-import 'package:xerkonix_design_system/xerkonix_design_system.dart';
-
-// Light theme
-MaterialApp(
-  theme: lightTheme,
-  home: MyHomePage(),
-);
-
-// Dark theme (automatic text color inversion)
-MaterialApp(
-  theme: darkTheme,
-  darkTheme: darkTheme,
-  home: MyHomePage(),
-);
-```
-
-### Shape & Layout
-
-```dart
-import 'package:xerkonix_design_system/xerkonix_design_system.dart';
-
-// Corner radius
-Container(
-  decoration: BoxDecoration(
-    borderRadius: BorderRadius.circular(XkShape.cornerRadius),
-    color: XkColor.surface,
-  ),
-);
-
-// Spacing
-Padding(
-  padding: EdgeInsets.all(XkLayout.spacing),
-  child: Text('Content'),
-);
-```
-
-### Motion
-
-```dart
-import 'package:xerkonix_design_system/xerkonix_design_system.dart';
-
-// Breathing Light animation for loading states
-AnimatedBuilder(
-  animation: XkMotion.breathingLight,
-  builder: (context, child) {
-    return Container(
-      color: XkColor.identity.withOpacity(
-        XkMotion.breathingLight.value,
-      ),
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: XkLightTheme.themeData,
+      darkTheme: XkDarkTheme.themeData,
+      home: const Scaffold(),
     );
-  },
+  }
+}
+```
+
+## Color Tokens
+
+```dart
+Container(
+  color: XkColor.canvas,
+  child: Text(
+    'Weave v1.1',
+    style: TextStyle(color: XkColor.text),
+  ),
+);
+
+final brand = XkColor.identity;
+final accent = XkColor.action;
+final signal = XkColor.signal;
+```
+
+Main token groups:
+
+- Surface: `canvas`, `surface`, `surfaceSoft`, `surfaceDeep`
+- Text: `text`, `textBody`, `textSoft`, `textFaint`
+- Brand/Accent: `identity`, `action`, `signal`
+- Semantic: `success`, `warning`, `error`, `info`
+- Dark overrides: `dark*` token set
+
+Legacy names from `1.0.x` are still available as aliases for compatibility.
+
+## Typography
+
+```dart
+Text('Display', style: XkTypo.display);
+Text('Heading', style: XkTypo.h2);
+Text('Body', style: XkTypo.body);
+Text('Label', style: XkTypo.label);
+Text('Meta', style: XkTypo.metaMono);
+```
+
+`XkTypo.title1`, `XkTypo.body`, `HIGTypo`, and `M3Typo` remain available.
+
+## Button Variants
+
+```dart
+Wrap(
+  spacing: 8,
+  children: [
+    XkButton.primary(onPressed: () {}, child: const Text('Primary')),
+    XkButton.brand(onPressed: () {}, child: const Text('Brand')),
+    XkButton.accent(onPressed: () {}, child: const Text('Accent')),
+    XkButton.tonal(onPressed: () {}, child: const Text('Tonal')),
+    XkButton.outline(onPressed: () {}, child: const Text('Outline')),
+  ],
 );
 ```
 
-## Design Philosophy
+Backward-compatible constructors (`outlined`, `success`, `warning`, `error`, `info`) are still supported.
 
-- **Warm Intelligence**: 차가운 디지털 화면이 아닌, '따뜻한 미색 종이 위에 깊은 먹색 잉크로 쓴 기록' 같은 느낌
-- **Minimal & Deep**: 불필요한 장식을 배제하고, 여백을 통해 지적인 깊이감 표현
-- **No Generic Tech Look**: 파란색 계열 사용 금지, 순백색 배경 지양
+## Motion
 
-## Additional Information
+```dart
+XkMotion.breathingLight(
+  child: const Icon(Icons.bolt),
+);
 
-- Version: v1.0.1
-- License: Apache License 2.0 (see [LICENSE](LICENSE) file)
+XkMotion.pulse(
+  child: const Icon(Icons.notifications),
+);
+```
+
+Motion defaults follow v1.1 timing tokens, and reduced-motion settings are respected.
+
+## License
+
+Apache License 2.0. See `LICENSE`.

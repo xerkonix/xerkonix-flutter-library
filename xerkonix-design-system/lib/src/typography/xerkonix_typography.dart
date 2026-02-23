@@ -2,473 +2,381 @@ import 'package:flutter/painting.dart';
 
 import 'typo_constants.dart';
 
-/// XkTypo - Main Typography System
-/// Provides generous line height and letter spacing for comfortable reading.
+/// XERKONIX DS v1.1 typography
+///
+/// Scale:
+/// - display 52 / 700
+/// - h1 38 / 700
+/// - h2 28 / 700
+/// - h3 22 / 600
+/// - bodyLarge 17 / 400
+/// - body 14 / 400
+/// - label 12 / 600
+/// - metaMono 11 / 500
 class XkTypo {
   XkTypo._();
 
-  // Typography Rules: IBM Plex Sans
-  // Letter spacing: -0.01em ~ -0.02em for a solid impression
-  // Line height: 150% or more for comfortable reading
-  static const double _lineHeight = 1.5; // 150% or more
-  static const double _letterSpacing = -0.015; // -0.01em ~ -0.02em
+  static const List<String> _sansFallback = [
+    NotoSansKR.fontFamily,
+    AppleSDGothicNeo.fontFamily,
+    Roboto.fontFamily,
+  ];
 
-  // Colors are set in ThemeData's textTheme, so null here
-  // Light theme: Structure (#2D2D2D) / Body Text (#4A4A4A)
-  // Dark theme: Canvas (#F5F5F5) automatically inverted
-  static final TextStyle largeTitle = TextStyle(
+  static TextStyle _sans({
+    required double size,
+    required FontWeight weight,
+    required double height,
+    double letterSpacing = 0,
+  }) {
+    return TextStyle(
       fontFamily: IBMPlexSans.fontFamily,
-      fontFamilyFallback: const [NotoSansKR.fontFamily],
-      fontSize: TypoConst.fontSize.largeTitle,
-      fontWeight: TypoConst.fontWeight.regular,
-      height: _lineHeight,
-      letterSpacing: _letterSpacing);
+      package: IBMPlexSans.package,
+      fontFamilyFallback: _sansFallback,
+      fontSize: size,
+      fontWeight: weight,
+      height: height,
+      letterSpacing: letterSpacing,
+    );
+  }
 
-  static final TextStyle title1 = TextStyle(
-      fontFamily: IBMPlexSans.fontFamily,
-      fontFamilyFallback: const [NotoSansKR.fontFamily],
-      fontSize: TypoConst.fontSize.title1,
-      fontWeight: TypoConst.fontWeight.regular,
-      height: _lineHeight,
-      letterSpacing: _letterSpacing);
+  static TextStyle _mono({
+    required double size,
+    required FontWeight weight,
+    required double height,
+    double letterSpacing = 0,
+  }) {
+    return TextStyle(
+      fontFamily: 'RobotoMono',
+      fontFamilyFallback: const [Roboto.fontFamily],
+      fontSize: size,
+      fontWeight: weight,
+      height: height,
+      letterSpacing: letterSpacing,
+    );
+  }
 
-  static final TextStyle title2 = TextStyle(
-      fontFamily: IBMPlexSans.fontFamily,
-      fontFamilyFallback: const [NotoSansKR.fontFamily],
-      fontSize: TypoConst.fontSize.title2,
-      fontWeight: TypoConst.fontWeight.regular,
-      height: _lineHeight,
-      letterSpacing: _letterSpacing);
+  // v1.1 canonical styles
+  static final TextStyle display = _sans(
+    size: TypoConst.fontSize.displayMax,
+    weight: TypoConst.fontWeight.bold,
+    height: 1.15,
+    letterSpacing: -0.4,
+  );
 
-  static final TextStyle title3 = TextStyle(
-      fontFamily: IBMPlexSans.fontFamily,
-      fontFamilyFallback: const [NotoSansKR.fontFamily],
-      fontSize: TypoConst.fontSize.title3,
-      fontWeight: TypoConst.fontWeight.regular,
-      height: _lineHeight,
-      letterSpacing: _letterSpacing);
+  static final TextStyle h1 = _sans(
+    size: TypoConst.fontSize.h1Max,
+    weight: TypoConst.fontWeight.bold,
+    height: 1.18,
+    letterSpacing: -0.2,
+  );
 
-  static final TextStyle headline = TextStyle(
-      fontFamily: IBMPlexSans.fontFamily,
-      fontFamilyFallback: const [NotoSansKR.fontFamily],
-      fontSize: TypoConst.fontSize.headline,
-      fontWeight: TypoConst.fontWeight.semiBold,
-      height: _lineHeight,
-      letterSpacing: _letterSpacing);
+  static final TextStyle h2 = _sans(
+    size: TypoConst.fontSize.h2,
+    weight: TypoConst.fontWeight.bold,
+    height: 1.24,
+    letterSpacing: -0.1,
+  );
 
-  static final TextStyle body = TextStyle(
-      fontFamily: IBMPlexSans.fontFamily,
-      fontFamilyFallback: const [NotoSansKR.fontFamily],
-      fontSize: TypoConst.fontSize.body,
-      fontWeight: TypoConst.fontWeight.regular,
-      height: _lineHeight,
-      letterSpacing: _letterSpacing);
+  static final TextStyle h3 = _sans(
+    size: TypoConst.fontSize.h3,
+    weight: TypoConst.fontWeight.semiBold,
+    height: 1.3,
+  );
 
-  static final TextStyle callout = TextStyle(
-      fontFamily: IBMPlexSans.fontFamily,
-      fontFamilyFallback: const [NotoSansKR.fontFamily],
-      fontSize: TypoConst.fontSize.callout,
-      fontWeight: TypoConst.fontWeight.regular,
-      height: _lineHeight,
-      letterSpacing: _letterSpacing);
+  static final TextStyle bodyLarge = _sans(
+    size: TypoConst.fontSize.bodyLarge,
+    weight: TypoConst.fontWeight.regular,
+    height: 1.6,
+  );
 
-  static final TextStyle subhead = TextStyle(
-      fontFamily: IBMPlexSans.fontFamily,
-      fontFamilyFallback: const [NotoSansKR.fontFamily],
-      fontSize: TypoConst.fontSize.subhead,
-      fontWeight: TypoConst.fontWeight.regular,
-      height: _lineHeight,
-      letterSpacing: _letterSpacing);
+  static final TextStyle body = _sans(
+    size: TypoConst.fontSize.body,
+    weight: TypoConst.fontWeight.regular,
+    height: 1.6,
+  );
 
-  static final TextStyle footnote = TextStyle(
-      fontFamily: IBMPlexSans.fontFamily,
-      fontFamilyFallback: const [NotoSansKR.fontFamily],
-      fontSize: TypoConst.fontSize.footnote,
-      fontWeight: TypoConst.fontWeight.regular,
-      height: _lineHeight,
-      letterSpacing: _letterSpacing);
+  static final TextStyle label = _sans(
+    size: TypoConst.fontSize.label,
+    weight: TypoConst.fontWeight.semiBold,
+    height: 1.32,
+  );
 
-  static final TextStyle caption1 = TextStyle(
-      fontFamily: IBMPlexSans.fontFamily,
-      fontFamilyFallback: const [NotoSansKR.fontFamily],
-      fontSize: TypoConst.fontSize.caption1,
-      fontWeight: TypoConst.fontWeight.regular,
-      height: _lineHeight,
-      letterSpacing: _letterSpacing);
+  static final TextStyle metaMono = _mono(
+    size: TypoConst.fontSize.meta,
+    weight: TypoConst.fontWeight.medium,
+    height: 1.3,
+    letterSpacing: 0.2,
+  );
 
-  static final TextStyle caption2 = TextStyle(
-      fontFamily: IBMPlexSans.fontFamily,
-      fontFamilyFallback: const [NotoSansKR.fontFamily],
-      fontSize: TypoConst.fontSize.caption2,
-      fontWeight: TypoConst.fontWeight.regular,
-      height: _lineHeight,
-      letterSpacing: _letterSpacing);
+  // Backward-compatible aliases
+  static TextStyle get largeTitle => display;
+  static TextStyle get title1 => h1;
+  static TextStyle get title2 => h2;
+  static TextStyle get title3 => h3;
+  static TextStyle get headline => h3;
+  static TextStyle get callout => body;
+  static TextStyle get subhead => body;
+  static TextStyle get footnote => label;
+  static TextStyle get caption1 => label;
+  static TextStyle get caption2 => metaMono;
 }
 
 class HIGTypo {
   HIGTypo._();
 
-  static final TextStyle largeTitle = TextStyle(
-      fontFamily: IBMPlexSans.fontFamily,
-      fontFamilyFallback: const [NotoSansKR.fontFamily],
-      fontSize: TypoConst.fontSize.largeTitle,
-      fontWeight: TypoConst.fontWeight.regular);
-  static final TextStyle title1 = TextStyle(
-      fontFamily: IBMPlexSans.fontFamily,
-      fontFamilyFallback: const [NotoSansKR.fontFamily],
-      fontSize: TypoConst.fontSize.title1,
-      fontWeight: TypoConst.fontWeight.regular);
-  static final TextStyle title2 = TextStyle(
-      fontFamily: IBMPlexSans.fontFamily,
-      fontFamilyFallback: const [NotoSansKR.fontFamily],
-      fontSize: TypoConst.fontSize.title2,
-      fontWeight: TypoConst.fontWeight.regular);
-  static final TextStyle title3 = TextStyle(
-      fontFamily: IBMPlexSans.fontFamily,
-      fontFamilyFallback: const [NotoSansKR.fontFamily],
-      fontSize: TypoConst.fontSize.title3,
-      fontWeight: TypoConst.fontWeight.regular);
-  static final TextStyle headline = TextStyle(
-      fontFamily: IBMPlexSans.fontFamily,
-      fontFamilyFallback: const [NotoSansKR.fontFamily],
-      fontSize: TypoConst.fontSize.headline,
-      fontWeight: TypoConst.fontWeight.semiBold);
-  static final TextStyle body = TextStyle(
-      fontFamily: IBMPlexSans.fontFamily,
-      fontFamilyFallback: const [NotoSansKR.fontFamily],
-      fontSize: TypoConst.fontSize.body,
-      fontWeight: TypoConst.fontWeight.regular);
-  static final TextStyle callout = TextStyle(
-      fontFamily: IBMPlexSans.fontFamily,
-      fontFamilyFallback: const [NotoSansKR.fontFamily],
-      fontSize: TypoConst.fontSize.callout,
-      fontWeight: TypoConst.fontWeight.regular);
-  static final TextStyle subhead = TextStyle(
-      fontFamily: IBMPlexSans.fontFamily,
-      fontFamilyFallback: const [NotoSansKR.fontFamily],
-      fontSize: TypoConst.fontSize.subhead,
-      fontWeight: TypoConst.fontWeight.regular);
-  static final TextStyle footnote = TextStyle(
-      fontFamily: IBMPlexSans.fontFamily,
-      fontFamilyFallback: const [NotoSansKR.fontFamily],
-      fontSize: TypoConst.fontSize.footnote,
-      fontWeight: TypoConst.fontWeight.regular);
-  static final TextStyle caption1 = TextStyle(
-      fontFamily: IBMPlexSans.fontFamily,
-      fontFamilyFallback: const [NotoSansKR.fontFamily],
-      fontSize: TypoConst.fontSize.caption1,
-      fontWeight: TypoConst.fontWeight.regular);
-  static final TextStyle caption2 = TextStyle(
-      fontFamily: IBMPlexSans.fontFamily,
-      fontFamilyFallback: const [NotoSansKR.fontFamily],
-      fontSize: TypoConst.fontSize.caption2,
-      fontWeight: TypoConst.fontWeight.regular);
+  static TextStyle get largeTitle => XkTypo.largeTitle;
+  static TextStyle get title1 => XkTypo.title1;
+  static TextStyle get title2 => XkTypo.title2;
+  static TextStyle get title3 => XkTypo.title3;
+  static TextStyle get headline => XkTypo.headline;
+  static TextStyle get body => XkTypo.body;
+  static TextStyle get callout => XkTypo.callout;
+  static TextStyle get subhead => XkTypo.subhead;
+  static TextStyle get footnote => XkTypo.footnote;
+  static TextStyle get caption1 => XkTypo.caption1;
+  static TextStyle get caption2 => XkTypo.caption2;
 }
 
 class M3Typo {
   M3Typo._();
 
-  static final TextStyle displayLarge = TextStyle(
+  static TextStyle _m3(double size, FontWeight weight) {
+    return TextStyle(
       fontFamily: IBMPlexSans.fontFamily,
-      fontFamilyFallback: const [NotoSansKR.fontFamily],
-      fontSize: TypoConst.fontSize.displayLarge,
-      fontWeight: TypoConst.fontWeight.regular);
-  static final TextStyle displayMedium = TextStyle(
-      fontFamily: IBMPlexSans.fontFamily,
-      fontFamilyFallback: const [NotoSansKR.fontFamily],
-      fontSize: TypoConst.fontSize.displayMedium,
-      fontWeight: TypoConst.fontWeight.regular);
-  static final TextStyle displaySmall = TextStyle(
-      fontFamily: IBMPlexSans.fontFamily,
-      fontFamilyFallback: const [NotoSansKR.fontFamily],
-      fontSize: TypoConst.fontSize.displaySmall,
-      fontWeight: TypoConst.fontWeight.regular);
-  static final TextStyle headlineLarge = TextStyle(
-      fontFamily: IBMPlexSans.fontFamily,
-      fontFamilyFallback: const [NotoSansKR.fontFamily],
-      fontSize: TypoConst.fontSize.headlineLarge,
-      fontWeight: TypoConst.fontWeight.regular);
-  static final TextStyle headlineMedium = TextStyle(
-      fontFamily: IBMPlexSans.fontFamily,
-      fontFamilyFallback: const [NotoSansKR.fontFamily],
-      fontSize: TypoConst.fontSize.headlineMedium,
-      fontWeight: TypoConst.fontWeight.regular);
-  static final TextStyle headlineSmall = TextStyle(
-      fontFamily: IBMPlexSans.fontFamily,
-      fontFamilyFallback: const [NotoSansKR.fontFamily],
-      fontSize: TypoConst.fontSize.headlineSmall,
-      fontWeight: TypoConst.fontWeight.regular);
-  static final TextStyle titleLarge = TextStyle(
-      fontFamily: IBMPlexSans.fontFamily,
-      fontFamilyFallback: const [NotoSansKR.fontFamily],
-      fontSize: TypoConst.fontSize.titleLarge,
-      fontWeight: TypoConst.fontWeight.regular);
-  static final TextStyle titleMedium = TextStyle(
-      fontFamily: IBMPlexSans.fontFamily,
-      fontFamilyFallback: const [NotoSansKR.fontFamily],
-      fontSize: TypoConst.fontSize.titleMedium,
-      fontWeight: TypoConst.fontWeight.medium);
-  static final TextStyle titleSmall = TextStyle(
-      fontFamily: IBMPlexSans.fontFamily,
-      fontFamilyFallback: const [NotoSansKR.fontFamily],
-      fontSize: TypoConst.fontSize.titleSmall,
-      fontWeight: TypoConst.fontWeight.medium);
-  static final TextStyle labelLarge = TextStyle(
-      fontFamily: IBMPlexSans.fontFamily,
-      fontFamilyFallback: const [NotoSansKR.fontFamily],
-      fontSize: TypoConst.fontSize.labelLarge,
-      fontWeight: TypoConst.fontWeight.medium);
-  static final TextStyle labelMedium = TextStyle(
-      fontFamily: IBMPlexSans.fontFamily,
-      fontFamilyFallback: const [NotoSansKR.fontFamily],
-      fontSize: TypoConst.fontSize.labelMedium,
-      fontWeight: TypoConst.fontWeight.medium);
-  static final TextStyle labelSmall = TextStyle(
-      fontFamily: IBMPlexSans.fontFamily,
-      fontFamilyFallback: const [NotoSansKR.fontFamily],
-      fontSize: TypoConst.fontSize.labelSmall,
-      fontWeight: TypoConst.fontWeight.medium);
-  static final TextStyle bodyLarge = TextStyle(
-      fontFamily: IBMPlexSans.fontFamily,
-      fontFamilyFallback: const [NotoSansKR.fontFamily],
-      fontSize: TypoConst.fontSize.bodyLarge,
-      fontWeight: TypoConst.fontWeight.regular);
-  static final TextStyle bodyMedium = TextStyle(
-      fontFamily: IBMPlexSans.fontFamily,
-      fontFamilyFallback: const [NotoSansKR.fontFamily],
-      fontSize: TypoConst.fontSize.bodyMedium,
-      fontWeight: TypoConst.fontWeight.medium);
-  static final TextStyle bodySmall = TextStyle(
-      fontFamily: IBMPlexSans.fontFamily,
-      fontFamilyFallback: const [NotoSansKR.fontFamily],
-      fontSize: TypoConst.fontSize.bodySmall,
-      fontWeight: TypoConst.fontWeight.regular);
+      package: IBMPlexSans.package,
+      fontFamilyFallback: const [NotoSansKR.fontFamily, Roboto.fontFamily],
+      fontSize: size,
+      fontWeight: weight,
+      height: 1.5,
+    );
+  }
+
+  static TextStyle get displayLarge =>
+      _m3(TypoConst.fontSize.displayLarge, TypoConst.fontWeight.regular);
+  static TextStyle get displayMedium =>
+      _m3(TypoConst.fontSize.displayMedium, TypoConst.fontWeight.regular);
+  static TextStyle get displaySmall =>
+      _m3(TypoConst.fontSize.displaySmall, TypoConst.fontWeight.regular);
+  static TextStyle get headlineLarge =>
+      _m3(TypoConst.fontSize.headlineLarge, TypoConst.fontWeight.regular);
+  static TextStyle get headlineMedium =>
+      _m3(TypoConst.fontSize.headlineMedium, TypoConst.fontWeight.regular);
+  static TextStyle get headlineSmall =>
+      _m3(TypoConst.fontSize.headlineSmall, TypoConst.fontWeight.regular);
+  static TextStyle get titleLarge =>
+      _m3(TypoConst.fontSize.titleLarge, TypoConst.fontWeight.regular);
+  static TextStyle get titleMedium =>
+      _m3(TypoConst.fontSize.titleMedium, TypoConst.fontWeight.medium);
+  static TextStyle get titleSmall =>
+      _m3(TypoConst.fontSize.titleSmall, TypoConst.fontWeight.medium);
+  static TextStyle get labelLarge =>
+      _m3(TypoConst.fontSize.labelLarge, TypoConst.fontWeight.medium);
+  static TextStyle get labelMedium =>
+      _m3(TypoConst.fontSize.labelMedium, TypoConst.fontWeight.medium);
+  static TextStyle get labelSmall =>
+      _m3(TypoConst.fontSize.labelSmall, TypoConst.fontWeight.medium);
+  static TextStyle get bodyLarge =>
+      _m3(TypoConst.fontSize.bodyLarge, TypoConst.fontWeight.regular);
+  static TextStyle get bodyMedium =>
+      _m3(TypoConst.fontSize.bodyMedium, TypoConst.fontWeight.medium);
+  static TextStyle get bodySmall =>
+      _m3(TypoConst.fontSize.bodySmall, TypoConst.fontWeight.regular);
 }
 
 class SFPro {
   SFPro._();
 
-  static const String fontFamily = "SFPro";
+  static const String fontFamily = 'SF Pro Text';
+  static const String? package = null;
 
-  static TextStyle thin({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w100, package: "xerkonix_palette");
-  }
+  static TextStyle thin({required double fontSize}) =>
+      _family(fontSize, FontWeight.w100);
+  static TextStyle extraLight({required double fontSize}) =>
+      _family(fontSize, FontWeight.w200);
+  static TextStyle light({required double fontSize}) =>
+      _family(fontSize, FontWeight.w300);
+  static TextStyle regular({required double fontSize}) =>
+      _family(fontSize, FontWeight.w400);
+  static TextStyle medium({required double fontSize}) =>
+      _family(fontSize, FontWeight.w500);
+  static TextStyle semiBold({required double fontSize}) =>
+      _family(fontSize, FontWeight.w600);
+  static TextStyle bold({required double fontSize}) =>
+      _family(fontSize, FontWeight.w700);
+  static TextStyle extraBold({required double fontSize}) =>
+      _family(fontSize, FontWeight.w800);
+  static TextStyle black({required double fontSize}) =>
+      _family(fontSize, FontWeight.w900);
 
-  static TextStyle extraLight({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w200, package: "xerkonix_palette");
-  }
-
-  static TextStyle light({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w300, package: "xerkonix_palette");
-  }
-
-  static TextStyle regular({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w400, package: "xerkonix_palette");
-  }
-
-  static TextStyle medium({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w500, package: "xerkonix_palette");
-  }
-
-  static TextStyle semiBold({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w600, package: "xerkonix_palette");
-  }
-
-  static TextStyle bold({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w700, package: "xerkonix_palette");
-  }
-
-  static TextStyle extraBold({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w800, package: "xerkonix_palette");
-  }
-
-  static TextStyle black({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w900, package: "xerkonix_palette");
+  static TextStyle _family(double fontSize, FontWeight weight) {
+    return TextStyle(
+      fontFamily: fontFamily,
+      package: package,
+      fontSize: fontSize,
+      fontWeight: weight,
+    );
   }
 }
 
 class AppleSDGothicNeo {
   AppleSDGothicNeo._();
 
-  static const String fontFamily = "AppleSDGothicNeo";
+  static const String fontFamily = 'Apple SD Gothic Neo';
+  static const String? package = null;
 
-  static TextStyle thin({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w100, package: "xerkonix_palette");
-  }
+  static TextStyle thin({required double fontSize}) =>
+      _family(fontSize, FontWeight.w100);
+  static TextStyle extraLight({required double fontSize}) =>
+      _family(fontSize, FontWeight.w200);
+  static TextStyle light({required double fontSize}) =>
+      _family(fontSize, FontWeight.w300);
+  static TextStyle regular({required double fontSize}) =>
+      _family(fontSize, FontWeight.w400);
+  static TextStyle medium({required double fontSize}) =>
+      _family(fontSize, FontWeight.w500);
+  static TextStyle semiBold({required double fontSize}) =>
+      _family(fontSize, FontWeight.w600);
+  static TextStyle bold({required double fontSize}) =>
+      _family(fontSize, FontWeight.w700);
+  static TextStyle extraBold({required double fontSize}) =>
+      _family(fontSize, FontWeight.w800);
+  static TextStyle black({required double fontSize}) =>
+      _family(fontSize, FontWeight.w900);
 
-  static TextStyle extraLight({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w200, package: "xerkonix_palette");
-  }
-
-  static TextStyle light({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w300, package: "xerkonix_palette");
-  }
-
-  static TextStyle regular({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w400, package: "xerkonix_palette");
-  }
-
-  static TextStyle medium({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w500, package: "xerkonix_palette");
-  }
-
-  static TextStyle semiBold({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w600, package: "xerkonix_palette");
-  }
-
-  static TextStyle bold({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w700, package: "xerkonix_palette");
-  }
-
-  static TextStyle extraBold({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w800, package: "xerkonix_palette");
-  }
-
-  static TextStyle black({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w900, package: "xerkonix_palette");
+  static TextStyle _family(double fontSize, FontWeight weight) {
+    return TextStyle(
+      fontFamily: fontFamily,
+      package: package,
+      fontSize: fontSize,
+      fontWeight: weight,
+    );
   }
 }
 
 class Roboto {
   Roboto._();
 
-  static const String fontFamily = "Roboto";
+  static const String fontFamily = 'Roboto';
+  static const String package = 'xerkonix_design_system';
 
-  static TextStyle thin({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w100, package: "xerkonix_palette");
-  }
+  static TextStyle thin({required double fontSize}) =>
+      _family(fontSize, FontWeight.w100);
+  static TextStyle light({required double fontSize}) =>
+      _family(fontSize, FontWeight.w300);
+  static TextStyle regular({required double fontSize}) =>
+      _family(fontSize, FontWeight.w400);
+  static TextStyle medium({required double fontSize}) =>
+      _family(fontSize, FontWeight.w500);
+  static TextStyle bold({required double fontSize}) =>
+      _family(fontSize, FontWeight.w700);
+  static TextStyle black({required double fontSize}) =>
+      _family(fontSize, FontWeight.w900);
 
-  static TextStyle light({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w300, package: "xerkonix_palette");
-  }
-
-  static TextStyle regular({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w400, package: "xerkonix_palette");
-  }
-
-  static TextStyle medium({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w500, package: "xerkonix_palette");
-  }
-
-  static TextStyle bold({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w700, package: "xerkonix_palette");
-  }
-
-  static TextStyle black({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w900, package: "xerkonix_palette");
+  static TextStyle _family(double fontSize, FontWeight weight) {
+    return TextStyle(
+      fontFamily: fontFamily,
+      package: package,
+      fontSize: fontSize,
+      fontWeight: weight,
+    );
   }
 }
 
 class NotoSansKR {
   NotoSansKR._();
 
-  static const String fontFamily = "NotoSansKR";
+  static const String fontFamily = 'NotoSansKR';
+  static const String package = 'xerkonix_design_system';
 
-  static TextStyle thin({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w100, package: "xerkonix_palette");
-  }
+  static TextStyle thin({required double fontSize}) =>
+      _family(fontSize, FontWeight.w100);
+  static TextStyle light({required double fontSize}) =>
+      _family(fontSize, FontWeight.w300);
+  static TextStyle regular({required double fontSize}) =>
+      _family(fontSize, FontWeight.w400);
+  static TextStyle medium({required double fontSize}) =>
+      _family(fontSize, FontWeight.w500);
+  static TextStyle bold({required double fontSize}) =>
+      _family(fontSize, FontWeight.w700);
+  static TextStyle black({required double fontSize}) =>
+      _family(fontSize, FontWeight.w900);
 
-  static TextStyle light({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w300, package: "xerkonix_palette");
-  }
-
-  static TextStyle regular({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w400, package: "xerkonix_palette");
-  }
-
-  static TextStyle medium({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w500, package: "xerkonix_palette");
-  }
-
-  static TextStyle bold({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w700, package: "xerkonix_palette");
-  }
-
-  static TextStyle black({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w900, package: "xerkonix_palette");
+  static TextStyle _family(double fontSize, FontWeight weight) {
+    return TextStyle(
+      fontFamily: fontFamily,
+      package: package,
+      fontSize: fontSize,
+      fontWeight: weight,
+    );
   }
 }
 
 class Pretendard {
   Pretendard._();
 
-  static const String fontFamily = "Pretendard";
+  static const String fontFamily = 'Pretendard';
+  static const String? package = null;
 
-  static TextStyle thin({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w100, package: "xerkonix_design_system");
-  }
+  static TextStyle thin({required double fontSize}) =>
+      _family(fontSize, FontWeight.w100);
+  static TextStyle extraLight({required double fontSize}) =>
+      _family(fontSize, FontWeight.w200);
+  static TextStyle light({required double fontSize}) =>
+      _family(fontSize, FontWeight.w300);
+  static TextStyle regular({required double fontSize}) =>
+      _family(fontSize, FontWeight.w400);
+  static TextStyle medium({required double fontSize}) =>
+      _family(fontSize, FontWeight.w500);
+  static TextStyle semiBold({required double fontSize}) =>
+      _family(fontSize, FontWeight.w600);
+  static TextStyle bold({required double fontSize}) =>
+      _family(fontSize, FontWeight.w700);
+  static TextStyle extraBold({required double fontSize}) =>
+      _family(fontSize, FontWeight.w800);
+  static TextStyle black({required double fontSize}) =>
+      _family(fontSize, FontWeight.w900);
 
-  static TextStyle extraLight({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w200, package: "xerkonix_design_system");
-  }
-
-  static TextStyle light({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w300, package: "xerkonix_design_system");
-  }
-
-  static TextStyle regular({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w400, package: "xerkonix_design_system");
-  }
-
-  static TextStyle medium({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w500, package: "xerkonix_design_system");
-  }
-
-  static TextStyle semiBold({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w600, package: "xerkonix_design_system");
-  }
-
-  static TextStyle bold({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w700, package: "xerkonix_design_system");
-  }
-
-  static TextStyle extraBold({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w800, package: "xerkonix_design_system");
-  }
-
-  static TextStyle black({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w900, package: "xerkonix_design_system");
+  static TextStyle _family(double fontSize, FontWeight weight) {
+    return TextStyle(
+      fontFamily: fontFamily,
+      package: package,
+      fontSize: fontSize,
+      fontWeight: weight,
+    );
   }
 }
 
 class IBMPlexSans {
   IBMPlexSans._();
 
-  static const String fontFamily = "IBMPlexSans";
+  static const String fontFamily = 'IBMPlexSans';
+  static const String package = 'xerkonix_design_system';
 
-  static TextStyle thin({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w100, package: "xerkonix_design_system");
-  }
+  static TextStyle thin({required double fontSize}) =>
+      _family(fontSize, FontWeight.w100);
+  static TextStyle extraLight({required double fontSize}) =>
+      _family(fontSize, FontWeight.w200);
+  static TextStyle light({required double fontSize}) =>
+      _family(fontSize, FontWeight.w300);
+  static TextStyle regular({required double fontSize}) =>
+      _family(fontSize, FontWeight.w400);
+  static TextStyle medium({required double fontSize}) =>
+      _family(fontSize, FontWeight.w500);
+  static TextStyle semiBold({required double fontSize}) =>
+      _family(fontSize, FontWeight.w600);
+  static TextStyle bold({required double fontSize}) =>
+      _family(fontSize, FontWeight.w700);
+  static TextStyle extraBold({required double fontSize}) =>
+      _family(fontSize, FontWeight.w800);
+  static TextStyle black({required double fontSize}) =>
+      _family(fontSize, FontWeight.w900);
 
-  static TextStyle extraLight({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w200, package: "xerkonix_design_system");
-  }
-
-  static TextStyle light({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w300, package: "xerkonix_design_system");
-  }
-
-  static TextStyle regular({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w400, package: "xerkonix_design_system");
-  }
-
-  static TextStyle medium({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w500, package: "xerkonix_design_system");
-  }
-
-  static TextStyle semiBold({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w600, package: "xerkonix_design_system");
-  }
-
-  static TextStyle bold({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w700, package: "xerkonix_design_system");
-  }
-
-  static TextStyle extraBold({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w800, package: "xerkonix_design_system");
-  }
-
-  static TextStyle black({required double fontSize}) {
-    return TextStyle(fontFamily: fontFamily, fontSize: fontSize, fontWeight: FontWeight.w900, package: "xerkonix_design_system");
+  static TextStyle _family(double fontSize, FontWeight weight) {
+    return TextStyle(
+      fontFamily: fontFamily,
+      package: package,
+      fontSize: fontSize,
+      fontWeight: weight,
+    );
   }
 }

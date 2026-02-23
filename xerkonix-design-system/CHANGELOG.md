@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.1.1
+
+### Fixed
+- Improved `XkHexagonRadar` dark-theme contrast so radar lines remain visible
+
+### Changed
+- Reorganized package documentation to English-first and Korean-second structure
+- Clarified typography policy to explicitly use `IBM Plex Sans KR` and `IBM Plex Mono`
+- Updated package/documentation version references for the `1.1.1` release
+
 ## 1.1.0
 
 ### Added

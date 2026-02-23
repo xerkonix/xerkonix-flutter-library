@@ -2,25 +2,29 @@
 
 Flutter design system package for XERKONIX Weave.
 
-이 패키지는 Weave HTML 레퍼런스 기준으로 아래를 제공합니다.
+## English
 
-- 토큰: color, typography, shape/layout, motion timing
-- 아이콘: 48개 아이콘 셋
-- 컴포넌트: button, chip, card, form, alert, table
-- 패턴 위젯: KPI, meter, timeline, monitor, radar, matrix, flow, domain tabs
-- 모션 위젯: Status Breath, Signal Sweep, Wave Drift, Focus Ripple, Card Settle, Alert Beat
+### Overview
 
-기본값은 회사 토큰을 사용하고, 필요한 경우 속성으로 반지름/패딩/색/크기 등을 오버라이드할 수 있습니다.
+`xerkonix_design_system` provides production-ready Weave UI foundations for Flutter:
 
-## Version
+- Tokens: color, typography, shape/layout, motion timing
+- Icons: 48 stroke icon widgets from the Weave HTML reference
+- Components: button, chip, card, form, alert, table
+- Pattern widgets: KPI, meter, timeline, monitor, radar, matrix, flow, domain tabs
+- Motion widgets: Status Breath, Signal Sweep, Wave Drift, Focus Ripple, Card Settle, Alert Beat
 
-Current version: **1.1.0**
+Defaults use company tokens, and each widget allows selective overrides (radius, padding, color, size, timing, and more) when needed.
 
-## Installation
+### Version
+
+Current version: **1.1.1**
+
+### Installation
 
 ```yaml
 dependencies:
-  xerkonix_design_system: ^1.1.0
+  xerkonix_design_system: ^1.1.1
 ```
 
 Requirements:
@@ -28,7 +32,7 @@ Requirements:
 - Dart SDK: `>=3.5.0 <4.0.0`
 - Flutter: `>=3.24.0`
 
-## Quick Start
+### Quick Start
 
 ```dart
 import 'package:flutter/material.dart';
@@ -52,12 +56,14 @@ class App extends StatelessWidget {
 }
 ```
 
-## Typography
+### Typography
 
-기본 폰트 정책:
+Font policy:
 
-- 기본(UI 본문/제목): `IBM Plex Sans KR`
-- 메타/코드형 텍스트: `IBM Plex Mono`
+- Primary UI text: `IBM Plex Sans KR`
+- Meta/monospace text: `IBM Plex Mono`
+
+Both font families are bundled in this package and loaded automatically when the package is added.
 
 ```dart
 Text('Display', style: XkTypo.display);
@@ -67,7 +73,7 @@ Text('Label', style: XkTypo.label);
 Text('Meta', style: XkTypo.metaMono);
 ```
 
-## Shape And Layout Tokens
+### Shape And Layout Tokens
 
 ```dart
 Container(
@@ -78,30 +84,30 @@ Container(
 )
 ```
 
-주요 토큰:
+Main token groups:
 
-- 반지름: `radiusXs`, `radiusSm`, `radiusMd`, `radiusLg`, `radiusXl`, `radiusFull`
-- 간격: `spacingXxs`, `spacingXs`, `spacingSm`, `spacingMd`, `spacingLg`, `spacingXl`, `spacing2xl`
+- Radius: `radiusXs`, `radiusSm`, `radiusMd`, `radiusLg`, `radiusXl`, `radiusFull`
+- Spacing: `spacingXxs`, `spacingXs`, `spacingSm`, `spacingMd`, `spacingLg`, `spacingXl`, `spacing2xl`
 
-## Iconography
+### Iconography
 
-`XkIconName`에 HTML 레퍼런스 아이콘 48개가 포함되어 있습니다.
+`XkIconName` contains 48 icons from the Weave HTML reference.
 
 ```dart
 const XkIcon(XkIconName.chevRight);
 const XkIcon(XkIconName.alert, size: XkIconSize.large);
 ```
 
-아이콘 옵션:
+Icon options:
 
 - `size`: `XkIconSize.inline/small/regular/large/display/hero`
 - `color`
 - `strokeWidth`
 - `semanticLabel`
 
-## Components
+### Components
 
-### Button
+#### Button
 
 ```dart
 Wrap(
@@ -116,7 +122,7 @@ Wrap(
 )
 ```
 
-Semantic variant:
+Semantic variants:
 
 ```dart
 XkButton.success(onPressed: () {}, child: const Text('Success'));
@@ -125,7 +131,7 @@ XkButton.error(onPressed: () {}, child: const Text('Error'));
 XkButton.info(onPressed: () {}, child: const Text('Info'));
 ```
 
-### Chip
+#### Chip
 
 ```dart
 const XkChip(label: 'default', variant: XkChipVariant.neutral);
@@ -134,7 +140,7 @@ const XkChip(label: 'attention', variant: XkChipVariant.accent);
 const XkChip(label: 'urgent', variant: XkChipVariant.signal);
 ```
 
-커스터마이징 예시:
+Customization example:
 
 ```dart
 XkChip(
@@ -147,36 +153,36 @@ XkChip(
 )
 ```
 
-### Info Card
+#### Info Card
 
 ```dart
 const XkInfoCard(
   metric: 'Metric Card',
   title: 'Primary Value',
-  description: '핵심 수치 카드',
+  description: 'Core metric card',
 )
 ```
 
-커스터마이징 예시:
+Customization example:
 
 ```dart
 XkInfoCard(
   metric: 'Status Card',
   title: 'State Delta',
-  description: '상태 변화 카드',
+  description: 'State transition card',
   borderRadius: BorderRadius.circular(18),
   padding: const EdgeInsets.all(20),
   backgroundColor: XkColor.surfaceSoft,
 )
 ```
 
-### Form Fields
+#### Form Fields
 
 ```dart
 XkTextInputField(
   label: 'Company',
-  hintText: '예: 주식회사 제르코닉스',
-  helperText: '법인명 기준 입력',
+  hintText: 'Example: XERKONIX Inc.',
+  helperText: 'Use legal entity name',
   controller: companyController,
 )
 
@@ -194,35 +200,35 @@ XkSelectField<String>(
 
 XkTextAreaField(
   label: 'Brief',
-  hintText: '핵심 의사결정 질문을 입력하세요.',
+  hintText: 'Write your core decision question.',
   maxLines: 4,
 )
 ```
 
-각 필드 공통 옵션:
+Shared field options:
 
 - `borderRadius`
 - `contentPadding`
 - `enabled`
 
-### Alert
+#### Alert
 
 ```dart
 const XkAlert(
-  title: '분석 완료',
-  message: '핵심 지표와 권장 액션 2건이 생성되었습니다.',
+  title: 'Analysis Complete',
+  message: 'Two recommended actions were generated.',
   variant: XkAlertVariant.success,
 )
 ```
 
-variant:
+Variants:
 
 - `XkAlertVariant.success`
 - `XkAlertVariant.info`
 - `XkAlertVariant.warning`
 - `XkAlertVariant.danger`
 
-### Table
+#### Table
 
 ```dart
 XkTable(
@@ -233,25 +239,25 @@ XkTable(
       XkTableCell(text: '94.2'),
       XkTableCell(text: '88.7'),
       XkTableCell(text: '+5.5', textColor: XkColor.success),
-      XkTableCell(text: '우선순위 유지'),
+      XkTableCell(text: 'Keep priority'),
     ]),
   ],
 )
 ```
 
-## Pattern Widgets
+### Pattern Widgets
 
-### KPI Card
+#### KPI Card
 
 ```dart
-const XkKpiCard(label: '신뢰도', value: '92', suffix: '%', delta: '평균 90% 이상 유지');
+const XkKpiCard(label: 'Trust', value: '92', suffix: '%', delta: 'Maintained above 90%');
 ```
 
-### Confidence Meter
+#### Confidence Meter
 
 ```dart
 const XkConfidenceMeter(
-  label: '역할 적합도 신뢰도',
+  label: 'Role-fit confidence',
   value: 0.94,
   valueText: '94%',
   startColor: XkColor.identity,
@@ -259,22 +265,22 @@ const XkConfidenceMeter(
 )
 ```
 
-### Signal Timeline
+#### Signal Timeline
 
 ```dart
 const XkSignalTimeline(
   items: [
     XkTimelineItem(
       time: '2026-01-14 09:23',
-      title: '이탈 위험 급상승',
-      description: '참여율 42% 하락, 3주 내 이탈 확률 78%',
+      title: 'Churn risk spike',
+      description: 'Participation dropped 42%, 78% churn probability within 3 weeks',
       color: XkColor.error,
     ),
   ],
 )
 ```
 
-### Signal Overview Monitor
+#### Signal Overview Monitor
 
 ```dart
 const XkSignalOverviewMonitor(
@@ -283,7 +289,7 @@ const XkSignalOverviewMonitor(
 )
 ```
 
-옵션:
+Options:
 
 - `height`
 - `animate`
@@ -292,7 +298,7 @@ const XkSignalOverviewMonitor(
 - `backgroundColor`
 - `borderColor`
 
-### Hexagon Radar
+#### Hexagon Radar
 
 ```dart
 const XkHexagonRadar(
@@ -300,7 +306,7 @@ const XkHexagonRadar(
 )
 ```
 
-### Cluster Matrix
+#### Cluster Matrix
 
 ```dart
 const XkClusterMatrix(
@@ -310,7 +316,7 @@ const XkClusterMatrix(
 )
 ```
 
-### Flow Compression
+#### Flow Compression
 
 ```dart
 const XkFlowCompression(
@@ -318,13 +324,13 @@ const XkFlowCompression(
 )
 ```
 
-### Domain Tabs
+#### Domain Tabs
 
 ```dart
 const XkDomainPatternTabs();
 ```
 
-커스텀 레이어 전달 예시:
+Custom layer input example:
 
 ```dart
 const XkDomainPatternTabs(
@@ -333,7 +339,7 @@ const XkDomainPatternTabs(
       key: 'input',
       title: 'Input Pattern',
       phase: 'Capture',
-      description: '입력 신호 정규화',
+      description: 'Normalize incoming signals',
       metrics: [
         MapEntry('Input channels', '12'),
         MapEntry('Schema match', '98%'),
@@ -343,9 +349,9 @@ const XkDomainPatternTabs(
 )
 ```
 
-## Motion
+### Motion
 
-HTML 모션 6종 공개 위젯:
+Six public motion widgets:
 
 ```dart
 const XkStatusBreath();
@@ -356,7 +362,7 @@ const XkCardSettle();
 const XkAlertBeat();
 ```
 
-옵션 예시:
+Option examples:
 
 ```dart
 const XkStatusBreath(
@@ -375,23 +381,167 @@ const XkSignalSweep(
 )
 ```
 
-기존 래퍼 API도 유지:
+Legacy wrapper API is still available:
 
 ```dart
 XkMotion.breathingLight(child: const Icon(Icons.bolt));
 XkMotion.pulse(child: const Icon(Icons.notifications));
 ```
 
-모든 모션 위젯은 기본적으로 `reduce motion` 접근성 설정을 존중합니다.
+All motion widgets respect accessibility reduced-motion settings by default.
 
-## Example
+### Platform Support
 
-`example/lib/main.dart`에서 아래 섹션을 한 화면에서 확인할 수 있습니다.
+You can use this package in all Flutter targets:
+
+- iOS
+- Android
+- Web
+- Windows
+- macOS
+- Linux
+
+### Example App
+
+You can review all implemented sections in `example/lib/main.dart`.
 
 - Iconography
 - Components
 - Pattern
 - Motion
+
+Run web example:
+
+```bash
+cd xerkonix-design-system/example
+flutter run -d web-server --web-port=18080
+```
+
+### License
+
+Apache License 2.0. See `LICENSE`.
+
+## 한국어
+
+### 개요
+
+`xerkonix_design_system`은 Flutter에서 바로 사용할 수 있는 XERKONIX Weave 디자인 시스템 패키지입니다.
+
+- 토큰: 색상, 타이포그래피, 형태/레이아웃, 모션 타이밍
+- 아이콘: Weave HTML 레퍼런스 기반 48개 스트로크 아이콘
+- 컴포넌트: 버튼, 칩, 카드, 폼, 알림, 테이블
+- 패턴 위젯: KPI, 신뢰도 미터, 타임라인, 모니터, 레이더, 매트릭스, 플로우, 도메인 탭
+- 모션 위젯: Status Breath, Signal Sweep, Wave Drift, Focus Ripple, Card Settle, Alert Beat
+
+기본값은 회사 토큰을 사용하며, 필요 시 반지름/패딩/색상/크기/시간값을 속성으로 오버라이드할 수 있습니다.
+
+### 버전
+
+현재 버전: **1.1.1**
+
+### 설치
+
+```yaml
+dependencies:
+  xerkonix_design_system: ^1.1.1
+```
+
+요구 사항:
+
+- Dart SDK: `>=3.5.0 <4.0.0`
+- Flutter: `>=3.24.0`
+
+### 빠른 시작
+
+기본 사용 코드는 위 English 섹션의 `Quick Start`와 동일합니다.
+
+### 타이포그래피
+
+폰트 정책:
+
+- 기본 UI 텍스트: `IBM Plex Sans KR`
+- 메타/모노스페이스 텍스트: `IBM Plex Mono`
+
+두 폰트 패밀리는 패키지에 포함되어 있으며, 패키지를 추가하면 자동으로 로드됩니다.
+
+텍스트 스타일 사용 예시는 위 English 섹션 `Typography` 코드와 동일합니다.
+
+### Shape/Layout 토큰
+
+`XkShape`, `XkLayout`으로 반지름과 간격 토큰을 사용합니다.
+
+- 반지름: `radiusXs`, `radiusSm`, `radiusMd`, `radiusLg`, `radiusXl`, `radiusFull`
+- 간격: `spacingXxs`, `spacingXs`, `spacingSm`, `spacingMd`, `spacingLg`, `spacingXl`, `spacing2xl`
+
+코드 예시는 위 English 섹션 `Shape And Layout Tokens`를 참고하세요.
+
+### 아이콘
+
+`XkIconName`에 48개 아이콘이 정의되어 있으며, `XkIcon`으로 렌더링합니다.
+
+- 주요 옵션: `size`, `color`, `strokeWidth`, `semanticLabel`
+
+코드 예시는 위 English 섹션 `Iconography`와 동일합니다.
+
+### 컴포넌트
+
+구현된 위젯:
+
+- `XkButton` (primary/brand/accent/tonal/outline + semantic variants)
+- `XkChip`
+- `XkInfoCard`
+- `XkTextInputField`, `XkTextAreaField`, `XkSelectField`
+- `XkAlert`
+- `XkTable`
+
+상세 코드 예시는 위 English 섹션 `Components`를 참고하세요.
+
+### 패턴 위젯
+
+구현된 위젯:
+
+- `XkKpiCard`
+- `XkConfidenceMeter`
+- `XkSignalTimeline`
+- `XkSignalOverviewMonitor`
+- `XkHexagonRadar`
+- `XkClusterMatrix`
+- `XkFlowCompression`
+- `XkDomainPatternTabs`
+
+상세 코드 예시는 위 English 섹션 `Pattern Widgets`를 참고하세요.
+
+### 모션
+
+공개 모션 위젯 6종:
+
+- `XkStatusBreath`
+- `XkSignalSweep`
+- `XkWaveDrift`
+- `XkFocusRipple`
+- `XkCardSettle`
+- `XkAlertBeat`
+
+기존 래퍼 API(`XkMotion.breathingLight`, `XkMotion.pulse`)도 유지됩니다.
+
+모든 모션 위젯은 기본적으로 접근성의 `reduce motion` 설정을 존중합니다.
+
+상세 코드 예시는 위 English 섹션 `Motion`을 참고하세요.
+
+### 플랫폼 지원
+
+Flutter가 지원하는 타깃에서 동일하게 사용할 수 있습니다.
+
+- iOS
+- Android
+- Web
+- Windows
+- macOS
+- Linux
+
+### 예제 앱
+
+`example/lib/main.dart`에서 구현된 전체 섹션을 확인할 수 있습니다.
 
 웹 실행:
 
@@ -400,6 +550,6 @@ cd xerkonix-design-system/example
 flutter run -d web-server --web-port=18080
 ```
 
-## License
+### 라이선스
 
-Apache License 2.0. See `LICENSE`.
+Apache License 2.0. `LICENSE`를 확인하세요.

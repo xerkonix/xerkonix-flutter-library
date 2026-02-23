@@ -11,6 +11,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_svg: ^2.2.1
 
 dev_dependencies:
   flutter_test:
@@ -19,47 +20,35 @@ dev_dependencies:
 
 flutter:
   fonts:
-    - family: NotoSansKR
+    - family: IBMPlexSansKR
       fonts:
-        - asset: lib/fonts/noto_sans_kr/NotoSansKR-Thin.otf
+        - asset: lib/fonts/ibm_plex_sans_kr/IBMPlexSansKR-Thin.ttf
           weight: 100
-        - asset: lib/fonts/noto_sans_kr/NotoSansKR-Light.otf
-          weight: 300
-        - asset: lib/fonts/noto_sans_kr/NotoSansKR-Regular.otf
-          weight: 400
-        - asset: lib/fonts/noto_sans_kr/NotoSansKR-Medium.otf
-          weight: 500
-        - asset: lib/fonts/noto_sans_kr/NotoSansKR-Bold.otf
-          weight: 700
-        - asset: lib/fonts/noto_sans_kr/NotoSansKR-Black.otf
-          weight: 900
-    - family: Roboto
-      fonts:
-        - asset: lib/fonts/roboto/Roboto-Thin.ttf
-          weight: 100
-        - asset: lib/fonts/roboto/Roboto-Light.ttf
-          weight: 300
-        - asset: lib/fonts/roboto/Roboto-Regular.ttf
-          weight: 400
-        - asset: lib/fonts/roboto/Roboto-Medium.ttf
-          weight: 500
-        - asset: lib/fonts/roboto/Roboto-Bold.ttf
-          weight: 700
-        - asset: lib/fonts/roboto/Roboto-Black.ttf
-          weight: 900
-    - family: IBMPlexSans
-      fonts:
-        - asset: lib/fonts/ibm_plex_sans/IBMPlexSans-Thin.ttf
-          weight: 100
-        - asset: lib/fonts/ibm_plex_sans/IBMPlexSans-ExtraLight.ttf
+        - asset: lib/fonts/ibm_plex_sans_kr/IBMPlexSansKR-ExtraLight.ttf
           weight: 200
-        - asset: lib/fonts/ibm_plex_sans/IBMPlexSans-Light.ttf
+        - asset: lib/fonts/ibm_plex_sans_kr/IBMPlexSansKR-Light.ttf
           weight: 300
-        - asset: lib/fonts/ibm_plex_sans/IBMPlexSans-Regular.ttf
+        - asset: lib/fonts/ibm_plex_sans_kr/IBMPlexSansKR-Regular.ttf
           weight: 400
-        - asset: lib/fonts/ibm_plex_sans/IBMPlexSans-Medium.ttf
+        - asset: lib/fonts/ibm_plex_sans_kr/IBMPlexSansKR-Medium.ttf
           weight: 500
-        - asset: lib/fonts/ibm_plex_sans/IBMPlexSans-SemiBold.ttf
+        - asset: lib/fonts/ibm_plex_sans_kr/IBMPlexSansKR-SemiBold.ttf
           weight: 600
-        - asset: lib/fonts/ibm_plex_sans/IBMPlexSans-Bold.ttf
+        - asset: lib/fonts/ibm_plex_sans_kr/IBMPlexSansKR-Bold.ttf
+          weight: 700
+    - family: IBMPlexMono
+      fonts:
+        - asset: lib/fonts/ibm_plex_mono/IBMPlexMono-Thin.ttf
+          weight: 100
+        - asset: lib/fonts/ibm_plex_mono/IBMPlexMono-ExtraLight.ttf
+          weight: 200
+        - asset: lib/fonts/ibm_plex_mono/IBMPlexMono-Light.ttf
+          weight: 300
+        - asset: lib/fonts/ibm_plex_mono/IBMPlexMono-Regular.ttf
+          weight: 400
+        - asset: lib/fonts/ibm_plex_mono/IBMPlexMono-Medium.ttf
+          weight: 500
+        - asset: lib/fonts/ibm_plex_mono/IBMPlexMono-SemiBold.ttf
+          weight: 600
+        - asset: lib/fonts/ibm_plex_mono/IBMPlexMono-Bold.ttf
           weight: 700

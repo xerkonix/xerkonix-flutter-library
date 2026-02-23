@@ -2,7 +2,7 @@
 
 Flutter design system package for XERKONIX products.
 
-This package provides a reusable token and component layer aligned with the Weave design references (`v1.1`), including colors, typography, themes, shape/layout tokens, motion presets, and button variants.
+This package provides a reusable token and component layer aligned with Weave design references, including colors, typography, themes, shape/layout tokens, iconography, components, pattern widgets, and motion primitives.
 
 ## Version
 
@@ -48,7 +48,7 @@ class App extends StatelessWidget {
 Container(
   color: XkColor.canvas,
   child: Text(
-    'Weave v1.1',
+    'Weave',
     style: TextStyle(color: XkColor.text),
   ),
 );
@@ -80,6 +80,11 @@ Text('Meta', style: XkTypo.metaMono);
 
 `XkTypo.title1`, `XkTypo.body`, `HIGTypo`, and `M3Typo` remain available.
 
+Font baseline:
+
+- Base / UI text: `IBM Plex Sans KR`
+- Meta / code-like text: `IBM Plex Mono`
+
 ## Button Variants
 
 ```dart
@@ -97,19 +102,79 @@ Wrap(
 
 Backward-compatible constructors (`outlined`, `success`, `warning`, `error`, `info`) are still supported.
 
-## Motion
+## Components
 
 ```dart
-XkMotion.breathingLight(
-  child: const Icon(Icons.bolt),
+const XkChip(label: 'trusted', variant: XkChipVariant.brand);
+
+const XkInfoCard(
+  metric: 'Metric Card',
+  title: 'Primary Value',
+  description: '핵심 수치 카드',
 );
 
-XkMotion.pulse(
-  child: const Icon(Icons.notifications),
+const XkAlert(
+  title: '분석 완료',
+  message: '핵심 지표와 권장 액션이 생성되었습니다.',
+  variant: XkAlertVariant.success,
 );
 ```
 
-Motion defaults follow v1.1 timing tokens, and reduced-motion settings are respected.
+Form and table widgets:
+
+- `XkTextInputField`
+- `XkSelectField`
+- `XkTextAreaField`
+- `XkTable`
+
+All widgets use company defaults by default, while exposing radius/padding/color overrides.
+
+## Iconography
+
+```dart
+const XkIcon(XkIconName.chevRight);
+const XkIcon(XkIconName.alert, size: XkIconSize.large);
+```
+
+- `XkIconName` includes all 48 icons from the HTML reference.
+- `XkIconSize`: `inline`, `small`, `regular`, `large`, `display`, `hero`.
+
+## Pattern Widgets
+
+```dart
+const XkKpiCard(label: '신뢰도', value: '92', suffix: '%');
+const XkSignalOverviewMonitor();
+const XkDomainPatternTabs();
+```
+
+Available pattern widgets:
+
+- `XkKpiCard`
+- `XkConfidenceMeter`
+- `XkSignalTimeline`
+- `XkSignalOverviewMonitor`
+- `XkHexagonRadar`
+- `XkClusterMatrix`
+- `XkFlowCompression`
+- `XkDomainPatternTabs`
+
+## Motion
+
+```dart
+const XkStatusBreath();
+const XkSignalSweep();
+const XkWaveDrift();
+const XkFocusRipple();
+const XkCardSettle();
+const XkAlertBeat();
+```
+
+Legacy wrappers are still available:
+
+- `XkMotion.breathingLight(...)`
+- `XkMotion.pulse(...)`
+
+Motion defaults follow Weave timing tokens, and reduced-motion settings are respected.
 
 ## License
 

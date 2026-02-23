@@ -16,3 +16,14 @@ export 'src/motion/xerkonix_motion.dart';
 
 // Components - Reusable UI Components
 export 'src/components/xerkonix_button.dart';
+export 'src/components/xerkonix_chip.dart';
+export 'src/components/xerkonix_card.dart';
+export 'src/components/xerkonix_form.dart';
+export 'src/components/xerkonix_alert.dart';
+export 'src/components/xerkonix_table.dart';
+
+// Icons
+export 'src/icons/xerkonix_icon.dart';
+
+// Pattern
+export 'src/pattern/xerkonix_pattern.dart';

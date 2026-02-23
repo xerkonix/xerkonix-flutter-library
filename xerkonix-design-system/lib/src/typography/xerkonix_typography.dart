@@ -2,7 +2,7 @@ import 'package:flutter/painting.dart';
 
 import 'typo_constants.dart';
 
-/// XERKONIX DS v1.1 typography
+/// XERKONIX Weave typography
 ///
 /// Scale:
 /// - display 52 / 700
@@ -16,10 +16,10 @@ import 'typo_constants.dart';
 class XkTypo {
   XkTypo._();
 
-  static const List<String> _sansFallback = [
-    NotoSansKR.fontFamily,
-    AppleSDGothicNeo.fontFamily,
-    Roboto.fontFamily,
+  static const List<String> _sansFallback = [IBMPlexSansKR.fontFamily];
+  static const List<String> _monoFallback = [
+    IBMPlexMono.fontFamily,
+    IBMPlexSansKR.fontFamily,
   ];
 
   static TextStyle _sans({
@@ -29,8 +29,8 @@ class XkTypo {
     double letterSpacing = 0,
   }) {
     return TextStyle(
-      fontFamily: IBMPlexSans.fontFamily,
-      package: IBMPlexSans.package,
+      fontFamily: IBMPlexSansKR.fontFamily,
+      package: IBMPlexSansKR.package,
       fontFamilyFallback: _sansFallback,
       fontSize: size,
       fontWeight: weight,
@@ -46,8 +46,9 @@ class XkTypo {
     double letterSpacing = 0,
   }) {
     return TextStyle(
-      fontFamily: 'RobotoMono',
-      fontFamilyFallback: const [Roboto.fontFamily],
+      fontFamily: IBMPlexMono.fontFamily,
+      package: IBMPlexMono.package,
+      fontFamilyFallback: _monoFallback,
       fontSize: size,
       fontWeight: weight,
       height: height,
@@ -55,7 +56,7 @@ class XkTypo {
     );
   }
 
-  // v1.1 canonical styles
+  // Canonical styles
   static final TextStyle display = _sans(
     size: TypoConst.fontSize.displayMax,
     weight: TypoConst.fontWeight.bold,
@@ -142,9 +143,9 @@ class M3Typo {
 
   static TextStyle _m3(double size, FontWeight weight) {
     return TextStyle(
-      fontFamily: IBMPlexSans.fontFamily,
-      package: IBMPlexSans.package,
-      fontFamilyFallback: const [NotoSansKR.fontFamily, Roboto.fontFamily],
+      fontFamily: IBMPlexSansKR.fontFamily,
+      package: IBMPlexSansKR.package,
+      fontFamilyFallback: const [IBMPlexSansKR.fontFamily],
       fontSize: size,
       fontWeight: weight,
       height: 1.5,
@@ -186,8 +187,8 @@ class M3Typo {
 class SFPro {
   SFPro._();
 
-  static const String fontFamily = 'SF Pro Text';
-  static const String? package = null;
+  static const String fontFamily = IBMPlexSans.fontFamily;
+  static const String package = IBMPlexSans.package;
 
   static TextStyle thin({required double fontSize}) =>
       _family(fontSize, FontWeight.w100);
@@ -221,8 +222,8 @@ class SFPro {
 class AppleSDGothicNeo {
   AppleSDGothicNeo._();
 
-  static const String fontFamily = 'Apple SD Gothic Neo';
-  static const String? package = null;
+  static const String fontFamily = IBMPlexSans.fontFamily;
+  static const String package = IBMPlexSans.package;
 
   static TextStyle thin({required double fontSize}) =>
       _family(fontSize, FontWeight.w100);
@@ -256,8 +257,8 @@ class AppleSDGothicNeo {
 class Roboto {
   Roboto._();
 
-  static const String fontFamily = 'Roboto';
-  static const String package = 'xerkonix_design_system';
+  static const String fontFamily = IBMPlexSans.fontFamily;
+  static const String package = IBMPlexSans.package;
 
   static TextStyle thin({required double fontSize}) =>
       _family(fontSize, FontWeight.w100);
@@ -285,8 +286,8 @@ class Roboto {
 class NotoSansKR {
   NotoSansKR._();
 
-  static const String fontFamily = 'NotoSansKR';
-  static const String package = 'xerkonix_design_system';
+  static const String fontFamily = IBMPlexSans.fontFamily;
+  static const String package = IBMPlexSans.package;
 
   static TextStyle thin({required double fontSize}) =>
       _family(fontSize, FontWeight.w100);
@@ -314,8 +315,8 @@ class NotoSansKR {
 class Pretendard {
   Pretendard._();
 
-  static const String fontFamily = 'Pretendard';
-  static const String? package = null;
+  static const String fontFamily = IBMPlexSans.fontFamily;
+  static const String package = IBMPlexSans.package;
 
   static TextStyle thin({required double fontSize}) =>
       _family(fontSize, FontWeight.w100);
@@ -346,11 +347,82 @@ class Pretendard {
   }
 }
 
+class IBMPlexSansKR {
+  IBMPlexSansKR._();
+
+  static const String fontFamily = 'IBMPlexSansKR';
+  static const String package = 'xerkonix_design_system';
+
+  static TextStyle thin({required double fontSize}) =>
+      _family(fontSize, FontWeight.w100);
+  static TextStyle extraLight({required double fontSize}) =>
+      _family(fontSize, FontWeight.w200);
+  static TextStyle light({required double fontSize}) =>
+      _family(fontSize, FontWeight.w300);
+  static TextStyle regular({required double fontSize}) =>
+      _family(fontSize, FontWeight.w400);
+  static TextStyle medium({required double fontSize}) =>
+      _family(fontSize, FontWeight.w500);
+  static TextStyle semiBold({required double fontSize}) =>
+      _family(fontSize, FontWeight.w600);
+  static TextStyle bold({required double fontSize}) =>
+      _family(fontSize, FontWeight.w700);
+  static TextStyle extraBold({required double fontSize}) =>
+      _family(fontSize, FontWeight.w800);
+  static TextStyle black({required double fontSize}) =>
+      _family(fontSize, FontWeight.w900);
+
+  static TextStyle _family(double fontSize, FontWeight weight) {
+    return TextStyle(
+      fontFamily: fontFamily,
+      package: package,
+      fontSize: fontSize,
+      fontWeight: weight,
+    );
+  }
+}
+
+class IBMPlexMono {
+  IBMPlexMono._();
+
+  static const String fontFamily = 'IBMPlexMono';
+  static const String package = 'xerkonix_design_system';
+
+  static TextStyle thin({required double fontSize}) =>
+      _family(fontSize, FontWeight.w100);
+  static TextStyle extraLight({required double fontSize}) =>
+      _family(fontSize, FontWeight.w200);
+  static TextStyle light({required double fontSize}) =>
+      _family(fontSize, FontWeight.w300);
+  static TextStyle regular({required double fontSize}) =>
+      _family(fontSize, FontWeight.w400);
+  static TextStyle medium({required double fontSize}) =>
+      _family(fontSize, FontWeight.w500);
+  static TextStyle semiBold({required double fontSize}) =>
+      _family(fontSize, FontWeight.w600);
+  static TextStyle bold({required double fontSize}) =>
+      _family(fontSize, FontWeight.w700);
+  static TextStyle extraBold({required double fontSize}) =>
+      _family(fontSize, FontWeight.w800);
+  static TextStyle black({required double fontSize}) =>
+      _family(fontSize, FontWeight.w900);
+
+  static TextStyle _family(double fontSize, FontWeight weight) {
+    return TextStyle(
+      fontFamily: fontFamily,
+      package: package,
+      fontSize: fontSize,
+      fontWeight: weight,
+    );
+  }
+}
+
+/// Backward-compatible alias: legacy API name now maps to Sans KR.
 class IBMPlexSans {
   IBMPlexSans._();
 
-  static const String fontFamily = 'IBMPlexSans';
-  static const String package = 'xerkonix_design_system';
+  static const String fontFamily = IBMPlexSansKR.fontFamily;
+  static const String package = IBMPlexSansKR.package;
 
   static TextStyle thin({required double fontSize}) =>
       _family(fontSize, FontWeight.w100);

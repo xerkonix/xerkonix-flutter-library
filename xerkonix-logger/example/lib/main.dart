@@ -135,7 +135,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: XkColor.canvas.withOpacity(0.3),
+                        color: XkColor.canvas.withValues(alpha: 0.3),
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
                           color: XkColor.divider,
@@ -184,7 +184,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             const SizedBox(height: 24),
             Card(
-              color: XkColor.canvas.withOpacity(0.5),
+              color: XkColor.canvas.withValues(alpha: 0.5),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(

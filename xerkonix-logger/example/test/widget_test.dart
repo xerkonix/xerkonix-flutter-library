@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:xerkonix_logger_example/main.dart';
+import 'package:example/main.dart';
 
 void main() {
   testWidgets('Logger Example app should have logger buttons', (WidgetTester tester) async {

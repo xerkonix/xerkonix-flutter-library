@@ -11,7 +11,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  xerkonix_design_system: ^1.0.0
+  xerkonix_design_system: ^1.1.1
   xerkonix_logger:
     path: ../
   http: ^1.1.0

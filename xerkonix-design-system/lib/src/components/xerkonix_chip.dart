@@ -4,17 +4,9 @@ import '../palette/color.dart';
 import '../shape/xerkonix_shape.dart';
 import '../typography/xerkonix_typography.dart';
 
-enum XkChipVariant {
-  neutral,
-  brand,
-  accent,
-  signal,
-}
+enum XkChipVariant { neutral, brand, support, accent, signal }
 
 /// Weave chip component from the HTML design reference.
-///
-/// - Defaults to company token values.
-/// - Exposes radius/padding/color options for flexible reuse.
 class XkChip extends StatelessWidget {
   const XkChip({
     super.key,
@@ -24,7 +16,7 @@ class XkChip extends StatelessWidget {
     this.showDot = true,
     this.leading,
     this.trailing,
-    this.padding = const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+    this.padding = const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
     this.borderRadius,
     this.backgroundColor,
     this.textColor,
@@ -51,14 +43,16 @@ class XkChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final colors = _resolveColors(isDark);
+    final resolvedRadius = borderRadius ?? XkShape.fullBorderRadius;
+    final inkBorderRadius = borderRadius is BorderRadius
+        ? borderRadius as BorderRadius
+        : XkShape.fullBorderRadius;
 
-    final chip = Container(
+    final body = Container(
       decoration: BoxDecoration(
         color: backgroundColor ?? colors.background,
-        borderRadius: borderRadius ?? XkShape.fullBorderRadius,
-        border: Border.all(
-          color: borderColor ?? colors.border,
-        ),
+        borderRadius: resolvedRadius,
+        border: Border.all(color: borderColor ?? colors.border),
       ),
       padding: padding,
       child: Row(
@@ -66,7 +60,7 @@ class XkChip extends StatelessWidget {
         children: [
           if (leading != null) ...[
             leading!,
-            const SizedBox(width: XkLayout.spacingXs),
+            const SizedBox(width: 6),
           ] else if (showDot) ...[
             Container(
               width: 6,
@@ -76,36 +70,29 @@ class XkChip extends StatelessWidget {
                 color: dotColor ?? colors.dot,
               ),
             ),
-            const SizedBox(width: XkLayout.spacingXs),
+            const SizedBox(width: 6),
           ],
           Text(
             label,
             style: textStyle ??
-                XkTypo.metaMono.copyWith(
-                  fontSize: 11,
-                  color: textColor ?? colors.text,
-                ),
+                XkTypo.chipLabel.copyWith(color: textColor ?? colors.text),
           ),
-          if (trailing != null) ...[
-            const SizedBox(width: XkLayout.spacingXs),
-            trailing!,
-          ],
+          if (trailing != null) ...[const SizedBox(width: 6), trailing!],
         ],
       ),
     );
 
     if (onTap == null) {
-      return chip;
+      return body;
     }
 
-    final inkBorderRadius = borderRadius is BorderRadius
-        ? borderRadius as BorderRadius
-        : XkShape.fullBorderRadius;
-
-    return InkWell(
-      borderRadius: inkBorderRadius,
-      onTap: onTap,
-      child: chip,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: inkBorderRadius,
+        onTap: onTap,
+        child: body,
+      ),
     );
   }
 
@@ -113,7 +100,7 @@ class XkChip extends StatelessWidget {
     switch (variant) {
       case XkChipVariant.neutral:
         return _ChipPalette(
-          background: isDark ? XkColor.darkSurfaceSoft : XkColor.surfaceSoft,
+          background: isDark ? XkColor.darkSurfaceSoft : XkColor.surface,
           border: isDark ? XkColor.darkBorderMid : XkColor.borderMid,
           text: isDark ? XkColor.darkTextBody : XkColor.textBody,
           dot: isDark ? XkColor.darkTextSoft : XkColor.textSoft,
@@ -121,21 +108,36 @@ class XkChip extends StatelessWidget {
       case XkChipVariant.brand:
         return _ChipPalette(
           background: isDark ? XkColor.darkIdentityWash : XkColor.identityWash,
-          border: isDark ? XkColor.darkIdentity : XkColor.identitySoft,
-          text: isDark ? XkColor.darkIdentity : XkColor.identityDeep,
+          border: (isDark ? XkColor.darkIdentity : XkColor.identity).withValues(
+            alpha: 0.44,
+          ),
+          text: isDark ? XkColor.darkIdentityDeep : XkColor.identityDeep,
           dot: isDark ? XkColor.darkIdentity : XkColor.identity,
+        );
+      case XkChipVariant.support:
+        return _ChipPalette(
+          background: isDark ? XkColor.darkSupportWash : XkColor.supportWash,
+          border: (isDark ? XkColor.darkSupport : XkColor.support).withValues(
+            alpha: 0.44,
+          ),
+          text: isDark ? XkColor.darkSupportDeep : XkColor.supportDeep,
+          dot: isDark ? XkColor.darkSupport : XkColor.support,
         );
       case XkChipVariant.accent:
         return _ChipPalette(
-          background: isDark ? XkColor.darkActionWash : XkColor.actionWash,
-          border: isDark ? XkColor.darkAction : XkColor.actionSoft,
-          text: isDark ? XkColor.darkAction : XkColor.actionDeep,
-          dot: isDark ? XkColor.darkAction : XkColor.action,
+          background: isDark ? XkColor.darkAccentWash : XkColor.accentWash,
+          border: (isDark ? XkColor.darkAccent : XkColor.accent).withValues(
+            alpha: 0.44,
+          ),
+          text: isDark ? XkColor.darkAccentDeep : XkColor.accentDeep,
+          dot: isDark ? XkColor.darkAccent : XkColor.accent,
         );
       case XkChipVariant.signal:
         return _ChipPalette(
           background: isDark ? XkColor.darkSignalWash : XkColor.signalWash,
-          border: isDark ? XkColor.darkSignal : XkColor.signal,
+          border: (isDark ? XkColor.darkSignal : XkColor.signal).withValues(
+            alpha: 0.44,
+          ),
           text: isDark ? XkColor.darkSignal : XkColor.signal,
           dot: isDark ? XkColor.darkSignal : XkColor.signal,
         );

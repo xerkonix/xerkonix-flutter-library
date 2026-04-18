@@ -1,9 +1,14 @@
 import 'dart:ui';
 
-/// XERKONIX Design Token Colors (v1.1)
+/// XERKONIX Design Token Colors (v1.3)
 ///
 /// Reference:
-/// - /Users/kimdoohyeon/Projects/xerkonix/weave/design system/XERKONIX_Internal_Design_Guide_v1.1.md
+/// - design system/v1.3/tokens.css
+/// - design system/v1.3/XERKONIX_Internal_Design_Guide_v1.3.md
+///
+/// v1.3 color palette hex values are identical to v1.2; the change is in
+/// *usage* policy (gold `identity` is no longer the default CTA — see
+/// `XkButton.action` / `--color-action` at `#3B434F`).
 class XkColor {
   XkColor._();
 
@@ -19,49 +24,81 @@ class XkColor {
   static const Color textSoft = Color(0xFF9D9990);
   static const Color textFaint = Color(0xFFC8C5BF);
 
-  // Brand and accent
+  // Light semantic palette
   static const Color identity = Color(0xFFC0A062);
   static const Color identityDeep = Color(0xFFA88844);
   static const Color identitySoft = Color(0xFFD4BC8A);
   static const Color identityWash = Color(0x1FC0A062);
 
-  static const Color action = Color(0xFFD97757);
-  static const Color actionDeep = Color(0xFFC0603E);
-  static const Color actionSoft = Color(0xFFF6E4DE);
-  static const Color actionWash = Color(0x24D97757);
+  static const Color action = Color(0xFF3B434F);
+  static const Color actionDeep = Color(0xFF2F3742);
+  static const Color actionSoft = Color(0xFFE7EBF0);
+  static const Color actionWash = Color(0x243B434F);
+  static const Color actionText = Color(0xFFFFFFFF);
 
-  static const Color signal = Color(0xFFFF6B6B);
-  static const Color signalWash = Color(0x1FFF6B6B);
+  static const Color accent = Color(0xFFC05A2A);
+  static const Color accentDeep = Color(0xFF9F461E);
+  static const Color accentSoft = Color(0xFFF3DFD6);
+  static const Color accentWash = Color(0x24C05A2A);
 
-  // Semantic colors
+  static const Color support = Color(0xFF8A9E3A);
+  static const Color supportDeep = Color(0xFF6F8128);
+  static const Color supportSoft = Color(0xFFE6EDC9);
+  static const Color supportWash = Color(0x298A9E3A);
+
+  static const Color signal = Color(0xFFB84040);
+  static const Color signalWash = Color(0x24B84040);
+
   static const Color success = Color(0xFF5B8C73);
-  static const Color warning = Color(0xFFE08E45);
-  static const Color error = Color(0xFFC25F4B);
+  static const Color warning = Color(0xFFF0A43A);
+  static const Color warningDeep = Color(0xFFA56700);
+  static const Color warningWash = Color(0x2EF0A43A);
+  static const Color error = Color(0xFFB84040);
   static const Color info = Color(0xFF6E7FA3);
 
-  // Dark theme overrides
+  // Dark theme foundations
   static const Color darkCanvas = Color(0xFF1D1D1D);
   static const Color darkSurface = Color(0xFF262626);
   static const Color darkSurfaceSoft = Color(0xFF2C2A27);
   static const Color darkSurfaceDeep = Color(0xFF34312D);
 
+  // Dark theme text
   static const Color darkText = Color(0xFFF5F5F5);
   static const Color darkTextBody = Color(0xFFCDC9BE);
   static const Color darkTextSoft = Color(0xFFA8A399);
   static const Color darkTextFaint = Color(0xFF858076);
 
+  // Dark semantic palette
   static const Color darkIdentity = Color(0xFFD4BC8A);
   static const Color darkIdentityDeep = Color(0xFFC0A062);
   static const Color darkIdentitySoft = Color(0xFFE2CB9E);
   static const Color darkIdentityWash = Color(0x33D4BC8A);
 
-  static const Color darkAction = Color(0xFFFF8D72);
-  static const Color darkActionDeep = Color(0xFFF07B59);
-  static const Color darkActionSoft = Color(0x33FF8D72);
-  static const Color darkActionWash = Color(0x2EFF8D72);
+  static const Color darkAction = Color(0xFFC2CAD5);
+  static const Color darkActionDeep = Color(0xFFD0D7E1);
+  static const Color darkActionSoft = Color(0x2EC2CAD5);
+  static const Color darkActionWash = Color(0x2EC2CAD5);
+  static const Color darkActionText = Color(0xFF18202A);
 
-  static const Color darkSignal = Color(0xFFFF8F8F);
-  static const Color darkSignalWash = Color(0x33FF8F8F);
+  static const Color darkAccent = Color(0xFFD8794D);
+  static const Color darkAccentDeep = Color(0xFFEBA07C);
+  static const Color darkAccentSoft = Color(0x2ED8794D);
+  static const Color darkAccentWash = Color(0x33D8794D);
+
+  static const Color darkSupport = Color(0xFFA3B857);
+  static const Color darkSupportDeep = Color(0xFFC0D476);
+  static const Color darkSupportSoft = Color(0x2EA3B857);
+  static const Color darkSupportWash = Color(0x33A3B857);
+
+  static const Color darkSignal = Color(0xFFD56767);
+  static const Color darkSignalWash = Color(0x33D56767);
+
+  static const Color darkSuccess = Color(0xFF7EA48F);
+  static const Color darkWarning = Color(0xFFFFC457);
+  static const Color darkWarningDeep = Color(0xFFFFD27B);
+  static const Color darkWarningWash = Color(0x3DFFC457);
+  static const Color darkError = Color(0xFFD56767);
+  static const Color darkInfo = Color(0xFF8CA0C8);
 
   // Border tokens
   static const Color borderSoft = Color(0x142D2D2D);
@@ -75,7 +112,7 @@ class XkColor {
   // Generic role mapping
   static const Color primary = identity;
   static const Color secondary = action;
-  static const Color tertiary = signal;
+  static const Color tertiary = accent;
 
   // Backward-compatible aliases
   static const Color structure = text;
@@ -87,10 +124,12 @@ class XkColor {
   static const Color textTertiary = textSoft;
   static const Color textDisabled = textFaint;
 
+  static const Color brand = identity;
   static const Color trust = identity;
   static const Color pulse = signal;
   static const Color life = signal;
   static const Color warmGraphite = textBody;
+  static const Color danger = error;
 
   @Deprecated('Use XkColor.canvas instead')
   static const Color pinkLavender = Color(0xFFCDB4DB);

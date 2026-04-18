@@ -5,20 +5,20 @@ import 'package:flutter/material.dart';
 import '../palette/color.dart';
 import '../shape/xerkonix_shape.dart';
 
-/// Motion token values from Weave reference.
+/// Motion token values from Weave v1.3 reference.
 class XkMotionToken {
   XkMotionToken._();
 
-  static const Duration observe = Duration(milliseconds: 160);
-  static const Duration interpret = Duration(milliseconds: 230);
+  static const Duration observe = Duration(milliseconds: 180);
+  static const Duration interpret = Duration(milliseconds: 250);
   static const Duration connect = Duration(milliseconds: 300);
 
-  static const Duration statusBreath = Duration(milliseconds: 2600);
-  static const Duration signalSweep = Duration(milliseconds: 2600);
-  static const Duration waveDrift = Duration(milliseconds: 3800);
+  static const Duration statusPulse = Duration(milliseconds: 2500);
+  static const Duration signalSweep = Duration(milliseconds: 2500);
+  static const Duration rhythmLine = Duration(milliseconds: 3500);
   static const Duration focusRipple = Duration(milliseconds: 2200);
   static const Duration cardSettle = Duration(milliseconds: 2800);
-  static const Duration alertBeat = Duration(milliseconds: 1900);
+  static const Duration alertPulse = Duration(milliseconds: 1900);
 
   static const Curve ease = Cubic(0.2, 0, 0.1, 1);
   static const Curve spring = Cubic(0.34, 1.35, 0.64, 1);
@@ -28,9 +28,9 @@ class XkMotionToken {
 class XkMotion {
   XkMotion._();
 
-  /// Existing API 유지: 밝기 기반 숨쉬기 효과.
+  /// 밝기 기반 숨쉬기 효과.
   static Widget breathingLight({
-    Duration duration = XkMotionToken.statusBreath,
+    Duration duration = XkMotionToken.statusPulse,
     double minOpacity = 0.35,
     double maxOpacity = 1.0,
     Color? color,
@@ -47,9 +47,9 @@ class XkMotion {
     );
   }
 
-  /// Existing API 유지: 색상 펄스 효과.
+  /// 색상 펄스 효과.
   static Widget pulse({
-    Duration duration = XkMotionToken.alertBeat,
+    Duration duration = XkMotionToken.alertPulse,
     Curve curve = XkMotionToken.ease,
     Color? primaryColor,
     Color? secondaryColor,
@@ -66,13 +66,13 @@ class XkMotion {
     );
   }
 
-  static Widget statusBreath({
-    Duration duration = XkMotionToken.statusBreath,
+  static Widget statusPulse({
+    Duration duration = XkMotionToken.statusPulse,
     Color color = XkColor.identity,
     double size = 16,
     bool respectReducedMotion = true,
   }) {
-    return XkStatusBreath(
+    return XkStatusPulse(
       duration: duration,
       color: color,
       size: size,
@@ -94,12 +94,12 @@ class XkMotion {
     );
   }
 
-  static Widget waveDrift({
-    Duration duration = XkMotionToken.waveDrift,
+  static Widget rhythmLine({
+    Duration duration = XkMotionToken.rhythmLine,
     Color color = XkColor.identity,
     bool respectReducedMotion = true,
   }) {
-    return XkWaveDrift(
+    return XkRhythmLine(
       duration: duration,
       color: color,
       respectReducedMotion: respectReducedMotion,
@@ -125,17 +125,17 @@ class XkMotion {
   }) {
     return XkCardSettle(
       duration: duration,
-      child: child,
       respectReducedMotion: respectReducedMotion,
+      child: child,
     );
   }
 
-  static Widget alertBeat({
-    Duration duration = XkMotionToken.alertBeat,
-    Color color = XkColor.action,
+  static Widget alertPulse({
+    Duration duration = XkMotionToken.alertPulse,
+    Color color = XkColor.signal,
     bool respectReducedMotion = true,
   }) {
-    return XkAlertBeat(
+    return XkAlertPulse(
       duration: duration,
       color: color,
       respectReducedMotion: respectReducedMotion,
@@ -143,11 +143,11 @@ class XkMotion {
   }
 }
 
-/// HTML reference: Status Breath
-class XkStatusBreath extends StatelessWidget {
-  const XkStatusBreath({
+/// Reference: `Status Pulse` (v1.2 name: `Status Breath`).
+class XkStatusPulse extends StatelessWidget {
+  const XkStatusPulse({
     super.key,
-    this.duration = XkMotionToken.statusBreath,
+    this.duration = XkMotionToken.statusPulse,
     this.size = 16,
     this.color = XkColor.identity,
     this.minScale = 0.8,
@@ -186,10 +186,7 @@ class XkStatusBreath extends StatelessWidget {
             child: Container(
               width: size,
               height: size,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: color,
-              ),
+              decoration: BoxDecoration(shape: BoxShape.circle, color: color),
             ),
           ),
         );
@@ -266,11 +263,11 @@ class XkSignalSweep extends StatelessWidget {
   }
 }
 
-/// HTML reference: Wave Drift
-class XkWaveDrift extends StatelessWidget {
-  const XkWaveDrift({
+/// Reference: `Rhythm Line` (v1.2 name: `Wave Drift`).
+class XkRhythmLine extends StatelessWidget {
+  const XkRhythmLine({
     super.key,
-    this.duration = XkMotionToken.waveDrift,
+    this.duration = XkMotionToken.rhythmLine,
     this.width = 192,
     this.height = 40,
     this.color = XkColor.identity,
@@ -292,7 +289,7 @@ class XkWaveDrift extends StatelessWidget {
       builder: (context, value, reducedMotion) {
         return CustomPaint(
           size: Size(width, height),
-          painter: _WaveDriftPainter(
+          painter: _RhythmLinePainter(
             color: color,
             phase: reducedMotion ? 0 : (value * 102),
           ),
@@ -302,11 +299,8 @@ class XkWaveDrift extends StatelessWidget {
   }
 }
 
-class _WaveDriftPainter extends CustomPainter {
-  const _WaveDriftPainter({
-    required this.color,
-    required this.phase,
-  });
+class _RhythmLinePainter extends CustomPainter {
+  const _RhythmLinePainter({required this.color, required this.phase});
 
   final Color color;
   final double phase;
@@ -371,7 +365,7 @@ class _WaveDriftPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant _WaveDriftPainter oldDelegate) {
+  bool shouldRepaint(covariant _RhythmLinePainter oldDelegate) {
     return oldDelegate.phase != phase || oldDelegate.color != color;
   }
 }
@@ -449,10 +443,7 @@ class _RippleRing extends StatelessWidget {
           height: 32,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(
-              width: 1,
-              color: color,
-            ),
+            border: Border.all(width: 1, color: color),
           ),
         ),
       ),
@@ -506,10 +497,7 @@ class XkCardSettle extends StatelessWidget {
           offset: Offset(0, translateY),
           child: Transform.scale(
             scale: scale,
-            child: Opacity(
-              opacity: opacity,
-              child: content,
-            ),
+            child: Opacity(opacity: opacity, child: content),
           ),
         );
       },
@@ -517,14 +505,14 @@ class XkCardSettle extends StatelessWidget {
   }
 }
 
-/// HTML reference: Alert Beat
-class XkAlertBeat extends StatelessWidget {
-  const XkAlertBeat({
+/// Reference: `Alert Pulse` (v1.2 name: `Alert Beat`).
+class XkAlertPulse extends StatelessWidget {
+  const XkAlertPulse({
     super.key,
-    this.duration = XkMotionToken.alertBeat,
+    this.duration = XkMotionToken.alertPulse,
     this.size = 72,
     this.dotSize = 16,
-    this.color = XkColor.action,
+    this.color = XkColor.signal,
     this.respectReducedMotion = true,
   });
 
@@ -555,10 +543,7 @@ class XkAlertBeat extends StatelessWidget {
               Container(
                 width: dotSize,
                 height: dotSize,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: color,
-                ),
+                decoration: BoxDecoration(shape: BoxShape.circle, color: color),
               ),
             ],
           ),
@@ -622,7 +607,7 @@ class _XkLoopMotion extends StatefulWidget {
 class _XkLoopMotionState extends State<_XkLoopMotion>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
-  late final Animation<double> _animation;
+  late Animation<double> _animation;
 
   @override
   void initState() {
@@ -630,6 +615,18 @@ class _XkLoopMotionState extends State<_XkLoopMotion>
     _controller = AnimationController(duration: widget.duration, vsync: this)
       ..repeat();
     _animation = CurvedAnimation(parent: _controller, curve: widget.curve);
+  }
+
+  @override
+  void didUpdateWidget(covariant _XkLoopMotion oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.duration != oldWidget.duration) {
+      _controller.duration = widget.duration;
+      _controller.repeat();
+    }
+    if (widget.curve != oldWidget.curve) {
+      _animation = CurvedAnimation(parent: _controller, curve: widget.curve);
+    }
   }
 
   @override
@@ -677,25 +674,34 @@ class _BreathingLight extends StatefulWidget {
 class _BreathingLightState extends State<_BreathingLight>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
-  late final Animation<double> _animation;
+  late Animation<double> _animation;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: widget.duration,
-      vsync: this,
-    )..repeat(reverse: true);
+    _controller = AnimationController(duration: widget.duration, vsync: this)
+      ..repeat(reverse: true);
 
     _animation = Tween<double>(
       begin: widget.minOpacity,
       end: widget.maxOpacity,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: XkMotionToken.ease,
-      ),
-    );
+    ).animate(CurvedAnimation(parent: _controller, curve: XkMotionToken.ease));
+  }
+
+  @override
+  void didUpdateWidget(covariant _BreathingLight oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.duration != oldWidget.duration) {
+      _controller.duration = widget.duration;
+      _controller.repeat(reverse: true);
+    }
+    if (widget.minOpacity != oldWidget.minOpacity ||
+        widget.maxOpacity != oldWidget.maxOpacity) {
+      _animation = Tween<double>(
+        begin: widget.minOpacity,
+        end: widget.maxOpacity,
+      ).animate(CurvedAnimation(parent: _controller, curve: XkMotionToken.ease));
+    }
   }
 
   @override
@@ -715,10 +721,7 @@ class _BreathingLightState extends State<_BreathingLight>
     return AnimatedBuilder(
       animation: _animation,
       builder: (context, _) {
-        return Opacity(
-          opacity: _animation.value,
-          child: widget.child,
-        );
+        return Opacity(opacity: _animation.value, child: widget.child);
       },
     );
   }
@@ -748,19 +751,33 @@ class _PulseAnimation extends StatefulWidget {
 class _PulseAnimationState extends State<_PulseAnimation>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
-  late final Animation<double> _animation;
+  late Animation<double> _animation;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: widget.duration,
-      vsync: this,
-    )..repeat(reverse: true);
+    _controller = AnimationController(duration: widget.duration, vsync: this)
+      ..repeat(reverse: true);
 
-    _animation = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(parent: _controller, curve: widget.curve),
-    );
+    _animation = Tween<double>(
+      begin: 0,
+      end: 1,
+    ).animate(CurvedAnimation(parent: _controller, curve: widget.curve));
+  }
+
+  @override
+  void didUpdateWidget(covariant _PulseAnimation oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.duration != oldWidget.duration) {
+      _controller.duration = widget.duration;
+      _controller.repeat(reverse: true);
+    }
+    if (widget.curve != oldWidget.curve) {
+      _animation = Tween<double>(
+        begin: 0,
+        end: 1,
+      ).animate(CurvedAnimation(parent: _controller, curve: widget.curve));
+    }
   }
 
   @override

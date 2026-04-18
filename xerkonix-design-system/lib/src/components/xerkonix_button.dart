@@ -6,12 +6,18 @@ import '../typography/xerkonix_typography.dart';
 
 /// XERKONIX Design System button component.
 ///
-/// v1.1 variants:
-/// - primary
-/// - brand
-/// - accent
+/// Variants:
+/// - primary   (text-on-canvas)
+/// - action    (default CTA, `#3B434F` / white · `cta` alias)
+/// - brand     (brand gold, for brand-identity contexts only)
+/// - support   (recommended / stable context)
+/// - accent    (editorial emphasis)
 /// - tonal
 /// - outline
+///
+/// v1.3 policy: the default CTA should be `action` (WCAG AAA contrast).
+/// `brand` remains available but is reserved for brand-identity moments,
+/// not generic primary actions. See design system/v1.3/tokens.css.
 class XkButton extends StatelessWidget {
   const XkButton._({
     super.key,
@@ -39,6 +45,27 @@ class XkButton extends StatelessWidget {
     );
   }
 
+  factory XkButton.action({
+    Key? key,
+    required VoidCallback? onPressed,
+    required Widget child,
+  }) {
+    return XkButton._(
+      key: key,
+      onPressed: onPressed,
+      buttonType: ButtonType.action,
+      child: child,
+    );
+  }
+
+  factory XkButton.cta({
+    Key? key,
+    required VoidCallback? onPressed,
+    required Widget child,
+  }) {
+    return XkButton.action(key: key, onPressed: onPressed, child: child);
+  }
+
   factory XkButton.brand({
     Key? key,
     required VoidCallback? onPressed,
@@ -48,6 +75,19 @@ class XkButton extends StatelessWidget {
       key: key,
       onPressed: onPressed,
       buttonType: ButtonType.brand,
+      child: child,
+    );
+  }
+
+  factory XkButton.support({
+    Key? key,
+    required VoidCallback? onPressed,
+    required Widget child,
+  }) {
+    return XkButton._(
+      key: key,
+      onPressed: onPressed,
+      buttonType: ButtonType.support,
       child: child,
     );
   }
@@ -97,11 +137,7 @@ class XkButton extends StatelessWidget {
     required VoidCallback? onPressed,
     required Widget child,
   }) {
-    return XkButton.outline(
-      key: key,
-      onPressed: onPressed,
-      child: child,
-    );
+    return XkButton.outline(key: key, onPressed: onPressed, child: child);
   }
 
   factory XkButton.success({
@@ -168,30 +204,57 @@ class XkButton extends StatelessWidget {
       case ButtonType.primary:
         return ElevatedButton(
           onPressed: onPressed,
-          style: _elevatedStyle(
+          style: _filledStyle(
             isDark: isDark,
             baseColor: isDark ? XkColor.darkText : XkColor.text,
+            hoverColor: isDark ? XkColor.darkTextBody : XkColor.textBody,
             textColor: isDark ? XkColor.darkCanvas : XkColor.canvas,
+          ),
+          child: child,
+        );
+      case ButtonType.action:
+        return ElevatedButton(
+          onPressed: onPressed,
+          style: _filledStyle(
+            isDark: isDark,
+            baseColor: isDark ? XkColor.darkAction : XkColor.action,
+            hoverColor: isDark ? XkColor.darkActionDeep : XkColor.actionDeep,
+            textColor: isDark ? XkColor.darkActionText : XkColor.actionText,
           ),
           child: child,
         );
       case ButtonType.brand:
         return ElevatedButton(
           onPressed: onPressed,
-          style: _elevatedStyle(
+          style: _filledStyle(
             isDark: isDark,
             baseColor: isDark ? XkColor.darkIdentity : XkColor.identity,
-            textColor: isDark ? XkColor.darkCanvas : Colors.white,
+            hoverColor: isDark
+                ? XkColor.darkIdentityDeep
+                : XkColor.identityDeep,
+            textColor: const Color(0xFF1A0E00),
+          ),
+          child: child,
+        );
+      case ButtonType.support:
+        return ElevatedButton(
+          onPressed: onPressed,
+          style: _filledStyle(
+            isDark: isDark,
+            baseColor: isDark ? XkColor.darkSupport : XkColor.support,
+            hoverColor: isDark ? XkColor.darkSupportDeep : XkColor.supportDeep,
+            textColor: const Color(0xFF1A0E00),
           ),
           child: child,
         );
       case ButtonType.accent:
         return ElevatedButton(
           onPressed: onPressed,
-          style: _elevatedStyle(
+          style: _filledStyle(
             isDark: isDark,
-            baseColor: isDark ? XkColor.darkAction : XkColor.action,
-            textColor: isDark ? XkColor.darkCanvas : Colors.white,
+            baseColor: isDark ? XkColor.darkAccent : XkColor.accent,
+            hoverColor: isDark ? XkColor.darkAccentDeep : XkColor.accentDeep,
+            textColor: isDark ? XkColor.darkActionText : Colors.white,
           ),
           child: child,
         );
@@ -210,28 +273,25 @@ class XkButton extends StatelessWidget {
       case ButtonType.semantic:
         return ElevatedButton(
           onPressed: onPressed,
-          style: _semanticStyle(semanticColor!, isDark: isDark),
+          style: _filledStyle(
+            isDark: isDark,
+            baseColor: semanticColor!,
+            hoverColor: _emphasize(semanticColor!, isDark),
+            textColor: _onColor(semanticColor!, isDark),
+          ),
           child: child,
         );
     }
   }
 
-  static final TextStyle _labelStyle = XkTypo.label.copyWith(
-    fontSize: 13,
-    fontWeight: FontWeight.w500,
-    height: 1.15,
-  );
-
-  static ButtonStyle _elevatedStyle({
+  static ButtonStyle _filledStyle({
     required bool isDark,
     required Color baseColor,
+    required Color hoverColor,
     required Color textColor,
   }) {
-    final disabledBg = isDark ? XkColor.darkTextFaint : XkColor.textFaint;
-    final disabledFg = isDark ? XkColor.darkSurface : XkColor.textSoft;
-
     return ButtonStyle(
-      textStyle: WidgetStateProperty.all(_labelStyle),
+      textStyle: WidgetStateProperty.all(XkTypo.buttonLabel),
       padding: WidgetStateProperty.all(
         const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
       ),
@@ -239,43 +299,40 @@ class XkButton extends StatelessWidget {
       shape: WidgetStateProperty.all(
         RoundedRectangleBorder(borderRadius: XkShape.smBorderRadius),
       ),
+      side: WidgetStateProperty.all(BorderSide.none),
       backgroundColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.disabled)) {
-          return disabledBg;
+          return isDark ? XkColor.darkTextFaint : XkColor.textFaint;
         }
-        if (states.contains(WidgetState.pressed)) {
-          return baseColor.withValues(alpha: 0.9);
-        }
-        if (states.contains(WidgetState.hovered) ||
+        if (states.contains(WidgetState.pressed) ||
+            states.contains(WidgetState.hovered) ||
             states.contains(WidgetState.focused)) {
-          return baseColor.withValues(alpha: 0.96);
+          return hoverColor;
         }
         return baseColor;
       }),
       foregroundColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.disabled)) {
-          return disabledFg;
+          return isDark ? XkColor.darkSurface : XkColor.textSoft;
         }
         return textColor;
       }),
       overlayColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.pressed)) {
-          return Colors.white.withValues(alpha: 0.14);
+          return textColor.withValues(alpha: 0.10);
         }
         if (states.contains(WidgetState.hovered)) {
-          return Colors.white.withValues(alpha: 0.08);
+          return textColor.withValues(alpha: 0.06);
         }
         return null;
       }),
       elevation: WidgetStateProperty.resolveWith((states) {
-        if (states.contains(WidgetState.hovered)) {
-          return 3;
-        }
-        return 0;
+        return states.contains(WidgetState.hovered) ? 2 : 0;
       }),
       shadowColor: WidgetStateProperty.all(
-        isDark ? const Color(0x73000000) : const Color(0x29000000),
+        isDark ? const Color(0x61000000) : const Color(0x14141414),
       ),
+      surfaceTintColor: WidgetStateProperty.all(Colors.transparent),
     );
   }
 
@@ -284,7 +341,7 @@ class XkButton extends StatelessWidget {
     final textColor = isDark ? XkColor.darkTextBody : XkColor.textBody;
 
     return ButtonStyle(
-      textStyle: WidgetStateProperty.all(_labelStyle),
+      textStyle: WidgetStateProperty.all(XkTypo.buttonLabel),
       padding: WidgetStateProperty.all(
         const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
       ),
@@ -294,10 +351,11 @@ class XkButton extends StatelessWidget {
       ),
       side: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.disabled)) {
-          return BorderSide(color: borderColor.withValues(alpha: 0.5));
+          return BorderSide(color: borderColor.withValues(alpha: 0.45));
         }
-        if (states.contains(WidgetState.pressed)) {
-          return BorderSide(color: borderColor.withValues(alpha: 0.9));
+        if (states.contains(WidgetState.hovered) ||
+            states.contains(WidgetState.focused)) {
+          return BorderSide(color: borderColor.withValues(alpha: 0.95));
         }
         return BorderSide(color: borderColor);
       }),
@@ -306,37 +364,37 @@ class XkButton extends StatelessWidget {
           return isDark ? XkColor.darkSurfaceDeep : XkColor.surfaceSoft;
         }
         if (states.contains(WidgetState.hovered)) {
-          return (isDark ? XkColor.darkSurface : XkColor.surface)
-              .withValues(alpha: 0.85);
+          return (isDark ? XkColor.darkSurface : XkColor.surface).withValues(
+            alpha: 0.92,
+          );
         }
         return Colors.transparent;
       }),
       foregroundColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.disabled)) {
-          return textColor.withValues(alpha: 0.5);
+          return textColor.withValues(alpha: 0.45);
         }
         return textColor;
       }),
       elevation: WidgetStateProperty.resolveWith((states) {
-        if (states.contains(WidgetState.hovered)) {
-          return 3;
-        }
-        return 0;
+        return states.contains(WidgetState.hovered) ? 2 : 0;
       }),
       shadowColor: WidgetStateProperty.all(
-        isDark ? const Color(0x66000000) : const Color(0x24000000),
+        isDark ? const Color(0x61000000) : const Color(0x14141414),
       ),
+      surfaceTintColor: WidgetStateProperty.all(Colors.transparent),
     );
   }
 
   static ButtonStyle _tonalStyle({required bool isDark}) {
-    final backgroundColor =
-        isDark ? XkColor.darkSurfaceSoft : XkColor.surfaceSoft;
+    final backgroundColor = isDark
+        ? XkColor.darkSurfaceSoft
+        : XkColor.surfaceSoft;
     final textColor = isDark ? XkColor.darkText : XkColor.text;
     final borderColor = isDark ? XkColor.darkBorderMid : XkColor.borderMid;
 
     return ButtonStyle(
-      textStyle: WidgetStateProperty.all(_labelStyle),
+      textStyle: WidgetStateProperty.all(XkTypo.buttonLabel),
       padding: WidgetStateProperty.all(
         const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
       ),
@@ -353,7 +411,7 @@ class XkButton extends StatelessWidget {
           return isDark ? XkColor.darkSurfaceDeep : XkColor.surfaceDeep;
         }
         if (states.contains(WidgetState.hovered)) {
-          return backgroundColor.withValues(alpha: 0.9);
+          return backgroundColor.withValues(alpha: 0.94);
         }
         return backgroundColor;
       }),
@@ -364,74 +422,32 @@ class XkButton extends StatelessWidget {
         return textColor;
       }),
       elevation: WidgetStateProperty.resolveWith((states) {
-        if (states.contains(WidgetState.hovered)) {
-          return 3;
-        }
-        return 0;
+        return states.contains(WidgetState.hovered) ? 2 : 0;
       }),
       shadowColor: WidgetStateProperty.all(
-        isDark ? const Color(0x66000000) : const Color(0x24000000),
+        isDark ? const Color(0x61000000) : const Color(0x14141414),
       ),
+      surfaceTintColor: WidgetStateProperty.all(Colors.transparent),
     );
   }
 
-  static ButtonStyle _semanticStyle(Color color, {required bool isDark}) {
-    final disabledBg = isDark ? XkColor.darkTextFaint : XkColor.textFaint;
-    final disabledFg = isDark ? XkColor.darkSurface : XkColor.textSoft;
+  static Color _emphasize(Color color, bool isDark) {
+    return Color.lerp(color, isDark ? Colors.white : Colors.black, 0.14) ??
+        color;
+  }
 
-    return ButtonStyle(
-      textStyle: WidgetStateProperty.all(_labelStyle),
-      padding: WidgetStateProperty.all(
-        const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
-      ),
-      minimumSize: WidgetStateProperty.all(const Size(0, 36)),
-      shape: WidgetStateProperty.all(
-        RoundedRectangleBorder(borderRadius: XkShape.smBorderRadius),
-      ),
-      backgroundColor: WidgetStateProperty.resolveWith((states) {
-        if (states.contains(WidgetState.disabled)) {
-          return disabledBg;
-        }
-        if (states.contains(WidgetState.pressed)) {
-          return color.withValues(alpha: 0.9);
-        }
-        if (states.contains(WidgetState.hovered) ||
-            states.contains(WidgetState.focused)) {
-          return color.withValues(alpha: 0.96);
-        }
-        return color;
-      }),
-      foregroundColor: WidgetStateProperty.resolveWith((states) {
-        if (states.contains(WidgetState.disabled)) {
-          return disabledFg;
-        }
-        return Colors.white;
-      }),
-      overlayColor: WidgetStateProperty.resolveWith((states) {
-        if (states.contains(WidgetState.pressed)) {
-          return Colors.white.withValues(alpha: 0.14);
-        }
-        if (states.contains(WidgetState.hovered)) {
-          return Colors.white.withValues(alpha: 0.08);
-        }
-        return null;
-      }),
-      elevation: WidgetStateProperty.resolveWith((states) {
-        if (states.contains(WidgetState.hovered)) {
-          return 3;
-        }
-        return 0;
-      }),
-      shadowColor: WidgetStateProperty.all(
-        isDark ? const Color(0x73000000) : const Color(0x29000000),
-      ),
-    );
+  static Color _onColor(Color color, bool isDark) {
+    return ThemeData.estimateBrightnessForColor(color) == Brightness.dark
+        ? Colors.white
+        : (isDark ? XkColor.darkActionText : const Color(0xFF1A0E00));
   }
 }
 
 enum ButtonType {
   primary,
+  action,
   brand,
+  support,
   accent,
   tonal,
   outline,

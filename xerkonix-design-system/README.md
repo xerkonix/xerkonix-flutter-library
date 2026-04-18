@@ -18,13 +18,13 @@ Defaults use company tokens, and each widget allows selective overrides (radius,
 
 ### Version
 
-Current version: **1.1.1**
+Current version: **1.3.0**
 
 ### Installation
 
 ```yaml
 dependencies:
-  xerkonix_design_system: ^1.1.1
+  xerkonix_design_system: ^1.3.0
 ```
 
 Requirements:
@@ -114,7 +114,9 @@ Wrap(
   spacing: 8,
   children: [
     XkButton.primary(onPressed: () {}, child: const Text('Primary')),
+    XkButton.action(onPressed: () {}, child: const Text('Action')),
     XkButton.brand(onPressed: () {}, child: const Text('Brand')),
+    XkButton.support(onPressed: () {}, child: const Text('Support')),
     XkButton.accent(onPressed: () {}, child: const Text('Accent')),
     XkButton.tonal(onPressed: () {}, child: const Text('Tonal')),
     XkButton.outline(onPressed: () {}, child: const Text('Outline')),
@@ -136,6 +138,7 @@ XkButton.info(onPressed: () {}, child: const Text('Info'));
 ```dart
 const XkChip(label: 'default', variant: XkChipVariant.neutral);
 const XkChip(label: 'trusted', variant: XkChipVariant.brand);
+const XkChip(label: 'recommended', variant: XkChipVariant.support);
 const XkChip(label: 'attention', variant: XkChipVariant.accent);
 const XkChip(label: 'urgent', variant: XkChipVariant.signal);
 ```
@@ -190,10 +193,10 @@ XkSelectField<String>(
   label: 'Domain',
   value: selectedDomain,
   options: const [
-    XkSelectOption(value: 'Input Layer', label: 'Input Layer'),
-    XkSelectOption(value: 'Pattern Layer', label: 'Pattern Layer'),
-    XkSelectOption(value: 'State Layer', label: 'State Layer'),
-    XkSelectOption(value: 'Action Layer', label: 'Action Layer'),
+    XkSelectOption(value: '수집 · Collect', label: '수집 · Collect'),
+    XkSelectOption(value: '분석 · Analyze', label: '분석 · Analyze'),
+    XkSelectOption(value: '상태 · Map', label: '상태 · Map'),
+    XkSelectOption(value: '실행 · Act', label: '실행 · Act'),
   ],
   onChanged: (value) {},
 )
@@ -280,10 +283,10 @@ const XkSignalTimeline(
 )
 ```
 
-#### Signal Overview Monitor
+#### Metric Timeline
 
 ```dart
-const XkSignalOverviewMonitor(
+const XkMetricTimeline(
   height: 220,
   animate: true,
 )
@@ -306,20 +309,20 @@ const XkHexagonRadar(
 )
 ```
 
-#### Cluster Matrix
+#### Distribution Heatmap
 
 ```dart
-const XkClusterMatrix(
+const XkDistributionHeatmap(
   columns: 6,
   cellSize: 24,
   gap: 6,
 )
 ```
 
-#### Flow Compression
+#### Priority Funnel
 
 ```dart
-const XkFlowCompression(
+const XkPriorityFunnel(
   values: [0.92, 0.76, 0.58, 0.40, 0.24],
 )
 ```
@@ -354,19 +357,19 @@ const XkDomainPatternTabs(
 Six public motion widgets:
 
 ```dart
-const XkStatusBreath();
+const XkStatusPulse();
 const XkSignalSweep();
-const XkWaveDrift();
+const XkRhythmLine();
 const XkFocusRipple();
 const XkCardSettle();
-const XkAlertBeat();
+const XkAlertPulse();
 ```
 
 Option examples:
 
 ```dart
-const XkStatusBreath(
-  duration: XkMotionToken.statusBreath,
+const XkStatusPulse(
+  duration: XkMotionToken.statusPulse,
   size: 18,
   color: XkColor.identity,
   minScale: 0.8,
@@ -437,13 +440,13 @@ Apache License 2.0. See `LICENSE`.
 
 ### 버전
 
-현재 버전: **1.1.1**
+현재 버전: **1.3.0**
 
 ### 설치
 
 ```yaml
 dependencies:
-  xerkonix_design_system: ^1.1.1
+  xerkonix_design_system: ^1.3.0
 ```
 
 요구 사항:
@@ -503,10 +506,10 @@ dependencies:
 - `XkKpiCard`
 - `XkConfidenceMeter`
 - `XkSignalTimeline`
-- `XkSignalOverviewMonitor`
+- `XkMetricTimeline`
 - `XkHexagonRadar`
-- `XkClusterMatrix`
-- `XkFlowCompression`
+- `XkDistributionHeatmap`
+- `XkPriorityFunnel`
 - `XkDomainPatternTabs`
 
 상세 코드 예시는 위 English 섹션 `Pattern Widgets`를 참고하세요.
@@ -515,12 +518,12 @@ dependencies:
 
 공개 모션 위젯 6종:
 
-- `XkStatusBreath`
+- `XkStatusPulse`
 - `XkSignalSweep`
-- `XkWaveDrift`
+- `XkRhythmLine`
 - `XkFocusRipple`
 - `XkCardSettle`
-- `XkAlertBeat`
+- `XkAlertPulse`
 
 기존 래퍼 API(`XkMotion.breathingLight`, `XkMotion.pulse`)도 유지됩니다.
 

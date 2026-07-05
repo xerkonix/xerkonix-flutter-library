@@ -1,99 +1,46 @@
-# Xerkonix Flutter Library
+# xerkonix-flutter-library
 
-A monorepo for XERKONIX Flutter packages.
+XERKONIX Flutter 공개 패키지 5종의 모노레포. 모두 pub.dev 에 게시된 Apache-2.0 오픈소스이며, Weave 디자인 시스템과 공통 앱 인프라(에러/HTTP/로깅/사이징)를 제공한다.
 
-## English
+이 패키지들은 **오픈소스 레퍼런스**다. XERKONIX 제품 서비스는 의도적으로 이 패키지들에 런타임 의존하지 않고, 공유 계약(`xerkonix-code-contract`)에서 코드를 생성해 각자 소유하는 방식을 쓴다(`xerkonix-frontend-boilerplate` 참고). 즉 이 라이브러리는 공개·참조용이고, 제품은 패키지 비종속이다.
 
-### Structure
+## 패키지
 
-```text
+| 패키지 (pub 이름) | 버전 | 요약 |
+|---|---|---|
+| [`xerkonix_design_system`](xerkonix-design-system/) | 2.1.1 | Weave v1.5 토큰·테마·타이포·아이콘·컴포넌트·패턴·모션 위젯 |
+| [`xerkonix_error_handler`](xerkonix-error-handler/) | 1.1.0 | 구조화된 에러 타입·예외·메시지 핸들러·다이얼로그/토스트 UI |
+| [`xerkonix_http`](xerkonix-http/) | 1.1.0 | 전 HTTP 메서드 클라이언트 + 자동 에러 파싱·로깅 통합 |
+| [`xerkonix_logger`](xerkonix-logger/) | 1.1.0 | 레벨별 로깅 + HTTP 요청/응답 로깅 |
+| [`xerkonix_sizer`](xerkonix-sizer/) | 1.1.0 | 논리 픽셀(lp) 기반 반응형 사이징 유틸리티 |
+
+각 패키지는 독립적으로 게시된다. `xerkonix_http` 는 `xerkonix_error_handler` / `xerkonix_logger` 에, `xerkonix_error_handler` 는 `xerkonix_logger` 에 의존한다.
+
+## 요구 사항
+
+- Dart SDK: `>=3.5.0 <4.0.0`
+- Flutter: `>=3.24.0`
+
+## 구조
+
+```
 xerkonix-flutter-library/
-├── xerkonix-design-system/   # Design system package
-├── xerkonix-error-handler/   # Error handling package
-├── xerkonix-http/            # HTTP client package
-├── xerkonix-logger/          # Logging package
-└── xerkonix-sizer/           # Responsive sizing package
+├── xerkonix-design-system/   # 디자인 시스템
+├── xerkonix-error-handler/   # 에러 처리
+├── xerkonix-http/            # HTTP 클라이언트
+├── xerkonix-logger/          # 로깅
+└── xerkonix-sizer/           # 반응형 사이징
 ```
 
-### Packages
+각 패키지의 예제는 해당 패키지 `example/` 폴더에 있다. 개발/검증은 패키지 디렉터리에서:
 
-#### xerkonix-design-system
-A comprehensive design system package providing Weave themes, typography, color tokens, shape/layout, motion, and UI components.
-
-Version: `1.1.1`
-
-#### xerkonix-error-handler
-A package for error and exception handling.
-
-Version: `1.0.0`
-
-#### xerkonix-http
-A package for HTTP client requests.
-
-Version: `1.0.0`
-
-#### xerkonix-logger
-A package that provides logging functionality.
-
-Version: `1.0.1`
-
-#### xerkonix-sizer
-A package for responsive sizing utilities.
-
-Version: `1.0.0`
-
-### Note
-
-Example projects for each package are in each package `example/` folder.
-
-### License
-
-All packages are licensed under Apache License 2.0. See each package `LICENSE` file.
-
-## 한국어
-
-### 구조
-
-```text
-xerkonix-flutter-library/
-├── xerkonix-design-system/   # 디자인 시스템 패키지
-├── xerkonix-error-handler/   # 에러 처리 패키지
-├── xerkonix-http/            # HTTP 클라이언트 패키지
-├── xerkonix-logger/          # 로깅 패키지
-└── xerkonix-sizer/           # 반응형 사이징 패키지
+```bash
+cd <package>
+flutter pub get
+flutter analyze
+flutter test
 ```
 
-### 패키지
+## 라이선스
 
-#### xerkonix-design-system
-Weave 테마, 타이포그래피, 컬러 토큰, shape/layout, 모션, UI 컴포넌트를 제공하는 디자인 시스템 패키지입니다.
-
-버전: `1.1.1`
-
-#### xerkonix-error-handler
-에러 및 예외 처리를 위한 패키지입니다.
-
-버전: `1.0.0`
-
-#### xerkonix-http
-HTTP 클라이언트 요청을 위한 패키지입니다.
-
-버전: `1.0.0`
-
-#### xerkonix-logger
-로깅 기능을 제공하는 패키지입니다.
-
-버전: `1.0.1`
-
-#### xerkonix-sizer
-반응형 사이징 유틸리티 패키지입니다.
-
-버전: `1.0.0`
-
-### 참고
-
-각 패키지의 예제 프로젝트는 해당 패키지의 `example/` 폴더에 있습니다.
-
-### 라이선스
-
-모든 패키지는 Apache License 2.0을 따릅니다. 각 패키지의 `LICENSE` 파일을 확인하세요.
+모든 패키지는 Apache License 2.0. 각 패키지의 `LICENSE` 파일 참고.

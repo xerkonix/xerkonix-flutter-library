@@ -1,109 +1,47 @@
 # xerkonix_logger
 
-A feature-rich logging package for Flutter applications with multiple log levels (log, debug, info, warning, error, exception), emoji-based visual indicators, and fun logger support. Integrates seamlessly with HTTP requests and provides structured logging capabilities.
+Flutter 애플리케이션용 로깅 패키지. 레벨별 로그(log/debug/info/warning/error/exception), HTTP 요청/응답 로깅, 이모지 기반 시각 표시를 제공한다. 현재 버전은 **1.1.0**.
 
-## Features
-
-- 🪵 Simple and intuitive logging API
-- 💬 Multiple log levels (log, debug, info, warning, error, exception)
-- 🎨 Emoji-enhanced log messages for better readability
-- 🌐 HTTP request/response logging support
-- 🏗️ Build process logging
-- ❤️ Fun logger options (heart, robot, poop)
-
-## Version
-
-**Current version: v1.0.1**
-
-## Getting Started
-
-Add this package to your `pubspec.yaml`:
+## 설치
 
 ```yaml
 dependencies:
-  xerkonix_logger: ^1.0.1
+  xerkonix_logger: ^1.1.0
   logger: ^2.4.0
   http: ^1.2.2
 ```
 
-Then run:
+- Dart SDK: `>=3.5.0 <4.0.0`
+- Flutter: `>=3.24.0`
 
-```bash
-flutter pub get
-```
-
-## Usage
-
-### Basic Logging
+## 사용
 
 ```dart
 import 'package:xerkonix_logger/xerkonix_logger.dart';
 
-// Default logger
-Logger("Default Logger");
-
-// Debug logging
-Logger.debug("Debugging message");
-
-// Info logging
-Logger.info("Information message");
-
-// Warning logging
-Logger.warning("Warning message");
-
-// Error logging
-Logger.error(Error("Error occurred"));
-
-// Exception logging
-Logger.exception(Exception("Exception occurred"));
+Logger.debug('Debugging message');
+Logger.info('Information message');
+Logger.warning('Warning message');
+Logger.error(Error('Error occurred'));
+Logger.exception(Exception('Exception occurred'));
 ```
 
-### HTTP Request/Response Logging
+### HTTP 로깅
 
 ```dart
-import 'package:http/http.dart' as http;
-
-// Log HTTP request
-http.Request request = http.Request("GET", Uri.parse("https://api.example.com"));
 Logger.httpRequest(httpRequest: request);
-
-// Log HTTP response
-http.Response response = await http.get(Uri.parse("https://api.example.com"));
-Logger.httpResponse(httpResponse: response);
-
-// Log HTTP response with headers
 Logger.httpResponse(httpResponse: response, printHeaders: true);
-```
-
-### Multipart Request Logging
-
-```dart
-var request = http.MultipartRequest('POST', Uri.parse('https://api.example.com'));
 Logger.multipartRequest(multipartRequest: request);
 ```
 
-### Fun Loggers
+### 기타
 
 ```dart
-FunLogger.heart("I Love You.");
-FunLogger.robot("Robot message");
-FunLogger.poop("Shit Code");
+Logger.build('build start\nbuilding...\nbuild done');   // 빌드 과정 로깅
+
+FunLogger.heart('...');   // 부가 로거 (heart / robot / poop)
 ```
 
-### Build Process Logging
+## 라이선스
 
-```dart
-Logger.build("build start\nbuilding...\nbuild done");
-```
-
-## Requirements
-
-- Dart SDK: `>=3.5.0 <4.0.0`
-- Flutter: `>=3.24.0`
-- logger: `^2.4.0`
-- http: `^1.2.2`
-
-## Additional Information
-
-- Version: v1.0.1
-- License: Apache License, Version 2.0 (see [LICENSE](LICENSE) file)
+Apache License 2.0. `LICENSE` 참고.

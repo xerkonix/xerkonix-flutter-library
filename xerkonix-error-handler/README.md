@@ -1,170 +1,57 @@
 # xerkonix_error_handler
 
-A comprehensive error and exception handling package for Flutter applications. Provides structured error types, custom exceptions, error message handlers, and UI components (dialogs, toasts) for consistent error management across applications.
+Flutter 애플리케이션용 에러/예외 처리 패키지. 구조화된 에러 타입, 커스텀 예외, 메시지 핸들러, 그리고 다이얼로그/토스트 UI 컴포넌트를 제공한다. 현재 버전은 **1.1.0**.
 
-## Features
-
-- 🎯 Simple and intuitive API for error handling
-- 🔧 Customizable error dialogs and toast messages
-- 📱 Full platform support (Web, iOS, Android, Linux, macOS, Windows)
-- 🚀 Perfect compatibility with Flutter 3.24+
-- 🎨 Support for various error types (Bad Request, Unauthorized, Forbidden, Not Found, Conflict, etc.)
-- 📝 Structured error definitions with code, type, message, title, and detail
-- 🔗 Integration with xerkonix_logger for error logging
-
-## Version
-
-**Current version: v1.0.0**
-
-## Getting Started
-
-### Installation
-
-Add this to your `pubspec.yaml` file:
+## 설치
 
 ```yaml
 dependencies:
-  xerkonix_error_handler: ^1.0.0
-  xerkonix_logger: ^1.0.0
+  xerkonix_error_handler: ^1.1.0
+  xerkonix_logger: ^1.1.0
 ```
 
-Then install the package:
+- Dart SDK: `>=3.5.0 <4.0.0`
+- Flutter: `>=3.24.0`
+- 의존: `xerkonix_logger`
 
-```bash
-flutter pub get
-```
+## 사용
 
-## Usage
-
-### Basic Error Handling
+`XkException` 을 던지면 기본 동작이 자동 적용된다 — `xerkonix_logger` 로 에러/스택트레이스 로깅, `XkErrorMessageHandler` 에 메시지 설정. 별도 boilerplate 없이 일관된 처리가 이루어진다.
 
 ```dart
 import 'package:xerkonix_error_handler/xerkonix_error_handler.dart';
 
 try {
-  // Code that may throw an error
   throw XkException(XkErrors.conflict());
 } on XkException catch (e) {
-  XkErrorMessageHandler.setErrorMessage(
-    title: e.error.title,
-    detail: e.error.detail,
-  );
   XkErrorMessageHandler.showError(
     context: context,
-    widgetType: WidgetType.dialog,
+    widgetType: WidgetType.dialog,   // 또는 WidgetType.snackbar
   );
 }
 ```
 
-### Using Predefined Error Types
+### 사전 정의 에러 (`XkErrors`)
+
+`badRequest()`(400), `unauthorized()`(401), `forbidden()`(403), `notFound()`(404), `conflict()`(409), `internalServerError()`(500) 등.
+
+### 커스텀 에러
+
+`XkError` 를 구현해 `code`/`type`/`message`/`title`/`detail`/`stackTrace` 를 채운 뒤 `XkException` 으로 감싼다.
 
 ```dart
-// Bad Request (400)
-throw XkException(XkErrors.badRequest());
-
-// Unauthorized (401)
-throw XkException(XkErrors.unauthorized());
-
-// Forbidden (403)
-throw XkException(XkErrors.forbidden());
-
-// Not Found (404)
-throw XkException(XkErrors.notFound());
-
-// Conflict (409)
-throw XkException(XkErrors.conflict());
-
-// Internal Server Error (500)
-throw XkException(XkErrors.internalServerError());
+class CustomError implements XkError { /* ... */ }
+throw XkException(CustomError('Something went wrong'));
 ```
 
-### Custom Error
+### 커스텀 UI
 
-```dart
-class CustomError implements XkError {
-  CustomError(this.message);
+`XkErrorMessageHandler.showError(..., customErrorDialog: ...)` 로 다이얼로그를 직접 지정할 수 있다.
 
-  @override
-  String? code;
+## 공개 API
 
-  @override
-  String? type;
+에러: `XkError`, `XkErrors`, `XkErrorCodes`, `XkErrorFactory`, `XkErrorNormalizer`. 예외: `XkException`, `XkExceptionFactory`. 메시지: `XkErrorMessageHandler`, 메시지 레지스트리·훅. UI: `error_dialog`, `error_toast`.
 
-  @override
-  String message;
+## 라이선스
 
-  @override
-  String title = "Custom Error Title";
-
-  @override
-  String? detail = "Custom Error Message";
-
-  @override
-  StackTrace? get stackTrace => StackTrace.current;
-}
-
-// Use custom error
-throw XkException(CustomError("Something went wrong"));
-```
-
-### Custom Error Dialog
-
-```dart
-XkErrorMessageHandler.showError(
-  context: context,
-  widgetType: WidgetType.dialog,
-  customErrorDialog: AlertDialog(
-    title: Text('Custom Error'),
-    content: Text('Error message'),
-    actions: [
-      TextButton(
-        onPressed: () => Navigator.of(context).pop(),
-        child: Text('OK'),
-      ),
-    ],
-  ),
-);
-```
-
-### Error Toast
-
-```dart
-XkErrorMessageHandler.showError(
-  context: context,
-  widgetType: WidgetType.snackbar,
-);
-```
-
-## Requirements
-
-- Dart SDK: `>=3.5.0 <4.0.0`
-- Flutter: `>=3.24.0`
-- xerkonix_logger: `^1.0.0`
-
-## Important Notes
-
-### Default Logging and Error Message Handling
-
-When you create an `XkException`, default behaviors are automatically applied:
-
-1. **Default Error Logging**: If you don't manually call logging methods, the error is automatically logged using `xerkonix_logger` by default
-2. **Default Exception Logging**: The exception stack trace is automatically logged by default
-3. **Default Error Message Setting**: The error message is automatically set in `XkErrorMessageHandler` by default for UI display
-
-This means you don't need to manually call logging or error message handling methods. Simply creating an `XkException` will apply all default behaviors:
-
-```dart
-// Creating an exception applies default logging and error message handling
-throw XkException(XkErrors.badRequest());
-
-// No need to manually call:
-// - Logger.error(...)
-// - XkErrorMessageHandler.setErrorMessage(...)
-```
-
-This default behavior provides convenience for package users by ensuring consistent error handling and logging without requiring additional boilerplate code.
-
-## Additional Information
-
-- Version: v1.0.0
-- License: Apache License, Version 2.0 (see [LICENSE](LICENSE) file)
+Apache License 2.0. `LICENSE` 참고.

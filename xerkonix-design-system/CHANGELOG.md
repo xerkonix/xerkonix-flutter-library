@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## 2.1.1
+
+- Fix: dedupe unreachable accent branches in `XkPattern._resolveGradientEnd` (no behavior change).
+- Tidy: `ColorScheme.secondary` now uses `accentDeep` (was identical to `primary`) for proper primary/secondary differentiation.
+
 ## 2.1.0 — Product-primitive parity (additive)
 
 Additive modernization that makes the package a superset of the product's real

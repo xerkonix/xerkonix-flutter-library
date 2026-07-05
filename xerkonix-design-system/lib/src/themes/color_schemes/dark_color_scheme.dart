@@ -9,7 +9,7 @@ const darkColorScheme = ColorScheme(
   onPrimary: XkColor.darkBg,
   primaryContainer: XkColor.darkAccentSoft,
   onPrimaryContainer: XkColor.darkBg,
-  secondary: XkColor.darkAccent,
+  secondary: XkColor.darkAccentDeep,
   onSecondary: XkColor.darkBg,
   secondaryContainer: XkColor.darkAccentSoft,
   onSecondaryContainer: XkColor.darkTextStrong,

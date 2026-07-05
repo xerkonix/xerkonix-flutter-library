@@ -161,17 +161,11 @@ class XkConfidenceMeter extends StatelessWidget {
     if (color == XkColor.accent || color == XkColor.darkAccent) {
       return isDark ? XkColor.darkAccentSoft : XkColor.accentSoft;
     }
-    if (color == XkColor.accent || color == XkColor.darkAccent) {
-      return isDark ? XkColor.darkAccentDeep : XkColor.accentSoft;
-    }
     if (color == XkColor.success || color == XkColor.darkSuccess) {
       return isDark ? XkColor.darkSuccess : XkColor.successSoft;
     }
     if (color == XkColor.gray600 || color == XkColor.gray500) {
       return Color.lerp(color, Colors.white, isDark ? 0.18 : 0.38) ?? color;
-    }
-    if (color == XkColor.accent || color == XkColor.darkAccent) {
-      return isDark ? XkColor.darkAccentDeep : XkColor.accentSoft;
     }
     return Color.lerp(color, Colors.white, isDark ? 0.18 : 0.32) ?? color;
   }

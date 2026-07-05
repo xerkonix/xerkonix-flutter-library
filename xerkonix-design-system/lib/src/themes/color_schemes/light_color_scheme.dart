@@ -9,7 +9,7 @@ const lightColorScheme = ColorScheme(
   onPrimary: Colors.white,
   primaryContainer: XkColor.accentSoft,
   onPrimaryContainer: XkColor.textStrong,
-  secondary: XkColor.accent,
+  secondary: XkColor.accentDeep,
   onSecondary: Colors.white,
   secondaryContainer: XkColor.accentSoft,
   onSecondaryContainer: XkColor.accentDeep,

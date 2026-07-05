@@ -23,10 +23,4 @@ dev_dependencies:
 # Local-development only: resolve sibling packages by path so all three build
 # together against the working tree. The coordinator STRIPS this block before
 # publishing (the hosted caret constraints above are what ship).
-dependency_overrides:
-  xerkonix_logger:
-    path: ../xerkonix-logger
-  xerkonix_error_handler:
-    path: ../xerkonix-error-handler
-
 flutter:

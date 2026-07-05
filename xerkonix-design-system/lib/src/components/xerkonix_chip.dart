@@ -100,32 +100,32 @@ class XkChip extends StatelessWidget {
     switch (variant) {
       case XkChipVariant.neutral:
         return _ChipPalette(
-          background: isDark ? XkColor.darkSurfaceSoft : XkColor.surface,
-          border: isDark ? XkColor.darkBorderMid : XkColor.borderMid,
+          background: isDark ? XkColor.darkSurface2 : XkColor.surface,
+          border: isDark ? XkColor.darkBorder : XkColor.border,
           text: isDark ? XkColor.darkTextBody : XkColor.textBody,
-          dot: isDark ? XkColor.darkTextSoft : XkColor.textSoft,
+          dot: isDark ? XkColor.darkTextMuted : XkColor.textMuted,
         );
       case XkChipVariant.brand:
         return _ChipPalette(
-          background: isDark ? XkColor.darkIdentityWash : XkColor.identityWash,
-          border: (isDark ? XkColor.darkIdentity : XkColor.identity).withValues(
+          background: isDark ? XkColor.darkAccentSoft : XkColor.accentSoft,
+          border: (isDark ? XkColor.darkAccent : XkColor.accent).withValues(
             alpha: 0.44,
           ),
-          text: isDark ? XkColor.darkIdentityDeep : XkColor.identityDeep,
-          dot: isDark ? XkColor.darkIdentity : XkColor.identity,
+          text: isDark ? XkColor.darkAccentDeep : XkColor.accentDeep,
+          dot: isDark ? XkColor.darkAccent : XkColor.accent,
         );
       case XkChipVariant.support:
         return _ChipPalette(
-          background: isDark ? XkColor.darkSupportWash : XkColor.supportWash,
-          border: (isDark ? XkColor.darkSupport : XkColor.support).withValues(
+          background: isDark ? XkColor.darkSuccessSoft : XkColor.successSoft,
+          border: (isDark ? XkColor.darkSuccess : XkColor.success).withValues(
             alpha: 0.44,
           ),
-          text: isDark ? XkColor.darkSupportDeep : XkColor.supportDeep,
-          dot: isDark ? XkColor.darkSupport : XkColor.support,
+          text: isDark ? XkColor.darkSuccess : XkColor.success,
+          dot: isDark ? XkColor.darkSuccess : XkColor.success,
         );
       case XkChipVariant.accent:
         return _ChipPalette(
-          background: isDark ? XkColor.darkAccentWash : XkColor.accentWash,
+          background: isDark ? XkColor.darkAccentSoft : XkColor.accentSoft,
           border: (isDark ? XkColor.darkAccent : XkColor.accent).withValues(
             alpha: 0.44,
           ),
@@ -134,12 +134,12 @@ class XkChip extends StatelessWidget {
         );
       case XkChipVariant.signal:
         return _ChipPalette(
-          background: isDark ? XkColor.darkSignalWash : XkColor.signalWash,
-          border: (isDark ? XkColor.darkSignal : XkColor.signal).withValues(
+          background: isDark ? XkColor.darkErrorSoft : XkColor.errorSoft,
+          border: (isDark ? XkColor.darkError : XkColor.error).withValues(
             alpha: 0.44,
           ),
-          text: isDark ? XkColor.darkSignal : XkColor.signal,
-          dot: isDark ? XkColor.darkSignal : XkColor.signal,
+          text: isDark ? XkColor.darkError : XkColor.error,
+          dot: isDark ? XkColor.darkError : XkColor.error,
         );
     }
   }

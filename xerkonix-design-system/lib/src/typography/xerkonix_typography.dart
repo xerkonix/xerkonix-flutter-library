@@ -19,10 +19,17 @@ import 'typo_constants.dart';
 class XkTypo {
   XkTypo._();
 
-  static const List<String> _sansFallback = [IBMPlexSansKR.fontFamily];
+  static const List<String> _sansFallback = [
+    'Apple SD Gothic Neo',
+    IBMPlexSansKR.fontFamily,
+  ];
+  static const List<String> _serifFallback = [
+    'Noto Serif KR',
+    IBMPlexSansKR.fontFamily,
+  ];
   static const List<String> _monoFallback = [
     IBMPlexMono.fontFamily,
-    IBMPlexSansKR.fontFamily,
+    Pretendard.fontFamily,
   ];
 
   static TextStyle _sans({
@@ -32,9 +39,27 @@ class XkTypo {
     double letterSpacing = 0,
   }) {
     return TextStyle(
-      fontFamily: IBMPlexSansKR.fontFamily,
-      package: IBMPlexSansKR.package,
+      fontFamily: Pretendard.fontFamily,
+      package: Pretendard.package,
       fontFamilyFallback: _sansFallback,
+      fontSize: size,
+      fontWeight: weight,
+      height: height,
+      letterSpacing: letterSpacing,
+    );
+  }
+
+  /// v1.5 display serif — MaruBuri. Reserved for 28px+ display styles.
+  static TextStyle _serif({
+    required double size,
+    required FontWeight weight,
+    required double height,
+    double letterSpacing = 0,
+  }) {
+    return TextStyle(
+      fontFamily: MaruBuri.fontFamily,
+      package: MaruBuri.package,
+      fontFamilyFallback: _serifFallback,
       fontSize: size,
       fontWeight: weight,
       height: height,
@@ -59,21 +84,22 @@ class XkTypo {
     );
   }
 
-  static final TextStyle display = _sans(
+  // Display styles (28px+) use the MaruBuri serif per v1.5.
+  static final TextStyle display = _serif(
     size: TypoConst.fontSize.displayMax,
     weight: TypoConst.fontWeight.bold,
     height: 1.15,
     letterSpacing: -0.4,
   );
 
-  static final TextStyle h1 = _sans(
+  static final TextStyle h1 = _serif(
     size: TypoConst.fontSize.h1Max,
     weight: TypoConst.fontWeight.bold,
     height: 1.18,
     letterSpacing: -0.2,
   );
 
-  static final TextStyle h2 = _sans(
+  static final TextStyle h2 = _serif(
     size: TypoConst.fontSize.h2,
     weight: TypoConst.fontWeight.bold,
     height: 1.24,
@@ -209,9 +235,12 @@ class M3Typo {
 
   static TextStyle _m3(double size, FontWeight weight) {
     return TextStyle(
-      fontFamily: IBMPlexSansKR.fontFamily,
-      package: IBMPlexSansKR.package,
-      fontFamilyFallback: const [IBMPlexSansKR.fontFamily],
+      fontFamily: Pretendard.fontFamily,
+      package: Pretendard.package,
+      fontFamilyFallback: const [
+        'Apple SD Gothic Neo',
+        IBMPlexSansKR.fontFamily,
+      ],
       fontSize: size,
       fontWeight: weight,
       height: 1.5,
@@ -479,8 +508,8 @@ class NotoSansKR {
 class Pretendard {
   Pretendard._();
 
-  static const String fontFamily = IBMPlexSans.fontFamily;
-  static const String package = IBMPlexSans.package;
+  static const String fontFamily = 'Pretendard';
+  static const String package = 'xerkonix_design_system';
 
   static TextStyle thin({required double fontSize}) => _familyStyle(
     fontFamily: fontFamily,
@@ -535,6 +564,39 @@ class Pretendard {
     package: package,
     fontSize: fontSize,
     weight: FontWeight.w900,
+  );
+}
+
+/// MaruBuri serif — v1.5 display family (28px+ headings only).
+class MaruBuri {
+  MaruBuri._();
+
+  static const String fontFamily = 'MaruBuri';
+  static const String package = 'xerkonix_design_system';
+
+  static TextStyle light({required double fontSize}) => _familyStyle(
+    fontFamily: fontFamily,
+    package: package,
+    fontSize: fontSize,
+    weight: FontWeight.w300,
+  );
+  static TextStyle regular({required double fontSize}) => _familyStyle(
+    fontFamily: fontFamily,
+    package: package,
+    fontSize: fontSize,
+    weight: FontWeight.w400,
+  );
+  static TextStyle semiBold({required double fontSize}) => _familyStyle(
+    fontFamily: fontFamily,
+    package: package,
+    fontSize: fontSize,
+    weight: FontWeight.w600,
+  );
+  static TextStyle bold({required double fontSize}) => _familyStyle(
+    fontFamily: fontFamily,
+    package: package,
+    fontSize: fontSize,
+    weight: FontWeight.w700,
   );
 }
 
@@ -662,12 +724,12 @@ class IBMPlexMono {
   );
 }
 
-/// Backward-compatible alias: legacy API name now maps to Sans KR.
+/// Backward-compatible alias: legacy API name now maps to Pretendard (v1.5 sans).
 class IBMPlexSans {
   IBMPlexSans._();
 
-  static const String fontFamily = IBMPlexSansKR.fontFamily;
-  static const String package = IBMPlexSansKR.package;
+  static const String fontFamily = Pretendard.fontFamily;
+  static const String package = Pretendard.package;
 
   static TextStyle thin({required double fontSize}) => _familyStyle(
     fontFamily: fontFamily,

@@ -191,7 +191,7 @@ class XkButton extends StatelessWidget {
       key: key,
       onPressed: onPressed,
       buttonType: ButtonType.semantic,
-      semanticColor: XkColor.info,
+      semanticColor: XkColor.gray600,
       child: child,
     );
   }
@@ -206,9 +206,9 @@ class XkButton extends StatelessWidget {
           onPressed: onPressed,
           style: _filledStyle(
             isDark: isDark,
-            baseColor: isDark ? XkColor.darkText : XkColor.text,
+            baseColor: isDark ? XkColor.darkTextStrong : XkColor.textStrong,
             hoverColor: isDark ? XkColor.darkTextBody : XkColor.textBody,
-            textColor: isDark ? XkColor.darkCanvas : XkColor.canvas,
+            textColor: isDark ? XkColor.darkBg : XkColor.bg,
           ),
           child: child,
         );
@@ -217,9 +217,9 @@ class XkButton extends StatelessWidget {
           onPressed: onPressed,
           style: _filledStyle(
             isDark: isDark,
-            baseColor: isDark ? XkColor.darkAction : XkColor.action,
-            hoverColor: isDark ? XkColor.darkActionDeep : XkColor.actionDeep,
-            textColor: isDark ? XkColor.darkActionText : XkColor.actionText,
+            baseColor: isDark ? XkColor.darkAccent : XkColor.accent,
+            hoverColor: isDark ? XkColor.darkAccentDeep : XkColor.accentDeep,
+            textColor: isDark ? XkColor.darkAccentText : XkColor.accentText,
           ),
           child: child,
         );
@@ -228,10 +228,10 @@ class XkButton extends StatelessWidget {
           onPressed: onPressed,
           style: _filledStyle(
             isDark: isDark,
-            baseColor: isDark ? XkColor.darkIdentity : XkColor.identity,
+            baseColor: isDark ? XkColor.darkAccent : XkColor.accent,
             hoverColor: isDark
-                ? XkColor.darkIdentityDeep
-                : XkColor.identityDeep,
+                ? XkColor.darkAccentDeep
+                : XkColor.accentDeep,
             textColor: const Color(0xFF1A0E00),
           ),
           child: child,
@@ -241,8 +241,8 @@ class XkButton extends StatelessWidget {
           onPressed: onPressed,
           style: _filledStyle(
             isDark: isDark,
-            baseColor: isDark ? XkColor.darkSupport : XkColor.support,
-            hoverColor: isDark ? XkColor.darkSupportDeep : XkColor.supportDeep,
+            baseColor: isDark ? XkColor.darkSuccess : XkColor.success,
+            hoverColor: isDark ? XkColor.darkSuccess : XkColor.success,
             textColor: const Color(0xFF1A0E00),
           ),
           child: child,
@@ -254,7 +254,7 @@ class XkButton extends StatelessWidget {
             isDark: isDark,
             baseColor: isDark ? XkColor.darkAccent : XkColor.accent,
             hoverColor: isDark ? XkColor.darkAccentDeep : XkColor.accentDeep,
-            textColor: isDark ? XkColor.darkActionText : Colors.white,
+            textColor: isDark ? XkColor.darkAccentText : Colors.white,
           ),
           child: child,
         );
@@ -302,7 +302,7 @@ class XkButton extends StatelessWidget {
       side: WidgetStateProperty.all(BorderSide.none),
       backgroundColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.disabled)) {
-          return isDark ? XkColor.darkTextFaint : XkColor.textFaint;
+          return isDark ? XkColor.gray400 : XkColor.gray400;
         }
         if (states.contains(WidgetState.pressed) ||
             states.contains(WidgetState.hovered) ||
@@ -313,7 +313,7 @@ class XkButton extends StatelessWidget {
       }),
       foregroundColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.disabled)) {
-          return isDark ? XkColor.darkSurface : XkColor.textSoft;
+          return isDark ? XkColor.darkSurface : XkColor.textMuted;
         }
         return textColor;
       }),
@@ -337,7 +337,7 @@ class XkButton extends StatelessWidget {
   }
 
   static ButtonStyle _outlineStyle({required bool isDark}) {
-    final borderColor = isDark ? XkColor.darkBorderMid : XkColor.borderMid;
+    final borderColor = isDark ? XkColor.darkBorder : XkColor.border;
     final textColor = isDark ? XkColor.darkTextBody : XkColor.textBody;
 
     return ButtonStyle(
@@ -361,7 +361,7 @@ class XkButton extends StatelessWidget {
       }),
       backgroundColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.pressed)) {
-          return isDark ? XkColor.darkSurfaceDeep : XkColor.surfaceSoft;
+          return isDark ? XkColor.darkSurface2 : XkColor.surface2;
         }
         if (states.contains(WidgetState.hovered)) {
           return (isDark ? XkColor.darkSurface : XkColor.surface).withValues(
@@ -388,10 +388,10 @@ class XkButton extends StatelessWidget {
 
   static ButtonStyle _tonalStyle({required bool isDark}) {
     final backgroundColor = isDark
-        ? XkColor.darkSurfaceSoft
-        : XkColor.surfaceSoft;
-    final textColor = isDark ? XkColor.darkText : XkColor.text;
-    final borderColor = isDark ? XkColor.darkBorderMid : XkColor.borderMid;
+        ? XkColor.darkSurface2
+        : XkColor.surface2;
+    final textColor = isDark ? XkColor.darkTextStrong : XkColor.textStrong;
+    final borderColor = isDark ? XkColor.darkBorder : XkColor.border;
 
     return ButtonStyle(
       textStyle: WidgetStateProperty.all(XkTypo.buttonLabel),
@@ -408,7 +408,7 @@ class XkButton extends StatelessWidget {
           return backgroundColor.withValues(alpha: 0.5);
         }
         if (states.contains(WidgetState.pressed)) {
-          return isDark ? XkColor.darkSurfaceDeep : XkColor.surfaceDeep;
+          return isDark ? XkColor.darkSurface2 : XkColor.surface2;
         }
         if (states.contains(WidgetState.hovered)) {
           return backgroundColor.withValues(alpha: 0.94);
@@ -439,7 +439,7 @@ class XkButton extends StatelessWidget {
   static Color _onColor(Color color, bool isDark) {
     return ThemeData.estimateBrightnessForColor(color) == Brightness.dark
         ? Colors.white
-        : (isDark ? XkColor.darkActionText : const Color(0xFF1A0E00));
+        : (isDark ? XkColor.darkAccentText : const Color(0xFF1A0E00));
   }
 }
 

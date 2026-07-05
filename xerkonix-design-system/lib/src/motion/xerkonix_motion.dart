@@ -5,13 +5,18 @@ import 'package:flutter/material.dart';
 import '../palette/color.dart';
 import '../shape/xerkonix_shape.dart';
 
-/// Motion token values from Weave v1.3 reference.
+/// Motion token values from Weave v1.5 reference.
+///
+/// v1.5 motion grammar (see tokens.css `--t-*` / `--ease-sharp`):
+/// - observe 180ms (micro state change: hover, icon active)
+/// - resolve 260ms (state transition: card entry, chip state)
+/// - settle  320ms (screen / palette transition, the longest value)
 class XkMotionToken {
   XkMotionToken._();
 
   static const Duration observe = Duration(milliseconds: 180);
-  static const Duration interpret = Duration(milliseconds: 250);
-  static const Duration connect = Duration(milliseconds: 300);
+  static const Duration resolve = Duration(milliseconds: 260);
+  static const Duration settle = Duration(milliseconds: 320);
 
   static const Duration statusPulse = Duration(milliseconds: 2500);
   static const Duration signalSweep = Duration(milliseconds: 2500);
@@ -20,7 +25,8 @@ class XkMotionToken {
   static const Duration cardSettle = Duration(milliseconds: 2800);
   static const Duration alertPulse = Duration(milliseconds: 1900);
 
-  static const Curve ease = Cubic(0.2, 0, 0.1, 1);
+  /// v1.5 easing — `cubic-bezier(0.33, 0.02, 0.2, 1)`.
+  static const Curve ease = Cubic(0.33, 0.02, 0.2, 1);
   static const Curve spring = Cubic(0.34, 1.35, 0.64, 1);
 }
 
@@ -41,7 +47,7 @@ class XkMotion {
       duration: duration,
       minOpacity: minOpacity,
       maxOpacity: maxOpacity,
-      color: color ?? XkColor.identity,
+      color: color ?? XkColor.accent,
       respectReducedMotion: respectReducedMotion,
       child: child,
     );
@@ -59,8 +65,8 @@ class XkMotion {
     return _PulseAnimation(
       duration: duration,
       curve: curve,
-      primaryColor: primaryColor ?? XkColor.identity,
-      secondaryColor: secondaryColor ?? XkColor.signal,
+      primaryColor: primaryColor ?? XkColor.accent,
+      secondaryColor: secondaryColor ?? XkColor.error,
       respectReducedMotion: respectReducedMotion,
       child: child,
     );
@@ -68,7 +74,7 @@ class XkMotion {
 
   static Widget statusPulse({
     Duration duration = XkMotionToken.statusPulse,
-    Color color = XkColor.identity,
+    Color color = XkColor.accent,
     double size = 16,
     bool respectReducedMotion = true,
   }) {
@@ -82,7 +88,7 @@ class XkMotion {
 
   static Widget signalSweep({
     Duration duration = XkMotionToken.signalSweep,
-    Color color = XkColor.identity,
+    Color color = XkColor.accent,
     double width = 186,
     bool respectReducedMotion = true,
   }) {
@@ -96,7 +102,7 @@ class XkMotion {
 
   static Widget rhythmLine({
     Duration duration = XkMotionToken.rhythmLine,
-    Color color = XkColor.identity,
+    Color color = XkColor.accent,
     bool respectReducedMotion = true,
   }) {
     return XkRhythmLine(
@@ -108,7 +114,7 @@ class XkMotion {
 
   static Widget focusRipple({
     Duration duration = XkMotionToken.focusRipple,
-    Color color = XkColor.identity,
+    Color color = XkColor.accent,
     bool respectReducedMotion = true,
   }) {
     return XkFocusRipple(
@@ -132,7 +138,7 @@ class XkMotion {
 
   static Widget alertPulse({
     Duration duration = XkMotionToken.alertPulse,
-    Color color = XkColor.signal,
+    Color color = XkColor.error,
     bool respectReducedMotion = true,
   }) {
     return XkAlertPulse(
@@ -149,7 +155,7 @@ class XkStatusPulse extends StatelessWidget {
     super.key,
     this.duration = XkMotionToken.statusPulse,
     this.size = 16,
-    this.color = XkColor.identity,
+    this.color = XkColor.accent,
     this.minScale = 0.8,
     this.maxScale = 1.22,
     this.minOpacity = 0.45,
@@ -203,7 +209,7 @@ class XkSignalSweep extends StatelessWidget {
     this.width = 186,
     this.trackHeight = 5,
     this.dotSize = 11,
-    this.color = XkColor.identity,
+    this.color = XkColor.accent,
     this.respectReducedMotion = true,
   });
 
@@ -270,7 +276,7 @@ class XkRhythmLine extends StatelessWidget {
     this.duration = XkMotionToken.rhythmLine,
     this.width = 192,
     this.height = 40,
-    this.color = XkColor.identity,
+    this.color = XkColor.accent,
     this.respectReducedMotion = true,
   });
 
@@ -377,7 +383,7 @@ class XkFocusRipple extends StatelessWidget {
     this.duration = XkMotionToken.focusRipple,
     this.size = 64,
     this.dotSize = 14,
-    this.color = XkColor.identity,
+    this.color = XkColor.accent,
     this.respectReducedMotion = true,
   });
 
@@ -487,7 +493,7 @@ class XkCardSettle extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
-                  color: isDark ? XkColor.darkBorderMid : XkColor.borderMid,
+                  color: isDark ? XkColor.darkBorder : XkColor.border,
                 ),
                 color: isDark ? XkColor.darkSurface : XkColor.surface,
               ),
@@ -512,7 +518,7 @@ class XkAlertPulse extends StatelessWidget {
     this.duration = XkMotionToken.alertPulse,
     this.size = 72,
     this.dotSize = 16,
-    this.color = XkColor.signal,
+    this.color = XkColor.error,
     this.respectReducedMotion = true,
   });
 

@@ -550,7 +550,7 @@ class _Hero extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final eyebrowColor =
-        isDark ? XkColor.darkTextSoft : XkColor.identityDeep;
+        isDark ? XkColor.darkTextMuted : XkColor.accentDeep;
 
     return Container(
       width: double.infinity,
@@ -562,9 +562,9 @@ class _Hero extends StatelessWidget {
         ),
         gradient: LinearGradient(
           colors: [
-            (isDark ? XkColor.darkIdentityWash : XkColor.identityWash)
+            (isDark ? XkColor.darkAccentSoft : XkColor.accentSoft)
                 .withValues(alpha: 0.42),
-            (isDark ? XkColor.darkActionWash : XkColor.actionWash).withValues(
+            (isDark ? XkColor.darkAccentSoft : XkColor.accentSoft).withValues(
               alpha: 0.30,
             ),
             Colors.transparent,
@@ -581,7 +581,7 @@ class _Hero extends StatelessWidget {
               Container(
                 width: 26,
                 height: 1,
-                color: XkColor.identity,
+                color: XkColor.accent,
               ),
               const SizedBox(width: 8),
               Text(
@@ -693,8 +693,8 @@ class _AxisMotionCard extends StatelessWidget {
                 color: isDark ? XkColor.darkBorderSoft : XkColor.borderSoft,
               ),
               color: isDark
-                  ? XkColor.darkSurfaceDeep.withValues(alpha: 0.72)
-                  : XkColor.surfaceSoft.withValues(alpha: 0.72),
+                  ? XkColor.darkSurface2.withValues(alpha: 0.72)
+                  : XkColor.surface2.withValues(alpha: 0.72),
             ),
             clipBehavior: Clip.antiAlias,
             child: motion,
@@ -714,8 +714,8 @@ class _ThreadAxisMotion extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final guide = isDark
-        ? XkColor.darkTextSoft.withValues(alpha: 0.16)
-        : XkColor.textSoft.withValues(alpha: 0.14);
+        ? XkColor.darkTextMuted.withValues(alpha: 0.16)
+        : XkColor.textMuted.withValues(alpha: 0.14);
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -739,7 +739,7 @@ class _ThreadAxisMotion extends StatelessWidget {
               child: XkRhythmLine(
                 width: width,
                 height: 54,
-                color: isDark ? XkColor.darkIdentity : XkColor.identity,
+                color: isDark ? XkColor.darkAccent : XkColor.accent,
               ),
             ),
           ],
@@ -804,8 +804,8 @@ class _KnotAxisPainter extends CustomPainter {
     final center = Offset(size.width / 2, size.height / 2);
     final guidePaint = Paint()
       ..color = isDark
-          ? XkColor.darkTextSoft.withValues(alpha: 0.22)
-          : XkColor.textSoft.withValues(alpha: 0.22)
+          ? XkColor.darkTextMuted.withValues(alpha: 0.22)
+          : XkColor.textMuted.withValues(alpha: 0.22)
       ..strokeWidth = 1.5
       ..strokeCap = StrokeCap.round;
 
@@ -821,7 +821,7 @@ class _KnotAxisPainter extends CustomPainter {
     }
 
     final accent = isDark ? XkColor.darkAccent : XkColor.accent;
-    final identity = isDark ? XkColor.darkIdentity : XkColor.identity;
+    final identity = isDark ? XkColor.darkAccent : XkColor.accent;
     final ringProgress = 0.5 - math.cos(progress * math.pi * 2) / 2;
 
     canvas.drawCircle(
@@ -862,7 +862,7 @@ class _MotionInterpretationNote extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: XkShape.mdBorderRadius,
         border: Border.all(color: border),
-        color: isDark ? XkColor.darkSurfaceDeep : XkColor.surfaceSoft,
+        color: isDark ? XkColor.darkSurface2 : XkColor.surface2,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -900,7 +900,7 @@ class _Section extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final metaColor = isDark ? XkColor.darkTextSoft : XkColor.textSoft;
+    final metaColor = isDark ? XkColor.darkTextMuted : XkColor.textMuted;
 
     return Container(
       width: double.infinity,
@@ -1093,24 +1093,24 @@ class _ConfidenceCard extends StatelessWidget {
             label: '역할 적합도 신뢰도',
             value: 0.94,
             valueText: '94%',
-            startColor: XkColor.identityDeep,
-            endColor: XkColor.identitySoft,
+            startColor: XkColor.accentDeep,
+            endColor: XkColor.accentSoft,
           ),
           const SizedBox(height: XkLayout.spacingSm),
           const XkConfidenceMeter(
             label: '행동 전환 명확도',
             value: 0.91,
             valueText: '91%',
-            startColor: XkColor.actionDeep,
-            endColor: XkColor.actionSoft,
+            startColor: XkColor.accentDeep,
+            endColor: XkColor.accentSoft,
           ),
           const SizedBox(height: XkLayout.spacingSm),
           const XkConfidenceMeter(
             label: '추천 보조 안정성',
             value: 0.88,
             valueText: '88%',
-            startColor: XkColor.supportDeep,
-            endColor: XkColor.supportSoft,
+            startColor: XkColor.success,
+            endColor: XkColor.successSoft,
           ),
         ],
       ),
@@ -1141,7 +1141,7 @@ class _TimelineCard extends StatelessWidget {
           time: '2026-01-05 11:30',
           title: '역량 업데이트',
           description: '경력 점수 +8.2',
-          color: XkColor.info,
+          color: XkColor.gray600,
         ),
         XkTimelineItem(
           time: '2025-12-20 09:00',
@@ -1186,8 +1186,8 @@ class _MotionTile extends StatelessWidget {
               width: double.infinity,
               decoration: BoxDecoration(
                 color: isDark
-                    ? XkColor.darkSurfaceDeep.withValues(alpha: 0.55)
-                    : XkColor.surfaceSoft,
+                    ? XkColor.darkSurface2.withValues(alpha: 0.55)
+                    : XkColor.surface2,
                 borderRadius: XkShape.smBorderRadius,
               ),
               child: Center(child: child),

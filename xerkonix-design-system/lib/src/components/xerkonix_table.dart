@@ -51,12 +51,12 @@ class XkTable extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final headerBg = headerBackgroundColor ??
-        (isDark ? XkColor.darkSurfaceSoft : XkColor.surfaceSoft);
+        (isDark ? XkColor.darkSurface2 : XkColor.surface2);
     final rowBg =
         rowBackgroundColor ?? (isDark ? XkColor.darkSurface : XkColor.surface);
     final borderColor = isDark ? XkColor.darkBorderSoft : XkColor.borderSoft;
     final headerText = isDark ? XkColor.darkTextBody : XkColor.textBody;
-    final rowText = isDark ? XkColor.darkText : XkColor.text;
+    final rowText = isDark ? XkColor.darkTextStrong : XkColor.textStrong;
 
     return Container(
       decoration: BoxDecoration(

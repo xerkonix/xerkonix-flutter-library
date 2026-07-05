@@ -1,169 +1,91 @@
 import 'dart:ui';
 
-/// XERKONIX Design Token Colors (v1.3)
+/// XERKONIX Design Token Colors (v1.5)
 ///
 /// Reference:
-/// - design system/v1.3/tokens.css
-/// - design system/v1.3/XERKONIX_Internal_Design_Guide_v1.3.md
+/// - design system/v1.5/tokens.css  (single source of truth)
+/// - design system/v1.5/MIGRATION-MAP.md
 ///
-/// v1.3 color palette hex values are identical to v1.2; the change is in
-/// *usage* policy (gold `identity` is no longer the default CTA — see
-/// `XkButton.action` / `--color-action` at `#3B434F`).
+/// v1.5 direction:
+/// - Neutral system rebuilt on a cool gray-blue 12-step scale
+///   (`gray000`..`gray950`, H ~231 deg).
+/// - Multi-hue accents (gold / navy / orange / olive) collapse to a single
+///   indigo `accent` plus an achromatic `brand` baseline.
+/// - No backward-compatible aliases: the v1.4 vocabulary
+///   (canvas / identity / action / support / signal ...) is removed.
 class XkColor {
   XkColor._();
 
-  // Light theme foundations
-  static const Color canvas = Color(0xFFF5F5F5);
-  static const Color surface = Color(0xFFFFFFFF);
-  static const Color surfaceSoft = Color(0xFFF2EFE9);
-  static const Color surfaceDeep = Color(0xFFEBE6DD);
+  // --- Gray-blue neutral scale (H ~231 deg) ---
+  static const Color gray000 = Color(0xFFFAFBFD);
+  static const Color gray050 = Color(0xFFF2F3F8);
+  static const Color gray100 = Color(0xFFE7E9F2);
+  static const Color gray200 = Color(0xFFD5D8E8);
+  static const Color gray300 = Color(0xFFC0C4DC);
+  static const Color gray400 = Color(0xFFA9AFCF); // brand reference value
+  static const Color gray500 = Color(0xFF8C93B8);
+  static const Color gray600 = Color(0xFF6F779D);
+  static const Color gray700 = Color(0xFF565D80);
+  static const Color gray800 = Color(0xFF3E4462);
+  static const Color gray900 = Color(0xFF292E45);
+  static const Color gray950 = Color(0xFF1B1E30);
 
-  // Light theme text
-  static const Color text = Color(0xFF2D2D2D);
-  static const Color textBody = Color(0xFF6F6B63);
-  static const Color textSoft = Color(0xFF9D9990);
-  static const Color textFaint = Color(0xFFC8C5BF);
+  // --- Semantic · Light ---
+  static const Color bg = gray050;
+  static const Color surface = gray000;
+  static const Color surface2 = gray100;
+  static const Color border = gray200;
+  static const Color borderSoft = Color(0x47A9AFCF); // rgba(169,175,207,.28)
 
-  // Light semantic palette
-  static const Color identity = Color(0xFFC0A062);
-  static const Color identityDeep = Color(0xFFA88844);
-  static const Color identitySoft = Color(0xFFD4BC8A);
-  static const Color identityWash = Color(0x1FC0A062);
+  static const Color textStrong = Color(0xFF23263A);
+  static const Color textBody = Color(0xFF494F6E);
+  static const Color textMuted = gray600;
 
-  static const Color action = Color(0xFF3B434F);
-  static const Color actionDeep = Color(0xFF2F3742);
-  static const Color actionSoft = Color(0xFFE7EBF0);
-  static const Color actionWash = Color(0x243B434F);
-  static const Color actionText = Color(0xFFFFFFFF);
+  static const Color brand = gray400;
+  static const Color accent = Color(0xFF4B5DC3);
+  static const Color accentDeep = Color(0xFF3D46A8);
+  static const Color accentSoft = Color(0xFFE4E6FA);
+  static const Color accentText = Color(0xFFFFFFFF);
 
-  static const Color accent = Color(0xFFC05A2A);
-  static const Color accentDeep = Color(0xFF9F461E);
-  static const Color accentSoft = Color(0xFFF3DFD6);
-  static const Color accentWash = Color(0x24C05A2A);
+  static const Color success = Color(0xFF5E8F7B);
+  static const Color successSoft = Color(0xFFE2EEE9);
+  static const Color warning = Color(0xFFB08954);
+  static const Color warningSoft = Color(0xFFF3EADC);
+  static const Color error = Color(0xFFB84E5E);
+  static const Color errorSoft = Color(0xFFF5E2E5);
 
-  static const Color support = Color(0xFF8A9E3A);
-  static const Color supportDeep = Color(0xFF6F8128);
-  static const Color supportSoft = Color(0xFFE6EDC9);
-  static const Color supportWash = Color(0x298A9E3A);
+  static const Color shadow = Color(0x1A292E45); // rgba(41,46,69,.10)
+  static const Color shadowLg = Color(0x24292E45); // rgba(41,46,69,.14)
 
-  static const Color signal = Color(0xFFB84040);
-  static const Color signalWash = Color(0x24B84040);
+  // --- Semantic · Dark ---
+  static const Color darkBg = gray950;
+  static const Color darkSurface = gray900;
+  static const Color darkSurface2 = Color(0xFF323A58);
+  static const Color darkBorder = Color(0xFF3A4160);
+  static const Color darkBorderSoft = Color(0x29A9AFCF); // rgba(169,175,207,.16)
 
-  static const Color success = Color(0xFF5B8C73);
-  static const Color warning = Color(0xFFF0A43A);
-  static const Color warningDeep = Color(0xFFA56700);
-  static const Color warningWash = Color(0x2EF0A43A);
-  static const Color error = Color(0xFFB84040);
-  static const Color info = Color(0xFF6E7FA3);
+  static const Color darkTextStrong = Color(0xFFEFF1F8);
+  static const Color darkTextBody = Color(0xFFB9BED6);
+  static const Color darkTextMuted = gray500;
 
-  // Dark theme foundations
-  static const Color darkCanvas = Color(0xFF1D1D1D);
-  static const Color darkSurface = Color(0xFF262626);
-  static const Color darkSurfaceSoft = Color(0xFF2C2A27);
-  static const Color darkSurfaceDeep = Color(0xFF34312D);
+  static const Color darkBrand = gray400;
+  static const Color darkAccent = Color(0xFF8E9BE6);
+  static const Color darkAccentDeep = Color(0xFFA5B0F0);
+  static const Color darkAccentSoft = Color(0x298E9BE6); // rgba(143,151,232,.16)
+  static const Color darkAccentText = Color(0xFF14162B);
 
-  // Dark theme text
-  static const Color darkText = Color(0xFFF5F5F5);
-  static const Color darkTextBody = Color(0xFFCDC9BE);
-  static const Color darkTextSoft = Color(0xFFA8A399);
-  static const Color darkTextFaint = Color(0xFF858076);
+  static const Color darkSuccess = Color(0xFF7FB59E);
+  static const Color darkSuccessSoft = Color(0x247FB59E);
+  static const Color darkWarning = Color(0xFFD3A96E);
+  static const Color darkWarningSoft = Color(0x24D3A96E);
+  static const Color darkError = Color(0xFFE08694);
+  static const Color darkErrorSoft = Color(0x24E08694);
 
-  // Dark semantic palette
-  static const Color darkIdentity = Color(0xFFD4BC8A);
-  static const Color darkIdentityDeep = Color(0xFFC0A062);
-  static const Color darkIdentitySoft = Color(0xFFE2CB9E);
-  static const Color darkIdentityWash = Color(0x33D4BC8A);
+  static const Color darkShadow = Color(0x52000000); // rgba(0,0,0,.32)
+  static const Color darkShadowLg = Color(0x6B000000); // rgba(0,0,0,.42)
 
-  static const Color darkAction = Color(0xFFC2CAD5);
-  static const Color darkActionDeep = Color(0xFFD0D7E1);
-  static const Color darkActionSoft = Color(0x2EC2CAD5);
-  static const Color darkActionWash = Color(0x2EC2CAD5);
-  static const Color darkActionText = Color(0xFF18202A);
-
-  static const Color darkAccent = Color(0xFFD8794D);
-  static const Color darkAccentDeep = Color(0xFFEBA07C);
-  static const Color darkAccentSoft = Color(0x2ED8794D);
-  static const Color darkAccentWash = Color(0x33D8794D);
-
-  static const Color darkSupport = Color(0xFFA3B857);
-  static const Color darkSupportDeep = Color(0xFFC0D476);
-  static const Color darkSupportSoft = Color(0x2EA3B857);
-  static const Color darkSupportWash = Color(0x33A3B857);
-
-  static const Color darkSignal = Color(0xFFD56767);
-  static const Color darkSignalWash = Color(0x33D56767);
-
-  static const Color darkSuccess = Color(0xFF7EA48F);
-  static const Color darkWarning = Color(0xFFFFC457);
-  static const Color darkWarningDeep = Color(0xFFFFD27B);
-  static const Color darkWarningWash = Color(0x3DFFC457);
-  static const Color darkError = Color(0xFFD56767);
-  static const Color darkInfo = Color(0xFF8CA0C8);
-
-  // Border tokens
-  static const Color borderSoft = Color(0x142D2D2D);
-  static const Color borderMid = Color(0x292D2D2D);
-  static const Color borderStrong = Color(0x3D2D2D2D);
-
-  static const Color darkBorderSoft = Color(0x1AF5F5F5);
-  static const Color darkBorderMid = Color(0x2EF5F5F5);
-  static const Color darkBorderStrong = Color(0x52F5F5F5);
-
-  // Generic role mapping
-  static const Color primary = identity;
-  static const Color secondary = action;
+  // --- Generic role mapping ---
+  static const Color primary = accent;
+  static const Color secondary = brand;
   static const Color tertiary = accent;
-
-  // Backward-compatible aliases
-  static const Color structure = text;
-  static const Color overlay = surfaceDeep;
-  static const Color divider = borderMid;
-
-  static const Color textPrimary = text;
-  static const Color bodyText = textBody;
-  static const Color textTertiary = textSoft;
-  static const Color textDisabled = textFaint;
-
-  static const Color brand = identity;
-  static const Color trust = identity;
-  static const Color pulse = signal;
-  static const Color life = signal;
-  static const Color warmGraphite = textBody;
-  static const Color danger = error;
-
-  @Deprecated('Use XkColor.canvas instead')
-  static const Color pinkLavender = Color(0xFFCDB4DB);
-
-  @Deprecated('Use XkColor.canvas instead')
-  static const Color lilac = Color(0xFFBE95C4);
-
-  @Deprecated('Use XkColor.canvas instead')
-  static const Color bilobaFlower = Color(0xFFAE99DE);
-
-  @Deprecated('Use XkColor.identity instead')
-  static const Color xerkonix = Color(0xFF9C75DB);
-
-  @Deprecated('Use XkColor.canvas instead')
-  static const Color veryPeri = Color(0xFF6667AB);
-
-  @Deprecated('Use XkColor.text instead')
-  static const Color royalPurple = Color(0xFF7851A9);
-
-  @Deprecated('Use XkColor.text instead')
-  static const Color deepPurple = Color(0xFF3A243B);
-
-  @Deprecated('Use XkColor.signal instead')
-  static const Color tyrianPurple = Color(0xFF66023C);
-
-  @Deprecated('Use XkColor.signal instead')
-  static const Color mahoganyRed = Color(0xFF670A0A);
-
-  @Deprecated('Use XkColor.signal instead')
-  static const Color carmine = Color(0xFF900020);
-
-  @Deprecated('Use XkColor.text instead')
-  static const Color oldLavender = Color(0xFF71697A);
-
-  @Deprecated('Use XkColor.text instead')
-  static const Color grey = Color(0xFF939597);
 }

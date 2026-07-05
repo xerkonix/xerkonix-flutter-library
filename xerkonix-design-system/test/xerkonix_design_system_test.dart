@@ -24,18 +24,34 @@ void main() {
       expect(XkColor.error.value, isNotNull);
     });
 
-    test('XkColor should have all palette colors', () {
-      expect(XkColor.pinkLavender, isA<Color>());
-      expect(XkColor.lilac, isA<Color>());
-      expect(XkColor.bilobaFlower, isA<Color>());
-      expect(XkColor.veryPeri, isA<Color>());
-      expect(XkColor.royalPurple, isA<Color>());
-      expect(XkColor.deepPurple, isA<Color>());
-      expect(XkColor.tyrianPurple, isA<Color>());
-      expect(XkColor.mahoganyRed, isA<Color>());
-      expect(XkColor.carmine, isA<Color>());
-      expect(XkColor.oldLavender, isA<Color>());
-      expect(XkColor.grey, isA<Color>());
+    test('XkColor should have the full gray-blue scale', () {
+      expect(XkColor.gray000, isA<Color>());
+      expect(XkColor.gray050, isA<Color>());
+      expect(XkColor.gray100, isA<Color>());
+      expect(XkColor.gray200, isA<Color>());
+      expect(XkColor.gray300, isA<Color>());
+      expect(XkColor.gray400, isA<Color>());
+      expect(XkColor.gray500, isA<Color>());
+      expect(XkColor.gray600, isA<Color>());
+      expect(XkColor.gray700, isA<Color>());
+      expect(XkColor.gray800, isA<Color>());
+      expect(XkColor.gray900, isA<Color>());
+      expect(XkColor.gray950, isA<Color>());
+    });
+
+    test('XkColor should have v1.5 semantic tokens', () {
+      expect(XkColor.bg, isA<Color>());
+      expect(XkColor.surface, isA<Color>());
+      expect(XkColor.surface2, isA<Color>());
+      expect(XkColor.textStrong, isA<Color>());
+      expect(XkColor.textBody, isA<Color>());
+      expect(XkColor.textMuted, isA<Color>());
+      expect(XkColor.brand, isA<Color>());
+      expect(XkColor.accent, isA<Color>());
+      expect(XkColor.accentSoft, isA<Color>());
+      expect(XkColor.success, isA<Color>());
+      expect(XkColor.warning, isA<Color>());
+      expect(XkColor.error, isA<Color>());
     });
   });
 

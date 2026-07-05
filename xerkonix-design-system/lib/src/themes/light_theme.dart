@@ -6,30 +6,30 @@ import '../typography/xerkonix_typography.dart';
 import 'color_schemes/light_color_scheme.dart';
 import 'xerkonix_theme.dart';
 
-/// Light Theme (XERKONIX DS v1.1)
+/// Light Theme (XERKONIX DS v1.5)
 class XkLightTheme extends XkTheme {
   XkLightTheme._();
 
   static ThemeData themeData = ThemeData(
     useMaterial3: true,
     colorScheme: lightColorScheme,
-    scaffoldBackgroundColor: XkColor.canvas,
+    scaffoldBackgroundColor: XkColor.bg,
     textTheme: TextTheme(
-      displayLarge: XkTypo.display.copyWith(color: XkColor.text),
-      displayMedium: XkTypo.h1.copyWith(color: XkColor.text),
-      displaySmall: XkTypo.h2.copyWith(color: XkColor.text),
-      headlineLarge: XkTypo.h1.copyWith(color: XkColor.text),
-      headlineMedium: XkTypo.h2.copyWith(color: XkColor.text),
-      headlineSmall: XkTypo.h3.copyWith(color: XkColor.text),
-      titleLarge: XkTypo.h3.copyWith(color: XkColor.text),
+      displayLarge: XkTypo.display.copyWith(color: XkColor.textStrong),
+      displayMedium: XkTypo.h1.copyWith(color: XkColor.textStrong),
+      displaySmall: XkTypo.h2.copyWith(color: XkColor.textStrong),
+      headlineLarge: XkTypo.h1.copyWith(color: XkColor.textStrong),
+      headlineMedium: XkTypo.h2.copyWith(color: XkColor.textStrong),
+      headlineSmall: XkTypo.h3.copyWith(color: XkColor.textStrong),
+      titleLarge: XkTypo.h3.copyWith(color: XkColor.textStrong),
       titleMedium: XkTypo.label.copyWith(color: XkColor.textBody),
-      titleSmall: XkTypo.label.copyWith(color: XkColor.textSoft),
+      titleSmall: XkTypo.label.copyWith(color: XkColor.textMuted),
       bodyLarge: XkTypo.bodyLarge.copyWith(color: XkColor.textBody),
       bodyMedium: XkTypo.body.copyWith(color: XkColor.textBody),
-      bodySmall: XkTypo.label.copyWith(color: XkColor.textSoft),
-      labelLarge: _buttonLabel.copyWith(color: XkColor.text),
-      labelMedium: XkTypo.label.copyWith(color: XkColor.textSoft),
-      labelSmall: XkTypo.metaMono.copyWith(color: XkColor.textSoft),
+      bodySmall: XkTypo.label.copyWith(color: XkColor.textMuted),
+      labelLarge: _buttonLabel.copyWith(color: XkColor.textStrong),
+      labelMedium: XkTypo.label.copyWith(color: XkColor.textMuted),
+      labelSmall: XkTypo.metaMono.copyWith(color: XkColor.textMuted),
     ),
     cardTheme: CardThemeData(
       color: XkColor.surface,
@@ -44,50 +44,50 @@ class XkLightTheme extends XkTheme {
       ),
     ),
     appBarTheme: AppBarTheme(
-      backgroundColor: XkColor.canvas,
+      backgroundColor: XkColor.bg,
       surfaceTintColor: Colors.transparent,
       scrolledUnderElevation: 0,
       elevation: 0,
       centerTitle: true,
-      titleTextStyle: XkTypo.h3.copyWith(color: XkColor.text),
-      iconTheme: const IconThemeData(color: XkColor.text),
+      titleTextStyle: XkTypo.h3.copyWith(color: XkColor.textStrong),
+      iconTheme: const IconThemeData(color: XkColor.textStrong),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: _elevatedStyle(
-        baseColor: XkColor.identity,
+        baseColor: XkColor.accent,
         textColor: Colors.white,
-        disabledColor: XkColor.textFaint,
-        disabledTextColor: XkColor.textSoft,
+        disabledColor: XkColor.gray400,
+        disabledTextColor: XkColor.textMuted,
       ),
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: _outlinedStyle(
-        borderColor: XkColor.borderMid,
+        borderColor: XkColor.border,
         textColor: XkColor.textBody,
       ),
     ),
     textButtonTheme: TextButtonThemeData(
       style: _tonalStyle(
-        backgroundColor: XkColor.surfaceSoft,
-        textColor: XkColor.text,
-        borderColor: XkColor.borderMid,
+        backgroundColor: XkColor.surface2,
+        textColor: XkColor.textStrong,
+        borderColor: XkColor.border,
       ),
     ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: XkColor.surface,
-      hintStyle: XkTypo.metaMono.copyWith(color: XkColor.textSoft),
+      hintStyle: XkTypo.metaMono.copyWith(color: XkColor.textMuted),
       border: OutlineInputBorder(
         borderRadius: XkShape.smBorderRadius,
-        borderSide: BorderSide(color: XkColor.borderMid),
+        borderSide: BorderSide(color: XkColor.border),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: XkShape.smBorderRadius,
-        borderSide: BorderSide(color: XkColor.borderMid),
+        borderSide: BorderSide(color: XkColor.border),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: XkShape.smBorderRadius,
-        borderSide: const BorderSide(color: XkColor.identity, width: 1.5),
+        borderSide: const BorderSide(color: XkColor.accent, width: 1.5),
       ),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
     ),
@@ -178,7 +178,7 @@ class XkLightTheme extends XkTheme {
       }),
       backgroundColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.pressed)) {
-          return XkColor.surfaceSoft;
+          return XkColor.surface2;
         }
         if (states.contains(WidgetState.hovered)) {
           return XkColor.surface.withValues(alpha: 0.8);
@@ -221,10 +221,10 @@ class XkLightTheme extends XkTheme {
           return backgroundColor.withValues(alpha: 0.5);
         }
         if (states.contains(WidgetState.pressed)) {
-          return XkColor.surfaceDeep;
+          return XkColor.surface2;
         }
         if (states.contains(WidgetState.hovered)) {
-          return XkColor.surfaceSoft.withValues(alpha: 0.92);
+          return XkColor.surface2.withValues(alpha: 0.92);
         }
         return backgroundColor;
       }),

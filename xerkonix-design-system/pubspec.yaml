@@ -1,6 +1,6 @@
 name: xerkonix_design_system
 description: Flutter design system package for XERKONIX Weave UI tokens, themes, typography, and components.
-version: 1.3.0
+version: 1.5.0
 repository: https://github.com/xerkonix/xerkonix-flutter-library/tree/main/xerkonix-design-system
 issue_tracker: https://github.com/xerkonix/xerkonix-flutter-library/issues
 
@@ -20,6 +20,26 @@ dev_dependencies:
 
 flutter:
   fonts:
+    - family: Pretendard
+      fonts:
+        - asset: lib/fonts/pretendard/Pretendard-Regular.otf
+          weight: 400
+        - asset: lib/fonts/pretendard/Pretendard-Medium.otf
+          weight: 500
+        - asset: lib/fonts/pretendard/Pretendard-SemiBold.otf
+          weight: 600
+        - asset: lib/fonts/pretendard/Pretendard-Bold.otf
+          weight: 700
+    - family: MaruBuri
+      fonts:
+        - asset: lib/fonts/maruburi/MaruBuri-Light.ttf
+          weight: 300
+        - asset: lib/fonts/maruburi/MaruBuri-Regular.ttf
+          weight: 400
+        - asset: lib/fonts/maruburi/MaruBuri-SemiBold.ttf
+          weight: 600
+        - asset: lib/fonts/maruburi/MaruBuri-Bold.ttf
+          weight: 700
     - family: IBMPlexSansKR
       fonts:
         - asset: lib/fonts/ibm_plex_sans_kr/IBMPlexSansKR-Thin.ttf

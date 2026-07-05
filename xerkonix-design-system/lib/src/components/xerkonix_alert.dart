@@ -160,7 +160,7 @@ class XkAlert extends StatelessWidget {
     final neutralBg = isDark ? XkColor.darkSurface : XkColor.surface;
     final neutralBorder =
         isDark ? XkColor.darkBorderSoft : XkColor.borderSoft;
-    final foreground = isDark ? XkColor.darkText : XkColor.text;
+    final foreground = isDark ? XkColor.darkTextStrong : XkColor.textStrong;
 
     switch (variant) {
       case XkAlertVariant.success:
@@ -175,7 +175,7 @@ class XkAlert extends StatelessWidget {
           background: neutralBg,
           border: neutralBorder,
           foreground: foreground,
-          accent: isDark ? XkColor.darkInfo : XkColor.info,
+          accent: isDark ? XkColor.gray500 : XkColor.gray600,
         );
       case XkAlertVariant.warning:
         return _AlertPalette(
@@ -183,12 +183,12 @@ class XkAlert extends StatelessWidget {
           border: neutralBorder,
           foreground: foreground,
           accent: isDark
-              ? XkColor.darkWarningDeep
-              : XkColor.warningDeep,
+              ? XkColor.darkWarning
+              : XkColor.warning,
         );
       case XkAlertVariant.danger:
-        final signal = isDark ? XkColor.darkSignal : XkColor.signal;
-        final wash = isDark ? XkColor.darkSignalWash : XkColor.signalWash;
+        final signal = isDark ? XkColor.darkError : XkColor.error;
+        final wash = isDark ? XkColor.darkErrorSoft : XkColor.errorSoft;
         return _AlertPalette(
           background: Color.alphaBlend(wash, neutralBg),
           border: neutralBorder,

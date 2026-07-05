@@ -36,8 +36,8 @@ class XkInfoCard extends StatelessWidget {
         backgroundColor ?? (isDark ? XkColor.darkSurface : XkColor.surface);
     final cardBorder =
         borderColor ?? (isDark ? XkColor.darkBorderSoft : XkColor.borderSoft);
-    final metricColor = isDark ? XkColor.darkTextSoft : XkColor.textSoft;
-    final titleColor = isDark ? XkColor.darkText : XkColor.text;
+    final metricColor = isDark ? XkColor.darkTextMuted : XkColor.textMuted;
+    final titleColor = isDark ? XkColor.darkTextStrong : XkColor.textStrong;
     final bodyColor = isDark ? XkColor.darkTextBody : XkColor.textBody;
 
     return Container(

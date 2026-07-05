@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## 2.0.0 (BREAKING) — Weave Design System v1.5
+
+Full re-skin to Weave v1.5: warm beige/gold system replaced by a cool
+gray-blue neutral scale with a single indigo accent. Token vocabulary is
+replaced with no backward-compat aliases, so this is a breaking release.
+
+### Changed
+- Palette: new `gray000..gray950` scale; `bg / surface / surface2 / border`,
+  `textStrong / textBody / textMuted`, `brand`, `accent(+Deep/+Soft/+Text)`,
+  `success/warning/error(+Soft)` and `dark*` equivalents.
+- Token renames (no aliases): `canvas→bg`, `surfaceSoft/Support/Deep/Sunken→surface2`,
+  `text→textStrong`, `textSoft→textMuted`, `identity*/action*→accent*`,
+  `support→success`, `signal→error`, `info→gray600`, `border*→border`.
+- Typography: base font `Pretendard`; display (≥28px) uses `MaruBuri` serif;
+  data/meta stays `IBM Plex Mono`. Pretendard + MaruBuri fonts bundled.
+- Motion: `interpret→resolve` (260ms), `connect→settle` (320ms); `ease`
+  curve is now `Cubic(0.33, 0.02, 0.2, 1)`.
+
 ## 1.3.0 (BREAKING)
 
 Aligned with Weave Design System v1.3 (`design system/v1.3/`). This release

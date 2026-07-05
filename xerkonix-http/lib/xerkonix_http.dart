@@ -1,5 +1,9 @@
 export 'src/constant/http_constant.dart';
 export 'src/constant/http_status.dart';
 export 'src/xerkonix_http/xerkonix_http.dart';
+export 'src/xerkonix_http/xerkonix_http_client.dart';
+export 'src/xerkonix_http/xerkonix_http_request.dart';
+export 'src/xerkonix_http/xerkonix_http_response.dart';
+export 'src/xerkonix_http/xerkonix_intercepted_client.dart';
 export 'src/http_utils/xerkonix_http_config.dart';
 export 'src/http_utils/xerkonix_http_utils.dart';

@@ -9,6 +9,20 @@ class ErrorType {
 
   static String unknownError = 'Unknown Error';
   static String unstableNetwork = "Unstable Network";
+  static String paymentRequired = "Payment Required";
+  static String tooManyRequests = "Too Many Requests";
+  static String networkTimeout = "Network Timeout";
+  static String networkUnknown = "Network Unknown";
+}
+
+/// Synthetic (non-HTTP) business codes used by the normalizer/adapter so that
+/// timeout/connectivity failures resolve through the message registry like any
+/// server-supplied `code`.
+class XkErrorCodes {
+  XkErrorCodes._();
+
+  static const String networkTimeout = 'XK_NETWORK_TIMEOUT';
+  static const String networkUnknown = 'XK_NETWORK_UNKNOWN';
 }
 
 class _ClientError {

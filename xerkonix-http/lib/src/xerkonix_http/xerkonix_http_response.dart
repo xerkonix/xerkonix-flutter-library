@@ -98,4 +98,57 @@ class XkHttpResponse {
       'detail': null,
     };
   }
+
+  // --- 1.1.0 additive response processor ---------------------------------
+
+  /// Processes [response] with the enriched 1.1.0 rules and returns the decoded
+  /// success payload (or `null` for 204):
+  ///
+  ///  * `2xx` success — decoded body; if [XkHttpConfig.unwrapDataEnvelope] is
+  ///    set and the body is a `{statusCode, data}` envelope, `data` is returned.
+  ///  * any `statusCode >= 400` — parsed via [XkErrorNormalizer.fromEnvelope]
+  ///    into a typed [XkError] (preserving business `code` + `metadata`) and
+  ///    thrown as an [XkException]. This includes the previously-generic 402,
+  ///    429, and arbitrary/unknown codes (a real default branch, not a blanket
+  ///    `unknownError`).
+  ///  * `3xx` — returned as the decoded body (redirects are not treated as
+  ///    errors here; the underlying client follows them).
+  dynamic process(Response response) {
+    final int status = response.statusCode;
+    if (httpConfig.isLoggingEnabled) {
+      Logger.httpResponse(httpResponse: response);
+    }
+    if (status == 204) {
+      return null;
+    }
+    if (status < 400) {
+      final decoded = _safeDecode(response);
+      if (httpConfig.unwrapDataEnvelope &&
+          decoded is Map<String, dynamic> &&
+          decoded.containsKey('statusCode') &&
+          decoded['data'] is Map<String, dynamic>) {
+        return decoded['data'];
+      }
+      return decoded;
+    }
+    // status >= 400 → typed error via the envelope adapter.
+    final decoded = _safeDecode(response);
+    final XkError xkError =
+        XkErrorNormalizer.fromEnvelope(decoded, status) ??
+            XkErrors.fromStatusCode(status);
+    throw XkException(xkError);
+  }
+
+  /// Decodes the body, tolerating empty/non-JSON payloads (returns the raw
+  /// string or `null`), so error responses without a JSON body still process.
+  dynamic _safeDecode(Response response) {
+    if (response.body.trim().isEmpty) {
+      return null;
+    }
+    try {
+      return _decodeResponse(response);
+    } catch (_) {
+      return response.body;
+    }
+  }
 }

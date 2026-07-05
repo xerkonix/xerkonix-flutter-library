@@ -52,4 +52,36 @@ class XkHttpUtils {
     return XkHttp(
         config: httpConfig, client: XkHttpClient(httpConfig: httpConfig));
   }
+
+  /// 1.1.0: builds an [XkHttp] from a single [baseUrl] string
+  /// (scheme+host+port+path-prefix), plus the additive auth/envelope options.
+  static XkHttp generateHttpFromBaseUrl({
+    required String baseUrl,
+    String? contentType,
+    String? tokenType,
+    String authHeaderName = 'Authorization',
+    String? authHeaderScheme,
+    bool unwrapDataEnvelope = false,
+    JsonDecodingOption? jsonDecodingOption,
+    Duration? networkTimeLimit,
+    bool? enableLogging,
+    List<String>? authEndpointSkipList,
+  }) {
+    final httpConfig = XkHttpConfig(
+      baseUrl: baseUrl,
+      contentType: contentType ?? "application/json",
+      tokenType: tokenType ?? "Bearer ",
+      authHeaderName: authHeaderName,
+      authHeaderScheme: authHeaderScheme,
+      unwrapDataEnvelope: unwrapDataEnvelope,
+      jsonDecodingOption: jsonDecodingOption ?? JsonDecodingOption.noOption,
+      networkTimeLimit:
+          networkTimeLimit ?? const Duration(milliseconds: 20000),
+      enableLogging: enableLogging,
+      authEndpointSkipList:
+          authEndpointSkipList ?? const <String>['/api/v1/auth/'],
+    );
+    return XkHttp(
+        config: httpConfig, client: XkHttpClient(httpConfig: httpConfig));
+  }
 }

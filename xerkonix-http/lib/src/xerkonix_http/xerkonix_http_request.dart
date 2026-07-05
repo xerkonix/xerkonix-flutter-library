@@ -70,6 +70,35 @@ class XkHttpRequest {
         : Uri(path: uriAddress, queryParameters: queryParameters);
   }
 
+  /// Resolves a request [Uri] for [path], preferring [XkHttpConfig.baseUrl]
+  /// (a single scheme+host+port+path-prefix string) when it is set, and
+  /// otherwise falling back to the discrete scheme/host/port via [generateUri].
+  ///
+  /// Query parameters are normalised to `Map<String, String>` (values are
+  /// stringified) to match `Uri.replace`.
+  Uri resolveUri({
+    required String path,
+    int? port,
+    Map<String, dynamic>? queryParameters,
+  }) {
+    final Map<String, String>? stringQuery = queryParameters?.map(
+      (String k, dynamic v) => MapEntry(k, '$v'),
+    );
+    final String? base = httpConfig.baseUrl?.trim();
+    if (base != null && base.isNotEmpty) {
+      final String normalizedBase = base.replaceFirst(RegExp(r'/$'), '');
+      final String normalizedPath =
+          path.startsWith('/') || path.isEmpty ? path : '/$path';
+      return Uri.parse('$normalizedBase$normalizedPath')
+          .replace(queryParameters: stringQuery);
+    }
+    return generateUri(
+      path: path,
+      port: port,
+      queryParameters: stringQuery,
+    );
+  }
+
   http.Request generateRequest(
       {required String method, required Map<String, String> headers, required Uri uri, Map<String, dynamic>? body}) {
     http.Request request = http.Request(method, uri);

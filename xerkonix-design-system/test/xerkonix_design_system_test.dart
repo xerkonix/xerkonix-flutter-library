@@ -121,5 +121,176 @@ void main() {
       expect(HIGTypo.subhead, isA<TextStyle>());
     });
   });
+
+  group('v2.1 component smoke tests (light + dark)', () {
+    Future<void> pumpBoth(
+      WidgetTester tester,
+      Widget child, {
+      bool useScaffold = true,
+    }) async {
+      for (final ThemeData theme in <ThemeData>[
+        XkLightTheme.themeData,
+        XkDarkTheme.themeData,
+      ]) {
+        final Widget body = useScaffold ? Scaffold(body: child) : child;
+        await tester.pumpWidget(
+          MaterialApp(theme: theme, home: body),
+        );
+        await tester.pump(const Duration(milliseconds: 50));
+        expect(tester.takeException(), isNull);
+      }
+    }
+
+    testWidgets('XkBrandMark builds', (WidgetTester tester) async {
+      await pumpBoth(tester, const XkBrandMark(size: 40));
+    });
+
+    testWidgets('XkBadge + beta preset build', (WidgetTester tester) async {
+      await pumpBoth(
+        tester,
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            const XkBadge(label: 'NEW'),
+            XkBadge.beta(),
+          ],
+        ),
+      );
+      expect(find.text('OPEN BETA'), findsWidgets);
+    });
+
+    testWidgets('XkAvatar builds with initial', (WidgetTester tester) async {
+      await pumpBoth(tester, const XkAvatar(name: '김도현'));
+    });
+
+    testWidgets('XkCard builds tappable and static', (
+      WidgetTester tester,
+    ) async {
+      await pumpBoth(
+        tester,
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            const XkCard(child: Text('static')),
+            XkCard(onTap: () {}, child: const Text('tap')),
+          ],
+        ),
+      );
+    });
+
+    testWidgets('Skeletons build', (WidgetTester tester) async {
+      await pumpBoth(
+        tester,
+        const Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[XkSkeleton(), XkSkeletonCard()],
+        ),
+      );
+      await pumpBoth(tester, const XkSkeletonList(count: 2));
+    });
+
+    testWidgets('XkLoadingOverlay respects visible flag', (
+      WidgetTester tester,
+    ) async {
+      await pumpBoth(
+        tester,
+        const Stack(
+          children: <Widget>[XkLoadingOverlay(message: '불러오는 중', visible: true)],
+        ),
+      );
+      expect(find.text('불러오는 중'), findsWidgets);
+    });
+
+    testWidgets('XkSectionLabel uppercases title', (
+      WidgetTester tester,
+    ) async {
+      await pumpBoth(tester, const XkSectionLabel(title: 'people'));
+      expect(find.text('PEOPLE'), findsWidgets);
+    });
+
+    testWidgets('XkBackButton builds', (WidgetTester tester) async {
+      await pumpBoth(
+        tester,
+        XkBackButton(label: '뒤로', onPressed: () {}),
+      );
+    });
+
+    testWidgets('XkProgressBar builds and clamps', (
+      WidgetTester tester,
+    ) async {
+      await pumpBoth(tester, const XkProgressBar(value: 1.5));
+    });
+
+    testWidgets('State panes build', (WidgetTester tester) async {
+      await pumpBoth(tester, const XkLoadingPane());
+      await pumpBoth(tester, const XkEmptyPane(message: '비어 있음'));
+      await pumpBoth(
+        tester,
+        XkErrorPane(message: '오류', onRetry: () {}),
+      );
+      await pumpBoth(tester, const XkErrorPane(message: '오류'));
+    });
+
+    testWidgets('XkButton.primaryGradient + expanded build', (
+      WidgetTester tester,
+    ) async {
+      await pumpBoth(
+        tester,
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            XkButton.primaryGradient(
+              onPressed: () {},
+              child: const Text('시작하기'),
+            ),
+            XkButton.action(
+              onPressed: () {},
+              expanded: true,
+              child: const Text('확인'),
+            ),
+          ],
+        ),
+      );
+      expect(find.text('시작하기'), findsWidgets);
+    });
+
+    testWidgets('XkChip selected two-state builds', (
+      WidgetTester tester,
+    ) async {
+      await pumpBoth(
+        tester,
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            XkChip(label: 'on', selected: true, onTap: () {}),
+            XkChip(label: 'off', selected: false, onTap: () {}),
+            const XkChip(label: 'variant'),
+          ],
+        ),
+      );
+    });
+
+    testWidgets('showXkToast falls back to SnackBar without overlay', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: XkLightTheme.themeData,
+          home: Scaffold(
+            body: Builder(
+              builder: (BuildContext context) => TextButton(
+                onPressed: () => showXkToast(context, '알림'),
+                child: const Text('go'),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.tap(find.text('go'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(tester.takeException(), isNull);
+    });
+  });
 }
 

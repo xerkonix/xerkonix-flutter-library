@@ -1,3 +1,4 @@
+// ignore_for_file: deprecated_member_use_from_same_package
 // ignore: depend_on_referenced_packages
 import '../error/xerkonix_error.dart';
 import '../error_message_handler/xerkonix_message_handler.dart';

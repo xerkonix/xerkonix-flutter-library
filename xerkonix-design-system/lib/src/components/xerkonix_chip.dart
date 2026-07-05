@@ -23,6 +23,7 @@ class XkChip extends StatelessWidget {
     this.borderColor,
     this.dotColor,
     this.textStyle,
+    this.selected,
   });
 
   final String label;
@@ -39,10 +40,17 @@ class XkChip extends StatelessWidget {
   final Color? dotColor;
   final TextStyle? textStyle;
 
+  /// When non-null, the chip becomes a two-state selectable/filter chip
+  /// (covers the product `CosentioChip`): selected chips use an accent tint,
+  /// unselected chips use a neutral surface. Leave null (default) for the
+  /// original static/variant behavior.
+  final bool? selected;
+
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final colors = _resolveColors(isDark);
+    final colors =
+        selected != null ? _selectableColors(isDark, selected!) : _resolveColors(isDark);
     final resolvedRadius = borderRadius ?? XkShape.fullBorderRadius;
     final inkBorderRadius = borderRadius is BorderRadius
         ? borderRadius as BorderRadius
@@ -61,7 +69,7 @@ class XkChip extends StatelessWidget {
           if (leading != null) ...[
             leading!,
             const SizedBox(width: 6),
-          ] else if (showDot) ...[
+          ] else if (showDot && selected == null) ...[
             Container(
               width: 6,
               height: 6,
@@ -93,6 +101,25 @@ class XkChip extends StatelessWidget {
         onTap: onTap,
         child: body,
       ),
+    );
+  }
+
+  _ChipPalette _selectableColors(bool isDark, bool isSelected) {
+    final Color accent = isDark ? XkColor.darkAccent : XkColor.accent;
+    final Color accentText = isDark ? XkColor.darkAccentDeep : XkColor.accentDeep;
+    if (isSelected) {
+      return _ChipPalette(
+        background: accent.withValues(alpha: 0.14),
+        border: accent,
+        text: accentText,
+        dot: accent,
+      );
+    }
+    return _ChipPalette(
+      background: isDark ? XkColor.darkSurface2 : XkColor.surface2,
+      border: isDark ? XkColor.darkBorder : XkColor.border,
+      text: isDark ? XkColor.darkTextBody : XkColor.textBody,
+      dot: isDark ? XkColor.darkTextMuted : XkColor.textMuted,
     );
   }
 

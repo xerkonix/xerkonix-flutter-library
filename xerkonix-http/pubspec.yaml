@@ -1,23 +1,32 @@
 name: xerkonix_http
 description: A robust HTTP client package for Flutter applications with built-in error handling, logging, and request/response utilities. Supports all HTTP methods (GET, POST, PUT, DELETE, PATCH, MULTIPART, CUSTOM) with configurable logging and automatic error parsing.
-version: 1.0.0
+version: 1.1.0
 repository: https://github.com/xerkonix/xerkonix-flutter-library/tree/main/xerkonix-http
 issue_tracker: https://github.com/xerkonix/xerkonix-flutter-library/issues
 
 environment:
-  sdk: ">=3.5.0 <4.0.0"
-  flutter: ">=3.24.0"
+  sdk: '>=3.9.0 <4.0.0'
+  flutter: '>=3.35.0'
 
 dependencies:
   flutter:
     sdk: flutter
-  http: ^1.2.2
-  xerkonix_error_handler: ^1.0.0
-  xerkonix_logger: ^1.0.1
+  http: ^1.6.0
+  xerkonix_error_handler: ^1.1.0
+  xerkonix_logger: ^1.1.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+
+# Local-development only: resolve sibling packages by path so all three build
+# together against the working tree. The coordinator STRIPS this block before
+# publishing (the hosted caret constraints above are what ship).
+dependency_overrides:
+  xerkonix_logger:
+    path: ../xerkonix-logger
+  xerkonix_error_handler:
+    path: ../xerkonix-error-handler
 
 flutter:

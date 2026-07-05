@@ -2,6 +2,42 @@
 
 All notable changes to this project will be documented in this file.
 
+## 2.1.0 — Product-primitive parity (additive)
+
+Additive modernization that makes the package a superset of the product's real
+UI primitives. No existing public API is removed or changed in a
+backward-incompatible way; all new behavior is opt-in.
+
+### Added
+- `XkBrandMark {size, primary?, secondary?}` — generic ring + arc + dot mark
+  primitive (defaults to accent/brand tokens; not hardcoded to any brand).
+- `XkBadge {label, color?}` + `XkBadge.beta()` preset — uppercased tracked-out
+  status badge (covers the "OPEN BETA" badge).
+- `XkAvatar {name, size = 44}` — deterministic initials + gradient avatar.
+- `XkSkeleton {height, width?, radius}`, `XkSkeletonCard`,
+  `XkSkeletonList {count, padding?}` — pulsing loading placeholders.
+- `XkLoadingOverlay {message, visible}` — full-screen dual-ring spinner + message.
+- `XkToast` + `showXkToast(context, message, {isError})` — top-sliding overlay
+  toast with auto/tap dismiss and a `SnackBar` fallback.
+- `XkSectionLabel {title, trailing?}` — uppercased tracked-out section header.
+- `XkBackButton {label, onPressed}` — chevron-left text button.
+- `XkCard {child, onTap?, padding?}` — generic tappable bordered surface
+  (base sibling of `XkInfoCard`, which is unchanged).
+- `XkProgressBar {value /*0..1*/, minHeight = 6, color?}` — thin rounded bar.
+- `XkLoadingPane`, `XkEmptyPane {message}`,
+  `XkErrorPane {message, onRetry?, retryLabel}` — state panes.
+
+### Changed (backward-compatible)
+- `XkButton`: new optional `expanded` (full-width) on every factory, and a new
+  `XkButton.primaryGradient(...)` gradient-fill accent CTA. Existing factories
+  and call sites are unaffected (defaults preserve prior behavior).
+- `XkChip`: new optional `selected` two-state (selectable/filter) mode. When
+  `selected` is null (default), the original static/variant behavior is kept.
+
+### Tooling
+- `environment.sdk` `>=3.9.0 <4.0.0`, `flutter` `>=3.35.0`.
+- `flutter_svg` `^2.3.0`.
+
 ## 2.0.0 (BREAKING) — Weave Design System v1.5
 
 Full re-skin to Weave v1.5: warm beige/gold system replaced by a cool

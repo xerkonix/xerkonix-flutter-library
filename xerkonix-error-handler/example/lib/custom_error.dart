@@ -19,5 +19,11 @@ class CustomError implements XkError {
   String? detail = "Custom Error Message";
 
   @override
+  int? statusCode;
+
+  @override
+  Map<String, dynamic> metadata = const <String, dynamic>{};
+
+  @override
   StackTrace? get stackTrace => StackTrace.current;
 }

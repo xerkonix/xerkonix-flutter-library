@@ -24,6 +24,8 @@ class XkButton extends StatelessWidget {
     required this.onPressed,
     required this.buttonType,
     this.semanticColor,
+    this.expanded = false,
+    this.gradient = false,
     required this.child,
   });
 
@@ -32,15 +34,41 @@ class XkButton extends StatelessWidget {
   final ButtonType buttonType;
   final Color? semanticColor;
 
+  /// When true, the button stretches to fill the available width.
+  final bool expanded;
+
+  /// When true, a gradient accent fill is used (see [XkButton.primaryGradient]).
+  final bool gradient;
+
   factory XkButton.primary({
     Key? key,
     required VoidCallback? onPressed,
     required Widget child,
+    bool expanded = false,
   }) {
     return XkButton._(
       key: key,
       onPressed: onPressed,
       buttonType: ButtonType.primary,
+      expanded: expanded,
+      child: child,
+    );
+  }
+
+  /// Gradient-filled accent CTA (covers the product `CosentioPrimaryButton`).
+  /// Full-width by default.
+  factory XkButton.primaryGradient({
+    Key? key,
+    required VoidCallback? onPressed,
+    required Widget child,
+    bool expanded = true,
+  }) {
+    return XkButton._(
+      key: key,
+      onPressed: onPressed,
+      buttonType: ButtonType.action,
+      gradient: true,
+      expanded: expanded,
       child: child,
     );
   }
@@ -49,11 +77,13 @@ class XkButton extends StatelessWidget {
     Key? key,
     required VoidCallback? onPressed,
     required Widget child,
+    bool expanded = false,
   }) {
     return XkButton._(
       key: key,
       onPressed: onPressed,
       buttonType: ButtonType.action,
+      expanded: expanded,
       child: child,
     );
   }
@@ -62,19 +92,27 @@ class XkButton extends StatelessWidget {
     Key? key,
     required VoidCallback? onPressed,
     required Widget child,
+    bool expanded = false,
   }) {
-    return XkButton.action(key: key, onPressed: onPressed, child: child);
+    return XkButton.action(
+      key: key,
+      onPressed: onPressed,
+      expanded: expanded,
+      child: child,
+    );
   }
 
   factory XkButton.brand({
     Key? key,
     required VoidCallback? onPressed,
     required Widget child,
+    bool expanded = false,
   }) {
     return XkButton._(
       key: key,
       onPressed: onPressed,
       buttonType: ButtonType.brand,
+      expanded: expanded,
       child: child,
     );
   }
@@ -83,11 +121,13 @@ class XkButton extends StatelessWidget {
     Key? key,
     required VoidCallback? onPressed,
     required Widget child,
+    bool expanded = false,
   }) {
     return XkButton._(
       key: key,
       onPressed: onPressed,
       buttonType: ButtonType.support,
+      expanded: expanded,
       child: child,
     );
   }
@@ -96,11 +136,13 @@ class XkButton extends StatelessWidget {
     Key? key,
     required VoidCallback? onPressed,
     required Widget child,
+    bool expanded = false,
   }) {
     return XkButton._(
       key: key,
       onPressed: onPressed,
       buttonType: ButtonType.accent,
+      expanded: expanded,
       child: child,
     );
   }
@@ -109,11 +151,13 @@ class XkButton extends StatelessWidget {
     Key? key,
     required VoidCallback? onPressed,
     required Widget child,
+    bool expanded = false,
   }) {
     return XkButton._(
       key: key,
       onPressed: onPressed,
       buttonType: ButtonType.tonal,
+      expanded: expanded,
       child: child,
     );
   }
@@ -122,11 +166,13 @@ class XkButton extends StatelessWidget {
     Key? key,
     required VoidCallback? onPressed,
     required Widget child,
+    bool expanded = false,
   }) {
     return XkButton._(
       key: key,
       onPressed: onPressed,
       buttonType: ButtonType.outline,
+      expanded: expanded,
       child: child,
     );
   }
@@ -136,20 +182,28 @@ class XkButton extends StatelessWidget {
     Key? key,
     required VoidCallback? onPressed,
     required Widget child,
+    bool expanded = false,
   }) {
-    return XkButton.outline(key: key, onPressed: onPressed, child: child);
+    return XkButton.outline(
+      key: key,
+      onPressed: onPressed,
+      expanded: expanded,
+      child: child,
+    );
   }
 
   factory XkButton.success({
     Key? key,
     required VoidCallback? onPressed,
     required Widget child,
+    bool expanded = false,
   }) {
     return XkButton._(
       key: key,
       onPressed: onPressed,
       buttonType: ButtonType.semantic,
       semanticColor: XkColor.success,
+      expanded: expanded,
       child: child,
     );
   }
@@ -158,12 +212,14 @@ class XkButton extends StatelessWidget {
     Key? key,
     required VoidCallback? onPressed,
     required Widget child,
+    bool expanded = false,
   }) {
     return XkButton._(
       key: key,
       onPressed: onPressed,
       buttonType: ButtonType.semantic,
       semanticColor: XkColor.warning,
+      expanded: expanded,
       child: child,
     );
   }
@@ -172,12 +228,14 @@ class XkButton extends StatelessWidget {
     Key? key,
     required VoidCallback? onPressed,
     required Widget child,
+    bool expanded = false,
   }) {
     return XkButton._(
       key: key,
       onPressed: onPressed,
       buttonType: ButtonType.semantic,
       semanticColor: XkColor.error,
+      expanded: expanded,
       child: child,
     );
   }
@@ -186,12 +244,14 @@ class XkButton extends StatelessWidget {
     Key? key,
     required VoidCallback? onPressed,
     required Widget child,
+    bool expanded = false,
   }) {
     return XkButton._(
       key: key,
       onPressed: onPressed,
       buttonType: ButtonType.semantic,
       semanticColor: XkColor.gray600,
+      expanded: expanded,
       child: child,
     );
   }
@@ -200,6 +260,49 @@ class XkButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
+    Widget button = gradient
+        ? _buildGradient(context, isDark)
+        : _buildCore(context, isDark);
+    if (expanded) {
+      button = SizedBox(width: double.infinity, child: button);
+    }
+    return button;
+  }
+
+  Widget _buildGradient(BuildContext context, bool isDark) {
+    final Color start = isDark ? XkColor.darkAccent : XkColor.accent;
+    final Color end = isDark ? XkColor.darkAccentDeep : XkColor.accentDeep;
+    final Color onColor = isDark ? XkColor.darkAccentText : XkColor.accentText;
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(colors: <Color>[start, end]),
+        borderRadius: XkShape.smBorderRadius,
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onPressed,
+          borderRadius: XkShape.smBorderRadius,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 15),
+            child: DefaultTextStyle.merge(
+              textAlign: TextAlign.center,
+              style: XkTypo.buttonLabel.copyWith(
+                color: onColor,
+                fontWeight: FontWeight.w600,
+              ),
+              child: IconTheme.merge(
+                data: IconThemeData(color: onColor),
+                child: Center(widthFactor: 1, child: child),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCore(BuildContext context, bool isDark) {
     switch (buttonType) {
       case ButtonType.primary:
         return ElevatedButton(

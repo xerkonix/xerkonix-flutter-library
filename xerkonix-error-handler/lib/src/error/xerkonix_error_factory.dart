@@ -135,3 +135,49 @@ class UnstableNetwork extends XkErrors {
             title: title ?? "Unstable Network",
             detail: detail ?? "The network state is not stable. Please try again later.");
 }
+
+// --- 1.1.0 additive subtypes --------------------------------------------
+
+class PaymentRequired extends XkErrors {
+  PaymentRequired({String? code, String? type, String? message, String? title, String? detail})
+      : super(
+            code: code ?? ErrorType.http.paymentRequiredCode,
+            type: type ?? ErrorType.http.paymentRequired,
+            message: message ??
+                "The request requires payment or the account has exhausted its quota.",
+            statusCode: 402,
+            title: title ?? "Payment Required",
+            detail: detail ?? "");
+}
+
+class TooManyRequests extends XkErrors {
+  TooManyRequests({String? code, String? type, String? message, String? title, String? detail})
+      : super(
+            code: code ?? ErrorType.http.tooManyRequestsCode,
+            type: type ?? ErrorType.http.tooManyRequests,
+            message: message ??
+                "The user has sent too many requests in a given amount of time (rate limited).",
+            statusCode: 429,
+            title: title ?? "Too Many Requests",
+            detail: detail ?? "");
+}
+
+class NetworkTimeout extends XkErrors {
+  NetworkTimeout({String? type, String? message, String? title, String? detail})
+      : super(
+            code: XkErrorCodes.networkTimeout,
+            type: type ?? ErrorType.networkTimeout,
+            message: message ?? "The network request timed out.",
+            title: title ?? "Network Timeout",
+            detail: detail ?? "The request timed out. Please try again later.");
+}
+
+class NetworkUnknown extends XkErrors {
+  NetworkUnknown({String? type, String? message, String? title, String? detail})
+      : super(
+            code: XkErrorCodes.networkUnknown,
+            type: type ?? ErrorType.networkUnknown,
+            message: message ?? "A network/connectivity error occurred.",
+            title: title ?? "Network Error",
+            detail: detail ?? "Could not reach the server. Please check your connection.");
+}

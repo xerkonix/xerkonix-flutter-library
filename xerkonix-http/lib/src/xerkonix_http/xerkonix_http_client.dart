@@ -34,12 +34,20 @@ class XkHttpClient {
     String? token,
     List<Map<String, String>>? headerList,
   }) async {
-    final Uri uri = request.generateUri(
-      path: path,
-      port: port,
-      queryParameters: queryParameters,
-      query: query,
-    );
+    final bool useBaseUrl =
+        (httpConfig.baseUrl?.trim().isNotEmpty ?? false) && query == null;
+    final Uri uri = useBaseUrl
+        ? request.resolveUri(
+            path: path,
+            port: port,
+            queryParameters: queryParameters,
+          )
+        : request.generateUri(
+            path: path,
+            port: port,
+            queryParameters: queryParameters,
+            query: query,
+          );
     final Map<String, String> headers = request.generateHeaders(
       token: token,
       headerList: headerList,
@@ -58,7 +66,10 @@ class XkHttpClient {
       final streamedResponse =
           await httpRequest.send().timeout(httpConfig.networkTimeLimit);
       final result = await http.Response.fromStream(streamedResponse);
-      return response.get(result);
+      // 1.1.0: `process` adds 402/429/3xx handling + code/metadata + optional
+      // success-envelope unwrap, while remaining behaviour-compatible for
+      // callers that only catch XkException.
+      return response.process(result);
     } on TimeoutException {
       throw XkException.requestTimeout();
     } on XkException {
@@ -91,7 +102,7 @@ class XkHttpClient {
   Future<dynamic> post({
     required String path,
     int? port,
-    required Map<String, dynamic> body,
+    Map<String, dynamic>? body,
     String? token,
     List<Map<String, String>>? headerList,
   }) async {
@@ -108,7 +119,7 @@ class XkHttpClient {
   Future<dynamic> put({
     required String path,
     int? port,
-    required Map<String, dynamic> body,
+    Map<String, dynamic>? body,
     String? token,
     List<Map<String, String>>? headerList,
   }) async {
@@ -125,7 +136,7 @@ class XkHttpClient {
   Future<dynamic> delete({
     required String path,
     int? port,
-    required Map<String, dynamic> body,
+    Map<String, dynamic>? body,
     String? token,
     List<Map<String, String>>? headerList,
   }) async {
@@ -142,7 +153,7 @@ class XkHttpClient {
   Future<dynamic> patch({
     required String path,
     int? port,
-    required Map<String, dynamic> body,
+    Map<String, dynamic>? body,
     String? token,
     List<Map<String, String>>? headerList,
   }) async {

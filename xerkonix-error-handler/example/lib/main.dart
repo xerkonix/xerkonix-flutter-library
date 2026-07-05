@@ -1,3 +1,4 @@
+// ignore_for_file: deprecated_member_use
 import 'package:flutter/material.dart';
 import 'package:xerkonix_error_handler/xerkonix_error_handler.dart';
 import 'package:xerkonix_design_system/xerkonix_design_system.dart';

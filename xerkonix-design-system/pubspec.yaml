@@ -1,17 +1,17 @@
 name: xerkonix_design_system
 description: Flutter design system package for XERKONIX Weave UI tokens, themes, typography, and components.
-version: 2.0.0
+version: 2.1.0
 repository: https://github.com/xerkonix/xerkonix-flutter-library/tree/main/xerkonix-design-system
 issue_tracker: https://github.com/xerkonix/xerkonix-flutter-library/issues
 
 environment:
-  sdk: '>=3.5.0 <4.0.0'
-  flutter: ">=3.24.0"
+  sdk: '>=3.9.0 <4.0.0'
+  flutter: ">=3.35.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  flutter_svg: ^2.2.1
+  flutter_svg: ^2.3.0
 
 dev_dependencies:
   flutter_test:

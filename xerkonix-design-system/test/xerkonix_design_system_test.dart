@@ -6,22 +6,22 @@ void main() {
   group('XkColor Tests', () {
     test('XkColor should have primary color', () {
       expect(XkColor.primary, isA<Color>());
-      expect(XkColor.primary.value, isNotNull);
+      expect(XkColor.primary.toARGB32(), isNotNull);
     });
 
     test('XkColor should have secondary color', () {
       expect(XkColor.secondary, isA<Color>());
-      expect(XkColor.secondary.value, isNotNull);
+      expect(XkColor.secondary.toARGB32(), isNotNull);
     });
 
     test('XkColor should have tertiary color', () {
       expect(XkColor.tertiary, isA<Color>());
-      expect(XkColor.tertiary.value, isNotNull);
+      expect(XkColor.tertiary.toARGB32(), isNotNull);
     });
 
     test('XkColor should have error color', () {
       expect(XkColor.error, isA<Color>());
-      expect(XkColor.error.value, isNotNull);
+      expect(XkColor.error.toARGB32(), isNotNull);
     });
 
     test('XkColor should have the full gray-blue scale', () {

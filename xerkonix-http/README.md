@@ -9,11 +9,11 @@ dependencies:
   xerkonix_http: ^1.1.0
   xerkonix_error_handler: ^1.1.0
   xerkonix_logger: ^1.1.0
-  http: ^1.2.2
+  http: ^1.6.0
 ```
 
-- Dart SDK: `>=3.5.0 <4.0.0`
-- Flutter: `>=3.24.0`
+- Dart SDK: `>=3.9.0 <4.0.0`
+- Flutter: `>=3.35.0`
 
 ## 사용
 

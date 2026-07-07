@@ -10,8 +10,8 @@ dependencies:
   xerkonix_logger: ^1.1.0
 ```
 
-- Dart SDK: `>=3.5.0 <4.0.0`
-- Flutter: `>=3.24.0`
+- Dart SDK: `>=3.9.0 <4.0.0`
+- Flutter: `>=3.35.0`
 - 의존: `xerkonix_logger`
 
 ## 사용
@@ -26,7 +26,7 @@ try {
 } on XkException catch (e) {
   XkErrorMessageHandler.showError(
     context: context,
-    widgetType: WidgetType.dialog,   // 또는 WidgetType.snackbar
+    widgetType: WidgetType.dialog,   // 또는 WidgetType.toast / WidgetType.snackBar
   );
 }
 ```

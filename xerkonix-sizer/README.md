@@ -9,8 +9,8 @@ dependencies:
   xerkonix_sizer: ^1.1.0
 ```
 
-- Dart SDK: `>=3.5.0 <4.0.0`
-- Flutter: `>=3.24.0`
+- Dart SDK: `>=3.9.0 <4.0.0`
+- Flutter: `>=3.35.0`
 
 ## 사용
 

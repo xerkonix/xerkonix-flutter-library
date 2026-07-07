@@ -9,8 +9,8 @@ dependencies:
   xerkonix_design_system: ^2.1.1
 ```
 
-- Dart SDK: `>=3.5.0 <4.0.0`
-- Flutter: `>=3.24.0`
+- Dart SDK: `>=3.9.0 <4.0.0`
+- Flutter: `>=3.35.0`
 
 폰트(Pretendard / MaruBuri / IBM Plex Sans KR / IBM Plex Mono)는 패키지에 번들돼 자동 로드된다.
 
@@ -85,7 +85,7 @@ XkTable(columns: [...], rows: [XkTableRowData([XkTableCell(text: '...')])]);
 
 각 위젯은 기본값에 회사 토큰을 쓰고, `borderRadius`/`padding`/`color`/`size` 등을 선택적으로 오버라이드할 수 있다.
 
-**v2.1 제품 프리미티브 추가**(additive, 기존 API 비파괴): `XkBrandMark`, `XkBadge`(+ `XkBadge.beta()`), `XkAvatar`, `XkSurfaceCard`, `XkSkeleton`, `XkLoadingOverlay`, `XkToast`, `XkSectionLabel`, `XkBackButton`, `XkProgressBar`, `XkStatePanes`.
+**v2.1 제품 프리미티브 추가**(additive, 기존 API 비파괴): `XkBrandMark`, `XkBadge`(+ `XkBadge.beta()`), `XkAvatar`, `XkCard`, `XkSkeleton`, `XkLoadingOverlay`, `XkToast`, `XkSectionLabel`, `XkBackButton`, `XkProgressBar`, `XkLoadingPane`/`XkEmptyPane`/`XkErrorPane`.
 
 ## 아이콘 — `XkIcon`
 

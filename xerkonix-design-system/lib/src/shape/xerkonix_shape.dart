@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 
-/// Shape tokens from XERKONIX Design System v1.3
+import '../palette/color.dart';
+
+/// Shape tokens from XERKONIX Weave Design System v1.5.
+///
+/// Radius scale mirrors tokens.css (`--radius-*`, 4px grid):
+/// xs 6 · sm 10 · md 14 · lg 18 · xl 22 · pill 999.
 class XkShape {
   XkShape._();
 
   static const double radiusXs = 6.0;
   static const double radiusSm = 10.0;
   static const double radiusMd = 14.0;
-  static const double radiusLg = 20.0;
-  static const double radiusXl = 26.0;
+  static const double radiusLg = 18.0;
+  static const double radiusXl = 22.0;
   static const double radiusFull = 999.0;
 
   static const BorderRadius xsBorderRadius = BorderRadius.all(
@@ -75,38 +80,33 @@ class XkLayout {
 
 enum XkShadowLevel { sm, md, lg }
 
-/// Shadow tokens from the v1.3 HTML reference.
+/// Elevation / shadow tokens — XERKONIX Weave v1.5.
+///
+/// tokens.css defines exactly two elevations, so the three-tier API collapses
+/// onto them (colors come from [XkColor]):
+/// - `--shadow`    `0 10px 34px` — resting / card → [XkShadowLevel.sm], [XkShadowLevel.md]
+/// - `--shadow-lg` `0 24px 60px` — raised / lifted → [XkShadowLevel.lg]
 class XkShadow {
   XkShadow._();
 
   static const List<BoxShadow> lightSm = [
-    BoxShadow(color: Color(0x0D141414), blurRadius: 3, offset: Offset(0, 1)),
-    BoxShadow(color: Color(0x0A141414), blurRadius: 0, spreadRadius: 1),
+    BoxShadow(color: XkColor.shadow, blurRadius: 34, offset: Offset(0, 10)),
   ];
 
-  static const List<BoxShadow> lightMd = [
-    BoxShadow(color: Color(0x14141414), blurRadius: 26, offset: Offset(0, 10)),
-    BoxShadow(color: Color(0x0D141414), blurRadius: 0, spreadRadius: 1),
-  ];
+  static const List<BoxShadow> lightMd = lightSm;
 
   static const List<BoxShadow> lightLg = [
-    BoxShadow(color: Color(0x24141414), blurRadius: 48, offset: Offset(0, 18)),
-    BoxShadow(color: Color(0x14141414), blurRadius: 0, spreadRadius: 1),
+    BoxShadow(color: XkColor.shadowLg, blurRadius: 60, offset: Offset(0, 24)),
   ];
 
   static const List<BoxShadow> darkSm = [
-    BoxShadow(color: Color(0x52000000), blurRadius: 3, offset: Offset(0, 1)),
-    BoxShadow(color: Color(0x0AFFFFFF), blurRadius: 0, spreadRadius: 1),
+    BoxShadow(color: XkColor.darkShadow, blurRadius: 34, offset: Offset(0, 10)),
   ];
 
-  static const List<BoxShadow> darkMd = [
-    BoxShadow(color: Color(0x61000000), blurRadius: 26, offset: Offset(0, 10)),
-    BoxShadow(color: Color(0x0FFFFFFF), blurRadius: 0, spreadRadius: 1),
-  ];
+  static const List<BoxShadow> darkMd = darkSm;
 
   static const List<BoxShadow> darkLg = [
-    BoxShadow(color: Color(0x8F000000), blurRadius: 48, offset: Offset(0, 18)),
-    BoxShadow(color: Color(0x17FFFFFF), blurRadius: 0, spreadRadius: 1),
+    BoxShadow(color: XkColor.darkShadowLg, blurRadius: 60, offset: Offset(0, 24)),
   ];
 
   static List<BoxShadow> resolve(

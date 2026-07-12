@@ -2,17 +2,12 @@ import 'dart:ui';
 
 /// XERKONIX Design Token Colors — TACTILE.
 ///
-/// TACTILE is the neumorphic successor to Weave v1.5. The multi-hue indigo
-/// accent system collapses to a **monochrome ink accent** (near-black in light,
-/// near-white in dark) so that elevation is carried by paired highlight/lowlight
-/// shadows (see [XkShadow]) rather than color. A **warm/cool temperature accent
-/// pair** ([tempWarm] / [tempCool]) is added for data that reads on a
-/// hot↔cold axis.
+/// The accent is a **monochrome ink** (near-black in light, near-white in dark),
+/// so elevation is carried by paired highlight/lowlight shadows (see [XkShadow])
+/// rather than color. A **warm/cool temperature accent pair** ([tempWarm] /
+/// [tempCool]) reads on a hot↔cold axis.
 ///
-/// Token names are preserved from Weave v1.5 (`accent`, `accentSoft`,
-/// `success`, `bg`, `surface`, …) so existing call sites keep resolving; only
-/// the underlying values change. New in TACTILE: `tempWarm(+Soft)` /
-/// `tempCool(+Soft)` and their `dark*` equivalents.
+/// Token names are legacy aliases, kept so existing call sites keep resolving.
 class XkColor {
   XkColor._();
 

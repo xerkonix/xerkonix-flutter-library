@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 
 /// Shape tokens from XERKONIX TACTILE Design System.
 ///
-/// Radius scale (4px grid, unchanged from Weave v1.5):
-/// xs 6 · sm 10 · md 14 · lg 18 · xl 22 · pill 999.
+/// Radius scale (4px grid): xs 6 · sm 10 · md 14 · lg 18 · xl 22 · pill 999.
 class XkShape {
   XkShape._();
 
@@ -80,10 +79,9 @@ enum XkShadowLevel { sm, md, lg }
 
 /// Neumorphic elevation tokens — XERKONIX TACTILE.
 ///
-/// TACTILE replaces the single soft drop of Weave v1.5 with a **paired**
-/// highlight + lowlight shadow, so surfaces read as physically extruded from a
-/// single top-left light source. A raised element casts a lowlight to the
-/// bottom-right and a highlight to the top-left.
+/// A **paired** highlight + lowlight shadow, so surfaces read as physically
+/// extruded from a single top-left light source. A raised element casts a
+/// lowlight to the bottom-right and a highlight to the top-left.
 ///
 /// - LIGHT: lowlight `rgba(146,148,166,.55)` at (7,7) blur 16 · highlight
 ///   `#FFFFFF` at (-6,-6) blur 14.

@@ -8,29 +8,25 @@ import '../palette/color.dart';
 /// The gradient is chosen deterministically from [name] so the same person
 /// always gets the same color, and it respects light/dark.
 class XkAvatar extends StatelessWidget {
-  const XkAvatar({
-    super.key,
-    required this.name,
-    this.size = 44,
-  });
+  const XkAvatar({super.key, required this.name, this.size = 44});
 
   final String name;
   final double size;
 
   static const List<List<Color>> _lightGradients = <List<Color>>[
-    <Color>[XkColor.accent, XkColor.accentDeep],
-    <Color>[Color(0xFF5E8F7B), Color(0xFF3E4462)],
-    <Color>[Color(0xFF6F779D), Color(0xFF3D46A8)],
-    <Color>[Color(0xFFB08954), Color(0xFF565D80)],
-    <Color>[Color(0xFF4B5DC3), Color(0xFF292E45)],
+    <Color>[XkColor.tempCool, XkColor.gray800],
+    <Color>[XkColor.success, XkColor.gray800],
+    <Color>[XkColor.tempWarm, XkColor.gray700],
+    <Color>[XkColor.warning, XkColor.gray800],
+    <Color>[XkColor.accent, XkColor.gray600],
   ];
 
   static const List<List<Color>> _darkGradients = <List<Color>>[
-    <Color>[XkColor.darkAccent, XkColor.darkAccentDeep],
-    <Color>[Color(0xFF7FB59E), Color(0xFF565D80)],
-    <Color>[Color(0xFF8C93B8), Color(0xFFA5B0F0)],
-    <Color>[Color(0xFFD3A96E), Color(0xFF6F779D)],
-    <Color>[Color(0xFF8E9BE6), Color(0xFF3E4462)],
+    <Color>[XkColor.darkTempCool, XkColor.gray700],
+    <Color>[XkColor.darkSuccess, XkColor.gray600],
+    <Color>[XkColor.darkTempWarm, XkColor.gray700],
+    <Color>[XkColor.darkWarning, XkColor.gray600],
+    <Color>[XkColor.gray400, XkColor.gray600],
   ];
 
   String get _initial {
@@ -55,11 +51,11 @@ class XkAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
-    final List<List<Color>> palettes =
-        isDark ? _darkGradients : _lightGradients;
+    final List<List<Color>> palettes = isDark
+        ? _darkGradients
+        : _lightGradients;
     final List<Color> colors = palettes[_bucket % palettes.length];
-    final Color onColor =
-        isDark ? XkColor.darkAccentText : XkColor.accentText;
+    final Color onColor = isDark ? XkColor.darkAccentText : XkColor.accentText;
     return Container(
       width: size,
       height: size,

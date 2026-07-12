@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import '../palette/color.dart';
 import '../shape/xerkonix_shape.dart';
 import '../typography/xerkonix_typography.dart';
+import 'xerkonix_neumorphic.dart';
 
 enum XkChipVariant { neutral, brand, support, accent, signal }
 
-/// Weave chip component from the HTML design reference.
+/// TACTILE chip component. Variant/static chips render as softly raised pills;
+/// two-state selectable chips press *into* the canvas (inset) when selected.
 class XkChip extends StatelessWidget {
   const XkChip({
     super.key,
@@ -48,46 +50,69 @@ class XkChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final colors =
-        selected != null ? _selectableColors(isDark, selected!) : _resolveColors(isDark);
+    final brightness = Theme.of(context).brightness;
+    final isDark = brightness == Brightness.dark;
+    final colors = selected != null
+        ? _selectableColors(isDark, selected!)
+        : _resolveColors(isDark);
     final resolvedRadius = borderRadius ?? XkShape.fullBorderRadius;
     final inkBorderRadius = borderRadius is BorderRadius
         ? borderRadius as BorderRadius
         : XkShape.fullBorderRadius;
+    final bool isInset = selected == true;
 
-    final body = Container(
+    final Widget row = Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (leading != null) ...[
+          leading!,
+          const SizedBox(width: 6),
+        ] else if (showDot && selected == null) ...[
+          Container(
+            width: 6,
+            height: 6,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: dotColor ?? colors.dot,
+            ),
+          ),
+          const SizedBox(width: 6),
+        ],
+        Text(
+          label,
+          style:
+              textStyle ??
+              XkTypo.chipLabel.copyWith(color: textColor ?? colors.text),
+        ),
+        if (trailing != null) ...[const SizedBox(width: 6), trailing!],
+      ],
+    );
+
+    final Widget padded = Padding(padding: padding, child: row);
+
+    final body = DecoratedBox(
       decoration: BoxDecoration(
         color: backgroundColor ?? colors.background,
         borderRadius: resolvedRadius,
         border: Border.all(color: borderColor ?? colors.border),
+        boxShadow: isInset ? null : XkShadow.raisedSoft(brightness),
       ),
-      padding: padding,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (leading != null) ...[
-            leading!,
-            const SizedBox(width: 6),
-          ] else if (showDot && selected == null) ...[
-            Container(
-              width: 6,
-              height: 6,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: dotColor ?? colors.dot,
+      child: isInset
+          ? CustomPaint(
+              foregroundPainter: XkInsetShadowPainter(
+                borderRadius: inkBorderRadius,
+                lowlight: isDark
+                    ? XkShadow.darkLowlight
+                    : XkColor.textStrong.withValues(alpha: 0.20),
+                highlight: isDark
+                    ? XkColor.darkTextStrong.withValues(alpha: 0.05)
+                    : Colors.white.withValues(alpha: 0.5),
+                distance: 2.5,
+                blur: 5,
               ),
-            ),
-            const SizedBox(width: 6),
-          ],
-          Text(
-            label,
-            style: textStyle ??
-                XkTypo.chipLabel.copyWith(color: textColor ?? colors.text),
-          ),
-          if (trailing != null) ...[const SizedBox(width: 6), trailing!],
-        ],
-      ),
+              child: padded,
+            )
+          : padded,
     );
 
     if (onTap == null) {
@@ -96,17 +121,15 @@ class XkChip extends StatelessWidget {
 
     return Material(
       color: Colors.transparent,
-      child: InkWell(
-        borderRadius: inkBorderRadius,
-        onTap: onTap,
-        child: body,
-      ),
+      child: InkWell(borderRadius: inkBorderRadius, onTap: onTap, child: body),
     );
   }
 
   _ChipPalette _selectableColors(bool isDark, bool isSelected) {
     final Color accent = isDark ? XkColor.darkAccent : XkColor.accent;
-    final Color accentText = isDark ? XkColor.darkAccentDeep : XkColor.accentDeep;
+    final Color accentText = isDark
+        ? XkColor.darkAccentDeep
+        : XkColor.accentDeep;
     if (isSelected) {
       return _ChipPalette(
         background: accent.withValues(alpha: 0.14),

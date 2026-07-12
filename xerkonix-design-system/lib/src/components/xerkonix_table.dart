@@ -50,7 +50,8 @@ class XkTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final headerBg = headerBackgroundColor ??
+    final headerBg =
+        headerBackgroundColor ??
         (isDark ? XkColor.darkSurface2 : XkColor.surface2);
     final rowBg =
         rowBackgroundColor ?? (isDark ? XkColor.darkSurface : XkColor.surface);
@@ -62,6 +63,7 @@ class XkTable extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: borderRadius ?? XkShape.mdBorderRadius,
         border: Border.all(color: borderColor),
+        boxShadow: XkShadow.raised(isDark ? Brightness.dark : Brightness.light),
       ),
       clipBehavior: Clip.antiAlias,
       child: SingleChildScrollView(
@@ -75,17 +77,11 @@ class XkTable extends StatelessWidget {
             fontSize: 12,
             color: headerText,
           ),
-          dataTextStyle: XkTypo.body.copyWith(
-            fontSize: 12,
-            color: rowText,
-          ),
+          dataTextStyle: XkTypo.body.copyWith(fontSize: 12, color: rowText),
           columns: columns
               .map(
                 (column) => DataColumn(
-                  label: Padding(
-                    padding: padding,
-                    child: Text(column),
-                  ),
+                  label: Padding(padding: padding, child: Text(column)),
                 ),
               )
               .toList(),
@@ -97,11 +93,13 @@ class XkTable extends StatelessWidget {
                         (cell) => DataCell(
                           Padding(
                             padding: padding,
-                            child: cell.child ??
+                            child:
+                                cell.child ??
                                 Text(
                                   cell.text ?? '',
                                   textAlign: cell.textAlign,
-                                  style: cell.textStyle ??
+                                  style:
+                                      cell.textStyle ??
                                       XkTypo.body.copyWith(
                                         fontSize: 12,
                                         color: cell.textColor ?? rowText,

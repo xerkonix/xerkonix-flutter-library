@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../palette/color.dart';
-
-/// Shape tokens from XERKONIX Weave Design System v1.5.
+/// Shape tokens from XERKONIX TACTILE Design System.
 ///
-/// Radius scale mirrors tokens.css (`--radius-*`, 4px grid):
+/// Radius scale (4px grid, unchanged from Weave v1.5):
 /// xs 6 · sm 10 · md 14 · lg 18 · xl 22 · pill 999.
 class XkShape {
   XkShape._();
@@ -80,34 +78,86 @@ class XkLayout {
 
 enum XkShadowLevel { sm, md, lg }
 
-/// Elevation / shadow tokens — XERKONIX Weave v1.5.
+/// Neumorphic elevation tokens — XERKONIX TACTILE.
 ///
-/// tokens.css defines exactly two elevations, so the three-tier API collapses
-/// onto them (colors come from [XkColor]):
-/// - `--shadow`    `0 10px 34px` — resting / card → [XkShadowLevel.sm], [XkShadowLevel.md]
-/// - `--shadow-lg` `0 24px 60px` — raised / lifted → [XkShadowLevel.lg]
+/// TACTILE replaces the single soft drop of Weave v1.5 with a **paired**
+/// highlight + lowlight shadow, so surfaces read as physically extruded from a
+/// single top-left light source. A raised element casts a lowlight to the
+/// bottom-right and a highlight to the top-left.
+///
+/// - LIGHT: lowlight `rgba(146,148,166,.55)` at (7,7) blur 16 · highlight
+///   `#FFFFFF` at (-6,-6) blur 14.
+/// - DARK: lowlight `rgba(0,0,0,.62)` at (7,7) blur 16 · highlight a
+///   near-transparent white at (-6,-6) blur 14.
+///
+/// Flutter's [BoxShadow] can only cast *outward*, so this class covers the
+/// raised (extruded) treatment. The complementary **inset** (sunken) treatment
+/// — which needs an inner shadow Flutter cannot express with [BoxDecoration]
+/// alone — is provided by `XkNeumorphic` / `XkInsetShadowPainter`.
 class XkShadow {
   XkShadow._();
 
-  static const List<BoxShadow> lightSm = [
-    BoxShadow(color: XkColor.shadow, blurRadius: 34, offset: Offset(0, 10)),
+  // --- Paired shadow colors (single top-left light source) ---
+  static const Color lightLowlight = Color(0x8C9294A6); // rgba(146,148,166,.55)
+  static const Color lightHighlight = Color(0xFFFFFFFF);
+  static const Color darkLowlight = Color(0x9E000000); // rgba(0,0,0,.62)
+  static const Color darkHighlight = Color(0x0FFFFFFF); // near-transparent
+
+  /// Raised surface (resting card / chip / button) — LIGHT.
+  static const List<BoxShadow> raisedLight = [
+    BoxShadow(color: lightLowlight, offset: Offset(7, 7), blurRadius: 16),
+    BoxShadow(color: lightHighlight, offset: Offset(-6, -6), blurRadius: 14),
   ];
 
-  static const List<BoxShadow> lightMd = lightSm;
-
-  static const List<BoxShadow> lightLg = [
-    BoxShadow(color: XkColor.shadowLg, blurRadius: 60, offset: Offset(0, 24)),
+  /// Raised surface (resting card / chip / button) — DARK.
+  static const List<BoxShadow> raisedDark = [
+    BoxShadow(color: darkLowlight, offset: Offset(7, 7), blurRadius: 16),
+    BoxShadow(color: darkHighlight, offset: Offset(-6, -6), blurRadius: 14),
   ];
 
-  static const List<BoxShadow> darkSm = [
-    BoxShadow(color: XkColor.darkShadow, blurRadius: 34, offset: Offset(0, 10)),
+  /// Lifted / floating surface (overlays, hovered) — LIGHT (deeper offsets).
+  static const List<BoxShadow> liftedLight = [
+    BoxShadow(color: lightLowlight, offset: Offset(11, 11), blurRadius: 24),
+    BoxShadow(color: lightHighlight, offset: Offset(-9, -9), blurRadius: 20),
   ];
 
-  static const List<BoxShadow> darkMd = darkSm;
-
-  static const List<BoxShadow> darkLg = [
-    BoxShadow(color: XkColor.darkShadowLg, blurRadius: 60, offset: Offset(0, 24)),
+  /// Lifted / floating surface (overlays, hovered) — DARK (deeper offsets).
+  static const List<BoxShadow> liftedDark = [
+    BoxShadow(color: darkLowlight, offset: Offset(11, 11), blurRadius: 24),
+    BoxShadow(color: darkHighlight, offset: Offset(-9, -9), blurRadius: 20),
   ];
+
+  /// Subtle raised treatment for small controls (chips, badges) — LIGHT.
+  static const List<BoxShadow> raisedSoftLight = [
+    BoxShadow(color: lightLowlight, offset: Offset(3, 3), blurRadius: 8),
+    BoxShadow(color: lightHighlight, offset: Offset(-3, -3), blurRadius: 7),
+  ];
+
+  /// Subtle raised treatment for small controls (chips, badges) — DARK.
+  static const List<BoxShadow> raisedSoftDark = [
+    BoxShadow(color: darkLowlight, offset: Offset(3, 3), blurRadius: 8),
+    BoxShadow(color: darkHighlight, offset: Offset(-3, -3), blurRadius: 7),
+  ];
+
+  /// Subtle paired raised shadow for small controls, by [brightness].
+  static List<BoxShadow> raisedSoft(Brightness brightness) =>
+      brightness == Brightness.dark ? raisedSoftDark : raisedSoftLight;
+
+  // Level aliases (sm/md = raised, lg = lifted) keep the 3-tier [resolve] API.
+  static const List<BoxShadow> lightSm = raisedLight;
+  static const List<BoxShadow> lightMd = raisedLight;
+  static const List<BoxShadow> lightLg = liftedLight;
+  static const List<BoxShadow> darkSm = raisedDark;
+  static const List<BoxShadow> darkMd = raisedDark;
+  static const List<BoxShadow> darkLg = liftedDark;
+
+  /// Paired raised shadow for the given [brightness].
+  static List<BoxShadow> raised(Brightness brightness) =>
+      brightness == Brightness.dark ? raisedDark : raisedLight;
+
+  /// Paired lifted (floating) shadow for the given [brightness].
+  static List<BoxShadow> lifted(Brightness brightness) =>
+      brightness == Brightness.dark ? liftedDark : liftedLight;
 
   static List<BoxShadow> resolve(
     Brightness brightness, [

@@ -2,6 +2,75 @@
 
 All notable changes to this project will be documented in this file.
 
+## 3.0.0 (BREAKING) — TACTILE Design System
+
+Full re-skin from Weave v1.5 to **TACTILE**, a neumorphic system. Elevation is
+now carried by paired highlight + lowlight shadows (and inset inner shadows)
+rather than by a single soft drop, and the indigo accent collapses to a
+monochrome ink accent (near-black in light, near-white in dark). Token *names*
+are preserved, so most call sites keep resolving; the values and the visual
+language change, so this is a breaking release.
+
+### Changed — tokens
+- **Palette (`XkColor`)**: retuned the full `gray000..gray950` scale and every
+  semantic token (`bg / surface / surface2 / border`, `textStrong/Body/Muted`,
+  `accent(+Deep/+Soft/+Text)`, `success/warning/error(+Soft)`, and all `dark*`
+  equivalents) to TACTILE values. `accent` is now a monochrome ink
+  (`#232430` light / `#F1F1F4` dark); `accentDeep` is the accent-hover step.
+- **Added a warm/cool temperature accent pair**: `tempWarm(+Soft)` /
+  `tempCool(+Soft)` and `darkTempWarm(+Soft)` / `darkTempCool(+Soft)`, for data
+  that reads on a hot↔cold axis. `XkColor.tertiary` and `ColorScheme.tertiary`
+  now map to the cool temperature accent.
+- **Elevation (`XkShadow`)**: the single-drop shadow is replaced by a
+  **neumorphic paired-shadow layer** — `raised` / `lifted` / `raisedSoft`
+  `List<BoxShadow>` (each a highlight + lowlight pair) plus the underlying
+  `lightLowlight/lightHighlight/darkLowlight/darkHighlight` colors. The legacy
+  `resolve(brightness, [level])` API is kept (sm/md → raised, lg → lifted), so
+  existing consumers (e.g. `XkPattern`) keep compiling.
+
+### Added — neumorphic primitive
+- **`XkNeumorphic`** container widget (`XkNeumorphicStyle.raised | inset | flat`)
+  — the core TACTILE surface. `Material` `CardTheme`/`ButtonStyle` cannot
+  express dual or inset shadows, so this fills the gap; a tappable `raised`
+  surface presses to `inset` while held. `XkNeumorphic.decoration(...)` exposes
+  the raised `BoxDecoration` for callers that build their own containers.
+- **`XkInsetShadowPainter`** — a reusable `CustomPainter` that emulates an inset
+  (inner) shadow, since Flutter's `BoxShadow` only casts outward.
+
+### Changed — components (public APIs preserved)
+- `XkButton` (all factories unchanged): every variant now renders as a
+  neumorphic surface — raised at rest, pressed *into* the canvas (inner shadow)
+  while held, with a subtle press scale. Emphasis is carried by elevation, not
+  hue.
+- `XkCard` / `XkInfoCard` / `XkTable` / `XkErrorPane` / `XkAlert`: raised
+  neumorphic surfaces (paired shadow) instead of a flat 1px border.
+- `XkChip`: variant/static chips are softly raised pills; two-state
+  `selected` chips press to inset when selected.
+- `XkBadge`: subtly raised chiclet.
+- Inputs (`XkTextInputField` / `XkTextAreaField` / `XkSelectField`): rendered as
+  sunken (inset) wells — a recessed fill with an inner shadow and a borderless
+  field. The global `inputDecorationTheme` is retuned to match.
+- `XkAvatar`: gradients refreshed to TACTILE tokens + the temperature pair.
+- Themes (`XkLightTheme` / `XkDarkTheme`): TACTILE color mapping, flat
+  (elevation-0, transparent-tint) Material buttons/cards, sunken inputs, and a
+  new `switchTheme` so Material `Switch` toggles adopt the ink accent.
+
+### Breaking / behavior notes
+- No public class or member was **removed or renamed**; source that referenced
+  token names, widgets, or factories continues to compile.
+- Visual output changes across the board (color, elevation, input chrome), and
+  interaction affordances shifted: `XkButton` and tappable `XkCard` now use a
+  press-to-inset gesture surface rather than a Material `InkWell` ripple, so
+  ripple-dependent expectations change.
+- `XkInfoCard` / `XkCard` no longer paint a default hairline border; pass
+  `borderColor` on `XkInfoCard` to restore one.
+
+### Tooling
+- Bumped example constraints for the sibling packages
+  (`xerkonix-error-handler` / `-logger` / `-sizer` / `-http` examples) from
+  `xerkonix_design_system: ^1.1.1` (which excluded 2.x/3.x) to `^3.0.0` so
+  `flutter pub get` resolves.
+
 ## 2.1.1
 
 - Fix: dedupe unreachable accent branches in `XkPattern._resolveGradientEnd` (no behavior change).

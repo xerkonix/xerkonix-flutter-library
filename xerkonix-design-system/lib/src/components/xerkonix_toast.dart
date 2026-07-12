@@ -67,8 +67,7 @@ class XkToast extends StatefulWidget {
   State<XkToast> createState() => _XkToastState();
 }
 
-class _XkToastState extends State<XkToast>
-    with SingleTickerProviderStateMixin {
+class _XkToastState extends State<XkToast> with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<Offset> _slide;
   Timer? _timer;
@@ -142,13 +141,9 @@ class _XkToastState extends State<XkToast>
                         color: err ? warn.withValues(alpha: 0.14) : surface2,
                         borderRadius: XkShape.mdBorderRadius,
                         border: Border.all(color: accent),
-                        boxShadow: <BoxShadow>[
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.25),
-                            blurRadius: 18,
-                            offset: const Offset(0, 6),
-                          ),
-                        ],
+                        boxShadow: XkShadow.lifted(
+                          dark ? Brightness.dark : Brightness.light,
+                        ),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,

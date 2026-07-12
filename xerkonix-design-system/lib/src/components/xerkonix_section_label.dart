@@ -5,11 +5,7 @@ import '../palette/color.dart';
 /// An uppercased, tracked-out section header with an optional [trailing] widget.
 /// Covers the product `SectionLabel`.
 class XkSectionLabel extends StatelessWidget {
-  const XkSectionLabel({
-    super.key,
-    required this.title,
-    this.trailing,
-  });
+  const XkSectionLabel({super.key, required this.title, this.trailing});
 
   final String title;
   final Widget? trailing;
@@ -25,15 +21,16 @@ class XkSectionLabel extends StatelessWidget {
           Expanded(
             child: Text(
               title.toUpperCase(),
-              style: (Theme.of(context).textTheme.bodySmall ?? const TextStyle())
-                  .copyWith(
-                letterSpacing: 1.6,
-                color: color,
-                fontWeight: FontWeight.w500,
-              ),
+              style:
+                  (Theme.of(context).textTheme.bodySmall ?? const TextStyle())
+                      .copyWith(
+                        letterSpacing: 1.6,
+                        color: color,
+                        fontWeight: FontWeight.w500,
+                      ),
             ),
           ),
-          if (trailing != null) trailing!,
+          ?trailing,
         ],
       ),
     );

@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 
-import '../palette/color.dart';
 import '../shape/xerkonix_shape.dart';
+import 'xerkonix_neumorphic.dart';
 
-/// A base tappable surface: a bordered, rounded container that becomes an
-/// [InkWell] when [onTap] is provided. Covers the product `CosentioCard`.
+/// A base tappable surface: a raised neumorphic, rounded container that presses
+/// *into* the canvas while held when [onTap] is provided. Covers the product
+/// `CosentioCard`.
 ///
 /// This is the generic sibling of [XkInfoCard] (which composes fixed
 /// metric/title/description content). Use [XkCard] when you need an arbitrary
-/// child on the standard surface.
+/// child on the standard surface. Built on [XkNeumorphic].
 class XkCard extends StatelessWidget {
   const XkCard({
     super.key,
@@ -23,29 +24,13 @@ class XkCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isDark = Theme.of(context).brightness == Brightness.dark;
-    final Color bg = isDark ? XkColor.darkSurface : XkColor.surface;
-    final Color border = isDark ? XkColor.darkBorder : XkColor.border;
-    final Widget content = Container(
+    return XkNeumorphic(
+      style: XkNeumorphicStyle.raised,
+      borderRadius: XkShape.lgBorderRadius,
+      padding: padding ?? const EdgeInsets.all(16),
+      onTap: onTap,
       width: double.infinity,
-      padding: padding,
-      decoration: BoxDecoration(
-        color: bg,
-        borderRadius: XkShape.lgBorderRadius,
-        border: Border.all(color: border),
-      ),
       child: child,
-    );
-    if (onTap == null) {
-      return content;
-    }
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: XkShape.lgBorderRadius,
-        child: content,
-      ),
     );
   }
 }

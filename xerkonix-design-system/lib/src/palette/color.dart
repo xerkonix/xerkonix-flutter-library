@@ -1,91 +1,108 @@
 import 'dart:ui';
 
-/// XERKONIX Design Token Colors (v1.5)
+/// XERKONIX Design Token Colors — TACTILE.
 ///
-/// Reference:
-/// - design system/v1.5/tokens.css  (single source of truth)
-/// - design system/v1.5/MIGRATION-MAP.md
+/// TACTILE is the neumorphic successor to Weave v1.5. The multi-hue indigo
+/// accent system collapses to a **monochrome ink accent** (near-black in light,
+/// near-white in dark) so that elevation is carried by paired highlight/lowlight
+/// shadows (see [XkShadow]) rather than color. A **warm/cool temperature accent
+/// pair** ([tempWarm] / [tempCool]) is added for data that reads on a
+/// hot↔cold axis.
 ///
-/// v1.5 direction:
-/// - Neutral system rebuilt on a cool gray-blue 12-step scale
-///   (`gray000`..`gray950`, H ~231 deg).
-/// - Multi-hue accents (gold / navy / orange / olive) collapse to a single
-///   indigo `accent` plus an achromatic `brand` baseline.
-/// - No backward-compatible aliases: the v1.4 vocabulary
-///   (canvas / identity / action / support / signal ...) is removed.
+/// Token names are preserved from Weave v1.5 (`accent`, `accentSoft`,
+/// `success`, `bg`, `surface`, …) so existing call sites keep resolving; only
+/// the underlying values change. New in TACTILE: `tempWarm(+Soft)` /
+/// `tempCool(+Soft)` and their `dark*` equivalents.
 class XkColor {
   XkColor._();
 
-  // --- Gray-blue neutral scale (H ~231 deg) ---
-  static const Color gray000 = Color(0xFFFAFBFD);
-  static const Color gray050 = Color(0xFFF2F3F8);
-  static const Color gray100 = Color(0xFFE7E9F2);
-  static const Color gray200 = Color(0xFFD5D8E8);
-  static const Color gray300 = Color(0xFFC0C4DC);
-  static const Color gray400 = Color(0xFFA9AFCF); // brand reference value
-  static const Color gray500 = Color(0xFF8C93B8);
-  static const Color gray600 = Color(0xFF6F779D);
-  static const Color gray700 = Color(0xFF565D80);
-  static const Color gray800 = Color(0xFF3E4462);
-  static const Color gray900 = Color(0xFF292E45);
-  static const Color gray950 = Color(0xFF1B1E30);
+  // --- Neutral gray scale (TACTILE) ---
+  static const Color gray000 = Color(0xFFFBFBFC);
+  static const Color gray050 = Color(0xFFF4F4F6);
+  static const Color gray100 = Color(0xFFEAEAEE);
+  static const Color gray200 = Color(0xFFDBDBE0);
+  static const Color gray300 = Color(0xFFC4C5CC);
+  static const Color gray400 = Color(0xFFACADB7);
+  static const Color gray500 = Color(0xFF8F909C);
+  static const Color gray600 = Color(0xFF71727F);
+  static const Color gray700 = Color(0xFF575866);
+  static const Color gray800 = Color(0xFF3F404C);
+  static const Color gray900 = Color(0xFF2A2B35);
+  static const Color gray950 = Color(0xFF1A1B22);
 
   // --- Semantic · Light ---
-  static const Color bg = gray050;
-  static const Color surface = gray000;
-  static const Color surface2 = gray100;
-  static const Color border = gray200;
-  static const Color borderSoft = Color(0x47A9AFCF); // rgba(169,175,207,.28)
+  static const Color bg = gray050; // #F4F4F6
+  static const Color surface = gray000; // #FBFBFC
+  static const Color surface2 = gray100; // #EAEAEE
+  static const Color border = gray200; // #DBDBE0
+  static const Color borderSoft = Color(0x66C4C5CC); // rgba(196,197,204,.40)
 
-  static const Color textStrong = Color(0xFF23263A);
-  static const Color textBody = Color(0xFF494F6E);
-  static const Color textMuted = gray600;
+  static const Color textStrong = Color(0xFF232430);
+  static const Color textBody = Color(0xFF4A4B57);
+  static const Color textMuted = gray600; // #71727F
 
   static const Color brand = gray400;
-  static const Color accent = Color(0xFF4B5DC3);
-  static const Color accentDeep = Color(0xFF3D46A8);
-  static const Color accentSoft = Color(0xFFE4E6FA);
-  static const Color accentText = Color(0xFFFFFFFF);
+
+  /// Monochrome ink action. In TACTILE the accent is near-black; elevation
+  /// (not hue) differentiates interactive surfaces.
+  static const Color accent = Color(0xFF232430); // action / accent
+  static const Color accentDeep = Color(0xFF3F404C); // accent-hover (gray800)
+  static const Color accentSoft = Color(0xFFE4E4E9); // soft neutral tint
+  static const Color accentText = Color(0xFFFBFBFC); // on-accent (surface)
 
   static const Color success = Color(0xFF5E8F7B);
-  static const Color successSoft = Color(0xFFE2EEE9);
-  static const Color warning = Color(0xFFB08954);
-  static const Color warningSoft = Color(0xFFF3EADC);
-  static const Color error = Color(0xFFB84E5E);
-  static const Color errorSoft = Color(0xFFF5E2E5);
+  static const Color successSoft = Color(0xFFE4EDE9);
+  static const Color warning = Color(0xFFC96E14);
+  static const Color warningSoft = Color(0xFFF6E7D5);
+  static const Color error = Color(0xFFC13030);
+  static const Color errorSoft = Color(0xFFF6DEDE);
 
-  static const Color shadow = Color(0x1A292E45); // rgba(41,46,69,.10)
-  static const Color shadowLg = Color(0x24292E45); // rgba(41,46,69,.14)
+  /// Temperature accent pair (hot ↔ cold axis).
+  static const Color tempWarm = Color(0xFFC65F45);
+  static const Color tempWarmSoft = Color(0xFFF6E1DA);
+  static const Color tempCool = Color(0xFF7B84C4);
+  static const Color tempCoolSoft = Color(0xFFE4E6F3);
+
+  static const Color shadow = Color(0x1A1A1B22); // rgba(26,27,34,.10)
+  static const Color shadowLg = Color(0x241A1B22); // rgba(26,27,34,.14)
 
   // --- Semantic · Dark ---
-  static const Color darkBg = gray950;
-  static const Color darkSurface = gray900;
-  static const Color darkSurface2 = Color(0xFF323A58);
-  static const Color darkBorder = Color(0xFF3A4160);
-  static const Color darkBorderSoft = Color(0x29A9AFCF); // rgba(169,175,207,.16)
+  static const Color darkBg = gray950; // #1A1B22
+  static const Color darkSurface = Color(0xFF23242C);
+  static const Color darkSurface2 = Color(0xFF2C2D37);
+  static const Color darkBorder = Color(0xFF373844);
+  static const Color darkBorderSoft = Color(0x66373844); // rgba(55,56,68,.40)
 
-  static const Color darkTextStrong = Color(0xFFEFF1F8);
-  static const Color darkTextBody = Color(0xFFB9BED6);
-  static const Color darkTextMuted = gray500;
+  static const Color darkTextStrong = Color(0xFFF1F1F4);
+  static const Color darkTextBody = Color(0xFFB4B5BE);
+  static const Color darkTextMuted = Color(0xFF7E7F8A);
 
   static const Color darkBrand = gray400;
-  static const Color darkAccent = Color(0xFF8E9BE6);
-  static const Color darkAccentDeep = Color(0xFFA5B0F0);
-  static const Color darkAccentSoft = Color(0x298E9BE6); // rgba(143,151,232,.16)
-  static const Color darkAccentText = Color(0xFF14162B);
+
+  static const Color darkAccent = Color(0xFFF1F1F4); // near-white ink action
+  static const Color darkAccentDeep = Color(0xFFD9DAE0); // accent-hover
+  static const Color darkAccentSoft = Color(
+    0x24F1F1F4,
+  ); // rgba(241,241,244,.14)
+  static const Color darkAccentText = Color(0xFF1A1B22); // on-accent (bg)
 
   static const Color darkSuccess = Color(0xFF7FB59E);
   static const Color darkSuccessSoft = Color(0x247FB59E);
-  static const Color darkWarning = Color(0xFFD3A96E);
-  static const Color darkWarningSoft = Color(0x24D3A96E);
-  static const Color darkError = Color(0xFFE08694);
-  static const Color darkErrorSoft = Color(0x24E08694);
+  static const Color darkWarning = Color(0xFFE0A45C);
+  static const Color darkWarningSoft = Color(0x24E0A45C);
+  static const Color darkError = Color(0xFFE08080);
+  static const Color darkErrorSoft = Color(0x24E08080);
 
-  static const Color darkShadow = Color(0x52000000); // rgba(0,0,0,.32)
-  static const Color darkShadowLg = Color(0x6B000000); // rgba(0,0,0,.42)
+  static const Color darkTempWarm = Color(0xFFDE9074);
+  static const Color darkTempWarmSoft = Color(0x24DE9074);
+  static const Color darkTempCool = Color(0xFF939CD6);
+  static const Color darkTempCoolSoft = Color(0x24939CD6);
+
+  static const Color darkShadow = Color(0x9E000000); // rgba(0,0,0,.62)
+  static const Color darkShadowLg = Color(0xB3000000); // rgba(0,0,0,.70)
 
   // --- Generic role mapping ---
   static const Color primary = accent;
   static const Color secondary = brand;
-  static const Color tertiary = accent;
+  static const Color tertiary = tempCool;
 }

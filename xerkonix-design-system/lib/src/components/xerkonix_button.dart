@@ -3,21 +3,25 @@ import 'package:flutter/material.dart';
 import '../palette/color.dart';
 import '../shape/xerkonix_shape.dart';
 import '../typography/xerkonix_typography.dart';
+import 'xerkonix_neumorphic.dart';
 
-/// XERKONIX Design System button component.
+/// XERKONIX TACTILE button component.
+///
+/// Every variant renders as a neumorphic surface: extruded (paired
+/// highlight + lowlight) at rest and pressed *into* the canvas (inner shadow)
+/// while held, so the press reads physically.
 ///
 /// Variants:
-/// - primary   (text-on-canvas)
-/// - action    (default CTA, `#3B434F` / white · `cta` alias)
-/// - brand     (brand gold, for brand-identity contexts only)
-/// - support   (recommended / stable context)
-/// - accent    (editorial emphasis)
-/// - tonal
-/// - outline
+/// - primary   (strong ink fill)
+/// - action    (default CTA · ink accent · `cta` alias)
+/// - brand     (softer ink, brand-identity moments)
+/// - support   (recommended / stable · success)
+/// - accent    (editorial emphasis · ink accent)
+/// - tonal     (raised neutral surface)
+/// - outline   (flat, bordered)
 ///
-/// v1.3 policy: the default CTA should be `action` (WCAG AAA contrast).
-/// `brand` remains available but is reserved for brand-identity moments,
-/// not generic primary actions. See design system/v1.3/tokens.css.
+/// TACTILE policy: the default CTA is `action`. In TACTILE the accent is a
+/// monochrome ink, so emphasis is carried by elevation, not hue.
 class XkButton extends StatelessWidget {
   const XkButton._({
     super.key,
@@ -55,8 +59,7 @@ class XkButton extends StatelessWidget {
     );
   }
 
-  /// Gradient-filled accent CTA (covers the product `CosentioPrimaryButton`).
-  /// Full-width by default.
+  /// Gradient-filled accent CTA. Full-width by default.
   factory XkButton.primaryGradient({
     Key? key,
     required VoidCallback? onPressed,
@@ -258,291 +261,257 @@ class XkButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
+    final _XkButtonSpec spec = _resolveSpec(isDark);
 
-    Widget button = gradient
-        ? _buildGradient(context, isDark)
-        : _buildCore(context, isDark);
+    Widget button = _NeumorphicButton(
+      onPressed: onPressed,
+      fill: spec.fill,
+      gradient: gradient ? spec.gradient : null,
+      textColor: spec.textColor,
+      border: spec.border,
+      elevated: spec.elevated,
+      disabledFill: isDark ? XkColor.darkSurface2 : XkColor.gray400,
+      disabledTextColor: isDark ? XkColor.darkTextMuted : XkColor.textMuted,
+      child: child,
+    );
     if (expanded) {
       button = SizedBox(width: double.infinity, child: button);
     }
     return button;
   }
 
-  Widget _buildGradient(BuildContext context, bool isDark) {
-    final Color start = isDark ? XkColor.darkAccent : XkColor.accent;
-    final Color end = isDark ? XkColor.darkAccentDeep : XkColor.accentDeep;
-    final Color onColor = isDark ? XkColor.darkAccentText : XkColor.accentText;
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(colors: <Color>[start, end]),
-        borderRadius: XkShape.smBorderRadius,
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onPressed,
-          borderRadius: XkShape.smBorderRadius,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 15),
-            child: DefaultTextStyle.merge(
-              textAlign: TextAlign.center,
-              style: XkTypo.buttonLabel.copyWith(
-                color: onColor,
-                fontWeight: FontWeight.w600,
-              ),
-              child: IconTheme.merge(
-                data: IconThemeData(color: onColor),
-                child: Center(widthFactor: 1, child: child),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildCore(BuildContext context, bool isDark) {
+  _XkButtonSpec _resolveSpec(bool isDark) {
     switch (buttonType) {
       case ButtonType.primary:
-        return ElevatedButton(
-          onPressed: onPressed,
-          style: _filledStyle(
-            isDark: isDark,
-            baseColor: isDark ? XkColor.darkTextStrong : XkColor.textStrong,
-            hoverColor: isDark ? XkColor.darkTextBody : XkColor.textBody,
-            textColor: isDark ? XkColor.darkBg : XkColor.bg,
-          ),
-          child: child,
+        return _XkButtonSpec(
+          fill: isDark ? XkColor.darkTextStrong : XkColor.textStrong,
+          textColor: isDark ? XkColor.darkBg : XkColor.bg,
         );
       case ButtonType.action:
-        return ElevatedButton(
-          onPressed: onPressed,
-          style: _filledStyle(
-            isDark: isDark,
-            baseColor: isDark ? XkColor.darkAccent : XkColor.accent,
-            hoverColor: isDark ? XkColor.darkAccentDeep : XkColor.accentDeep,
-            textColor: isDark ? XkColor.darkAccentText : XkColor.accentText,
+        return _XkButtonSpec(
+          fill: isDark ? XkColor.darkAccent : XkColor.accent,
+          textColor: isDark ? XkColor.darkAccentText : XkColor.accentText,
+          gradient: LinearGradient(
+            colors: isDark
+                ? const <Color>[XkColor.darkAccent, XkColor.darkAccentDeep]
+                : const <Color>[XkColor.accent, XkColor.accentDeep],
           ),
-          child: child,
         );
       case ButtonType.brand:
-        return ElevatedButton(
-          onPressed: onPressed,
-          style: _filledStyle(
-            isDark: isDark,
-            baseColor: isDark ? XkColor.darkAccent : XkColor.accent,
-            hoverColor: isDark
-                ? XkColor.darkAccentDeep
-                : XkColor.accentDeep,
-            textColor: const Color(0xFF1A0E00),
-          ),
-          child: child,
+        return _XkButtonSpec(
+          fill: isDark ? XkColor.darkAccentDeep : XkColor.accentDeep,
+          textColor: isDark ? XkColor.darkAccentText : XkColor.accentText,
         );
       case ButtonType.support:
-        return ElevatedButton(
-          onPressed: onPressed,
-          style: _filledStyle(
-            isDark: isDark,
-            baseColor: isDark ? XkColor.darkSuccess : XkColor.success,
-            hoverColor: isDark ? XkColor.darkSuccess : XkColor.success,
-            textColor: const Color(0xFF1A0E00),
-          ),
-          child: child,
+        return _XkButtonSpec(
+          fill: isDark ? XkColor.darkSuccess : XkColor.success,
+          textColor: isDark ? XkColor.darkBg : XkColor.accentText,
         );
       case ButtonType.accent:
-        return ElevatedButton(
-          onPressed: onPressed,
-          style: _filledStyle(
-            isDark: isDark,
-            baseColor: isDark ? XkColor.darkAccent : XkColor.accent,
-            hoverColor: isDark ? XkColor.darkAccentDeep : XkColor.accentDeep,
-            textColor: isDark ? XkColor.darkAccentText : Colors.white,
-          ),
-          child: child,
+        return _XkButtonSpec(
+          fill: isDark ? XkColor.darkAccent : XkColor.accent,
+          textColor: isDark ? XkColor.darkAccentText : XkColor.accentText,
         );
       case ButtonType.tonal:
-        return OutlinedButton(
-          onPressed: onPressed,
-          style: _tonalStyle(isDark: isDark),
-          child: child,
+        return _XkButtonSpec(
+          fill: isDark ? XkColor.darkSurface2 : XkColor.surface,
+          textColor: isDark ? XkColor.darkTextStrong : XkColor.textStrong,
         );
       case ButtonType.outline:
-        return OutlinedButton(
-          onPressed: onPressed,
-          style: _outlineStyle(isDark: isDark),
-          child: child,
+        return _XkButtonSpec(
+          fill: Colors.transparent,
+          textColor: isDark ? XkColor.darkTextBody : XkColor.textBody,
+          border: Border.all(
+            color: isDark ? XkColor.darkBorder : XkColor.border,
+          ),
+          elevated: false,
         );
       case ButtonType.semantic:
-        return ElevatedButton(
-          onPressed: onPressed,
-          style: _filledStyle(
-            isDark: isDark,
-            baseColor: semanticColor!,
-            hoverColor: _emphasize(semanticColor!, isDark),
-            textColor: _onColor(semanticColor!, isDark),
-          ),
-          child: child,
-        );
+        final Color base = semanticColor!;
+        return _XkButtonSpec(fill: base, textColor: _onColor(base, isDark));
     }
-  }
-
-  static ButtonStyle _filledStyle({
-    required bool isDark,
-    required Color baseColor,
-    required Color hoverColor,
-    required Color textColor,
-  }) {
-    return ButtonStyle(
-      textStyle: WidgetStateProperty.all(XkTypo.buttonLabel),
-      padding: WidgetStateProperty.all(
-        const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
-      ),
-      minimumSize: WidgetStateProperty.all(const Size(0, 36)),
-      shape: WidgetStateProperty.all(
-        RoundedRectangleBorder(borderRadius: XkShape.smBorderRadius),
-      ),
-      side: WidgetStateProperty.all(BorderSide.none),
-      backgroundColor: WidgetStateProperty.resolveWith((states) {
-        if (states.contains(WidgetState.disabled)) {
-          return isDark ? XkColor.gray400 : XkColor.gray400;
-        }
-        if (states.contains(WidgetState.pressed) ||
-            states.contains(WidgetState.hovered) ||
-            states.contains(WidgetState.focused)) {
-          return hoverColor;
-        }
-        return baseColor;
-      }),
-      foregroundColor: WidgetStateProperty.resolveWith((states) {
-        if (states.contains(WidgetState.disabled)) {
-          return isDark ? XkColor.darkSurface : XkColor.textMuted;
-        }
-        return textColor;
-      }),
-      overlayColor: WidgetStateProperty.resolveWith((states) {
-        if (states.contains(WidgetState.pressed)) {
-          return textColor.withValues(alpha: 0.10);
-        }
-        if (states.contains(WidgetState.hovered)) {
-          return textColor.withValues(alpha: 0.06);
-        }
-        return null;
-      }),
-      elevation: WidgetStateProperty.resolveWith((states) {
-        return states.contains(WidgetState.hovered) ? 2 : 0;
-      }),
-      shadowColor: WidgetStateProperty.all(
-        isDark ? const Color(0x61000000) : const Color(0x14141414),
-      ),
-      surfaceTintColor: WidgetStateProperty.all(Colors.transparent),
-    );
-  }
-
-  static ButtonStyle _outlineStyle({required bool isDark}) {
-    final borderColor = isDark ? XkColor.darkBorder : XkColor.border;
-    final textColor = isDark ? XkColor.darkTextBody : XkColor.textBody;
-
-    return ButtonStyle(
-      textStyle: WidgetStateProperty.all(XkTypo.buttonLabel),
-      padding: WidgetStateProperty.all(
-        const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
-      ),
-      minimumSize: WidgetStateProperty.all(const Size(0, 36)),
-      shape: WidgetStateProperty.all(
-        RoundedRectangleBorder(borderRadius: XkShape.smBorderRadius),
-      ),
-      side: WidgetStateProperty.resolveWith((states) {
-        if (states.contains(WidgetState.disabled)) {
-          return BorderSide(color: borderColor.withValues(alpha: 0.45));
-        }
-        if (states.contains(WidgetState.hovered) ||
-            states.contains(WidgetState.focused)) {
-          return BorderSide(color: borderColor.withValues(alpha: 0.95));
-        }
-        return BorderSide(color: borderColor);
-      }),
-      backgroundColor: WidgetStateProperty.resolveWith((states) {
-        if (states.contains(WidgetState.pressed)) {
-          return isDark ? XkColor.darkSurface2 : XkColor.surface2;
-        }
-        if (states.contains(WidgetState.hovered)) {
-          return (isDark ? XkColor.darkSurface : XkColor.surface).withValues(
-            alpha: 0.92,
-          );
-        }
-        return Colors.transparent;
-      }),
-      foregroundColor: WidgetStateProperty.resolveWith((states) {
-        if (states.contains(WidgetState.disabled)) {
-          return textColor.withValues(alpha: 0.45);
-        }
-        return textColor;
-      }),
-      elevation: WidgetStateProperty.resolveWith((states) {
-        return states.contains(WidgetState.hovered) ? 2 : 0;
-      }),
-      shadowColor: WidgetStateProperty.all(
-        isDark ? const Color(0x61000000) : const Color(0x14141414),
-      ),
-      surfaceTintColor: WidgetStateProperty.all(Colors.transparent),
-    );
-  }
-
-  static ButtonStyle _tonalStyle({required bool isDark}) {
-    final backgroundColor = isDark
-        ? XkColor.darkSurface2
-        : XkColor.surface2;
-    final textColor = isDark ? XkColor.darkTextStrong : XkColor.textStrong;
-    final borderColor = isDark ? XkColor.darkBorder : XkColor.border;
-
-    return ButtonStyle(
-      textStyle: WidgetStateProperty.all(XkTypo.buttonLabel),
-      padding: WidgetStateProperty.all(
-        const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
-      ),
-      minimumSize: WidgetStateProperty.all(const Size(0, 36)),
-      shape: WidgetStateProperty.all(
-        RoundedRectangleBorder(borderRadius: XkShape.smBorderRadius),
-      ),
-      side: WidgetStateProperty.all(BorderSide(color: borderColor)),
-      backgroundColor: WidgetStateProperty.resolveWith((states) {
-        if (states.contains(WidgetState.disabled)) {
-          return backgroundColor.withValues(alpha: 0.5);
-        }
-        if (states.contains(WidgetState.pressed)) {
-          return isDark ? XkColor.darkSurface2 : XkColor.surface2;
-        }
-        if (states.contains(WidgetState.hovered)) {
-          return backgroundColor.withValues(alpha: 0.94);
-        }
-        return backgroundColor;
-      }),
-      foregroundColor: WidgetStateProperty.resolveWith((states) {
-        if (states.contains(WidgetState.disabled)) {
-          return textColor.withValues(alpha: 0.45);
-        }
-        return textColor;
-      }),
-      elevation: WidgetStateProperty.resolveWith((states) {
-        return states.contains(WidgetState.hovered) ? 2 : 0;
-      }),
-      shadowColor: WidgetStateProperty.all(
-        isDark ? const Color(0x61000000) : const Color(0x14141414),
-      ),
-      surfaceTintColor: WidgetStateProperty.all(Colors.transparent),
-    );
-  }
-
-  static Color _emphasize(Color color, bool isDark) {
-    return Color.lerp(color, isDark ? Colors.white : Colors.black, 0.14) ??
-        color;
   }
 
   static Color _onColor(Color color, bool isDark) {
     return ThemeData.estimateBrightnessForColor(color) == Brightness.dark
-        ? Colors.white
-        : (isDark ? XkColor.darkAccentText : const Color(0xFF1A0E00));
+        ? XkColor.accentText
+        : (isDark ? XkColor.darkBg : XkColor.textStrong);
+  }
+}
+
+class _XkButtonSpec {
+  const _XkButtonSpec({
+    required this.fill,
+    required this.textColor,
+    this.gradient,
+    this.border,
+    this.elevated = true,
+  });
+
+  final Color fill;
+  final Color textColor;
+  final Gradient? gradient;
+  final BoxBorder? border;
+
+  /// Whether the resting surface casts a raised (extruded) shadow.
+  final bool elevated;
+}
+
+/// A neumorphic pressable surface used to render every [XkButton] variant.
+class _NeumorphicButton extends StatefulWidget {
+  const _NeumorphicButton({
+    required this.onPressed,
+    required this.child,
+    required this.fill,
+    required this.textColor,
+    required this.disabledFill,
+    required this.disabledTextColor,
+    this.gradient,
+    this.border,
+    this.elevated = true,
+  });
+
+  final VoidCallback? onPressed;
+  final Widget child;
+  final Color fill;
+  final Color textColor;
+  final Color disabledFill;
+  final Color disabledTextColor;
+  final Gradient? gradient;
+  final BoxBorder? border;
+  final bool elevated;
+
+  static const BorderRadius _radius = XkShape.smBorderRadius;
+  static const EdgeInsets _padding = EdgeInsets.symmetric(
+    horizontal: 18,
+    vertical: 11,
+  );
+
+  @override
+  State<_NeumorphicButton> createState() => _NeumorphicButtonState();
+}
+
+class _NeumorphicButtonState extends State<_NeumorphicButton> {
+  bool _pressed = false;
+  bool _hovered = false;
+
+  bool get _enabled => widget.onPressed != null;
+
+  void _setPressed(bool value) {
+    if (_pressed != value) {
+      setState(() => _pressed = value);
+    }
+  }
+
+  void _setHovered(bool value) {
+    if (_hovered != value) {
+      setState(() => _hovered = value);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final Brightness brightness = Theme.of(context).brightness;
+    final bool isDark = brightness == Brightness.dark;
+
+    final Color fill = _enabled ? widget.fill : widget.disabledFill;
+    final Color textColor = _enabled
+        ? widget.textColor
+        : widget.disabledTextColor;
+    final Gradient? gradient = _enabled ? widget.gradient : null;
+
+    final Widget label = DefaultTextStyle.merge(
+      textAlign: TextAlign.center,
+      style: XkTypo.buttonLabel.copyWith(
+        color: textColor,
+        fontWeight: FontWeight.w600,
+      ),
+      child: IconTheme.merge(
+        data: IconThemeData(color: textColor, size: 18),
+        child: Center(widthFactor: 1, child: widget.child),
+      ),
+    );
+
+    final Widget content = Padding(
+      padding: _NeumorphicButton._padding,
+      child: label,
+    );
+
+    Widget surface;
+    if (!_enabled) {
+      surface = DecoratedBox(
+        decoration: BoxDecoration(
+          color: fill,
+          gradient: gradient,
+          borderRadius: _NeumorphicButton._radius,
+          border: widget.border,
+        ),
+        child: content,
+      );
+    } else if (_pressed) {
+      // Pressed → inset. Base fill + inner shadow.
+      surface = DecoratedBox(
+        decoration: BoxDecoration(
+          color: fill,
+          gradient: gradient,
+          borderRadius: _NeumorphicButton._radius,
+          border: widget.border,
+        ),
+        child: CustomPaint(
+          foregroundPainter: XkInsetShadowPainter(
+            borderRadius: _NeumorphicButton._radius,
+            lowlight: isDark
+                ? XkShadow.darkLowlight
+                : XkColor.textStrong.withValues(alpha: 0.28),
+            highlight: isDark
+                ? XkColor.darkTextStrong.withValues(alpha: 0.06)
+                : Colors.white.withValues(alpha: 0.35),
+            distance: 3,
+            blur: 6,
+          ),
+          child: content,
+        ),
+      );
+    } else {
+      // Resting (and hovered) → raised.
+      surface = DecoratedBox(
+        decoration: BoxDecoration(
+          color: fill,
+          gradient: gradient,
+          borderRadius: _NeumorphicButton._radius,
+          border: widget.border,
+          boxShadow: widget.elevated
+              ? (_hovered
+                    ? XkShadow.lifted(brightness)
+                    : XkShadow.raised(brightness))
+              : null,
+        ),
+        child: content,
+      );
+    }
+
+    return Semantics(
+      button: true,
+      enabled: _enabled,
+      child: MouseRegion(
+        cursor: _enabled ? SystemMouseCursors.click : SystemMouseCursors.basic,
+        onEnter: (_) => _setHovered(true),
+        onExit: (_) => _setHovered(false),
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: widget.onPressed,
+          onTapDown: _enabled ? (_) => _setPressed(true) : null,
+          onTapUp: _enabled ? (_) => _setPressed(false) : null,
+          onTapCancel: _enabled ? () => _setPressed(false) : null,
+          child: AnimatedScale(
+            scale: _pressed ? 0.98 : 1.0,
+            duration: const Duration(milliseconds: 90),
+            child: surface,
+          ),
+        ),
+      ),
+    );
   }
 }
 

@@ -56,7 +56,8 @@ class XkAlert extends StatelessWidget {
     final foreground = textColor ?? palette.foreground;
     final accent = accentColor ?? palette.accent;
     final bg = backgroundColor ?? palette.background;
-    final resolvedRadius = borderRadius ??
+    final resolvedRadius =
+        borderRadius ??
         const BorderRadius.only(
           topLeft: Radius.zero,
           bottomLeft: Radius.zero,
@@ -64,7 +65,8 @@ class XkAlert extends StatelessWidget {
           bottomRight: Radius.circular(XkShape.radiusMd),
         );
 
-    final trailingWidget = trailing ??
+    final trailingWidget =
+        trailing ??
         (showMetaPrefix
             ? Padding(
                 padding: const EdgeInsets.only(top: 4),
@@ -79,65 +81,71 @@ class XkAlert extends StatelessWidget {
               )
             : null);
 
-    return ClipRRect(
-      borderRadius: resolvedRadius,
-      child: Container(
-        decoration: BoxDecoration(
-          color: bg,
-          borderRadius: resolvedRadius,
-          border: Border.all(color: borderColor ?? palette.border),
-        ),
-        child: Stack(
-          children: [
-            Positioned(
-              top: 0,
-              bottom: 0,
-              left: 0,
-              width: _accentWidth,
-              child: Container(color: accent),
-            ),
-            Padding(
-              padding: padding,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (leading != null) ...[
-                    leading!,
-                    const SizedBox(width: XkLayout.spacingSm),
-                  ],
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          title,
-                          style: XkTypo.fieldLabel.copyWith(
-                            color: foreground,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: -0.05,
-                          ),
-                        ),
-                        const SizedBox(height: 3),
-                        Text(
-                          message,
-                          style: XkTypo.bodySmall.copyWith(
-                            color: isDark
-                                ? XkColor.darkTextBody
-                                : XkColor.textBody,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  if (trailingWidget != null) ...[
-                    const SizedBox(width: XkLayout.spacingSm),
-                    trailingWidget,
-                  ],
-                ],
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        borderRadius: resolvedRadius,
+        boxShadow: XkShadow.raised(isDark ? Brightness.dark : Brightness.light),
+      ),
+      child: ClipRRect(
+        borderRadius: resolvedRadius,
+        child: Container(
+          decoration: BoxDecoration(
+            color: bg,
+            borderRadius: resolvedRadius,
+            border: Border.all(color: borderColor ?? palette.border),
+          ),
+          child: Stack(
+            children: [
+              Positioned(
+                top: 0,
+                bottom: 0,
+                left: 0,
+                width: _accentWidth,
+                child: Container(color: accent),
               ),
-            ),
-          ],
+              Padding(
+                padding: padding,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (leading != null) ...[
+                      leading!,
+                      const SizedBox(width: XkLayout.spacingSm),
+                    ],
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            title,
+                            style: XkTypo.fieldLabel.copyWith(
+                              color: foreground,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: -0.05,
+                            ),
+                          ),
+                          const SizedBox(height: 3),
+                          Text(
+                            message,
+                            style: XkTypo.bodySmall.copyWith(
+                              color: isDark
+                                  ? XkColor.darkTextBody
+                                  : XkColor.textBody,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (trailingWidget != null) ...[
+                      const SizedBox(width: XkLayout.spacingSm),
+                      trailingWidget,
+                    ],
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -158,8 +166,7 @@ class XkAlert extends StatelessWidget {
 
   _AlertPalette _resolvePalette(bool isDark) {
     final neutralBg = isDark ? XkColor.darkSurface : XkColor.surface;
-    final neutralBorder =
-        isDark ? XkColor.darkBorderSoft : XkColor.borderSoft;
+    final neutralBorder = isDark ? XkColor.darkBorderSoft : XkColor.borderSoft;
     final foreground = isDark ? XkColor.darkTextStrong : XkColor.textStrong;
 
     switch (variant) {
@@ -182,9 +189,7 @@ class XkAlert extends StatelessWidget {
           background: neutralBg,
           border: neutralBorder,
           foreground: foreground,
-          accent: isDark
-              ? XkColor.darkWarning
-              : XkColor.warning,
+          accent: isDark ? XkColor.darkWarning : XkColor.warning,
         );
       case XkAlertVariant.danger:
         final signal = isDark ? XkColor.darkError : XkColor.error;

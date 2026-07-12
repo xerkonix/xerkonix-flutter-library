@@ -39,7 +39,7 @@ void main() {
       expect(XkColor.gray950, isA<Color>());
     });
 
-    test('XkColor should have v1.5 semantic tokens', () {
+    test('XkColor should have TACTILE semantic tokens', () {
       expect(XkColor.bg, isA<Color>());
       expect(XkColor.surface, isA<Color>());
       expect(XkColor.surface2, isA<Color>());
@@ -52,6 +52,55 @@ void main() {
       expect(XkColor.success, isA<Color>());
       expect(XkColor.warning, isA<Color>());
       expect(XkColor.error, isA<Color>());
+    });
+
+    test('XkColor should expose the TACTILE key values', () {
+      // Monochrome ink accent + core surfaces (light).
+      expect(XkColor.accent.toARGB32(), 0xFF232430);
+      expect(XkColor.bg.toARGB32(), 0xFFF4F4F6);
+      expect(XkColor.surface.toARGB32(), 0xFFFBFBFC);
+      // Near-white ink accent (dark).
+      expect(XkColor.darkAccent.toARGB32(), 0xFFF1F1F4);
+      expect(XkColor.darkBg.toARGB32(), 0xFF1A1B22);
+    });
+
+    test('XkColor should have the warm/cool temperature accent pair', () {
+      expect(XkColor.tempWarm, isA<Color>());
+      expect(XkColor.tempCool, isA<Color>());
+      expect(XkColor.tempWarmSoft, isA<Color>());
+      expect(XkColor.tempCoolSoft, isA<Color>());
+      expect(XkColor.darkTempWarm, isA<Color>());
+      expect(XkColor.darkTempCool, isA<Color>());
+      expect(XkColor.tempWarm.toARGB32(), 0xFFC65F45);
+      expect(XkColor.tempCool.toARGB32(), 0xFF7B84C4);
+    });
+  });
+
+  group('Neumorphic elevation tokens', () {
+    test('XkShadow.raised/lifted return paired (2) box shadows', () {
+      expect(XkShadow.raised(Brightness.light).length, 2);
+      expect(XkShadow.raised(Brightness.dark).length, 2);
+      expect(XkShadow.lifted(Brightness.light).length, 2);
+      expect(XkShadow.raisedSoft(Brightness.dark).length, 2);
+    });
+
+    test('raised light pair matches the TACTILE highlight/lowlight spec', () {
+      final BoxShadow low = XkShadow.raisedLight.first;
+      final BoxShadow high = XkShadow.raisedLight.last;
+      expect(low.color.toARGB32(), 0x8C9294A6);
+      expect(low.offset, const Offset(7, 7));
+      expect(low.blurRadius, 16);
+      expect(high.color.toARGB32(), 0xFFFFFFFF);
+      expect(high.offset, const Offset(-6, -6));
+      expect(high.blurRadius, 14);
+    });
+
+    test('resolve keeps the legacy 3-tier API', () {
+      expect(XkShadow.resolve(Brightness.light), isA<List<BoxShadow>>());
+      expect(
+        XkShadow.resolve(Brightness.dark, XkShadowLevel.lg),
+        XkShadow.liftedDark,
+      );
     });
   });
 
@@ -66,13 +115,16 @@ void main() {
       expect(XkDarkTheme.themeData.useMaterial3, true);
     });
 
-    test('XkLightTheme and XkDarkTheme should have different color schemes', () {
-      final lightScheme = XkLightTheme.themeData.colorScheme;
-      final darkScheme = XkDarkTheme.themeData.colorScheme;
-      
-      expect(lightScheme.brightness, Brightness.light);
-      expect(darkScheme.brightness, Brightness.dark);
-    });
+    test(
+      'XkLightTheme and XkDarkTheme should have different color schemes',
+      () {
+        final lightScheme = XkLightTheme.themeData.colorScheme;
+        final darkScheme = XkDarkTheme.themeData.colorScheme;
+
+        expect(lightScheme.brightness, Brightness.light);
+        expect(darkScheme.brightness, Brightness.dark);
+      },
+    );
   });
 
   group('Typography Tests', () {
@@ -133,9 +185,7 @@ void main() {
         XkDarkTheme.themeData,
       ]) {
         final Widget body = useScaffold ? Scaffold(body: child) : child;
-        await tester.pumpWidget(
-          MaterialApp(theme: theme, home: body),
-        );
+        await tester.pumpWidget(MaterialApp(theme: theme, home: body));
         await tester.pump(const Duration(milliseconds: 50));
         expect(tester.takeException(), isNull);
       }
@@ -195,39 +245,31 @@ void main() {
       await pumpBoth(
         tester,
         const Stack(
-          children: <Widget>[XkLoadingOverlay(message: '불러오는 중', visible: true)],
+          children: <Widget>[
+            XkLoadingOverlay(message: '불러오는 중', visible: true),
+          ],
         ),
       );
       expect(find.text('불러오는 중'), findsWidgets);
     });
 
-    testWidgets('XkSectionLabel uppercases title', (
-      WidgetTester tester,
-    ) async {
+    testWidgets('XkSectionLabel uppercases title', (WidgetTester tester) async {
       await pumpBoth(tester, const XkSectionLabel(title: 'people'));
       expect(find.text('PEOPLE'), findsWidgets);
     });
 
     testWidgets('XkBackButton builds', (WidgetTester tester) async {
-      await pumpBoth(
-        tester,
-        XkBackButton(label: '뒤로', onPressed: () {}),
-      );
+      await pumpBoth(tester, XkBackButton(label: '뒤로', onPressed: () {}));
     });
 
-    testWidgets('XkProgressBar builds and clamps', (
-      WidgetTester tester,
-    ) async {
+    testWidgets('XkProgressBar builds and clamps', (WidgetTester tester) async {
       await pumpBoth(tester, const XkProgressBar(value: 1.5));
     });
 
     testWidgets('State panes build', (WidgetTester tester) async {
       await pumpBoth(tester, const XkLoadingPane());
       await pumpBoth(tester, const XkEmptyPane(message: '비어 있음'));
-      await pumpBoth(
-        tester,
-        XkErrorPane(message: '오류', onRetry: () {}),
-      );
+      await pumpBoth(tester, XkErrorPane(message: '오류', onRetry: () {}));
       await pumpBoth(tester, const XkErrorPane(message: '오류'));
     });
 
@@ -270,6 +312,76 @@ void main() {
       );
     });
 
+    testWidgets('XkNeumorphic builds raised, inset, flat and tappable', (
+      WidgetTester tester,
+    ) async {
+      await pumpBoth(
+        tester,
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            const XkNeumorphic(child: Text('raised')),
+            const XkNeumorphic(
+              style: XkNeumorphicStyle.inset,
+              child: Text('inset'),
+            ),
+            const XkNeumorphic(
+              style: XkNeumorphicStyle.flat,
+              child: Text('flat'),
+            ),
+            XkNeumorphic(onTap: () {}, child: const Text('tap')),
+          ],
+        ),
+      );
+      expect(find.text('inset'), findsWidgets);
+    });
+
+    testWidgets('XkNeumorphic press toggles to inset without error', (
+      WidgetTester tester,
+    ) async {
+      var taps = 0;
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: XkLightTheme.themeData,
+          home: Scaffold(
+            body: Center(
+              child: XkNeumorphic(
+                onTap: () => taps++,
+                child: const Text('press me'),
+              ),
+            ),
+          ),
+        ),
+      );
+      final TestGesture gesture = await tester.startGesture(
+        tester.getCenter(find.text('press me')),
+      );
+      await tester.pump(const Duration(milliseconds: 16));
+      expect(tester.takeException(), isNull);
+      await gesture.up();
+      await tester.pump();
+      expect(taps, 1);
+    });
+
+    testWidgets('XkInsetShadowPainter paints without error', (
+      WidgetTester tester,
+    ) async {
+      await pumpBoth(
+        tester,
+        const SizedBox(
+          width: 120,
+          height: 40,
+          child: CustomPaint(
+            painter: XkInsetShadowPainter(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+              lowlight: Color(0x33000000),
+              highlight: Color(0x22FFFFFF),
+            ),
+          ),
+        ),
+      );
+    });
+
     testWidgets('showXkToast falls back to SnackBar without overlay', (
       WidgetTester tester,
     ) async {
@@ -293,4 +405,3 @@ void main() {
     });
   });
 }
-

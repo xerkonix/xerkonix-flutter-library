@@ -8,8 +8,11 @@ export 'src/themes/light_theme.dart';
 // Typography - Typography system
 export 'src/typography/xerkonix_typography.dart';
 
-// Shape & Layout - Shape and layout utilities
+// Shape & Layout - Shape, layout, and neumorphic elevation utilities
 export 'src/shape/xerkonix_shape.dart';
+
+// Neumorphic elevation primitive (raised / inset surfaces)
+export 'src/components/xerkonix_neumorphic.dart';
 
 // Motion - Animation components
 export 'src/motion/xerkonix_motion.dart';

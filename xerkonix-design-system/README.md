@@ -1,6 +1,6 @@
 # xerkonix_design_system
 
-XERKONIX Weave 디자인 시스템의 Flutter 구현 패키지. 색·타이포·형태·모션 토큰과 라이트/다크 테마, 아이콘, 컴포넌트, 패턴/모션 위젯을 제공한다. 현재 버전은 **2.1.1**(Weave v1.5 토큰 기준)이다.
+XERKONIX TACTILE 디자인 시스템의 Flutter 구현 패키지. 색·타이포·형태·모션 토큰과 라이트/다크 테마, 아이콘, 컴포넌트, 패턴/모션 위젯을 제공한다. 현재 버전은 **2.1.1**(TACTILE v2.0 토큰 기준)이다.
 
 ## 설치
 
@@ -35,7 +35,7 @@ MaterialApp(
 
 ### 색 — `XkColor`
 
-Weave v1.5 팔레트. 12단계 그레이블루 스케일(`gray000` … `gray950`) 위에 시맨틱 토큰을 정의한다.
+TACTILE v2.0 팔레트. 12단계 그레이블루 스케일(`gray000` … `gray950`) 위에 시맨틱 토큰을 정의한다.
 
 - 서피스/텍스트: `bg`, `surface`, `surface2`, `border`, `borderSoft`, `textStrong`, `textBody`, `textMuted`
 - 강조: `accent`(인디고, 화면당 1개), `accentDeep`, `accentSoft`, `accentText`, 무채 baseline `brand`

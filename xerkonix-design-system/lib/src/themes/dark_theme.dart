@@ -6,7 +6,7 @@ import '../typography/xerkonix_typography.dart';
 import 'color_schemes/dark_color_scheme.dart';
 import 'xerkonix_theme.dart';
 
-/// Dark Theme (XERKONIX DS v1.5)
+/// Dark Theme (XERKONIX DS · TACTILE)
 class XkDarkTheme extends XkTheme {
   XkDarkTheme._();
 
@@ -34,8 +34,10 @@ class XkDarkTheme extends XkTheme {
     cardTheme: CardThemeData(
       color: XkColor.darkSurface,
       elevation: 0,
+      shadowColor: XkColor.darkShadow,
+      surfaceTintColor: Colors.transparent,
       shape: RoundedRectangleBorder(
-        borderRadius: XkShape.xlBorderRadius,
+        borderRadius: XkShape.lgBorderRadius,
         side: BorderSide(color: XkColor.darkBorderSoft),
       ),
       margin: const EdgeInsets.symmetric(
@@ -55,7 +57,8 @@ class XkDarkTheme extends XkTheme {
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: _elevatedStyle(
         baseColor: XkColor.darkAccent,
-        textColor: XkColor.darkBg,
+        hoverColor: XkColor.darkAccentDeep,
+        textColor: XkColor.darkAccentText,
         disabledColor: XkColor.gray400,
         disabledTextColor: XkColor.darkSurface,
       ),
@@ -75,21 +78,34 @@ class XkDarkTheme extends XkTheme {
     ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: XkColor.darkSurface,
-      hintStyle: XkTypo.metaMono.copyWith(color: XkColor.darkTextMuted),
+      fillColor: XkColor.darkBg,
+      hintStyle: XkTypo.hint.copyWith(color: XkColor.darkTextMuted),
       border: OutlineInputBorder(
         borderRadius: XkShape.smBorderRadius,
-        borderSide: BorderSide(color: XkColor.darkBorder),
+        borderSide: BorderSide(color: XkColor.darkBorderSoft),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: XkShape.smBorderRadius,
-        borderSide: BorderSide(color: XkColor.darkBorder),
+        borderSide: BorderSide(color: XkColor.darkBorderSoft),
       ),
-      focusedBorder: OutlineInputBorder(
+      focusedBorder: const OutlineInputBorder(
         borderRadius: XkShape.smBorderRadius,
-        borderSide: const BorderSide(color: XkColor.darkAccent, width: 1.5),
+        borderSide: BorderSide(color: XkColor.darkAccent, width: 1.5),
       ),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+    ),
+    switchTheme: _switchTheme(
+      accent: XkColor.darkAccent,
+      onAccent: XkColor.darkAccentText,
+      thumbOff: XkColor.darkTextMuted,
+      trackOff: XkColor.darkSurface2,
+      border: XkColor.darkBorder,
+      disabled: XkColor.gray600,
+    ),
+    dividerTheme: const DividerThemeData(
+      color: XkColor.darkBorderSoft,
+      space: 1,
+      thickness: 1,
     ),
     dividerColor: XkColor.darkBorderSoft,
   );
@@ -102,6 +118,7 @@ class XkDarkTheme extends XkTheme {
 
   static ButtonStyle _elevatedStyle({
     required Color baseColor,
+    required Color hoverColor,
     required Color textColor,
     required Color disabledColor,
     required Color disabledTextColor,
@@ -109,9 +126,9 @@ class XkDarkTheme extends XkTheme {
     return ButtonStyle(
       textStyle: WidgetStateProperty.all(_buttonLabel),
       padding: WidgetStateProperty.all(
-        const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
+        const EdgeInsets.symmetric(horizontal: 18, vertical: 11),
       ),
-      minimumSize: WidgetStateProperty.all(const Size(0, 36)),
+      minimumSize: WidgetStateProperty.all(const Size(0, 40)),
       shape: WidgetStateProperty.all(
         RoundedRectangleBorder(borderRadius: XkShape.smBorderRadius),
       ),
@@ -125,7 +142,7 @@ class XkDarkTheme extends XkTheme {
         }
         if (states.contains(WidgetState.hovered) ||
             states.contains(WidgetState.focused)) {
-          return baseColor.withValues(alpha: 0.96);
+          return hoverColor;
         }
         return baseColor;
       }),
@@ -144,13 +161,9 @@ class XkDarkTheme extends XkTheme {
         }
         return null;
       }),
-      elevation: WidgetStateProperty.resolveWith((states) {
-        if (states.contains(WidgetState.hovered)) {
-          return 3;
-        }
-        return 0;
-      }),
-      shadowColor: WidgetStateProperty.all(const Color(0x73000000)),
+      elevation: WidgetStateProperty.all(0),
+      shadowColor: WidgetStateProperty.all(Colors.transparent),
+      surfaceTintColor: WidgetStateProperty.all(Colors.transparent),
     );
   }
 
@@ -161,9 +174,9 @@ class XkDarkTheme extends XkTheme {
     return ButtonStyle(
       textStyle: WidgetStateProperty.all(_buttonLabel),
       padding: WidgetStateProperty.all(
-        const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
+        const EdgeInsets.symmetric(horizontal: 18, vertical: 11),
       ),
-      minimumSize: WidgetStateProperty.all(const Size(0, 36)),
+      minimumSize: WidgetStateProperty.all(const Size(0, 40)),
       shape: WidgetStateProperty.all(
         RoundedRectangleBorder(borderRadius: XkShape.smBorderRadius),
       ),
@@ -191,13 +204,9 @@ class XkDarkTheme extends XkTheme {
         }
         return textColor;
       }),
-      elevation: WidgetStateProperty.resolveWith((states) {
-        if (states.contains(WidgetState.hovered)) {
-          return 3;
-        }
-        return 0;
-      }),
-      shadowColor: WidgetStateProperty.all(const Color(0x66000000)),
+      elevation: WidgetStateProperty.all(0),
+      shadowColor: WidgetStateProperty.all(Colors.transparent),
+      surfaceTintColor: WidgetStateProperty.all(Colors.transparent),
     );
   }
 
@@ -209,9 +218,9 @@ class XkDarkTheme extends XkTheme {
     return ButtonStyle(
       textStyle: WidgetStateProperty.all(_buttonLabel),
       padding: WidgetStateProperty.all(
-        const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
+        const EdgeInsets.symmetric(horizontal: 18, vertical: 11),
       ),
-      minimumSize: WidgetStateProperty.all(const Size(0, 36)),
+      minimumSize: WidgetStateProperty.all(const Size(0, 40)),
       shape: WidgetStateProperty.all(
         RoundedRectangleBorder(borderRadius: XkShape.smBorderRadius),
       ),
@@ -234,13 +243,36 @@ class XkDarkTheme extends XkTheme {
         }
         return textColor;
       }),
-      elevation: WidgetStateProperty.resolveWith((states) {
-        if (states.contains(WidgetState.hovered)) {
-          return 3;
+      elevation: WidgetStateProperty.all(0),
+      shadowColor: WidgetStateProperty.all(Colors.transparent),
+      surfaceTintColor: WidgetStateProperty.all(Colors.transparent),
+    );
+  }
+
+  static SwitchThemeData _switchTheme({
+    required Color accent,
+    required Color onAccent,
+    required Color thumbOff,
+    required Color trackOff,
+    required Color border,
+    required Color disabled,
+  }) {
+    return SwitchThemeData(
+      thumbColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.disabled)) {
+          return disabled;
         }
-        return 0;
+        return states.contains(WidgetState.selected) ? onAccent : thumbOff;
       }),
-      shadowColor: WidgetStateProperty.all(const Color(0x66000000)),
+      trackColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.disabled)) {
+          return trackOff.withValues(alpha: 0.5);
+        }
+        return states.contains(WidgetState.selected) ? accent : trackOff;
+      }),
+      trackOutlineColor: WidgetStateProperty.resolveWith((states) {
+        return states.contains(WidgetState.selected) ? accent : border;
+      }),
     );
   }
 }

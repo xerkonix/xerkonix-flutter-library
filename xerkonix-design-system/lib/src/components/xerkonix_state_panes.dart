@@ -50,10 +50,10 @@ class XkErrorPane extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isDark = Theme.of(context).brightness == Brightness.dark;
+    final Brightness brightness = Theme.of(context).brightness;
+    final bool isDark = brightness == Brightness.dark;
     final Color error = isDark ? XkColor.darkError : XkColor.error;
     final Color surface = isDark ? XkColor.darkSurface : XkColor.surface;
-    final Color border = isDark ? XkColor.darkBorder : XkColor.border;
     return Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 420),
@@ -62,7 +62,7 @@ class XkErrorPane extends StatelessWidget {
           decoration: BoxDecoration(
             color: surface,
             borderRadius: XkShape.mdBorderRadius,
-            border: Border.all(color: border),
+            boxShadow: XkShadow.raised(brightness),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,

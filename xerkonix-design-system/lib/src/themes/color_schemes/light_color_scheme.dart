@@ -2,24 +2,27 @@ import 'package:flutter/material.dart';
 
 import '../../palette/color.dart';
 
-/// Light color scheme based on XERKONIX DS v1.5 tokens.
+/// Light color scheme based on XERKONIX TACTILE tokens.
+///
+/// The action accent is a monochrome ink (near-black); the tertiary role hosts
+/// the cool temperature accent so the warm/cool pair has a place in the scheme.
 const lightColorScheme = ColorScheme(
   brightness: Brightness.light,
   primary: XkColor.accent,
-  onPrimary: Colors.white,
+  onPrimary: XkColor.accentText,
   primaryContainer: XkColor.accentSoft,
   onPrimaryContainer: XkColor.textStrong,
   secondary: XkColor.accentDeep,
-  onSecondary: Colors.white,
-  secondaryContainer: XkColor.accentSoft,
-  onSecondaryContainer: XkColor.accentDeep,
-  tertiary: XkColor.error,
+  onSecondary: XkColor.accentText,
+  secondaryContainer: XkColor.surface2,
+  onSecondaryContainer: XkColor.textStrong,
+  tertiary: XkColor.tempCool,
   onTertiary: Colors.white,
-  tertiaryContainer: XkColor.errorSoft,
+  tertiaryContainer: XkColor.tempCoolSoft,
   onTertiaryContainer: XkColor.textStrong,
   error: XkColor.error,
   onError: Colors.white,
-  errorContainer: Color(0xFFF4DDD7),
+  errorContainer: XkColor.errorSoft,
   onErrorContainer: XkColor.textStrong,
   surface: XkColor.surface,
   onSurface: XkColor.textStrong,
@@ -27,10 +30,10 @@ const lightColorScheme = ColorScheme(
   onSurfaceVariant: XkColor.textBody,
   outline: XkColor.border,
   outlineVariant: XkColor.borderSoft,
-  shadow: Color(0x1A000000),
+  shadow: XkColor.shadow,
   scrim: Color(0x66000000),
   inverseSurface: XkColor.textStrong,
   onInverseSurface: XkColor.bg,
-  inversePrimary: XkColor.accentSoft,
-  surfaceTint: XkColor.accent,
+  inversePrimary: XkColor.darkAccent,
+  surfaceTint: Colors.transparent,
 );

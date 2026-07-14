@@ -18,6 +18,10 @@ class XkHttpConfig {
     this.authHeaderScheme,
     this.unwrapDataEnvelope = false,
     this.authEndpointSkipList = const <String>['/api/v1/auth/'],
+    // --- body-logging controls (M31) -------------------------------------
+    this.logRequestBody = false,
+    this.logResponseBody = false,
+    this.maxLogBodyLength = 1024,
   });
 
   final String scheme;
@@ -52,9 +56,36 @@ class XkHttpConfig {
   /// interceptor skips these to avoid recursive refresh loops.
   final List<String> authEndpointSkipList;
 
+  /// Whether REQUEST bodies may be written to the log. OFF by default — bodies
+  /// are opt-in (an allowlist gate) so credentials/PII in a payload are never
+  /// logged unless a caller deliberately turns this on. Even when enabled the
+  /// body is truncated to [maxLogBodyLength]; sensitive headers/query params are
+  /// always masked regardless of this flag.
+  final bool logRequestBody;
+
+  /// Whether RESPONSE bodies may be written to the log. OFF by default. See
+  /// [logRequestBody].
+  final bool logResponseBody;
+
+  /// Maximum number of body characters written to the log when body logging is
+  /// enabled. Longer bodies are truncated.
+  final int maxLogBodyLength;
+
   /// 로깅이 활성화되어 있는지 확인
   /// enableLogging이 null이면 kDebugMode를 반환 (기본값: 개발 환경에서만 활성화)
+  /// 즉, release 빌드에서는 명시적으로 켜지 않는 한 로깅은 비활성이다.
   bool get isLoggingEnabled => enableLogging ?? kDebugMode;
+
+  /// Request bodies are logged only when logging is on AND explicitly allowed
+  /// AND never in a release build (defence-in-depth against a misconfigured
+  /// `enableLogging: true` shipping to production).
+  bool get isRequestBodyLoggingEnabled =>
+      isLoggingEnabled && logRequestBody && !kReleaseMode;
+
+  /// Response bodies are logged only when logging is on AND explicitly allowed
+  /// AND never in a release build.
+  bool get isResponseBodyLoggingEnabled =>
+      isLoggingEnabled && logResponseBody && !kReleaseMode;
 
   /// The effective scheme prepended to the auth token in [authHeaderName].
   String get effectiveAuthHeaderScheme =>
@@ -77,6 +108,9 @@ class XkHttpConfig {
     String? authHeaderScheme,
     bool? unwrapDataEnvelope,
     List<String>? authEndpointSkipList,
+    bool? logRequestBody,
+    bool? logResponseBody,
+    int? maxLogBodyLength,
   }) {
     return XkHttpConfig(
       scheme: scheme ?? this.scheme,
@@ -92,6 +126,9 @@ class XkHttpConfig {
       authHeaderScheme: authHeaderScheme ?? this.authHeaderScheme,
       unwrapDataEnvelope: unwrapDataEnvelope ?? this.unwrapDataEnvelope,
       authEndpointSkipList: authEndpointSkipList ?? this.authEndpointSkipList,
+      logRequestBody: logRequestBody ?? this.logRequestBody,
+      logResponseBody: logResponseBody ?? this.logResponseBody,
+      maxLogBodyLength: maxLogBodyLength ?? this.maxLogBodyLength,
     );
   }
 }

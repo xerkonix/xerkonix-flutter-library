@@ -2,6 +2,18 @@ import 'dart:ui';
 import 'package:flutter/widgets.dart';
 import 'unit.dart';
 
+/// Prefer the context-based [ResponsiveSizer] — it re-measures from the exact
+/// [BuildContext] it is built with, so it is correct under multi-window,
+/// split-screen, resize and rotation.
+///
+/// [Sizer] remains as a convenience global. Two historical problems are fixed:
+///  * it resolved the view via `views.single`, which THROWS whenever there are
+///    zero or multiple [FlutterView]s (embedded/multi-window). It now resolves
+///    the implicit view (falling back to the first available) and no-ops when
+///    there is no view instead of crashing.
+///  * it captured a one-shot measurement that never updated. It now registers a
+///    [WidgetsBindingObserver] and re-measures on `didChangeMetrics` (resize /
+///    rotation / safe-area changes), so the globals stay current.
 class Sizer {
   Sizer._();
 
@@ -10,32 +22,61 @@ class Sizer {
   static UnitPadding unitPadding = UnitPadding();
   static double? _standardLogicalWidth;
   static double? _standardLogicalHeight;
+  static _SizerMetricsObserver? _observer;
 
   static void init({double? standardLogicalWidth, double? standardLogicalHeight}) {
+    WidgetsFlutterBinding.ensureInitialized();
     _standardLogicalWidth = standardLogicalWidth;
     _standardLogicalHeight = standardLogicalHeight;
 
-    unitPadding.topSafeArea =
-        MediaQueryData.fromView(PlatformDispatcher.instance.views.single)
-            .padding
-            .top;
-    unitPadding.bottomSafeArea =
-        MediaQueryData.fromView(PlatformDispatcher.instance.views.single)
-            .padding
-            .bottom;
+    _measure();
 
+    // Keep the globals live across metric changes. Registered once (idempotent).
+    if (_observer == null) {
+      _observer = _SizerMetricsObserver();
+      WidgetsBinding.instance.addObserver(_observer!);
+    }
+  }
+
+  /// Re-measures the globals from the current view. Safe to call anytime; a
+  /// no-op when no view is available yet.
+  static void refresh() => _measure();
+
+  /// Stops observing metric changes and releases the observer. Optional; useful
+  /// in tests or when tearing down a headless engine.
+  static void dispose() {
+    if (_observer != null) {
+      WidgetsBinding.instance.removeObserver(_observer!);
+      _observer = null;
+    }
+  }
+
+  /// Resolves a usable [FlutterView] without ever throwing: the implicit view
+  /// when present, otherwise the first registered view, otherwise `null`.
+  static FlutterView? _resolveView() {
+    final PlatformDispatcher dispatcher = PlatformDispatcher.instance;
+    final FlutterView? implicit = dispatcher.implicitView;
+    if (implicit != null) {
+      return implicit;
+    }
+    final Iterable<FlutterView> views = dispatcher.views;
+    return views.isEmpty ? null : views.first;
+  }
+
+  static void _measure() {
+    final FlutterView? view = _resolveView();
+    if (view == null) {
+      return;
+    }
+    final MediaQueryData mq = MediaQueryData.fromView(view);
+
+    unitPadding.topSafeArea = mq.padding.top;
+    unitPadding.bottomSafeArea = mq.padding.bottom;
     unitPadding.safeAreaPadding =
         unitPadding.topSafeArea + unitPadding.bottomSafeArea;
 
-    unitWidth.max =
-        MediaQueryData.fromView(PlatformDispatcher.instance.views.single)
-            .size
-            .width;
-
-    unitHeight.max =
-        MediaQueryData.fromView(PlatformDispatcher.instance.views.single)
-            .size
-            .height;
+    unitWidth.max = mq.size.width;
+    unitHeight.max = mq.size.height;
 
     unitWidth.standard = _standardLogicalWidth ?? unitWidth.max;
     unitHeight.standard = _standardLogicalHeight ?? unitHeight.max;
@@ -55,6 +96,12 @@ class Sizer {
     _calculateLpValues(unitWidth, unitWidth.lp4);
     _calculateLpValues(unitHeight, unitHeight.lp4);
   }
+}
+
+/// Re-measures the [Sizer] globals whenever the view metrics change.
+class _SizerMetricsObserver extends WidgetsBindingObserver {
+  @override
+  void didChangeMetrics() => Sizer.refresh();
 }
 
 class ResponsiveSizer {

@@ -646,9 +646,17 @@ class _XkLoopMotionState extends State<_XkLoopMotion>
     final reducedMotion =
         MediaQuery.maybeOf(context)?.disableAnimations ?? false;
     if (widget.respectReducedMotion && reducedMotion) {
+      // Actually halt the ticker — returning a static frame while the
+      // controller keeps repeating wastes CPU/battery indefinitely.
+      if (_controller.isAnimating) {
+        _controller.stop();
+      }
       return widget.builder(context, 0.5, true);
     }
 
+    if (!_controller.isAnimating) {
+      _controller.repeat();
+    }
     return AnimatedBuilder(
       animation: _animation,
       builder: (context, _) => widget.builder(context, _animation.value, false),
@@ -721,9 +729,15 @@ class _BreathingLightState extends State<_BreathingLight>
     final reducedMotion =
         MediaQuery.maybeOf(context)?.disableAnimations ?? false;
     if (widget.respectReducedMotion && reducedMotion) {
+      if (_controller.isAnimating) {
+        _controller.stop();
+      }
       return widget.child;
     }
 
+    if (!_controller.isAnimating) {
+      _controller.repeat(reverse: true);
+    }
     return AnimatedBuilder(
       animation: _animation,
       builder: (context, _) {
@@ -801,9 +815,15 @@ class _PulseAnimationState extends State<_PulseAnimation>
     final reducedMotion =
         MediaQuery.maybeOf(context)?.disableAnimations ?? false;
     if (widget.respectReducedMotion && reducedMotion) {
+      if (_controller.isAnimating) {
+        _controller.stop();
+      }
       return widget.child;
     }
 
+    if (!_controller.isAnimating) {
+      _controller.repeat(reverse: true);
+    }
     return AnimatedBuilder(
       animation: _animation,
       builder: (context, _) {

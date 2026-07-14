@@ -51,7 +51,14 @@ class _XkSkeletonState extends State<XkSkeleton>
       ),
     );
     if (reducedMotion) {
+      // Stop the ticker rather than leaving it repeating behind a static frame.
+      if (_controller.isAnimating) {
+        _controller.stop();
+      }
       return block;
+    }
+    if (!_controller.isAnimating) {
+      _controller.repeat(reverse: true);
     }
     return FadeTransition(
       opacity: Tween<double>(begin: 0.35, end: 0.8).animate(

@@ -27,44 +27,49 @@ class XkErrorNormalizer {
     String? detail,
     Map<String, dynamic>? metadata,
   }) {
-    XkError base;
+    // Returns the concrete subtype directly, preserving both its runtime type
+    // (so `isA<PaymentRequired>()` / `isA<TooManyRequests>()` etc. hold at the
+    // call site) AND the real statusCode + metadata + business code. The subtype
+    // factories accept statusCode/metadata, so no lossy re-wrap into base
+    // XkError is needed.
     switch (statusCode) {
       case 400:
-        base = XkErrors.badRequest(code: code, message: message, title: title, detail: detail);
+        return XkErrors.badRequest(
+            code: code, message: message, title: title, detail: detail, statusCode: statusCode, metadata: metadata);
       case 401:
-        base = XkErrors.unauthorized(code: code, message: message, title: title, detail: detail);
+        return XkErrors.unauthorized(
+            code: code, message: message, title: title, detail: detail, statusCode: statusCode, metadata: metadata);
       case 402:
-        base = XkErrors.paymentRequired(code: code, message: message, title: title, detail: detail);
+        return XkErrors.paymentRequired(
+            code: code, message: message, title: title, detail: detail, statusCode: statusCode, metadata: metadata);
       case 403:
-        base = XkErrors.forbidden(code: code, message: message, title: title, detail: detail);
+        return XkErrors.forbidden(
+            code: code, message: message, title: title, detail: detail, statusCode: statusCode, metadata: metadata);
       case 404:
-        base = XkErrors.notFound(code: code, message: message, title: title, detail: detail);
+        return XkErrors.notFound(
+            code: code, message: message, title: title, detail: detail, statusCode: statusCode, metadata: metadata);
       case 408:
-        base = XkErrors.requestTimeout(code: code, message: message, title: title, detail: detail);
+        return XkErrors.requestTimeout(
+            code: code, message: message, title: title, detail: detail, statusCode: statusCode, metadata: metadata);
       case 409:
-        base = XkErrors.conflict(code: code, message: message, title: title, detail: detail);
+        return XkErrors.conflict(
+            code: code, message: message, title: title, detail: detail, statusCode: statusCode, metadata: metadata);
       case 422:
-        base = XkErrors.unprocessableEntity(code: code, message: message, title: title, detail: detail);
+        return XkErrors.unprocessableEntity(
+            code: code, message: message, title: title, detail: detail, statusCode: statusCode, metadata: metadata);
       case 429:
-        base = XkErrors.tooManyRequests(code: code, message: message, title: title, detail: detail);
+        return XkErrors.tooManyRequests(
+            code: code, message: message, title: title, detail: detail, statusCode: statusCode, metadata: metadata);
       case 500:
-        base = XkErrors.internalServerError(code: code, message: message, title: title, detail: detail);
+        return XkErrors.internalServerError(
+            code: code, message: message, title: title, detail: detail, statusCode: statusCode, metadata: metadata);
       case 503:
-        base = XkErrors.serviceUnavailable(code: code, message: message, title: title, detail: detail);
+        return XkErrors.serviceUnavailable(
+            code: code, message: message, title: title, detail: detail, statusCode: statusCode, metadata: metadata);
       default:
-        base = XkErrors.unknownError(message: message, title: title, detail: detail);
+        return XkErrors.unknownError(
+            code: code, message: message, title: title, detail: detail, statusCode: statusCode, metadata: metadata);
     }
-    // Re-stamp with the real statusCode + metadata + preserved code (the
-    // subtype factories don't accept those directly).
-    return XkError(
-      code: code ?? base.code,
-      type: base.type,
-      message: base.message,
-      title: base.title,
-      detail: base.detail,
-      statusCode: statusCode,
-      metadata: metadata ?? const <String, dynamic>{},
-    );
   }
 
   /// Normalizes a caught [error] (typically from an `http` call) into an

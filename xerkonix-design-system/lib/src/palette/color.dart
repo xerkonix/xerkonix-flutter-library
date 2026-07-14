@@ -30,11 +30,13 @@ class XkColor {
   static const Color surface = gray000; // #FBFBFC
   static const Color surface2 = gray100; // #EAEAEE
   static const Color border = gray200; // #DBDBE0
-  static const Color borderSoft = Color(0x66C4C5CC); // rgba(196,197,204,.40)
+  static const Color borderSoft = Color(0x47ACADB7); // rgba(172,173,183,.28)
 
   static const Color textStrong = Color(0xFF232430);
   static const Color textBody = Color(0xFF4A4B57);
-  static const Color textMuted = gray600; // #71727F
+  // N21: muted lowered in lightness from gray-600 for WCAG AA (≥4.5:1).
+  // Canonical tokens.css value; may shift again if N21 lands a new muted.
+  static const Color textMuted = Color(0xFF686975);
 
   static const Color brand = gray400;
 
@@ -42,21 +44,21 @@ class XkColor {
   /// (not hue) differentiates interactive surfaces.
   static const Color accent = Color(0xFF232430); // action / accent
   static const Color accentDeep = Color(0xFF3F404C); // accent-hover (gray800)
-  static const Color accentSoft = Color(0xFFE4E4E9); // soft neutral tint
+  static const Color accentSoft = Color(0xFFEAEAEE); // soft neutral tint (gray100)
   static const Color accentText = Color(0xFFFBFBFC); // on-accent (surface)
 
   static const Color success = Color(0xFF5E8F7B);
-  static const Color successSoft = Color(0xFFE4EDE9);
+  static const Color successSoft = Color(0xFFE2EEE9);
   static const Color warning = Color(0xFFC96E14);
-  static const Color warningSoft = Color(0xFFF6E7D5);
+  static const Color warningSoft = Color(0xFFFBE9D3);
   static const Color error = Color(0xFFC13030);
-  static const Color errorSoft = Color(0xFFF6DEDE);
+  static const Color errorSoft = Color(0xFFF8DBDB);
 
   /// Temperature accent pair (hot ↔ cold axis).
   static const Color tempWarm = Color(0xFFC65F45);
-  static const Color tempWarmSoft = Color(0xFFF6E1DA);
+  static const Color tempWarmSoft = Color(0xFFF9E8E2);
   static const Color tempCool = Color(0xFF7B84C4);
-  static const Color tempCoolSoft = Color(0xFFE4E6F3);
+  static const Color tempCoolSoft = Color(0xFFEDEEF7);
 
   static const Color shadow = Color(0x1A1A1B22); // rgba(26,27,34,.10)
   static const Color shadowLg = Color(0x241A1B22); // rgba(26,27,34,.14)
@@ -66,16 +68,17 @@ class XkColor {
   static const Color darkSurface = Color(0xFF23242C);
   static const Color darkSurface2 = Color(0xFF2C2D37);
   static const Color darkBorder = Color(0xFF373844);
-  static const Color darkBorderSoft = Color(0x66373844); // rgba(55,56,68,.40)
+  static const Color darkBorderSoft = Color(0x26ACADB7); // rgba(172,173,183,.15)
 
   static const Color darkTextStrong = Color(0xFFF1F1F4);
   static const Color darkTextBody = Color(0xFFB4B5BE);
-  static const Color darkTextMuted = Color(0xFF7E7F8A);
+  // N21: canonical tokens.css value; may shift again if N21 lands a new muted.
+  static const Color darkTextMuted = Color(0xFF93949D);
 
   static const Color darkBrand = gray400;
 
   static const Color darkAccent = Color(0xFFF1F1F4); // near-white ink action
-  static const Color darkAccentDeep = Color(0xFFD9DAE0); // accent-hover
+  static const Color darkAccentDeep = Color(0xFFDBDBE0); // accent-hover
   static const Color darkAccentSoft = Color(
     0x24F1F1F4,
   ); // rgba(241,241,244,.14)
@@ -83,13 +86,13 @@ class XkColor {
 
   static const Color darkSuccess = Color(0xFF7FB59E);
   static const Color darkSuccessSoft = Color(0x247FB59E);
-  static const Color darkWarning = Color(0xFFE0A45C);
-  static const Color darkWarningSoft = Color(0x24E0A45C);
-  static const Color darkError = Color(0xFFE08080);
-  static const Color darkErrorSoft = Color(0x24E08080);
+  static const Color darkWarning = Color(0xFFEC9A50);
+  static const Color darkWarningSoft = Color(0x26EC9A50); // rgba(236,154,80,.15)
+  static const Color darkError = Color(0xFFE4696B);
+  static const Color darkErrorSoft = Color(0x26E4696B); // rgba(228,105,107,.15)
 
   static const Color darkTempWarm = Color(0xFFDE9074);
-  static const Color darkTempWarmSoft = Color(0x24DE9074);
+  static const Color darkTempWarmSoft = Color(0x26DE9074); // rgba(222,144,116,.15)
   static const Color darkTempCool = Color(0xFF939CD6);
   static const Color darkTempCoolSoft = Color(0x24939CD6);
 

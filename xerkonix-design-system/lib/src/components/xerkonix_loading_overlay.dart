@@ -118,6 +118,20 @@ class _SpinRingState extends State<_SpinRing>
 
   @override
   Widget build(BuildContext context) {
+    final bool reducedMotion =
+        MediaQuery.maybeOf(context)?.disableAnimations ?? false;
+    if (reducedMotion) {
+      // Halt the endlessly-repeating rotation ticker and show a static ring
+      // (value: null keeps the OS-level indeterminate indicator, which the
+      // platform itself renders without motion when animations are disabled).
+      if (_controller.isAnimating) {
+        _controller.stop();
+      }
+      return CircularProgressIndicator(strokeWidth: 1.5, color: widget.color);
+    }
+    if (!_controller.isAnimating) {
+      _controller.repeat();
+    }
     return RotationTransition(
       turns: Tween<double>(
         begin: 0,

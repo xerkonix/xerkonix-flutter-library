@@ -21,6 +21,14 @@ dev_dependencies:
   flutter_lints: ^6.0.0
 
 # Local-development only: resolve sibling packages by path so all three build
-# together against the working tree. The coordinator STRIPS this block before
-# publishing (the hosted caret constraints above are what ship).
+# together against the working tree (tests/analyze exercise the LOCAL source of
+# the sibling packages, not their published pub.dev releases). The coordinator
+# STRIPS this block before publishing (the hosted caret constraints above are
+# what ship).
+dependency_overrides:
+  xerkonix_logger:
+    path: ../xerkonix-logger
+  xerkonix_error_handler:
+    path: ../xerkonix-error-handler
+
 flutter:

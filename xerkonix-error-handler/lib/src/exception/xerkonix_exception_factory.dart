@@ -2,125 +2,70 @@
 import 'package:xerkonix_error_handler/src/error/xerkonix_error.dart';
 
 import '../error/xerkonix_errors.dart';
-import '../error_message_handler/xerkonix_message_handler.dart';
 import 'xerkonix_exception.dart';
 
+// Each typed exception forwards the CALLER-SUPPLIED [xkError] to `super`, so the
+// stored `xkError` (and the message-registry lookup + logs performed by the base
+// [XkException] constructor) reflect the real error — its subtype, code,
+// statusCode and metadata — instead of a freshly-built default that discards
+// everything the caller passed. When no error is supplied, the type-appropriate
+// default is used. Logging/message-handling happens exactly once, in the base
+// constructor (the previous per-subclass duplication is removed).
+
 class UserInputErrorException extends XkException {
-  @override
-  UserInputErrorException({XkError? xkError}) : super(XkErrors.userInputError()) {
-    xkError ??= XkErrors.userInputError();
-    printExceptionLog(this);
-    printErrorLog();
-    XkErrorMessageHandler.setErrorMessage(xkError: xkError);
-  }
+  UserInputErrorException({XkError? xkError})
+      : super(xkError ?? XkErrors.userInputError());
 }
 
 class InvalidFormatException extends XkException {
-  @override
-  InvalidFormatException({XkError? xkError}) : super(XkErrors.invalidFormat()) {
-    xkError ??= XkErrors.invalidFormat();
-    printExceptionLog(this);
-    printErrorLog();
-    XkErrorMessageHandler.setErrorMessage(xkError: xkError);
-  }
+  InvalidFormatException({XkError? xkError})
+      : super(xkError ?? XkErrors.invalidFormat());
 }
 
 class BadRequestException extends XkException {
-  @override
-  BadRequestException({XkError? xkError}) : super(XkErrors.badRequest()) {
-    xkError ??= XkErrors.badRequest();
-    printExceptionLog(this);
-    printErrorLog();
-    XkErrorMessageHandler.setErrorMessage(xkError: xkError);
-  }
+  BadRequestException({XkError? xkError})
+      : super(xkError ?? XkErrors.badRequest());
 }
 
 class UnauthorizedException extends XkException {
-  @override
-  UnauthorizedException({XkError? xkError}) : super(XkErrors.unauthorized()) {
-    xkError ??= XkErrors.unauthorized();
-    printExceptionLog(this);
-    printErrorLog();
-    XkErrorMessageHandler.setErrorMessage(xkError: xkError);
-  }
+  UnauthorizedException({XkError? xkError})
+      : super(xkError ?? XkErrors.unauthorized());
 }
 
 class ForbiddenException extends XkException {
-  @override
-  ForbiddenException({XkError? xkError}) : super(XkErrors.forbidden()) {
-    xkError ??= XkErrors.forbidden();
-    printExceptionLog(this);
-    printErrorLog();
-    XkErrorMessageHandler.setErrorMessage(xkError: xkError);
-  }
+  ForbiddenException({XkError? xkError})
+      : super(xkError ?? XkErrors.forbidden());
 }
 
 class NotFoundException extends XkException {
-  @override
-  NotFoundException({XkError? xkError}) : super(XkErrors.notFound()) {
-    xkError ??= XkErrors.notFound();
-    printExceptionLog(this);
-    printErrorLog();
-    XkErrorMessageHandler.setErrorMessage(xkError: xkError);
-  }
+  NotFoundException({XkError? xkError}) : super(xkError ?? XkErrors.notFound());
 }
 
 class ConflictException extends XkException {
-  @override
-  ConflictException({XkError? xkError}) : super(XkErrors.conflict()) {
-    xkError ??= XkErrors.conflict();
-    printExceptionLog(this);
-    printErrorLog();
-    XkErrorMessageHandler.setErrorMessage(xkError: xkError);
-  }
+  ConflictException({XkError? xkError}) : super(xkError ?? XkErrors.conflict());
 }
 
 class RequestTimeoutException extends XkException {
-  @override
-  RequestTimeoutException({XkError? xkError}) : super(XkErrors.requestTimeout()) {
-    xkError ??= XkErrors.requestTimeout();
-    printExceptionLog(this);
-    printErrorLog();
-    XkErrorMessageHandler.setErrorMessage(xkError: xkError);
-  }
+  RequestTimeoutException({XkError? xkError})
+      : super(xkError ?? XkErrors.requestTimeout());
 }
 
 class InternalServerErrorException extends XkException {
-  @override
-  InternalServerErrorException({XkError? xkError}) : super(XkErrors.internalServerError()) {
-    xkError ??= XkErrors.internalServerError();
-    printExceptionLog(this);
-    printErrorLog();
-    XkErrorMessageHandler.setErrorMessage(xkError: xkError);
-  }
+  InternalServerErrorException({XkError? xkError})
+      : super(xkError ?? XkErrors.internalServerError());
 }
 
 class ServiceUnavailableException extends XkException {
-  @override
-  ServiceUnavailableException({XkError? xkError}) : super(XkErrors.serviceUnavailable()) {
-    xkError ??= XkErrors.serviceUnavailable();
-    printExceptionLog(this);
-    printErrorLog();
-    XkErrorMessageHandler.setErrorMessage(xkError: xkError);
-  }
+  ServiceUnavailableException({XkError? xkError})
+      : super(xkError ?? XkErrors.serviceUnavailable());
 }
 
 class UnknownErrorException extends XkException {
-  @override
-  UnknownErrorException({XkError? xkError}) : super(XkErrors.unknownError()) {
-    xkError ??= XkErrors.unknownError();
-    printExceptionLog(this);
-    printErrorLog();
-    XkErrorMessageHandler.setErrorMessage(xkError: xkError);
-  }
+  UnknownErrorException({XkError? xkError})
+      : super(xkError ?? XkErrors.unknownError());
 }
 
 class UnstableNetworkException extends XkException {
-  @override
-  UnstableNetworkException({XkError? xkError}) : super(XkErrors.unstableNetwork()) {
-    xkError ??= XkErrors.unstableNetwork();
-    printExceptionLog(this);
-    printErrorLog();
-    XkErrorMessageHandler.setErrorMessage(xkError: xkError);
-  }
+  UnstableNetworkException({XkError? xkError})
+      : super(xkError ?? XkErrors.unstableNetwork());
 }

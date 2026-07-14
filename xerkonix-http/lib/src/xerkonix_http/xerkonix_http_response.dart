@@ -17,12 +17,20 @@ class XkHttpResponse {
       case 201: // Created
         final responseJson = _decodeResponse(response);
         if (httpConfig.isLoggingEnabled) {
-          Logger.httpResponse(httpResponse: response);
+          Logger.httpResponse(
+            httpResponse: response,
+            logBody: httpConfig.isResponseBodyLoggingEnabled,
+            maxBodyLength: httpConfig.maxLogBodyLength,
+          );
         }
         return responseJson;
       case 204: // No Content
         if (httpConfig.isLoggingEnabled) {
-          Logger.httpResponse(httpResponse: response);
+          Logger.httpResponse(
+            httpResponse: response,
+            logBody: httpConfig.isResponseBodyLoggingEnabled,
+            maxBodyLength: httpConfig.maxLogBodyLength,
+          );
         }
         return null;
       case 400: // Bad Request

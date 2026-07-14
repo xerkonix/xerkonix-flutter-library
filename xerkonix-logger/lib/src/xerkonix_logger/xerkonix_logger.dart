@@ -22,27 +22,37 @@ class Logger {
 
   factory Logger.build(dynamic message) = BuildLogger;
 
-  factory Logger.httpRequest({required http.Request httpRequest}) =
-      HttpRequestLogger;
+  factory Logger.httpRequest({
+    required http.Request httpRequest,
+    bool logBody,
+    int maxBodyLength,
+  }) = HttpRequestLogger;
 
   factory Logger.multipartRequest(
           {required http.MultipartRequest multipartRequest}) =
       MultipartRequestLogger;
 
-  factory Logger.httpResponse(
-      {required http.Response httpResponse,
-      bool printHeaders}) = HttpResponseLogger;
+  factory Logger.httpResponse({
+    required http.Response httpResponse,
+    bool printHeaders,
+    bool logBody,
+    int maxBodyLength,
+  }) = HttpResponseLogger;
 
   factory Logger.htmlRequest(
       {required String method,
       required Map<String, String> headers,
       required Uri uri,
       String? body,
+      bool logBody,
+      int maxBodyLength,
       int? methodCount}) = HtmlRequestLogger;
 
   factory Logger.htmlResponse(
       {Map<String, String>? printHeaders,
       required int statusCode,
       required String body,
+      bool logBody,
+      int maxBodyLength,
       int? methodCount}) = HtmlResponseLogger;
 }

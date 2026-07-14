@@ -42,35 +42,35 @@ class XkErrors implements XkError {
 
   factory XkErrors.invalidFormat({String? type, String? message, String? title, String? detail}) = InvalidFormat;
 
-  factory XkErrors.badRequest({String? code, String? type, String? message, String? title, String? detail}) = BadRequest;
+  factory XkErrors.badRequest({String? code, String? type, String? message, String? title, String? detail, int? statusCode, Map<String, dynamic>? metadata}) = BadRequest;
 
-  factory XkErrors.unauthorized({String? code, String? type, String? message, String? title, String? detail}) = Unauthorized;
+  factory XkErrors.unauthorized({String? code, String? type, String? message, String? title, String? detail, int? statusCode, Map<String, dynamic>? metadata}) = Unauthorized;
 
-  factory XkErrors.forbidden({String? code, String? type, String? message, String? title, String? detail}) = Forbidden;
+  factory XkErrors.forbidden({String? code, String? type, String? message, String? title, String? detail, int? statusCode, Map<String, dynamic>? metadata}) = Forbidden;
 
-  factory XkErrors.notFound({String? code, String? type, String? message, String? title, String? detail}) = NotFound;
+  factory XkErrors.notFound({String? code, String? type, String? message, String? title, String? detail, int? statusCode, Map<String, dynamic>? metadata}) = NotFound;
 
-  factory XkErrors.conflict({String? code, String? type, String? message, String? title, String? detail}) = Conflict;
+  factory XkErrors.conflict({String? code, String? type, String? message, String? title, String? detail, int? statusCode, Map<String, dynamic>? metadata}) = Conflict;
 
-  factory XkErrors.unprocessableEntity({String? code, String? type, String? message, String? title, String? detail}) = UnprocessableEntity;
+  factory XkErrors.unprocessableEntity({String? code, String? type, String? message, String? title, String? detail, int? statusCode, Map<String, dynamic>? metadata}) = UnprocessableEntity;
 
-  factory XkErrors.requestTimeout({String? code, String? type, String? message, String? title, String? detail}) = RequestTimeout;
+  factory XkErrors.requestTimeout({String? code, String? type, String? message, String? title, String? detail, int? statusCode, Map<String, dynamic>? metadata}) = RequestTimeout;
 
-  factory XkErrors.internalServerError({String? code, String? type, String? message, String? title, String? detail}) = InternalServerError;
+  factory XkErrors.internalServerError({String? code, String? type, String? message, String? title, String? detail, int? statusCode, Map<String, dynamic>? metadata}) = InternalServerError;
 
-  factory XkErrors.serviceUnavailable({String? code, String? type, String? message, String? title, String? detail}) = ServiceUnavailable;
+  factory XkErrors.serviceUnavailable({String? code, String? type, String? message, String? title, String? detail, int? statusCode, Map<String, dynamic>? metadata}) = ServiceUnavailable;
 
-  factory XkErrors.unknownError({String? type, String? message, String? title, String? detail}) = UnknownError;
+  factory XkErrors.unknownError({String? code, String? type, String? message, String? title, String? detail, int? statusCode, Map<String, dynamic>? metadata}) = UnknownError;
 
   factory XkErrors.unstableNetwork({String? type, String? message, String? title, String? detail}) = UnstableNetwork;
 
   // --- 1.1.0 additive subtypes -------------------------------------------
 
   /// 402 Payment Required / quota-exceeded.
-  factory XkErrors.paymentRequired({String? code, String? type, String? message, String? title, String? detail}) = PaymentRequired;
+  factory XkErrors.paymentRequired({String? code, String? type, String? message, String? title, String? detail, int? statusCode, Map<String, dynamic>? metadata}) = PaymentRequired;
 
   /// 429 Too Many Requests / rate-limited.
-  factory XkErrors.tooManyRequests({String? code, String? type, String? message, String? title, String? detail}) = TooManyRequests;
+  factory XkErrors.tooManyRequests({String? code, String? type, String? message, String? title, String? detail, int? statusCode, Map<String, dynamic>? metadata}) = TooManyRequests;
 
   /// Synthetic network-timeout error (no HTTP status). Carries code
   /// [XkErrorCodes.networkTimeout].

@@ -121,13 +121,18 @@ class _SpinRingState extends State<_SpinRing>
     final bool reducedMotion =
         MediaQuery.maybeOf(context)?.disableAnimations ?? false;
     if (reducedMotion) {
-      // Halt the endlessly-repeating rotation ticker and show a static ring
-      // (value: null keeps the OS-level indeterminate indicator, which the
-      // platform itself renders without motion when animations are disabled).
+      // Halt the rotation ticker AND render a genuinely static ring. An
+      // indeterminate CircularProgressIndicator (value: null) keeps spinning on
+      // every platform regardless of disableAnimations, so we must pass a fixed
+      // `value` — a determinate indicator draws a still arc with no motion.
       if (_controller.isAnimating) {
         _controller.stop();
       }
-      return CircularProgressIndicator(strokeWidth: 1.5, color: widget.color);
+      return CircularProgressIndicator(
+        value: 0.25,
+        strokeWidth: 1.5,
+        color: widget.color,
+      );
     }
     if (!_controller.isAnimating) {
       _controller.repeat();

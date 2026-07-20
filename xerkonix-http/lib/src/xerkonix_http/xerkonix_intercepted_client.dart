@@ -4,18 +4,18 @@ import 'package:http/http.dart' as http;
 
 import '../http_utils/xerkonix_http_config.dart';
 
-/// Called when a request completes carrying a rotated auth token in a response
-/// header. [token] is the trimmed header value.
+/// Called with a rotated auth (session) token — either read from a response
+/// header, or produced by a successful refresh. [token] is the trimmed value.
+/// Wire this to your token store so subsequent requests use the fresh token.
 typedef XkSessionTokenCallback = void Function(String token);
-
-/// Called after a successful refresh with the rotated `(session, refresh)` pair.
-typedef XkTokensCallback = void Function(String sessionToken, String refreshToken);
 
 /// Performs a token refresh given the current refresh token, returning the new
 /// session token (empty string == refresh failed / give up).
 ///
-/// Implementations typically POST to an auth-refresh endpoint and may also
-/// surface a rotated refresh token via [XkInterceptedClient.onTokens].
+/// Implementations typically POST to an auth-refresh endpoint. If that endpoint
+/// rotates the REFRESH token too, the implementation persists the new refresh
+/// token itself (it owns that response); the client persists the returned
+/// SESSION token via [XkInterceptedClient.onSessionToken].
 typedef XkRefreshCallback = Future<String> Function(String refreshToken);
 
 /// A pluggable [http.BaseClient] wrapper adding:
@@ -37,7 +37,6 @@ class XkInterceptedClient extends http.BaseClient {
     this.getRefreshToken,
     this.refresh,
     this.onSessionToken,
-    this.onTokens,
     this.sessionHeaderName,
   }) : _inner = inner;
 
@@ -55,18 +54,17 @@ class XkInterceptedClient extends http.BaseClient {
   /// Performs the actual refresh. Required to enable 401 retry.
   final XkRefreshCallback? refresh;
 
-  /// Invoked with a rotated token read from a RESPONSE header (see
-  /// [sessionHeaderName]).
+  /// Invoked with a rotated session token — from a RESPONSE header (see
+  /// [sessionHeaderName]) or from a successful refresh. Wire it to your store.
   final XkSessionTokenCallback? onSessionToken;
-
-  /// Invoked after a successful refresh with the new `(session, refresh)` pair.
-  final XkTokensCallback? onTokens;
 
   /// The RESPONSE header name to read a rotating auth token from. Defaults to
   /// [XkHttpConfig.authHeaderName] when unset.
   final String? sessionHeaderName;
 
-  bool _refreshing = false;
+  /// The in-flight refresh, shared by all callers that hit a 401 while it runs
+  /// (single-flight). `null` when no refresh is running.
+  Future<String>? _refreshInFlight;
 
   String get _sessionHeaderName =>
       sessionHeaderName ?? config.authHeaderName;
@@ -106,27 +104,19 @@ class XkInterceptedClient extends http.BaseClient {
     final http.StreamedResponse response = await _inner.send(request);
     _captureSessionToken(response);
 
-    final bool canRetry = response.statusCode == 401 &&
-        !_refreshing &&
+    final bool eligible = response.statusCode == 401 &&
         refresh != null &&
         request is http.Request &&
         !_isAuthEndpoint(request.url);
-    if (!canRetry) {
+    if (!eligible) {
       return response;
     }
 
-    final String refreshToken = getRefreshToken?.call().trim() ?? '';
-    if (refreshToken.isEmpty) {
-      return response;
-    }
-
-    _refreshing = true;
-    String newSession;
-    try {
-      newSession = await refresh!(refreshToken);
-    } finally {
-      _refreshing = false;
-    }
+    // Single-flight refresh: if one is already running, WAIT for it and retry
+    // with its result instead of returning the 401 straight to the caller.
+    // Concurrent 401s (requests A and B racing on an expired token) previously
+    // let B return 401 while A refreshed — a spurious auth failure / logout.
+    final String newSession = await _refreshSession();
     if (newSession.isEmpty) {
       return response;
     }
@@ -146,6 +136,35 @@ class XkInterceptedClient extends http.BaseClient {
     final http.StreamedResponse retried = await _inner.send(retry);
     _captureSessionToken(retried);
     return retried;
+  }
+
+  /// Returns a refreshed session token (empty string == refresh failed / give
+  /// up), sharing a single in-flight refresh across concurrent callers.
+  Future<String> _refreshSession() {
+    final Future<String>? inFlight = _refreshInFlight;
+    if (inFlight != null) {
+      return inFlight;
+    }
+    final Future<String> future = _doRefresh();
+    _refreshInFlight = future;
+    // Free the slot when done (success OR failure) so a later 401 can refresh.
+    future.whenComplete(() => _refreshInFlight = null);
+    return future;
+  }
+
+  Future<String> _doRefresh() async {
+    final String refreshToken = getRefreshToken?.call().trim() ?? '';
+    if (refreshToken.isEmpty) {
+      return '';
+    }
+    final String newSession = (await refresh!(refreshToken)).trim();
+    if (newSession.isNotEmpty) {
+      // Persist the rotated session token so subsequent requests use it. Without
+      // this, every request keeps sending the stale token and re-triggers a
+      // refresh (refresh storm / forced logout).
+      onSessionToken?.call(newSession);
+    }
+    return newSession;
   }
 
   @override

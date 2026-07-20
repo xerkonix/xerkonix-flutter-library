@@ -71,6 +71,10 @@ class _XkToastState extends State<XkToast> with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<Offset> _slide;
   Timer? _timer;
+  // 재진입 가드: 탭 핸들러와 자동종료 타이머가 각각 _dismiss 를 부를 수 있고,
+  // reverse 애니메이션 도중 두 번째 호출이 들어오면 onDone()(=OverlayEntry.remove)
+  // 이 2회 실행되어 이미 제거된 엔트리에 remove 가 재실행돼 크래시한다.
+  bool _dismissed = false;
 
   @override
   void initState() {
@@ -88,6 +92,8 @@ class _XkToastState extends State<XkToast> with SingleTickerProviderStateMixin {
   }
 
   Future<void> _dismiss() async {
+    if (_dismissed) return;
+    _dismissed = true;
     _timer?.cancel();
     if (!mounted) {
       widget.onDone();

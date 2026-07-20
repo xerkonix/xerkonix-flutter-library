@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:http/http.dart' as http;
 
@@ -86,8 +85,13 @@ class XkErrorNormalizer {
     if (error is TimeoutException) {
       return XkErrors.networkTimeout();
     }
-    if (error is SocketException) {
-      return XkErrors.networkUnknown(detail: error.message);
+    // We intentionally do NOT import dart:io: it is unavailable on Flutter Web
+    // and would break this package (and its dependents like xerkonix_http) on
+    // web builds. On native, http surfaces connection failures as SocketException
+    // (matched by type name here); on web it surfaces them as ClientException.
+    // Both map to NetworkUnknown.
+    if (_isSocketException(error)) {
+      return XkErrors.networkUnknown(detail: error.toString());
     }
     if (error is http.ClientException) {
       return XkErrors.networkUnknown(detail: error.message);
@@ -97,6 +101,9 @@ class XkErrorNormalizer {
     }
     return XkErrors.unknownError(message: error.toString());
   }
+
+  static bool _isSocketException(Object error) =>
+      error.runtimeType.toString() == 'SocketException';
 
   /// Parses an HTTP response [body] (already-decoded JSON or a raw string) plus
   /// its [statusCode] into an [XkError] following the product envelope contract:

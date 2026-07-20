@@ -207,6 +207,55 @@ void main() {
       final resp = await client.get(Uri.parse('https://api.x.com/api/v1/home'));
       expect(resp.statusCode, 401);
     });
+
+    test('persists the rotated session token via onSessionToken after refresh',
+        () async {
+      String? persisted;
+      final mock = MockClient((http.Request req) async {
+        final String auth = req.headers['x-cosentio-account-session'] ?? '';
+        return http.Response('{}', auth == 'NEW' ? 200 : 401);
+      });
+      final client = XkInterceptedClient(
+        inner: mock,
+        config: const XkHttpConfig(authHeaderName: 'x-cosentio-account-session'),
+        getAuthToken: () => 'OLD',
+        getRefreshToken: () => 'REFRESH',
+        refresh: (String r) async => 'NEW',
+        onSessionToken: (String t) => persisted = t,
+      );
+      final resp = await client.get(Uri.parse('https://api.x.com/api/v1/home'));
+      expect(resp.statusCode, 200);
+      expect(persisted, 'NEW'); // 갱신된 세션 토큰이 영속화됨 → refresh 폭주 방지
+    });
+
+    test('concurrent 401s share ONE refresh (single-flight) and both retry',
+        () async {
+      var refreshCalls = 0;
+      final mock = MockClient((http.Request req) async {
+        final String auth = req.headers['x-cosentio-account-session'] ?? '';
+        if (auth == 'NEW') return http.Response('{"ok":true}', 200);
+        return http.Response('{}', 401);
+      });
+      final client = XkInterceptedClient(
+        inner: mock,
+        config: const XkHttpConfig(authHeaderName: 'x-cosentio-account-session'),
+        getAuthToken: () => 'OLD',
+        getRefreshToken: () => 'REFRESH',
+        refresh: (String r) async {
+          refreshCalls++;
+          await Future<void>.delayed(const Duration(milliseconds: 10));
+          return 'NEW';
+        },
+      );
+      // 만료 토큰으로 두 요청이 동시에 나가 둘 다 401 → 갱신은 1회만, 둘 다 성공.
+      final List<http.Response> results = await Future.wait(<Future<http.Response>>[
+        client.get(Uri.parse('https://api.x.com/api/v1/a')),
+        client.get(Uri.parse('https://api.x.com/api/v1/b')),
+      ]);
+      expect(results[0].statusCode, 200);
+      expect(results[1].statusCode, 200); // 예전엔 두 번째가 401을 그대로 반환했다
+      expect(refreshCalls, 1); // single-flight
+    });
   });
 
   group('generateHttpFromBaseUrl', () {

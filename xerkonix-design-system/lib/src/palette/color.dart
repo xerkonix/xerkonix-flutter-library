@@ -47,17 +47,19 @@ class XkColor {
   static const Color accentSoft = Color(0xFFEAEAEE); // soft neutral tint (gray100)
   static const Color accentText = Color(0xFFFBFBFC); // on-accent (surface)
 
-  static const Color success = Color(0xFF5E8F7B);
+  // 2026-07-27 TACTILE 정본 WCAG AA 승급 값(bg 대비 4.5:1 이상). 옛 값
+  // (#5E8F7B / #C96E14 / #C65F45 / #7B84C4)은 3.3:1 대로 본문 텍스트 기준 미달이었다.
+  static const Color success = Color(0xFF4F7868);
   static const Color successSoft = Color(0xFFE2EEE9);
-  static const Color warning = Color(0xFFC96E14);
+  static const Color warning = Color(0xFFA95C11);
   static const Color warningSoft = Color(0xFFFBE9D3);
   static const Color error = Color(0xFFC13030);
   static const Color errorSoft = Color(0xFFF8DBDB);
 
   /// Temperature accent pair (hot ↔ cold axis).
-  static const Color tempWarm = Color(0xFFC65F45);
+  static const Color tempWarm = Color(0xFFB75138);
   static const Color tempWarmSoft = Color(0xFFF9E8E2);
-  static const Color tempCool = Color(0xFF7B84C4);
+  static const Color tempCool = Color(0xFF5F6AB8);
   static const Color tempCoolSoft = Color(0xFFEDEEF7);
 
   static const Color shadow = Color(0x1A1A1B22); // rgba(26,27,34,.10)

@@ -41,6 +41,7 @@ class XkNeumorphic extends StatefulWidget {
     this.intensity = 1.0,
     this.width,
     this.height,
+    this.semanticLabel,
   });
 
   final Widget child;
@@ -64,6 +65,10 @@ class XkNeumorphic extends StatefulWidget {
 
   final double? width;
   final double? height;
+
+  /// 스크린리더가 읽을 이름. 아이콘만 담은 탭 가능 표면은 지정해야 한다 —
+  /// 없으면 이름 없는 button 노드로 읽힌다.
+  final String? semanticLabel;
 
   /// The raised paired-shadow [BoxDecoration] for the given [brightness].
   ///
@@ -89,12 +94,21 @@ class XkNeumorphic extends StatefulWidget {
 
 class _XkNeumorphicState extends State<XkNeumorphic> {
   bool _pressed = false;
+  bool _focused = false;
 
   bool get _interactive => widget.onTap != null;
 
   void _setPressed(bool value) {
     if (_pressed != value) {
       setState(() => _pressed = value);
+    }
+  }
+
+  /// 키보드 포커스는 눌림과 같은 인셋으로 표시한다 — 이 프리미티브에는 별도의
+  /// 포커스 링 레이어가 없고, 지금 어디에 있는지 보이지 않으면 Tab 이동이 무용하다.
+  void _setFocused(bool value) {
+    if (_focused != value) {
+      setState(() => _focused = value);
     }
   }
 
@@ -178,15 +192,36 @@ class _XkNeumorphicState extends State<XkNeumorphic> {
       return result;
     }
 
+    // 탭 가능한 뉴모픽 표면도 키보드로 도달·활성화돼야 한다 — XkButton 과 같은
+    // 뿌리의 결함이었다(GestureDetector 만 있어 Tab/Enter 불가).
     return Semantics(
       button: true,
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: widget.onTap,
-        onTapDown: (_) => _setPressed(true),
-        onTapUp: (_) => _setPressed(false),
-        onTapCancel: () => _setPressed(false),
-        child: MouseRegion(cursor: SystemMouseCursors.click, child: result),
+      label: widget.semanticLabel,
+      child: FocusableActionDetector(
+        mouseCursor: SystemMouseCursors.click,
+        onShowFocusHighlight: _setFocused,
+        actions: <Type, Action<Intent>>{
+          ActivateIntent: CallbackAction<ActivateIntent>(
+            onInvoke: (ActivateIntent intent) {
+              widget.onTap?.call();
+              return null;
+            },
+          ),
+          ButtonActivateIntent: CallbackAction<ButtonActivateIntent>(
+            onInvoke: (ButtonActivateIntent intent) {
+              widget.onTap?.call();
+              return null;
+            },
+          ),
+        },
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: widget.onTap,
+          onTapDown: (_) => _setPressed(true),
+          onTapUp: (_) => _setPressed(false),
+          onTapCancel: () => _setPressed(false),
+          child: result,
+        ),
       ),
     );
   }

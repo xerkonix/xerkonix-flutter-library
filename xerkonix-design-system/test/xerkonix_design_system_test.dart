@@ -71,8 +71,10 @@ void main() {
       expect(XkColor.tempCoolSoft, isA<Color>());
       expect(XkColor.darkTempWarm, isA<Color>());
       expect(XkColor.darkTempCool, isA<Color>());
-      expect(XkColor.tempWarm.toARGB32(), 0xFFC65F45);
-      expect(XkColor.tempCool.toARGB32(), 0xFF7B84C4);
+      // 2026-07-27 TACTILE 정본 WCAG AA 승급 값. 옛 값(#C65F45 / #7B84C4)은
+      // bg 대비 3.3:1 대로 본문 텍스트 기준 미달이었다.
+      expect(XkColor.tempWarm.toARGB32(), 0xFFB75138);
+      expect(XkColor.tempCool.toARGB32(), 0xFF5F6AB8);
     });
   });
 

@@ -491,13 +491,34 @@ class _NeumorphicButtonState extends State<_NeumorphicButton> {
       );
     }
 
+    // FocusableActionDetector: 포커스 노드 + Enter/Space 활성화 + 호버 추적.
+    // 예전에는 GestureDetector 뿐이라 웹/데스크톱에서 Tab 이 이 버튼에 닿지
+    // 않았고 Enter/Space 로도 눌리지 않았다 — 마우스 없이는 어떤 주요 액션도
+    // 실행할 수 없었다(WCAG 2.1.1). 포커스 링은 기존 hover 융기를 재사용한다.
     return Semantics(
       button: true,
       enabled: _enabled,
-      child: MouseRegion(
-        cursor: _enabled ? SystemMouseCursors.click : SystemMouseCursors.basic,
-        onEnter: (_) => _setHovered(true),
-        onExit: (_) => _setHovered(false),
+      child: FocusableActionDetector(
+        enabled: _enabled,
+        mouseCursor: _enabled
+            ? SystemMouseCursors.click
+            : SystemMouseCursors.basic,
+        onShowHoverHighlight: _setHovered,
+        onShowFocusHighlight: _setHovered,
+        actions: <Type, Action<Intent>>{
+          ActivateIntent: CallbackAction<ActivateIntent>(
+            onInvoke: (ActivateIntent intent) {
+              widget.onPressed?.call();
+              return null;
+            },
+          ),
+          ButtonActivateIntent: CallbackAction<ButtonActivateIntent>(
+            onInvoke: (ButtonActivateIntent intent) {
+              widget.onPressed?.call();
+              return null;
+            },
+          ),
+        },
         child: GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: widget.onPressed,

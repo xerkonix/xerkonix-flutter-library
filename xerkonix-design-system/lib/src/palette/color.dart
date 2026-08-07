@@ -56,14 +56,22 @@ class XkColor {
   static const Color error = Color(0xFFC13030);
   static const Color errorSoft = Color(0xFFF8DBDB);
 
+  // v2.1 on-soft — soft 틴트 배경 위 텍스트 전용. 본색은 bg 기준으로만 AA 를
+  // 통과해서 soft 위(배지·콜아웃)에서는 4.1~4.4 로 미달한다. hue 동일, 명도만
+  // 하강해 soft 위에서도 ≥4.5:1.
+  static const Color successOnSoft = Color(0xFF4B7263);
+  static const Color warningOnSoft = Color(0xFFA05710);
+  static const Color errorOnSoft = Color(0xFFB92E2E);
+
   /// Temperature accent pair (hot ↔ cold axis).
   static const Color tempWarm = Color(0xFFB75138);
   static const Color tempWarmSoft = Color(0xFFF9E8E2);
   static const Color tempCool = Color(0xFF5F6AB8);
   static const Color tempCoolSoft = Color(0xFFEDEEF7);
 
-  static const Color shadow = Color(0x1A1A1B22); // rgba(26,27,34,.10)
-  static const Color shadowLg = Color(0x241A1B22); // rgba(26,27,34,.14)
+  // 드롭 섀도우(--shadow/--shadow-lg) — gray-900(#2A2B35) 틴트가 정본.
+  static const Color shadow = Color(0x1A2A2B35); // rgba(42,43,53,.10)
+  static const Color shadowLg = Color(0x242A2B35); // rgba(42,43,53,.14)
 
   // --- Semantic · Dark ---
   static const Color darkBg = gray950; // #1A1B22
@@ -90,16 +98,26 @@ class XkColor {
   static const Color darkSuccessSoft = Color(0x247FB59E);
   static const Color darkWarning = Color(0xFFEC9A50);
   static const Color darkWarningSoft = Color(0x26EC9A50); // rgba(236,154,80,.15)
-  static const Color darkError = Color(0xFFE4696B);
+  // v2.1: #E4696B → #E67274 — --surface-2(#2C2D37) 위 4.25:1 미달 실측 보정.
+  static const Color darkError = Color(0xFFE67274);
+  // soft 는 정본이 옛 색 기반 rgba(228,105,107,.15) 를 유지한다.
   static const Color darkErrorSoft = Color(0x26E4696B); // rgba(228,105,107,.15)
+
+  // v2.1 on-soft(다크) — 다크 soft 는 반투명이라 본색이 그대로 대비를
+  // 통과한다. 정본도 본색 별칭(--*-on-soft:var(--*))이므로 본색 재사용.
+  static const Color darkSuccessOnSoft = darkSuccess;
+  static const Color darkWarningOnSoft = darkWarning;
+  static const Color darkErrorOnSoft = darkError;
 
   static const Color darkTempWarm = Color(0xFFDE9074);
   static const Color darkTempWarmSoft = Color(0x26DE9074); // rgba(222,144,116,.15)
   static const Color darkTempCool = Color(0xFF939CD6);
   static const Color darkTempCoolSoft = Color(0x24939CD6);
 
-  static const Color darkShadow = Color(0x9E000000); // rgba(0,0,0,.62)
-  static const Color darkShadowLg = Color(0xB3000000); // rgba(0,0,0,.70)
+  // 다크 드롭 섀도우(--shadow/--shadow-lg). 뉴모픽 --neu-shadow(.62)와 다르다 —
+  // 그쪽은 XkShadow.darkLowlight 소관.
+  static const Color darkShadow = Color(0x52000000); // rgba(0,0,0,.32)
+  static const Color darkShadowLg = Color(0x6B000000); // rgba(0,0,0,.42)
 
   // --- Generic role mapping ---
   static const Color primary = accent;

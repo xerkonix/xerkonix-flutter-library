@@ -79,11 +79,28 @@ void main() {
   });
 
   group('Neumorphic elevation tokens', () {
-    test('XkShadow.raised/lifted return paired (2) box shadows', () {
+    test('XkShadow.raised is paired (2); lifted is single-direction --float',
+        () {
       expect(XkShadow.raised(Brightness.light).length, 2);
       expect(XkShadow.raised(Brightness.dark).length, 2);
-      expect(XkShadow.lifted(Brightness.light).length, 2);
       expect(XkShadow.raisedSoft(Brightness.dark).length, 2);
+      // v2.1: 떠 있는 층은 정본 --float(단방향 드롭 섀도우) — 페어드 아님.
+      expect(XkShadow.lifted(Brightness.light).length, 1);
+      expect(XkShadow.lifted(Brightness.dark).length, 1);
+      expect(
+        XkShadow.liftedLight.single.color.toARGB32(),
+        0x24232430, // rgba(35,36,48,.14)
+      );
+      expect(XkShadow.liftedLight.single.offset, const Offset(0, 14));
+      expect(XkShadow.liftedLight.single.blurRadius, 40);
+      expect(
+        XkShadow.liftedDark.single.color.toARGB32(),
+        0x8C000000, // rgba(0,0,0,.55)
+      );
+      expect(XkShadow.liftedDark.single.offset, const Offset(0, 16));
+      expect(XkShadow.liftedDark.single.blurRadius, 44);
+      // 다크 하이라이트 0 규칙 — raised 페어의 하이라이트는 완전 투명.
+      expect(XkShadow.darkHighlight.toARGB32(), 0x00FFFFFF);
     });
 
     test('raised light pair matches the TACTILE highlight/lowlight spec', () {

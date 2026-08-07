@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import '../palette/color.dart';
 import '../shape/xerkonix_shape.dart';
 
-/// Motion token values from Weave v1.5 reference.
+/// Motion token values from XERKONIX TACTILE tokens.css v2.1.
 ///
-/// v1.5 motion grammar (see tokens.css `--t-*` / `--ease-sharp`):
+/// v2.1 motion grammar (see tokens.css `--t-*` / `--ease`):
 /// - observe 180ms (micro state change: hover, icon active)
 /// - resolve 260ms (state transition: card entry, chip state)
 /// - settle  320ms (screen / palette transition, the longest value)
@@ -25,8 +25,11 @@ class XkMotionToken {
   static const Duration cardSettle = Duration(milliseconds: 2800);
   static const Duration alertPulse = Duration(milliseconds: 1900);
 
-  /// v1.5 easing — `cubic-bezier(0.33, 0.02, 0.2, 1)`.
+  /// v2.1 easing — `cubic-bezier(0.33, 0.02, 0.2, 1)` (`--ease`).
   static const Curve ease = Cubic(0.33, 0.02, 0.2, 1);
+
+  /// 정본 스프링 상수(구현 tactile.js) k320·c18(노브) / k420·c12(팝)의
+  /// CSS cubic-bezier 근사. 값은 근사 커브 그대로 유지한다(동작 회귀 위험).
   static const Curve spring = Cubic(0.34, 1.35, 0.64, 1);
 }
 

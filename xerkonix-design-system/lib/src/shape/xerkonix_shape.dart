@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 
-/// Shape tokens from XERKONIX TACTILE Design System.
+/// Shape tokens from XERKONIX TACTILE Design System (tokens.css v2.1).
 ///
-/// Radius scale (4px grid): xs 6 · sm 10 · md 14 · lg 18 · xl 22 · pill 999.
+/// Radius scale (4px grid): xs 6 · sm 10 · ctl 12 · md 14 · lg 18 · xl 22 ·
+/// pill 999. `ctl` (v2.1 `--radius-ctl`) is the control-only step for
+/// buttons / fields / steppers.
 class XkShape {
   XkShape._();
 
   static const double radiusXs = 6.0;
   static const double radiusSm = 10.0;
+
+  /// v2.1 `--radius-ctl` — controls (button / field / stepper) only.
+  static const double radiusCtl = 12.0;
   static const double radiusMd = 14.0;
   static const double radiusLg = 18.0;
   static const double radiusXl = 22.0;
@@ -18,6 +23,9 @@ class XkShape {
   );
   static const BorderRadius smBorderRadius = BorderRadius.all(
     Radius.circular(radiusSm),
+  );
+  static const BorderRadius ctlBorderRadius = BorderRadius.all(
+    Radius.circular(radiusCtl),
   );
   static const BorderRadius mdBorderRadius = BorderRadius.all(
     Radius.circular(radiusMd),
@@ -42,20 +50,26 @@ class XkShape {
   static const BorderRadius largeBorderRadius = mdBorderRadius;
 }
 
-/// Layout tokens from XERKONIX Design System v1.3
+/// Layout tokens from XERKONIX TACTILE Design System (tokens.css v2.1).
+///
+/// Spacing ladder (v2.1 `--sp-*`, 4px grid): 4 · 8 · 12 · 16 · 20 · 24 · 32 ·
+/// 48 · 64. `spacingLg` (20) maps to the v2.1 `--sp-4h` half-step, which is
+/// now an official ladder value.
 class XkLayout {
   XkLayout._();
 
   static const double gridMax = 1400.0;
   static const double sidebarWidth = 220.0;
 
-  static const double spacingXxs = 4.0;
-  static const double spacingXs = 8.0;
-  static const double spacingSm = 10.0;
-  static const double spacingMd = 16.0;
-  static const double spacingLg = 20.0;
-  static const double spacingXl = 24.0;
-  static const double spacing2xl = 32.0;
+  static const double spacingXxs = 4.0; // --sp-1
+  static const double spacingXs = 8.0; // --sp-2
+  static const double spacingSm = 12.0; // --sp-3 (was 10 — off-ladder, fixed)
+  static const double spacingMd = 16.0; // --sp-4
+  static const double spacingLg = 20.0; // --sp-4h (v2.1 official half-step)
+  static const double spacingXl = 24.0; // --sp-5
+  static const double spacing2xl = 32.0; // --sp-6
+  static const double spacing3xl = 48.0; // --sp-7
+  static const double spacing4xl = 64.0; // --sp-8
 
   // Backward-compatible aliases
   static const double spacingExtraLarge = spacing2xl;
@@ -77,16 +91,18 @@ class XkLayout {
 
 enum XkShadowLevel { sm, md, lg }
 
-/// Neumorphic elevation tokens — XERKONIX TACTILE.
+/// Neumorphic elevation tokens — XERKONIX TACTILE (tokens.css v2.1).
 ///
 /// A **paired** highlight + lowlight shadow, so surfaces read as physically
 /// extruded from a single top-left light source. A raised element casts a
 /// lowlight to the bottom-right and a highlight to the top-left.
 ///
-/// - LIGHT: lowlight `rgba(146,148,166,.55)` at (7,7) blur 16 · highlight
-///   `#FFFFFF` at (-6,-6) blur 14.
-/// - DARK: lowlight `rgba(0,0,0,.62)` at (7,7) blur 16 · highlight a
-///   near-transparent white at (-6,-6) blur 14.
+/// - LIGHT (`--neu-raise`): lowlight `rgba(146,148,166,.55)` at (7,7) blur 16
+///   · highlight `#FFFFFF` at (-6,-6) blur 14.
+/// - DARK (`--neu-raise`): lowlight `rgba(0,0,0,.62)` at (8,8) blur 18 ·
+///   highlight **0** at (-5,-5) blur 12. Canonical rule: dark mode forbids
+///   highlight shadows on dark surfaces — `--neu-light` is
+///   `rgba(255,255,255,0)`, i.e. fully transparent, not "near-transparent".
 ///
 /// Flutter's [BoxShadow] can only cast *outward*, so this class covers the
 /// raised (extruded) treatment. The complementary **inset** (sunken) treatment
@@ -99,7 +115,9 @@ class XkShadow {
   static const Color lightLowlight = Color(0x8C9294A6); // rgba(146,148,166,.55)
   static const Color lightHighlight = Color(0xFFFFFFFF);
   static const Color darkLowlight = Color(0x9E000000); // rgba(0,0,0,.62)
-  static const Color darkHighlight = Color(0x0FFFFFFF); // near-transparent
+  // Dark highlight is exactly 0 (rgba(255,255,255,0)) — the canonical
+  // "다크는 하이라이트 0" rule; keeping the slot preserves paired geometry.
+  static const Color darkHighlight = Color(0x00FFFFFF);
 
   /// Raised surface (resting card / chip / button) — LIGHT.
   static const List<BoxShadow> raisedLight = [
@@ -107,33 +125,49 @@ class XkShadow {
     BoxShadow(color: lightHighlight, offset: Offset(-6, -6), blurRadius: 14),
   ];
 
-  /// Raised surface (resting card / chip / button) — DARK.
+  /// Raised surface (resting card / chip / button) — DARK
+  /// (canonical dark `--neu-raise`).
   static const List<BoxShadow> raisedDark = [
-    BoxShadow(color: darkLowlight, offset: Offset(7, 7), blurRadius: 16),
-    BoxShadow(color: darkHighlight, offset: Offset(-6, -6), blurRadius: 14),
+    BoxShadow(color: darkLowlight, offset: Offset(8, 8), blurRadius: 18),
+    BoxShadow(color: darkHighlight, offset: Offset(-5, -5), blurRadius: 12),
   ];
 
-  /// Lifted / floating surface (overlays, hovered) — LIGHT (deeper offsets).
+  /// Lifted / floating surface (overlays, menus, toasts) — LIGHT.
+  ///
+  /// Canonical `--float` (v2.1, was `--raise`): floating layers use a single
+  /// **downward** drop shadow — `0 14px 40px rgba(35,36,48,.14)` — not the
+  /// paired neumorphic treatment, which is reserved for touchable layers.
   static const List<BoxShadow> liftedLight = [
-    BoxShadow(color: lightLowlight, offset: Offset(11, 11), blurRadius: 24),
-    BoxShadow(color: lightHighlight, offset: Offset(-9, -9), blurRadius: 20),
+    BoxShadow(
+      color: Color(0x24232430), // rgba(35,36,48,.14)
+      offset: Offset(0, 14),
+      blurRadius: 40,
+    ),
   ];
 
-  /// Lifted / floating surface (overlays, hovered) — DARK (deeper offsets).
+  /// Lifted / floating surface (overlays, menus, toasts) — DARK.
+  ///
+  /// Canonical dark `--float`: `0 16px 44px rgba(0,0,0,.55)` — single
+  /// downward shadow, no highlight (다크는 하이라이트 0).
   static const List<BoxShadow> liftedDark = [
-    BoxShadow(color: darkLowlight, offset: Offset(11, 11), blurRadius: 24),
-    BoxShadow(color: darkHighlight, offset: Offset(-9, -9), blurRadius: 20),
+    BoxShadow(
+      color: Color(0x8C000000), // rgba(0,0,0,.55)
+      offset: Offset(0, 16),
+      blurRadius: 44,
+    ),
   ];
 
-  /// Subtle raised treatment for small controls (chips, badges) — LIGHT.
+  /// Subtle raised treatment for small controls (chips, badges) — LIGHT
+  /// (canonical `--neu-raise-sm`).
   static const List<BoxShadow> raisedSoftLight = [
-    BoxShadow(color: lightLowlight, offset: Offset(3, 3), blurRadius: 8),
-    BoxShadow(color: lightHighlight, offset: Offset(-3, -3), blurRadius: 7),
+    BoxShadow(color: lightLowlight, offset: Offset(4, 4), blurRadius: 9),
+    BoxShadow(color: lightHighlight, offset: Offset(-3, -3), blurRadius: 8),
   ];
 
-  /// Subtle raised treatment for small controls (chips, badges) — DARK.
+  /// Subtle raised treatment for small controls (chips, badges) — DARK
+  /// (canonical dark `--neu-raise-sm`).
   static const List<BoxShadow> raisedSoftDark = [
-    BoxShadow(color: darkLowlight, offset: Offset(3, 3), blurRadius: 8),
+    BoxShadow(color: darkLowlight, offset: Offset(5, 5), blurRadius: 10),
     BoxShadow(color: darkHighlight, offset: Offset(-3, -3), blurRadius: 7),
   ];
 
@@ -153,7 +187,7 @@ class XkShadow {
   static List<BoxShadow> raised(Brightness brightness) =>
       brightness == Brightness.dark ? raisedDark : raisedLight;
 
-  /// Paired lifted (floating) shadow for the given [brightness].
+  /// Floating-layer (`--float`) shadow for the given [brightness].
   static List<BoxShadow> lifted(Brightness brightness) =>
       brightness == Brightness.dark ? liftedDark : liftedLight;
 

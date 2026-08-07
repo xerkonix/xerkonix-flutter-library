@@ -23,7 +23,7 @@ class _FontWeight {
 }
 
 class _FontSize {
-  // XERKONIX DS v1.1 scale
+  // XERKONIX TACTILE v2.1 scale
   final double displayMin = 32;
   final double displayMax = 52;
   final double h1Min = 26;

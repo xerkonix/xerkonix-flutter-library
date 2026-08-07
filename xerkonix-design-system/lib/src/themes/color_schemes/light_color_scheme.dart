@@ -31,7 +31,7 @@ const lightColorScheme = ColorScheme(
   outline: XkColor.border,
   outlineVariant: XkColor.borderSoft,
   shadow: XkColor.shadow,
-  scrim: Color(0x66000000),
+  scrim: Color(0x731A1B22), // 정본 --scrim rgba(26,27,34,.45)
   inverseSurface: XkColor.textStrong,
   onInverseSurface: XkColor.bg,
   inversePrimary: XkColor.darkAccent,

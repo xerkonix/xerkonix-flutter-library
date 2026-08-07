@@ -161,8 +161,9 @@ class _XkNeumorphicState extends State<XkNeumorphic> {
             foregroundPainter: XkInsetShadowPainter(
               borderRadius: radius,
               lowlight: isDark ? XkShadow.darkLowlight : XkShadow.lightLowlight,
+              // 다크는 하이라이트 0 (정본 --neu-light: rgba(255,255,255,0)).
               highlight: isDark
-                  ? XkColor.darkTextStrong.withValues(alpha: 0.05)
+                  ? XkShadow.darkHighlight
                   : XkShadow.lightHighlight,
               intensity: widget.intensity,
             ),

@@ -1,5 +1,12 @@
 # xerkonix-flutter-library
 
+> **작업 전에 개발 가이드를 읽는다.** 규칙 정본은 [development-guide](https://github.com/xerkonix/development-guide) 리포의
+> `XERKONIX_DEV_GUIDE.html` 한 파일이다 (로컬에서는 워크스페이스 형제 폴더
+> `../development-guide/`). 주제별 Markdown 모듈은 그 파일에서 생성된다.
+>
+> 시작 전 [일하는 방법](https://github.com/xerkonix/development-guide/blob/main/process-guide/README.md) · PR 전 [셀프 코드리뷰](https://github.com/xerkonix/development-guide/blob/main/code-review/README.md) · [변경 유형별 필수 테스트](https://github.com/xerkonix/development-guide/blob/main/testing-guide/README.md)
+> · 이 리포는 앱이다 → [Flutter](https://github.com/xerkonix/development-guide/blob/main/flutter-development-guide/README.md) · [REST API 계약](https://github.com/xerkonix/development-guide/blob/main/rest-api-guide/README.md)
+
 XERKONIX Flutter 공개 패키지 5종의 모노레포. 모두 pub.dev 에 게시된 Apache-2.0 오픈소스이며, TACTILE 디자인 시스템과 공통 앱 인프라(에러/HTTP/로깅/사이징)를 제공한다.
 
 이 패키지들은 **오픈소스 레퍼런스**다. XERKONIX 제품 서비스는 의도적으로 이 패키지들에 런타임 의존하지 않고, 공유 계약(`xerkonix-code-contract`)에서 코드를 생성해 각자 소유하는 방식을 쓴다(`xerkonix-frontend-boilerplate` 참고). 즉 이 라이브러리는 공개·참조용이고, 제품은 패키지 비종속이다.

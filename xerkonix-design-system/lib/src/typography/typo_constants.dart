@@ -35,6 +35,11 @@ class _FontSize {
   final double label = 12;
   final double meta = 11;
 
+  // v2.2 운영 화면(어드민·콘솔) 타이포 계약 — Page Title 28/36.
+  // 값 자체는 [h2]·[title2] 와 같지만, 운영 화면에서 "제목이 검색창·도구에
+  // 눌리지 않게" 하는 역할 이름을 따로 둔다(정본 --fs-page-title).
+  final double pageTitle = 28;
+
   // Apple alias mapping (backward compatibility)
   final double largeTitle = 52;
   final double title1 = 38;

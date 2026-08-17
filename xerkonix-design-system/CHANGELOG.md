@@ -2,6 +2,43 @@
 
 All notable changes to this project will be documented in this file.
 
+## 3.1.0 — TACTILE v2.2 tokens
+
+Additive only; no existing API or value changes. Mirrors TACTILE v2.2.0, which
+itself changed no values — it added a hierarchy layer on top of the existing
+scales.
+
+### Added
+- **Ink hierarchy** — `XkColor.inkDisplay` / `anchor` (+ `darkInkDisplay` /
+  `darkAnchor`). Display ink for large headings and hero figures, anchor for
+  section hooks/labels. The point is to stop hanging hierarchy on size alone.
+- **Functional color slots** — `successVivid` / `warningVivid` / `errorVivid`
+  for icons, status glyphs and gauges (non-text 3:1; the base colors are
+  darkened to clear text AA, which turns the orange brown). **Never use vivid
+  on text.** `successBorder` / `warningBorder` / `errorBorder` give a soft
+  plane its edge so a translucent dark soft does not dissolve into the
+  background. Dark vivid aliases the base color, matching canon.
+- **Information layer** — `XkShadow.elevatedLight` / `elevatedDark`
+  (`--shadow-sm`): a single soft drop for elevated *information* cards,
+  deliberately a different vocabulary from the neumorphic `raised*` pair which
+  belongs to the touchable layer. At most one or two per section.
+- **Section rhythm** — `XkLayout.sectionLo` (72) / `sectionHi` (112). The old
+  fixed 88 section padding is retired; the 32–48 group band
+  (`spacing2xl`/`spacing3xl`) is the band to reach for.
+- **Ops-screen page title** — `XkTypo.pageTitle` (28/36, serif 600), the
+  `--fs-page-title` contract for admin/console screens.
+
+### Tests
+- `token_canon_parity_test.dart` covers every token above (15 → 22 tests) and
+  gains a **coverage net**: it enumerates every declaration in canon's `:root`
+  and fails unless each one is either mirrored or listed with a reason for not
+  being mirrored. Previously the suite compared only mapped pairs, so a new
+  canon token could go missing silently — which is exactly how the v2.2 tokens
+  sat unmirrored. Verified by injecting a token into canon and watching the
+  test fail with its name.
+- Dark-block `var()` references now resolve through `:root` (CSS cascade); the
+  dark block only carries overrides, so `var(--gray-000)` had no local answer.
+
 ## 3.0.0 (BREAKING) — TACTILE Design System
 
 Full re-skin from Weave v1.5 to **TACTILE**, a neumorphic system. Elevation is

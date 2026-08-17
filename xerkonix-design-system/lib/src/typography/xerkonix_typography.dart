@@ -160,6 +160,18 @@ class XkTypo {
     height: 1.35,
   );
 
+  /// Ops-screen page title — TACTILE v2.2 `--fs-page-title` (28/36, 명조 600).
+  ///
+  /// 어드민·콘솔 같은 운영 화면은 마케팅 사다리와 별도 계약을 갖는다. 이 단은
+  /// "제목이 검색창·도구에 눌리지 않게" 하는 최소 계약이고, 화면 구조는
+  /// Page Anchor → Summary → Primary Workspace 순서를 따른다.
+  static final TextStyle pageTitle = _serif(
+    size: TypoConst.fontSize.pageTitle,
+    weight: TypoConst.fontWeight.semiBold,
+    height: 1.3,
+    letterSpacing: -0.42,
+  );
+
   static final TextStyle cardTitle = _sans(
     size: 16,
     weight: TypoConst.fontWeight.semiBold,

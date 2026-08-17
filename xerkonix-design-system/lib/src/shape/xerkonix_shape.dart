@@ -71,6 +71,12 @@ class XkLayout {
   static const double spacing3xl = 48.0; // --sp-7
   static const double spacing4xl = 64.0; // --sp-8
 
+  // v2.2 섹션 패딩 — 88 고정을 폐지하고 내용 무게에 따라 가변으로 쓴다.
+  // 간격 역할: 요소 8 · 컴포넌트 16–24 · 묶음 32–48 · 섹션 72–112.
+  // 비어 있던 32–48 묶음 대역([spacing2xl]·[spacing3xl])을 쓰는 것이 규칙이다.
+  static const double sectionLo = 72.0; // --sp-section-lo
+  static const double sectionHi = 112.0; // --sp-section-hi
+
   // Backward-compatible aliases
   static const double spacingExtraLarge = spacing2xl;
   static const double spacingLarge = spacingXl;
@@ -154,6 +160,39 @@ class XkShadow {
       color: Color(0x8C000000), // rgba(0,0,0,.55)
       offset: Offset(0, 16),
       blurRadius: 44,
+    ),
+  ];
+
+  /// Information layer, elevated card — LIGHT (canonical `--shadow-sm`, v2.2).
+  ///
+  /// Deliberately a different vocabulary from [raisedLight]: the neumorphic
+  /// pair belongs to the **touchable** layer, this single soft drop belongs to
+  /// the **information** layer. Use on at most one or two cards per section —
+  /// if everything floats, nothing does.
+  static const List<BoxShadow> elevatedLight = [
+    BoxShadow(
+      color: Color(0x122A2B35), // rgba(42,43,53,.07)
+      offset: Offset(0, 2),
+      blurRadius: 10,
+    ),
+    BoxShadow(
+      color: Color(0x0D2A2B35), // rgba(42,43,53,.05)
+      offset: Offset(0, 1),
+      blurRadius: 3,
+    ),
+  ];
+
+  /// Information layer, elevated card — DARK (canonical dark `--shadow-sm`).
+  static const List<BoxShadow> elevatedDark = [
+    BoxShadow(
+      color: Color(0x6B000000), // rgba(0,0,0,.42)
+      offset: Offset(0, 2),
+      blurRadius: 10,
+    ),
+    BoxShadow(
+      color: Color(0x4D000000), // rgba(0,0,0,.30)
+      offset: Offset(0, 1),
+      blurRadius: 3,
     ),
   ];
 

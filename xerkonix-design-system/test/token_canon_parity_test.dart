@@ -201,6 +201,10 @@ void main() {
   late final String css = canon.readAsStringSync();
   late final Map<String, String> light = _rawVars(_lightBlock(css));
   late final Map<String, String> dark = _rawVars(_darkBlock(css));
+  // 다크 블록은 **오버라이드만** 적는다 — 무채 12단 같은 :root 선언은 없다.
+  // 그래서 다크의 var(--gray-000) 처럼 :root 를 가리키는 참조는 다크 맵만으로는
+  // 풀리지 않는다. CSS 캐스케이드대로 :root 위에 다크를 얹어 해석한다.
+  late final Map<String, String> darkAll = <String, String>{...light, ...dark};
 
   group('무채 12단', () {
     test('gray-000…950 이 TACTILE 정본과 같다', skip: skip, () {
@@ -221,6 +225,21 @@ void main() {
     });
   });
 
+  // [v2.2] 잉크 2단 — 위계를 크기 하나에 걸지 않기 위한 축. 정본은 gray 별칭이라
+  // 별칭 해석(var())까지 통과하는지 함께 본다.
+  group('잉크 2단', () {
+    test('ink-display · anchor 가 정본과 같다 (라이트/다크)', skip: skip, () {
+      _expectColorParity(light, <String, Color>{
+        '--ink-display': XkColor.inkDisplay,
+        '--anchor': XkColor.anchor,
+      }, 'XkColor 잉크 2단을 tokens.css 라이트 값으로 맞춰라.');
+      _expectColorParity(darkAll, <String, Color>{
+        '--ink-display': XkColor.darkInkDisplay,
+        '--anchor': XkColor.darkAnchor,
+      }, 'XkColor 잉크 2단을 tokens.css 다크 값으로 맞춰라.');
+    });
+  });
+
   group('기능색', () {
     test('라이트 기능색 6종 + on-soft 가 정본과 같다', skip: skip, () {
       _expectColorParity(light, <String, Color>{
@@ -234,6 +253,13 @@ void main() {
         '--success-on-soft': XkColor.successOnSoft,
         '--warning-on-soft': XkColor.warningOnSoft,
         '--error-on-soft': XkColor.errorOnSoft,
+        // [v2.2] vivid — 아이콘·게이지 전용(비텍스트 3:1) · border — soft 면 가장자리
+        '--success-vivid': XkColor.successVivid,
+        '--warning-vivid': XkColor.warningVivid,
+        '--error-vivid': XkColor.errorVivid,
+        '--success-border': XkColor.successBorder,
+        '--warning-border': XkColor.warningBorder,
+        '--error-border': XkColor.errorBorder,
       }, 'XkColor 라이트 기능색을 tokens.css 값으로 맞춰라.');
     });
 
@@ -245,6 +271,10 @@ void main() {
         '--temp-warm': XkColor.darkTempWarm,
         '--temp-cool': XkColor.darkTempCool,
         '--text-muted': XkColor.darkTextMuted,
+        // [v2.2] 다크 border — 알파만 상향
+        '--success-border': XkColor.darkSuccessBorder,
+        '--warning-border': XkColor.darkWarningBorder,
+        '--error-border': XkColor.darkErrorBorder,
       }, 'XkColor 다크 기능색을 tokens.css 다크 블록 값으로 맞춰라.');
     });
 
@@ -254,6 +284,13 @@ void main() {
       expect(XkColor.darkSuccessOnSoft, XkColor.darkSuccess);
       expect(XkColor.darkWarningOnSoft, XkColor.darkWarning);
       expect(XkColor.darkErrorOnSoft, XkColor.darkError);
+    });
+
+    // [v2.2] 다크 vivid 도 본색 별칭(--*-vivid:var(--*)) — 별칭 규칙 자체를 본다.
+    test('다크 vivid 는 본색 별칭이다', () {
+      expect(XkColor.darkSuccessVivid, XkColor.darkSuccess);
+      expect(XkColor.darkWarningVivid, XkColor.darkWarning);
+      expect(XkColor.darkErrorVivid, XkColor.darkError);
     });
   });
 
@@ -357,6 +394,25 @@ void main() {
     });
   });
 
+  // [v2.2] 정보 층 — 만지는 층(--neu-raise)과 어휘가 분리된 단방향 2겹 드롭.
+  group('정보 층 (--shadow-sm)', () {
+    test('elevatedLight 가 정본 라이트 --shadow-sm 과 같다', skip: skip, () {
+      _expectShadowParity(
+        '--shadow-sm(light)',
+        XkShadow.elevatedLight,
+        _cssShadows(light['--shadow-sm']!, light),
+      );
+    });
+
+    test('elevatedDark 가 정본 다크 --shadow-sm 과 같다', skip: skip, () {
+      _expectShadowParity(
+        '--shadow-sm(dark)',
+        XkShadow.elevatedDark,
+        _cssShadows(dark['--shadow-sm']!, dark),
+      );
+    });
+  });
+
   group('곡률 · 간격 사다리', () {
     test('radius 사다리(ctl 포함)가 정본과 같다', skip: skip, () {
       final Map<String, double> pairs = <String, double>{
@@ -392,6 +448,9 @@ void main() {
         '--sp-6': XkLayout.spacing2xl,
         '--sp-7': XkLayout.spacing3xl, // 48
         '--sp-8': XkLayout.spacing4xl, // 64
+        // [v2.2] 섹션 패딩 — 88 고정 폐지, 내용 무게에 따라 가변
+        '--sp-section-lo': XkLayout.sectionLo, // 72
+        '--sp-section-hi': XkLayout.sectionHi, // 112
       };
       final Map<String, String> mismatched = <String, String>{};
       pairs.forEach((String name, double actual) {
@@ -404,6 +463,151 @@ void main() {
       });
       expect(mismatched, isEmpty,
           reason: 'XkLayout 의 spacing 단을 tokens.css 값으로 맞춰라.');
+    });
+
+    // [v2.2] 운영 화면 타이포 계약 — Page Title 28. 라이브러리 타이포는 자체
+    // 스케일이라 --fs-* 전체를 미러링하지 않는다. 역할 이름이 붙은 이 한 단만
+    // 정본과 묶는다.
+    test('운영 화면 Page Title(--fs-page-title) 이 정본과 같다', skip: skip, () {
+      expect(
+        XkTypo.pageTitle.fontSize,
+        _cssPx(light['--fs-page-title']!),
+        reason: '운영 화면 Page Title 을 tokens.css --fs-page-title 로 맞춰라.',
+      );
+    });
+  });
+
+  // -------------------------------------------------------------------------
+  // 커버리지 — 이 스위트가 "빠짐"도 잡게 만드는 그물.
+  //
+  // 위 대조들은 **매핑된 쌍만** 본다. 그래서 정본에 토큰이 새로 생겨도 매핑에
+  // 넣지 않으면 조용히 통과했다(v2.2 신규 9종이 실제로 그랬다 — 값은 맞는데
+  // 라이브러리에 개념이 없는 상태). 아래 테스트는 정본 라이트 블록의 모든 선언을
+  // 열거해 **미러링 대상이거나, 미러링하지 않기로 적어둔 것** 중 하나여야 한다고
+  // 요구한다. 정본이 다음에 토큰을 추가하면 여기서 먼저 실패하고, 사람은 "미러
+  // 하거나 이유를 적어라"는 결정을 강제로 마주한다.
+  // -------------------------------------------------------------------------
+  group('커버리지', () {
+    // 이 스위트가 실제로 정본과 대조하는 이름들.
+    const Set<String> mirrored = <String>{
+      '--gray-000', '--gray-050', '--gray-100', '--gray-200', '--gray-300',
+      '--gray-400', '--gray-500', '--gray-600', '--gray-700', '--gray-800',
+      '--gray-900', '--gray-950',
+      '--ink-display', '--anchor',
+      '--text-muted',
+      '--success', '--warning', '--error',
+      '--success-on-soft', '--warning-on-soft', '--error-on-soft',
+      '--success-vivid', '--warning-vivid', '--error-vivid',
+      '--success-border', '--warning-border', '--error-border',
+      '--temp-warm', '--temp-cool',
+      '--scrim',
+      '--neu-light', '--neu-shadow', '--neu-raise',
+      '--float', '--shadow', '--shadow-lg', '--shadow-sm',
+      '--radius-xs', '--radius-sm', '--radius-ctl', '--radius-md',
+      '--radius-lg', '--radius-xl', '--radius-pill',
+      '--sp-1', '--sp-2', '--sp-3', '--sp-4', '--sp-4h',
+      '--sp-5', '--sp-6', '--sp-7', '--sp-8',
+      '--sp-section-lo', '--sp-section-hi',
+      '--fs-page-title',
+    };
+
+    // 미러링하지 않기로 한 것 — 각각 이유가 있다. 이유 없이 여기 넣지 마라.
+    const Map<String, String> notMirrored = <String, String>{
+      // 표면/텍스트 역할은 테마(XkLightTheme/XkDarkTheme)가 gray 단에서 조립한다.
+      // gray 단이 위에서 대조되므로 값의 근거는 이미 묶여 있다.
+      '--bg': '테마가 gray 단에서 조립',
+      '--surface': '테마가 gray 단에서 조립',
+      '--surface-2': '테마가 gray 단에서 조립',
+      '--border': '테마가 gray 단에서 조립',
+      '--border-soft': '테마 경계 알파 — 위젯 단위 사용',
+      '--text-strong': '테마 텍스트 역할',
+      '--text-body': '테마 텍스트 역할',
+      // 액션·별칭 계열은 무채 잉크라 gray/텍스트 값과 같다.
+      '--action': '무채 잉크 — text-strong 과 동일 값',
+      '--action-hover': '무채 잉크 — gray-800 과 동일 값',
+      '--action-text': '무채 잉크 — gray-000 과 동일 값',
+      '--accent': '--action 별칭',
+      '--accent-deep': '--action-hover 별칭',
+      '--accent-soft': 'gray-100 별칭',
+      '--accent-text': '--action-text 별칭',
+      '--brand': 'gray-400 별칭',
+      // soft 틴트면은 on-soft 텍스트와 짝으로만 쓰이고, 값은 위젯이 보유한다.
+      '--success-soft': 'soft 면 — 위젯 보유',
+      '--warning-soft': 'soft 면 — 위젯 보유',
+      '--error-soft': 'soft 면 — 위젯 보유',
+      '--temp-warm-soft': 'soft 면 — 위젯 보유',
+      '--temp-cool-soft': 'soft 면 — 위젯 보유',
+      // 나머지 뉴모픽 겹은 raise 기하가 대표로 묶여 있다.
+      '--hl-dark': '뉴모픽 보조 겹 — raise 기하로 대표 대조',
+      '--hl-light': '뉴모픽 보조 겹 — raise 기하로 대표 대조',
+      '--neu-raise-sm': 'raise 파생 — 기하 규칙 동일',
+      '--neu-inset': 'inset 은 Flutter BoxShadow 로 1:1 대응이 없다',
+      '--neu-inset-sm': 'inset 은 Flutter BoxShadow 로 1:1 대응이 없다',
+      '--raise': '@deprecated → --float 별칭',
+      // 웹 전용 표현 — Flutter 대응 개념이 없다.
+      '--spec-line': '웹 전용 신호선',
+      '--hatch-line': '웹 전용 빗금',
+      '--hatch': '웹 전용 빗금 그라디언트',
+      '--dim': '웹 전용 감광',
+      '--serif': '폰트 패밀리 — 패키지가 자체 지정',
+      '--sans': '폰트 패밀리 — 패키지가 자체 지정',
+      '--mono': '폰트 패밀리 — 패키지가 자체 지정',
+      // 모션은 XkMotion 이 자체 보유(값 대조는 별도 스위트 소관).
+      '--t-observe': 'XkMotion 소관',
+      '--t-resolve': 'XkMotion 소관',
+      '--t-settle': 'XkMotion 소관',
+      '--ease': 'CSS 베지어 — Curves 로 근사',
+      '--ease-sharp': '--ease 별칭',
+      // 타이포 사다리는 패키지가 자체 스케일을 쓴다(운영 Page Title 만 묶었다).
+      '--fs-d1': '패키지 자체 타이포 스케일',
+      '--fs-d2': '패키지 자체 타이포 스케일',
+      '--fs-t1': '패키지 자체 타이포 스케일',
+      '--fs-t2': '패키지 자체 타이포 스케일',
+      '--fs-b': '패키지 자체 타이포 스케일',
+      '--fs-b2': '패키지 자체 타이포 스케일',
+      '--fs-s': '패키지 자체 타이포 스케일',
+      '--fs-c': '패키지 자체 타이포 스케일',
+      '--fs-cap': '패키지 자체 타이포 스케일',
+      '--fs-mini': '패키지 자체 타이포 스케일',
+      // 분류 8색·코드 팔레트는 앱(코센티오)이 보유한다.
+      '--hue-1': '분류 8색 — 앱 보유',
+      '--hue-2': '분류 8색 — 앱 보유',
+      '--hue-3': '분류 8색 — 앱 보유',
+      '--hue-4': '분류 8색 — 앱 보유',
+      '--hue-5': '분류 8색 — 앱 보유',
+      '--hue-6': '분류 8색 — 앱 보유',
+      '--hue-7': '분류 8색 — 앱 보유',
+      '--hue-8': '분류 8색 — 앱 보유',
+      '--ink-bg': '코드 패널 — 앱 보유',
+      '--ink-line': '코드 패널 — 앱 보유',
+      '--ink-text': '코드 패널 — 앱 보유',
+      '--syn-key': '신택스 — 앱 보유',
+      '--syn-str': '신택스 — 앱 보유',
+      '--syn-num': '신택스 — 앱 보유',
+      '--syn-com': '신택스 — 앱 보유',
+    };
+
+    test('정본 라이트 블록의 모든 토큰이 미러링되거나 이유가 적혀 있다',
+        skip: skip, () {
+      final Set<String> unaccounted = light.keys
+          .where((String n) =>
+              !mirrored.contains(n) && !notMirrored.containsKey(n))
+          .toSet();
+      expect(
+        unaccounted,
+        isEmpty,
+        reason:
+            '정본에 새 토큰이 생겼다. 라이브러리에 미러링하고 mirrored 에 넣거나, '
+            '미러링하지 않을 이유를 notMirrored 에 적어라 — 조용히 빠지는 것을 '
+            '막는 그물이다.',
+      );
+    });
+
+    test('mirrored 에 적힌 이름이 정본에 실제로 있다', skip: skip, () {
+      final Set<String> stale =
+          mirrored.where((String n) => !light.containsKey(n)).toSet();
+      expect(stale, isEmpty,
+          reason: '정본에서 사라진 토큰이 mirrored 에 남아 있다 — 매핑을 함께 고쳐라.');
     });
   });
 }

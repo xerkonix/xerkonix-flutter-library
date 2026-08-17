@@ -38,6 +38,12 @@ class XkColor {
   // Canonical tokens.css value; may shift again if N21 lands a new muted.
   static const Color textMuted = Color(0xFF686975);
 
+  /// v2.2 ink hierarchy — display ink for large headings (d1/d2) and hero
+  /// figures, anchor for section hooks/labels (mono + tracking). The point is
+  /// to stop hanging hierarchy on size alone.
+  static const Color inkDisplay = gray950; // --ink-display
+  static const Color anchor = gray500; // --anchor
+
   static const Color brand = gray400;
 
   /// Monochrome ink action. In TACTILE the accent is near-black; elevation
@@ -63,6 +69,22 @@ class XkColor {
   static const Color warningOnSoft = Color(0xFFA05710);
   static const Color errorOnSoft = Color(0xFFB92E2E);
 
+  // v2.2 vivid — icons, status glyphs and gauges only. The base colors are
+  // darkened to clear text AA (4.5:1), which turns the orange brown; non-text
+  // signals only need 3:1, so this step keeps the chroma (same hue).
+  // Measured against --bg: success 3.61 · warning 3.45 · error 4.18.
+  // **Never use on text** — below AA.
+  static const Color successVivid = Color(0xFF2F9066);
+  static const Color warningVivid = Color(0xFFC96A05);
+  static const Color errorVivid = Color(0xFFD63C3C);
+
+  // v2.2 border — the edge of a soft-tinted plane (callouts, badge frames).
+  // Base hue at low alpha; keeps a translucent soft plane from dissolving
+  // into the background in dark mode.
+  static const Color successBorder = Color(0x4D4F7868); // rgba(79,120,104,.30)
+  static const Color warningBorder = Color(0x4DA95C11); // rgba(169,92,17,.30)
+  static const Color errorBorder = Color(0x47C13030); // rgba(193,48,48,.28)
+
   /// Temperature accent pair (hot ↔ cold axis).
   static const Color tempWarm = Color(0xFFB75138);
   static const Color tempWarmSoft = Color(0xFFF9E8E2);
@@ -84,6 +106,9 @@ class XkColor {
   static const Color darkTextBody = Color(0xFFB4B5BE);
   // N21: canonical tokens.css value; may shift again if N21 lands a new muted.
   static const Color darkTextMuted = Color(0xFF93949D);
+
+  static const Color darkInkDisplay = gray000; // --ink-display (dark)
+  static const Color darkAnchor = gray400; // --anchor (dark)
 
   static const Color darkBrand = gray400;
 
@@ -108,6 +133,18 @@ class XkColor {
   static const Color darkSuccessOnSoft = darkSuccess;
   static const Color darkWarningOnSoft = darkWarning;
   static const Color darkErrorOnSoft = darkError;
+
+  // v2.2 vivid(다크) — 다크 base 는 이미 밝아 비텍스트 3:1 을 여유롭게 넘는다.
+  // 정본도 별칭(--*-vivid:var(--*))이므로 본색 재사용.
+  static const Color darkSuccessVivid = darkSuccess;
+  static const Color darkWarningVivid = darkWarning;
+  static const Color darkErrorVivid = darkError;
+
+  // v2.2 border(다크) — 알파만 상향. error 는 soft 와 같은 옛 색 기반 rgb 를
+  // 정본이 유지하므로 여기서도 동일하게 둔다.
+  static const Color darkSuccessBorder = Color(0x527FB59E); // rgba(127,181,158,.32)
+  static const Color darkWarningBorder = Color(0x52EC9A50); // rgba(236,154,80,.32)
+  static const Color darkErrorBorder = Color(0x4DE4696B); // rgba(228,105,107,.30)
 
   static const Color darkTempWarm = Color(0xFFDE9074);
   static const Color darkTempWarmSoft = Color(0x26DE9074); // rgba(222,144,116,.15)

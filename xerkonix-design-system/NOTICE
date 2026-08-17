@@ -1,0 +1,42 @@
+xerkonix_design_system
+Copyright 2026 XERKONIX
+
+This product includes software developed by XERKONIX, licensed under the
+Apache License, Version 2.0 (see LICENSE).
+
+--------------------------------------------------------------------------------
+THIRD-PARTY FONTS
+--------------------------------------------------------------------------------
+
+This package bundles and redistributes the font families below under lib/fonts/.
+The fonts are NOT covered by the Apache License above — each is redistributed
+under its own license, and the full text of that license ships next to the font
+files as required by it.
+
+1. Pretendard
+   Copyright (c) 2021, Kil Hyung-jin (https://github.com/orioncactus/pretendard),
+   with Reserved Font Name 'Pretendard'.
+   Also includes Copyright 2014-2021 Adobe (http://www.adobe.com/), with
+   Reserved Font Name 'Source'.
+   License: SIL Open Font License, Version 1.1
+   Full text: lib/fonts/pretendard/OFL.txt
+
+2. IBM Plex Sans KR
+   Copyright © 2017 IBM Corp. with Reserved Font Name "Plex"
+   License: SIL Open Font License, Version 1.1
+   Full text: lib/fonts/ibm_plex_sans_kr/OFL.txt
+
+3. IBM Plex Mono
+   Copyright © 2017 IBM Corp. with Reserved Font Name "Plex"
+   License: SIL Open Font License, Version 1.1
+   Full text: lib/fonts/ibm_plex_mono/OFL.txt
+
+4. MaruBuri (마루 부리)
+   지적 재산권: 네이버 및 네이버 문화재단
+   License: NAVER font license (not SIL OFL — NAVER's own open license, the same
+   terms that apply to the Nanum fonts). Distribution: https://hangeul.naver.com/font
+   Full text: lib/fonts/maruburi/LICENSE.txt
+
+Reserved Font Names: 'Pretendard', 'Plex'. Derived or modified versions of those
+fonts must not use the reserved names in the font-selection naming fields, per
+the SIL Open Font License.

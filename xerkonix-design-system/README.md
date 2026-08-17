@@ -12,7 +12,7 @@ dependencies:
 - Dart SDK: `>=3.9.0 <4.0.0`
 - Flutter: `>=3.35.0`
 
-폰트(Pretendard / MaruBuri / IBM Plex Sans KR / IBM Plex Mono)는 패키지에 번들돼 자동 로드된다.
+폰트(Pretendard / MaruBuri / IBM Plex Sans KR / IBM Plex Mono)는 패키지에 번들돼 자동 로드된다. 각 폰트의 라이선스는 아래 [라이선스](#라이선스) 절 참고.
 
 ## 빠른 시작
 
@@ -117,4 +117,17 @@ flutter run -d web-server --web-port=18080
 
 ## 라이선스
 
-Apache License 2.0. `LICENSE` 참고.
+패키지 코드는 **Apache License 2.0** — `LICENSE` 참고.
+
+번들된 폰트는 Apache 2.0 이 아니라 **각자의 라이선스**로 재배포되며, 각 라이선스
+전문은 폰트 파일 옆에 함께 담겨 있다(재배포 조건). 요약은 루트 `NOTICE`.
+
+| 폰트 | 저작권 | 라이선스 | 전문 |
+|---|---|---|---|
+| Pretendard | Kil Hyung-jin (2021) · Adobe(Source, 2014–2021) | SIL OFL 1.1 | `lib/fonts/pretendard/OFL.txt` |
+| IBM Plex Sans KR | IBM Corp. (2017) | SIL OFL 1.1 | `lib/fonts/ibm_plex_sans_kr/OFL.txt` |
+| IBM Plex Mono | IBM Corp. (2017) | SIL OFL 1.1 | `lib/fonts/ibm_plex_mono/OFL.txt` |
+| MaruBuri (마루 부리) | 네이버 · 네이버 문화재단 | 네이버 글꼴 라이선스(OFL 아님) | `lib/fonts/maruburi/LICENSE.txt` |
+
+예약 이름(Reserved Font Name)은 `Pretendard` · `Plex` 다 — 이 폰트를 수정해
+재배포할 때 폰트 선택 이름 필드에 예약 이름을 쓰면 안 된다.

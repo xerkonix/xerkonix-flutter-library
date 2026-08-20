@@ -57,8 +57,8 @@ void main() {
     test('XkColor should expose the TACTILE key values', () {
       // Monochrome ink accent + core surfaces (light).
       expect(XkColor.accent.toARGB32(), 0xFF232430);
-      expect(XkColor.bg.toARGB32(), 0xFFF4F4F6);
-      expect(XkColor.surface.toARGB32(), 0xFFFBFBFC);
+      expect(XkColor.bg.toARGB32(), 0xFFF5F5F7); // [v2.3]
+      expect(XkColor.surface.toARGB32(), 0xFFFFFFFF); // [v2.3]
       // Near-white ink accent (dark).
       expect(XkColor.darkAccent.toARGB32(), 0xFFF1F1F4);
       expect(XkColor.darkBg.toARGB32(), 0xFF1A1B22);
@@ -106,7 +106,7 @@ void main() {
     test('raised light pair matches the TACTILE highlight/lowlight spec', () {
       final BoxShadow low = XkShadow.raisedLight.first;
       final BoxShadow high = XkShadow.raisedLight.last;
-      expect(low.color.toARGB32(), 0x8C9294A6);
+      expect(low.color.toARGB32(), 0x809093A6); // [v2.3] rgba(144,147,166,.5)
       expect(low.offset, const Offset(7, 7));
       expect(low.blurRadius, 16);
       expect(high.color.toARGB32(), 0xFFFFFFFF);

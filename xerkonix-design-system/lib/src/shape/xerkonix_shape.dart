@@ -118,7 +118,8 @@ class XkShadow {
   XkShadow._();
 
   // --- Paired shadow colors (single top-left light source) ---
-  static const Color lightLowlight = Color(0x8C9294A6); // rgba(146,148,166,.55)
+  // [v2.3] 캔버스가 밝아진 만큼 그림자 톤 보정.
+  static const Color lightLowlight = Color(0x809093A6); // rgba(144,147,166,.5)
   static const Color lightHighlight = Color(0xFFFFFFFF);
   static const Color darkLowlight = Color(0x9E000000); // rgba(0,0,0,.62)
   // Dark highlight is exactly 0 (rgba(255,255,255,0)) — the canonical

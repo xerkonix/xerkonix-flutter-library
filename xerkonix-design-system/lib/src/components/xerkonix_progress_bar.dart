@@ -22,9 +22,10 @@ class XkProgressBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
-    final Color track = isDark ? XkColor.darkSurface2 : XkColor.surface2;
+    // [v2.3] 트랙=우물(--well) · 채움=포인트 인디케이터(--point-ind).
+    final Color track = isDark ? XkColor.darkWell : XkColor.well;
     final Color fill =
-        color ?? (isDark ? XkColor.darkAccent : XkColor.accent);
+        color ?? (isDark ? XkColor.darkPointInd : XkColor.pointInd);
     return ClipRRect(
       borderRadius: BorderRadius.circular(minHeight / 2),
       child: LinearProgressIndicator(

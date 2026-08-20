@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## 3.2.0
+
+TACTILE v2.3.0 대응 — 가독성 개편.
+
+- 면 분리: `bg #F5F5F7` · `surface #FFFFFF` · `surface2 #EFF0F3` · `border #E3E5EA`
+  (gray 별칭에서 독립값으로 — 파리티 테스트도 직접 대조로 승격).
+- 잉크: `textMuted #575866`(6.44:1) · `anchor #686975`(옛 gray-500 은 AA 위반) ·
+  `darkTextMuted #9FA0A9`.
+- 신설: `well`/`darkWell`(입력·트랙 우물), `point`/`pointDeep`/`pointInd` +
+  다크 원석 단일(`darkPoint #62CBDB`). 계약 — 링크·켜짐·인디케이터 전용,
+  `pointInd` 는 문구 금지, CTA 는 여전히 근흑 잉크.
+- 배선: `XkProgressBar` 트랙=well · 채움=pointInd. `XkShadow.lightLowlight`
+  rgba(144,147,166,.5) 로 톤 보정.
+- 파리티: 표면 4종 + 우물·포인트 4종 대조 그룹 추가.
+
 ## 3.1.0 — TACTILE v2.2 tokens
 
 Additive only; no existing API or value changes. Mirrors TACTILE v2.2.0, which

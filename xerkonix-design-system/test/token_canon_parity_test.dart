@@ -240,6 +240,42 @@ void main() {
     });
   });
 
+  // [v2.3] 면 분리 — bg/surface 가 gray 별칭에서 독립값이 되면서 직접 대조로 승격.
+  group('표면 v2.3', () {
+    test('bg · surface · surface-2 · border 가 정본과 같다 (라이트/다크)', skip: skip, () {
+      _expectColorParity(light, <String, Color>{
+        '--bg': XkColor.bg,
+        '--surface': XkColor.surface,
+        '--surface-2': XkColor.surface2,
+        '--border': XkColor.border,
+      }, 'XkColor 표면을 tokens.css 라이트 값으로 맞춰라.');
+      _expectColorParity(darkAll, <String, Color>{
+        '--bg': XkColor.darkBg,
+        '--surface': XkColor.darkSurface,
+        '--surface-2': XkColor.darkSurface2,
+        '--border': XkColor.darkBorder,
+      }, 'XkColor 표면을 tokens.css 다크 값으로 맞춰라.');
+    });
+  });
+
+  // [v2.3] 우물 + 포인트(아쿠아마린 2단) — 링크·켜짐·인디케이터 전용 계약.
+  group('우물·포인트 v2.3', () {
+    test('well · point · point-deep · point-ind 가 정본과 같다 (라이트/다크)', skip: skip, () {
+      _expectColorParity(light, <String, Color>{
+        '--well': XkColor.well,
+        '--point': XkColor.point,
+        '--point-deep': XkColor.pointDeep,
+        '--point-ind': XkColor.pointInd,
+      }, 'XkColor 우물·포인트를 tokens.css 라이트 값으로 맞춰라.');
+      _expectColorParity(darkAll, <String, Color>{
+        '--well': XkColor.darkWell,
+        '--point': XkColor.darkPoint,
+        '--point-deep': XkColor.darkPointDeep,
+        '--point-ind': XkColor.darkPointInd,
+      }, 'XkColor 우물·포인트를 tokens.css 다크 값으로 맞춰라.');
+    });
+  });
+
   group('기능색', () {
     test('라이트 기능색 6종 + on-soft 가 정본과 같다', skip: skip, () {
       _expectColorParity(light, <String, Color>{
@@ -495,6 +531,8 @@ void main() {
       '--gray-900', '--gray-950',
       '--ink-display', '--anchor',
       '--text-muted',
+      '--bg', '--surface', '--surface-2', '--border',
+      '--well', '--point', '--point-deep', '--point-ind',
       '--success', '--warning', '--error',
       '--success-on-soft', '--warning-on-soft', '--error-on-soft',
       '--success-vivid', '--warning-vivid', '--error-vivid',
@@ -515,10 +553,6 @@ void main() {
     const Map<String, String> notMirrored = <String, String>{
       // 표면/텍스트 역할은 테마(XkLightTheme/XkDarkTheme)가 gray 단에서 조립한다.
       // gray 단이 위에서 대조되므로 값의 근거는 이미 묶여 있다.
-      '--bg': '테마가 gray 단에서 조립',
-      '--surface': '테마가 gray 단에서 조립',
-      '--surface-2': '테마가 gray 단에서 조립',
-      '--border': '테마가 gray 단에서 조립',
       '--border-soft': '테마 경계 알파 — 위젯 단위 사용',
       '--text-strong': '테마 텍스트 역할',
       '--text-body': '테마 텍스트 역할',

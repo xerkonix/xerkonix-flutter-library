@@ -26,25 +26,35 @@ class XkColor {
   static const Color gray950 = Color(0xFF1A1B22);
 
   // --- Semantic · Light ---
-  static const Color bg = gray050; // #F4F4F6
-  static const Color surface = gray000; // #FBFBFC
-  static const Color surface2 = gray100; // #EAEAEE
-  static const Color border = gray200; // #DBDBE0
+  // [v2.3] 면 분리 — 캔버스 하강 + 순백 카드(1.09:1). gray 단 별칭에서 독립값으로.
+  static const Color bg = Color(0xFFF5F5F7);
+  static const Color surface = Color(0xFFFFFFFF);
+  static const Color surface2 = Color(0xFFEFF0F3);
+  static const Color border = Color(0xFFE3E5EA);
+  /// [v2.3] --well — 입력·트랙 전용 우물 면 (캔버스 대비 1.13:1).
+  static const Color well = Color(0xFFE6E8EC);
   static const Color borderSoft = Color(0x47ACADB7); // rgba(172,173,183,.28)
 
   static const Color textStrong = Color(0xFF232430);
   static const Color textBody = Color(0xFF4A4B57);
-  // N21: muted lowered in lightness from gray-600 for WCAG AA (≥4.5:1).
-  // Canonical tokens.css value; may shift again if N21 lands a new muted.
-  static const Color textMuted = Color(0xFF686975);
+  // [v2.3] muted 상향 — 옛 #686975 는 AA 턱걸이(4.94:1) → 6.44:1.
+  static const Color textMuted = Color(0xFF575866);
 
   /// v2.2 ink hierarchy — display ink for large headings (d1/d2) and hero
   /// figures, anchor for section hooks/labels (mono + tracking). The point is
   /// to stop hanging hierarchy on size alone.
   static const Color inkDisplay = gray950; // --ink-display
-  static const Color anchor = gray500; // --anchor
+  // [v2.3] anchor: gray-500 은 2.88:1 로 텍스트 AA 위반이었다 → 4.99:1.
+  static const Color anchor = Color(0xFF686975); // --anchor
 
   static const Color brand = gray400;
+
+  /// [v2.3] 포인트(아쿠아마린) — 인라인 링크·켜짐 상태·인디케이터 전용.
+  /// CTA·배지·제목 금지 — 액션은 여전히 근흑 잉크([accent]).
+  /// [point] 는 문구 가능(캔버스 4.60:1) · [pointInd] 는 면 요소 전용(문구 금지).
+  static const Color point = Color(0xFF007A91);
+  static const Color pointDeep = Color(0xFF006B7F);
+  static const Color pointInd = Color(0xFF0090AE);
 
   /// Monochrome ink action. In TACTILE the accent is near-black; elevation
   /// (not hue) differentiates interactive surfaces.
@@ -101,16 +111,23 @@ class XkColor {
   static const Color darkSurface2 = Color(0xFF2C2D37);
   static const Color darkBorder = Color(0xFF373844);
   static const Color darkBorderSoft = Color(0x26ACADB7); // rgba(172,173,183,.15)
+  /// [v2.3] --well (dark) — 값 한계(1.13:1)라 위젯이 1px 링을 병기한다.
+  static const Color darkWell = Color(0xFF0C0D11);
 
   static const Color darkTextStrong = Color(0xFFF1F1F4);
   static const Color darkTextBody = Color(0xFFB4B5BE);
-  // N21: canonical tokens.css value; may shift again if N21 lands a new muted.
-  static const Color darkTextMuted = Color(0xFF93949D);
+  // [v2.3] 다크 muted 상향 — 5.69 → 6.60:1.
+  static const Color darkTextMuted = Color(0xFF9FA0A9);
 
   static const Color darkInkDisplay = gray000; // --ink-display (dark)
   static const Color darkAnchor = gray400; // --anchor (dark)
 
   static const Color darkBrand = gray400;
+
+  /// [v2.3] 다크 포인트 — 원석 단일(#62CBDB, 캔버스 9.06:1). ind 는 별칭.
+  static const Color darkPoint = Color(0xFF62CBDB);
+  static const Color darkPointDeep = Color(0xFF78D5E3);
+  static const Color darkPointInd = darkPoint;
 
   static const Color darkAccent = Color(0xFFF1F1F4); // near-white ink action
   static const Color darkAccentDeep = Color(0xFFDBDBE0); // accent-hover

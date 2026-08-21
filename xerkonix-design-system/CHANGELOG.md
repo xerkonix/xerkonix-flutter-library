@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## 3.3.0
+
+TACTILE v2.4.0 대응 — 포인트 버튼 패밀리.
+
+- `XkButton.point` / `.pointOutline` / `.pointText` / `.pointElevated` 4형 신설.
+  보조 액션·인터랙티브 강조용 — 주 액션(근흑)은 여전히 화면당 1개.
+
 ## 3.2.0
 
 TACTILE v2.3.0 대응 — 가독성 개편.

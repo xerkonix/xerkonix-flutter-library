@@ -150,6 +150,70 @@ class XkButton extends StatelessWidget {
     );
   }
 
+  /// [v2.4] 포인트 필드 — 아쿠아마린 필 + 표면색 글자(두 테마 AA).
+  factory XkButton.point({
+    Key? key,
+    required VoidCallback? onPressed,
+    required Widget child,
+    bool expanded = false,
+  }) {
+    return XkButton._(
+      key: key,
+      onPressed: onPressed,
+      buttonType: ButtonType.point,
+      expanded: expanded,
+      child: child,
+    );
+  }
+
+  /// [v2.4] 포인트 아웃라인 — 1.5px 포인트 테두리 + 포인트 잉크.
+  factory XkButton.pointOutline({
+    Key? key,
+    required VoidCallback? onPressed,
+    required Widget child,
+    bool expanded = false,
+  }) {
+    return XkButton._(
+      key: key,
+      onPressed: onPressed,
+      buttonType: ButtonType.pointOutline,
+      expanded: expanded,
+      child: child,
+    );
+  }
+
+  /// [v2.4] 포인트 텍스트 버튼 — 포인트 잉크만, 면·그림자 없음.
+  factory XkButton.pointText({
+    Key? key,
+    required VoidCallback? onPressed,
+    required Widget child,
+    bool expanded = false,
+  }) {
+    return XkButton._(
+      key: key,
+      onPressed: onPressed,
+      buttonType: ButtonType.pointText,
+      expanded: expanded,
+      child: child,
+    );
+  }
+
+  /// [v2.4] 포인트 엘리베이티드 — 뉴모픽 융기 면 + 포인트 잉크.
+  factory XkButton.pointElevated({
+    Key? key,
+    required VoidCallback? onPressed,
+    required Widget child,
+    bool expanded = false,
+  }) {
+    return XkButton._(
+      key: key,
+      onPressed: onPressed,
+      buttonType: ButtonType.pointElevated,
+      expanded: expanded,
+      child: child,
+    );
+  }
+
   factory XkButton.tonal({
     Key? key,
     required VoidCallback? onPressed,
@@ -317,6 +381,33 @@ class XkButton extends StatelessWidget {
         return _XkButtonSpec(
           fill: isDark ? XkColor.darkSurface2 : XkColor.surface,
           textColor: isDark ? XkColor.darkTextStrong : XkColor.textStrong,
+        );
+      case ButtonType.point:
+        // [v2.4] 필드 글자는 표면색 — 라이트 순백(5.96:1) · 다크 어두운 면(6.21:1).
+        return _XkButtonSpec(
+          fill: isDark ? XkColor.darkPoint : XkColor.point,
+          textColor: isDark ? XkColor.darkSurface : XkColor.surface,
+        );
+      case ButtonType.pointOutline:
+        return _XkButtonSpec(
+          fill: Colors.transparent,
+          textColor: isDark ? XkColor.darkPoint : XkColor.point,
+          border: Border.all(
+            width: 1.5,
+            color: isDark ? XkColor.darkPoint : XkColor.point,
+          ),
+          elevated: false,
+        );
+      case ButtonType.pointText:
+        return _XkButtonSpec(
+          fill: Colors.transparent,
+          textColor: isDark ? XkColor.darkPoint : XkColor.point,
+          elevated: false,
+        );
+      case ButtonType.pointElevated:
+        return _XkButtonSpec(
+          fill: isDark ? XkColor.darkSurface : XkColor.surface,
+          textColor: isDark ? XkColor.darkPoint : XkColor.point,
         );
       case ButtonType.outline:
         return _XkButtonSpec(
@@ -545,4 +636,10 @@ enum ButtonType {
   tonal,
   outline,
   semantic,
+  // [v2.4] 포인트(아쿠아마린) 4형 — 보조 액션·인터랙티브 강조용.
+  // 주 액션(근흑 accent/primary)은 여전히 화면당 1개다.
+  point,
+  pointOutline,
+  pointText,
+  pointElevated,
 }

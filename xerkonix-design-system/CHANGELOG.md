@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## 3.3.1
+
+TACTILE v2.5.0 대응 — 켜짐 상태가 포인트에서 근흑으로 환원됐다. 값·API 변경 없음.
+
+- 코드 변경 없음: `_switchTheme` 은 이미 `accent`(근흑)를 트랙에 쓰고, 체크·라디오는
+  `colorScheme.primary` = `XkColor.accent` 를 따른다 — v2.3 포인트 전환을 받은 적이
+  없어 이번 환원과 이미 일치한다.
+- 계약 문서 정렬: `XkColor.point` 독스트링과 파리티 테스트 주석에서 "켜짐 상태" 삭제.
+  포인트가 쓰는 자리는 **인라인 링크와 인디케이터** 둘이다(`XkProgressBar` 채움은
+  인디케이터라 `pointInd` 유지).
+
 ## 3.3.0
 
 TACTILE v2.4.0 대응 — 포인트 버튼 패밀리.

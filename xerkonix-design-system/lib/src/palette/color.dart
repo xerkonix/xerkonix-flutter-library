@@ -49,8 +49,9 @@ class XkColor {
 
   static const Color brand = gray400;
 
-  /// [v2.3] 포인트(아쿠아마린) — 인라인 링크·켜짐 상태·인디케이터 전용.
-  /// CTA·배지·제목 금지 — 액션은 여전히 근흑 잉크([accent]).
+  /// [v2.3] 포인트(아쿠아마린) — [v2.5] 인라인 링크·인디케이터 전용.
+  /// 켜짐 상태(토글/체크/라디오)는 근흑([accent])으로 환원됐다 — 컨트롤의 켜짐은
+  /// 강조가 아니라 상태다. CTA·배지·제목 금지, 액션은 화면당 1개.
   /// [point] 는 문구 가능(캔버스 4.60:1) · [pointInd] 는 면 요소 전용(문구 금지).
   static const Color point = Color(0xFF007A91);
   static const Color pointDeep = Color(0xFF006B7F);

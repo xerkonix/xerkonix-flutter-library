@@ -258,7 +258,8 @@ void main() {
     });
   });
 
-  // [v2.3] 우물 + 포인트(아쿠아마린 2단) — 링크·켜짐·인디케이터 전용 계약.
+  // [v2.3] 우물 + 포인트(아쿠아마린 2단) — [v2.5] 링크·인디케이터 전용 계약
+  // (켜짐 상태는 근흑으로 환원). 값 파리티는 v2.5 에서도 불변이다.
   group('우물·포인트 v2.3', () {
     test('well · point · point-deep · point-ind 가 정본과 같다 (라이트/다크)', skip: skip, () {
       _expectColorParity(light, <String, Color>{

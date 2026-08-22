@@ -1,6 +1,6 @@
 name: xerkonix_design_system
 description: Flutter design system package for XERKONIX TACTILE neumorphic UI tokens, themes, typography, and components.
-version: 3.3.0
+version: 3.3.1
 repository: https://github.com/xerkonix/xerkonix-flutter-library/tree/main/xerkonix-design-system
 issue_tracker: https://github.com/xerkonix/xerkonix-flutter-library/issues
 

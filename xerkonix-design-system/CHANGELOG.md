@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## 3.3.2
+
+라이트 정본 hex를 다크에서 그대로 칠하던 오용을 고친다.
+
+- `XkColor.themed` — 라이트 토큰(값 동일한 하드코딩 hex 포함)을 다크 대응값으로 넘긴다.
+- 시맨틱 버튼 · 테이블 셀 · 배지 · 히트맵/퍼널/레이더 · 알림·상태 펄스에 적용.
+
 ## 3.3.1
 
 TACTILE v2.5.0 대응 — 켜짐 상태가 포인트에서 근흑으로 환원됐다. 값·API 변경 없음.

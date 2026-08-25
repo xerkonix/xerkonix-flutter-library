@@ -102,7 +102,14 @@ class XkTable extends StatelessWidget {
                                       cell.textStyle ??
                                       XkTypo.body.copyWith(
                                         fontSize: 12,
-                                        color: cell.textColor ?? rowText,
+                                        color: cell.textColor == null
+                                            ? rowText
+                                            : XkColor.themed(
+                                                cell.textColor!,
+                                                isDark
+                                                    ? Brightness.dark
+                                                    : Brightness.light,
+                                              ),
                                       ),
                                 ),
                           ),

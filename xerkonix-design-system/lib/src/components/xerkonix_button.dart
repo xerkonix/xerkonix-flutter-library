@@ -419,7 +419,10 @@ class XkButton extends StatelessWidget {
           elevated: false,
         );
       case ButtonType.semantic:
-        final Color base = semanticColor!;
+        final Color base = XkColor.themed(
+          semanticColor!,
+          isDark ? Brightness.dark : Brightness.light,
+        );
         return _XkButtonSpec(fill: base, textColor: _onColor(base, isDark));
     }
   }

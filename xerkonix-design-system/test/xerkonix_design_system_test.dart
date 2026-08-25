@@ -64,6 +64,18 @@ void main() {
       expect(XkColor.darkBg.toARGB32(), 0xFF1A1B22);
     });
 
+    test('XkColor.themed remaps light canon hex in dark, identity in light', () {
+      expect(XkColor.themed(XkColor.point, Brightness.light), XkColor.point);
+      expect(XkColor.themed(XkColor.point, Brightness.dark), XkColor.darkPoint);
+      expect(
+        XkColor.themed(const Color(0xFF007A91), Brightness.dark),
+        XkColor.darkPoint,
+      );
+      expect(XkColor.themed(XkColor.success, Brightness.dark), XkColor.darkSuccess);
+      expect(XkColor.themed(XkColor.darkPoint, Brightness.dark), XkColor.darkPoint);
+      expect(XkColor.themed(XkColor.gray400, Brightness.dark), XkColor.gray400);
+    });
+
     test('XkColor should have the warm/cool temperature accent pair', () {
       expect(XkColor.tempWarm, isA<Color>());
       expect(XkColor.tempCool, isA<Color>());

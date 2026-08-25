@@ -187,6 +187,7 @@ class XkStatusPulse extends StatelessWidget {
             reducedMotion ? 1.0 : (minScale + (maxScale - minScale) * t);
         final opacity =
             reducedMotion ? 1.0 : (minOpacity + (maxOpacity - minOpacity) * t);
+        final Color ink = XkColor.themed(color, Theme.of(context).brightness);
 
         return Transform.scale(
           scale: scale,
@@ -195,7 +196,7 @@ class XkStatusPulse extends StatelessWidget {
             child: Container(
               width: size,
               height: size,
-              decoration: BoxDecoration(shape: BoxShape.circle, color: color),
+              decoration: BoxDecoration(shape: BoxShape.circle, color: ink),
             ),
           ),
         );
@@ -533,6 +534,7 @@ class XkAlertPulse extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Color ink = XkColor.themed(color, Theme.of(context).brightness);
     return _XkLoopMotion(
       duration: duration,
       curve: Curves.easeInOut,
@@ -547,12 +549,12 @@ class XkAlertPulse extends StatelessWidget {
           child: Stack(
             alignment: Alignment.center,
             children: [
-              _AlertRing(color: color, progress: p1, maxOpacity: 0.45),
-              _AlertRing(color: color, progress: p2, maxOpacity: 0.25),
+              _AlertRing(color: ink, progress: p1, maxOpacity: 0.45),
+              _AlertRing(color: ink, progress: p2, maxOpacity: 0.25),
               Container(
                 width: dotSize,
                 height: dotSize,
-                decoration: BoxDecoration(shape: BoxShape.circle, color: color),
+                decoration: BoxDecoration(shape: BoxShape.circle, color: ink),
               ),
             ],
           ),

@@ -178,4 +178,32 @@ class XkColor {
   static const Color primary = accent;
   static const Color secondary = brand;
   static const Color tertiary = tempCool;
+
+  /// Light-canon hex → dark remap. Identity in light. Unknown colours pass
+  /// through. Value-equal (so a hardcoded `Color(0xFF007A91)` remaps too).
+  static Color themed(Color color, Brightness brightness) {
+    if (brightness != Brightness.dark) return color;
+    if (color == point) return darkPoint;
+    if (color == pointDeep) return darkPointDeep;
+    if (color == pointInd) return darkPointInd;
+    if (color == success) return darkSuccess;
+    if (color == successSoft) return darkSuccessSoft;
+    if (color == successOnSoft) return darkSuccessOnSoft;
+    if (color == successVivid) return darkSuccessVivid;
+    if (color == warning) return darkWarning;
+    if (color == warningSoft) return darkWarningSoft;
+    if (color == warningOnSoft) return darkWarningOnSoft;
+    if (color == warningVivid) return darkWarningVivid;
+    if (color == error) return darkError;
+    if (color == errorSoft) return darkErrorSoft;
+    if (color == errorOnSoft) return darkErrorOnSoft;
+    if (color == errorVivid) return darkErrorVivid;
+    if (color == accent) return darkAccent;
+    if (color == accentDeep) return darkAccentDeep;
+    if (color == accentSoft) return darkAccentSoft;
+    if (color == accentText) return darkAccentText;
+    if (color == tempWarm) return darkTempWarm;
+    if (color == tempCool) return darkTempCool;
+    return color;
+  }
 }

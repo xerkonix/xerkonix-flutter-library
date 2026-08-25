@@ -581,12 +581,19 @@ class XkHexagonRadar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final resolvedColor =
-        color ?? (isDark ? XkColor.darkAccent : XkColor.accent);
-    final resolvedAccent =
-        accentColor ?? (isDark ? XkColor.darkAccent : XkColor.accent);
-    final resolvedSupport =
-        supportColor ?? (isDark ? XkColor.darkSuccess : XkColor.success);
+    final brightness = isDark ? Brightness.dark : Brightness.light;
+    final resolvedColor = XkColor.themed(
+      color ?? (isDark ? XkColor.darkAccent : XkColor.accent),
+      brightness,
+    );
+    final resolvedAccent = XkColor.themed(
+      accentColor ?? (isDark ? XkColor.darkAccent : XkColor.accent),
+      brightness,
+    );
+    final resolvedSupport = XkColor.themed(
+      supportColor ?? (isDark ? XkColor.darkSuccess : XkColor.success),
+      brightness,
+    );
     final resolvedGrid =
         gridColor ??
         (isDark
@@ -758,7 +765,11 @@ class XkDistributionHeatmap extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final brightness = isDark ? Brightness.dark : Brightness.light;
     final surface = isDark ? XkColor.darkSurface : XkColor.surface;
+    final Color base = XkColor.themed(baseColor, brightness);
+    final Color accent = XkColor.themed(accentColor, brightness);
+    final Color support = XkColor.themed(supportColor, brightness);
 
     return Wrap(
       spacing: gap,
@@ -766,9 +777,9 @@ class XkDistributionHeatmap extends StatelessWidget {
       children: List.generate(values.length, (i) {
         final value = values[i].clamp(0.0, 1.0);
         final target = switch (i % columns) {
-          1 || 4 => accentColor,
-          3 => supportColor,
-          _ => baseColor,
+          1 || 4 => accent,
+          3 => support,
+          _ => base,
         };
         return Container(
           width: cellSize,
@@ -804,7 +815,11 @@ class XkPriorityFunnel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final brightness = isDark ? Brightness.dark : Brightness.light;
     final trackColor = isDark ? XkColor.darkSurface2 : XkColor.surface2;
+    final Color lane = XkColor.themed(color, brightness);
+    final Color accent = XkColor.themed(accentColor, brightness);
+    final Color support = XkColor.themed(supportColor, brightness);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -815,7 +830,7 @@ class XkPriorityFunnel extends StatelessWidget {
             height: height,
             trackColor: trackColor,
             gradient: LinearGradient(
-              colors: [accentColor, color, supportColor],
+              colors: [accent, lane, support],
             ),
             opacity: 0.34 + (i * 0.14),
           ),
@@ -829,19 +844,19 @@ class XkPriorityFunnel extends StatelessWidget {
             _FunnelVariant(
               title: 'Identity only',
               trackColor: trackColor,
-              colorA: color,
+              colorA: lane,
               colorB: isDark ? XkColor.darkAccentSoft : XkColor.accentSoft,
             ),
             _FunnelVariant(
               title: 'Accent only',
               trackColor: trackColor,
-              colorA: accentColor,
+              colorA: accent,
               colorB: isDark ? XkColor.darkAccentSoft : XkColor.accentSoft,
             ),
             _FunnelVariant(
               title: 'Support only',
               trackColor: trackColor,
-              colorA: supportColor,
+              colorA: support,
               colorB: isDark ? XkColor.darkSuccessSoft : XkColor.successSoft,
             ),
           ],

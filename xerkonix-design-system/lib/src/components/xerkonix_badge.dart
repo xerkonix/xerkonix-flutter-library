@@ -25,7 +25,10 @@ class XkBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     final Brightness brightness = Theme.of(context).brightness;
     final bool isDark = brightness == Brightness.dark;
-    final Color base = color ?? (isDark ? XkColor.darkAccent : XkColor.accent);
+    final Color base = XkColor.themed(
+      color ?? (isDark ? XkColor.darkAccent : XkColor.accent),
+      brightness,
+    );
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
       decoration: BoxDecoration(

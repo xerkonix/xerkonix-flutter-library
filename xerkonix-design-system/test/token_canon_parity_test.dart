@@ -580,6 +580,7 @@ void main() {
       '--neu-inset-sm': 'inset 은 Flutter BoxShadow 로 1:1 대응이 없다',
       '--raise': '@deprecated → --float 별칭',
       // 웹 전용 표현 — Flutter 대응 개념이 없다.
+      '--gem': '웹 유리 재질 — 테두리·패널 빛. 다크 --point 와 동일 hex',
       '--spec-line': '웹 전용 신호선',
       '--hatch-line': '웹 전용 빗금',
       '--hatch': '웹 전용 빗금 그라디언트',

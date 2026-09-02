@@ -151,6 +151,10 @@ class XkButton extends StatelessWidget {
   }
 
   /// [v2.4] 포인트 필드 — 아쿠아마린 필 + 표면색 글자(두 테마 AA).
+  ///
+  /// 주 CTA 가 아닌 **보조 변형**이다. 화면당 근흑 액션(`XkButton.accent`) 1개
+  /// 규칙 안에서 포인트 면 채움은 보조 행동에만 쓴다 — TACTILE v2.6 의 "CTA 면을
+  /// `--point`/`--gem` 으로 칠하지 않는다" 는 주 CTA 에 대한 규칙이다.
   factory XkButton.point({
     Key? key,
     required VoidCallback? onPressed,

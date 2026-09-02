@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+값·API 변경 없음.
+
+- `XkButton.point` 독스트링 — 포인트 면 채움은 주 CTA 가 아닌 **보조 변형**임을
+  명시(화면당 근흑 액션 1개 규칙 안에서 보조 행동에만). TACTILE v2.6 의 "CTA 면을
+  `--point`/`--gem` 으로 칠하지 않는다" 는 주 CTA 에 대한 규칙이다.
+- 토큰 파리티 테스트 — 형제 리포가 없으면 skip 하던 것을 `test/fixtures/tokens.css`
+  스냅샷 대조로 바꿨다(CI 에서도 진짜 검사가 된다). 형제 리포가 있으면 스냅샷이
+  그것과 같은지도 확인한다.
+
 ## 3.3.2
 
 라이트 정본 hex를 다크에서 그대로 칠하던 오용을 고친다.

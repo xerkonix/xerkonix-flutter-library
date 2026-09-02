@@ -239,7 +239,7 @@ void main() {
   late final Map<String, String> darkAll = <String, String>{...light, ...dark};
 
   group('무채 12단', () {
-    test('gray-000…950 이 TACTILE 정본과 같다', () {
+    test('gray-000…950 이 TACTILE 출처(tokens.css)와 같다', () {
       _expectColorParity(light, <String, Color>{
         '--gray-000': XkColor.gray000,
         '--gray-050': XkColor.gray050,
@@ -260,7 +260,7 @@ void main() {
   // [v2.2] 잉크 2단 — 위계를 크기 하나에 걸지 않기 위한 축. 정본은 gray 별칭이라
   // 별칭 해석(var())까지 통과하는지 함께 본다.
   group('잉크 2단', () {
-    test('ink-display · anchor 가 정본과 같다 (라이트/다크)', () {
+    test('ink-display · anchor 가 출처(tokens.css)와 같다 (라이트/다크)', () {
       _expectColorParity(light, <String, Color>{
         '--ink-display': XkColor.inkDisplay,
         '--anchor': XkColor.anchor,
@@ -274,7 +274,7 @@ void main() {
 
   // [v2.3] 면 분리 — bg/surface 가 gray 별칭에서 독립값이 되면서 직접 대조로 승격.
   group('표면 v2.3', () {
-    test('bg · surface · surface-2 · border 가 정본과 같다 (라이트/다크)', () {
+    test('bg · surface · surface-2 · border 가 출처(tokens.css)와 같다 (라이트/다크)', () {
       _expectColorParity(light, <String, Color>{
         '--bg': XkColor.bg,
         '--surface': XkColor.surface,
@@ -293,7 +293,7 @@ void main() {
   // [v2.3] 우물 + 포인트(아쿠아마린 2단) — [v2.5] 링크·인디케이터 전용 계약
   // (켜짐 상태는 근흑으로 환원). 값 파리티는 v2.5 에서도 불변이다.
   group('우물·포인트 v2.3', () {
-    test('well · point · point-deep · point-ind 가 정본과 같다 (라이트/다크)', () {
+    test('well · point · point-deep · point-ind 가 출처(tokens.css)와 같다 (라이트/다크)', () {
       _expectColorParity(light, <String, Color>{
         '--well': XkColor.well,
         '--point': XkColor.point,
@@ -310,7 +310,7 @@ void main() {
   });
 
   group('기능색', () {
-    test('라이트 기능색 6종 + on-soft 가 정본과 같다', () {
+    test('라이트 기능색 6종 + on-soft 가 출처(tokens.css)와 같다', () {
       _expectColorParity(light, <String, Color>{
         '--success': XkColor.success,
         '--warning': XkColor.warning,
@@ -332,7 +332,7 @@ void main() {
       }, 'XkColor 라이트 기능색을 tokens.css 값으로 맞춰라.');
     });
 
-    test('다크 기능색 6종이 정본과 같다', () {
+    test('다크 기능색 6종이 출처(tokens.css)와 같다', () {
       _expectColorParity(dark, <String, Color>{
         '--success': XkColor.darkSuccess,
         '--warning': XkColor.darkWarning,
@@ -371,15 +371,15 @@ void main() {
       expect(XkShadow.darkHighlight.a, 0.0);
     });
 
-    test('darkLowlight 가 정본 --neu-shadow 와 같다', () {
+    test('darkLowlight 가 출처 --neu-shadow 와 같다', () {
       expect(
         XkShadow.darkLowlight,
         _cssColor(dark['--neu-shadow']!, dark),
-        reason: '정본 다크 --neu-shadow(rgba(0,0,0,.62)) 와 어긋났다.',
+        reason: '출처 다크 --neu-shadow(rgba(0,0,0,.62)) 와 어긋났다.',
       );
     });
 
-    test('raisedDark 기하가 정본 다크 --neu-raise(8/8/18 · -5/-5/12) 와 같다', () {
+    test('raisedDark 기하가 출처 다크 --neu-raise(8/8/18 · -5/-5/12) 와 같다', () {
       _expectShadowParity(
         '--neu-raise(dark)',
         XkShadow.raisedDark,
@@ -389,7 +389,7 @@ void main() {
 
     // 라이트 짝(7/7/16 · -6/-6/14)도 같은 파서로 잡아둔다 — 광원 기하가 한쪽만
     // 바뀌는 드리프트 방지.
-    test('raisedLight 기하가 정본 라이트 --neu-raise 와 같다', () {
+    test('raisedLight 기하가 출처 라이트 --neu-raise 와 같다', () {
       _expectShadowParity(
         '--neu-raise(light)',
         XkShadow.raisedLight,
@@ -401,7 +401,7 @@ void main() {
   group('스크림', () {
     // 다크 --bg 가 거의 검정이라 배경색 계열 스크림은 암전이 0 — 정본은 테마별로
     // 값이 다르다(라이트 rgba(26,27,34,.45) · 다크 rgba(0,0,0,.66)).
-    test('라이트/다크 scrim 이 정본과 같다', () {
+    test('라이트/다크 scrim 이 출처(tokens.css)와 같다', () {
       expect(
         XkLightTheme.themeData.colorScheme.scrim,
         _cssColor(light['--scrim']!, light),
@@ -417,7 +417,7 @@ void main() {
 
   group('드롭 섀도우 (--shadow / --shadow-lg)', () {
     // 라이브러리는 이 토큰을 색으로만 보유한다(XkColor.shadow*) — 색 단위 대조.
-    test('라이트 shadow/shadowLg 색이 정본(gray-900 틴트)과 같다', () {
+    test('라이트 shadow/shadowLg 색이 출처(gray-900 틴트)과 같다', () {
       final Color shadow = _cssShadows(light['--shadow']!, light).single.color;
       final Color shadowLg =
           _cssShadows(light['--shadow-lg']!, light).single.color;
@@ -431,7 +431,7 @@ void main() {
           reason: '라이트 --shadow-lg 는 gray-900 틴트가 정본이다.');
     });
 
-    test('다크 shadow/shadowLg 색이 정본(.32/.42 순검정)과 같다', () {
+    test('다크 shadow/shadowLg 색이 출처(.32/.42 순검정)과 같다', () {
       expect(
         XkColor.darkShadow,
         _cssShadows(dark['--shadow']!, dark).single.color,
@@ -445,7 +445,7 @@ void main() {
 
   group('떠 있는 층 (--float)', () {
     // [v2.1] 단방향 드롭 — 만지는 층의 --neu-raise 와 다르다.
-    test('liftedLight 가 정본 라이트 --float 와 같다', () {
+    test('liftedLight 가 출처 라이트 --float 와 같다', () {
       _expectShadowParity(
         '--float(light)',
         XkShadow.liftedLight,
@@ -453,7 +453,7 @@ void main() {
       );
     });
 
-    test('liftedDark 가 정본 다크 --float 와 같다', () {
+    test('liftedDark 가 출처 다크 --float 와 같다', () {
       _expectShadowParity(
         '--float(dark)',
         XkShadow.liftedDark,
@@ -464,7 +464,7 @@ void main() {
 
   // [v2.2] 정보 층 — 만지는 층(--neu-raise)과 어휘가 분리된 단방향 2겹 드롭.
   group('정보 층 (--shadow-sm)', () {
-    test('elevatedLight 가 정본 라이트 --shadow-sm 과 같다', () {
+    test('elevatedLight 가 출처 라이트 --shadow-sm 과 같다', () {
       _expectShadowParity(
         '--shadow-sm(light)',
         XkShadow.elevatedLight,
@@ -472,7 +472,7 @@ void main() {
       );
     });
 
-    test('elevatedDark 가 정본 다크 --shadow-sm 과 같다', () {
+    test('elevatedDark 가 출처 다크 --shadow-sm 과 같다', () {
       _expectShadowParity(
         '--shadow-sm(dark)',
         XkShadow.elevatedDark,
@@ -482,7 +482,7 @@ void main() {
   });
 
   group('곡률 · 간격 사다리', () {
-    test('radius 사다리(ctl 포함)가 정본과 같다', () {
+    test('radius 사다리(ctl 포함)가 출처(tokens.css)와 같다', () {
       final Map<String, double> pairs = <String, double>{
         '--radius-xs': XkShape.radiusXs,
         '--radius-sm': XkShape.radiusSm,
@@ -505,7 +505,7 @@ void main() {
           reason: 'XkShape 의 radius 단을 tokens.css 값으로 맞춰라.');
     });
 
-    test('spacing 사다리(12/20/48/64 포함)가 정본과 같다', () {
+    test('spacing 사다리(12/20/48/64 포함)가 출처(tokens.css)와 같다', () {
       final Map<String, double> pairs = <String, double>{
         '--sp-1': XkLayout.spacingXxs,
         '--sp-2': XkLayout.spacingXs,
@@ -536,7 +536,7 @@ void main() {
     // [v2.2] 운영 화면 타이포 계약 — Page Title 28. 라이브러리 타이포는 자체
     // 스케일이라 --fs-* 전체를 미러링하지 않는다. 역할 이름이 붙은 이 한 단만
     // 정본과 묶는다.
-    test('운영 화면 Page Title(--fs-page-title) 이 정본과 같다', () {
+    test('운영 화면 Page Title(--fs-page-title) 이 출처(tokens.css)와 같다', () {
       expect(
         XkTypo.pageTitle.fontSize,
         _cssPx(light['--fs-page-title']!),
@@ -550,7 +550,7 @@ void main() {
   //
   // 위 대조들은 **매핑된 쌍만** 본다. 그래서 정본에 토큰이 새로 생겨도 매핑에
   // 넣지 않으면 조용히 통과했다(v2.2 신규 9종이 실제로 그랬다 — 값은 맞는데
-  // 라이브러리에 개념이 없는 상태). 아래 테스트는 정본 라이트 블록의 모든 선언을
+  // 라이브러리에 개념이 없는 상태). 아래 테스트는 출처 라이트 블록의 모든 선언을
   // 열거해 **미러링 대상이거나, 미러링하지 않기로 적어둔 것** 중 하나여야 한다고
   // 요구한다. 정본이 다음에 토큰을 추가하면 여기서 먼저 실패하고, 사람은 "미러
   // 하거나 이유를 적어라"는 결정을 강제로 마주한다.
@@ -654,7 +654,7 @@ void main() {
       '--syn-com': '신택스 — 앱 보유',
     };
 
-    test('정본 라이트 블록의 모든 토큰이 미러링되거나 이유가 적혀 있다', () {
+    test('출처 라이트 블록의 모든 토큰이 미러링되거나 이유가 적혀 있다', () {
       final Set<String> unaccounted = light.keys
           .where((String n) =>
               !mirrored.contains(n) && !notMirrored.containsKey(n))
@@ -669,7 +669,7 @@ void main() {
       );
     });
 
-    test('mirrored 에 적힌 이름이 정본에 실제로 있다', () {
+    test('mirrored 에 적힌 이름이 출처 tokens.css 에 실제로 있다', () {
       final Set<String> stale =
           mirrored.where((String n) => !light.containsKey(n)).toSet();
       expect(stale, isEmpty,

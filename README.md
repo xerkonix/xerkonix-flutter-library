@@ -1,21 +1,14 @@
 # xerkonix-flutter-library
 
-> **작업 전에 개발 가이드를 읽는다.** 규칙 정본은 [development-guide](https://github.com/xerkonix/development-guide) 리포의
-> `XERKONIX_DEV_GUIDE.html` 한 파일이다 (로컬에서는 워크스페이스 형제 폴더
-> `../development-guide/`). 주제별 Markdown 모듈은 그 파일에서 생성된다.
->
-> 시작 전 [일하는 방법](https://github.com/xerkonix/development-guide/blob/main/process-guide/README.md) · PR 전 [셀프 코드리뷰](https://github.com/xerkonix/development-guide/blob/main/code-review/README.md) · [변경 유형별 필수 테스트](https://github.com/xerkonix/development-guide/blob/main/testing-guide/README.md)
-> · 이 리포는 앱이다 → [Flutter](https://github.com/xerkonix/development-guide/blob/main/flutter-development-guide/README.md) · [REST API 계약](https://github.com/xerkonix/development-guide/blob/main/rest-api-guide/README.md)
-
 XERKONIX Flutter 공개 패키지 5종의 모노레포. 모두 pub.dev 에 게시된 Apache-2.0 오픈소스이며, TACTILE 디자인 시스템과 공통 앱 인프라(에러/HTTP/로깅/사이징)를 제공한다.
 
-이 패키지들은 **오픈소스 레퍼런스**다. XERKONIX 제품 서비스는 의도적으로 이 패키지들에 런타임 의존하지 않고, 공유 계약(`xerkonix-code-contract`)에서 코드를 생성해 각자 소유하는 방식을 쓴다(`xerkonix-frontend-boilerplate` 참고). 즉 이 라이브러리는 공개·참조용이고, 제품은 패키지 비종속이다.
+이 패키지들은 **오픈소스 레퍼런스**다. XERKONIX 제품 서비스는 의도적으로 이 패키지들에 런타임 의존하지 않고, 공유 디자인·에러 계약에서 코드를 생성해 각자 소유하는 방식을 쓴다. 즉 이 라이브러리는 공개·참조용이고, 제품은 패키지 비종속이다.
 
 ## 패키지
 
 | 패키지 (pub 이름) | 버전 | 요약 |
 |---|---|---|
-| [`xerkonix_design_system`](xerkonix-design-system/) | 3.1.0 | TACTILE v2.2.0 토큰·테마·타이포·아이콘·컴포넌트·패턴·모션 위젯 |
+| [`xerkonix_design_system`](xerkonix-design-system/) | 3.3.2 | TACTILE 토큰 계약 v2.6.0 · 테마·타이포·아이콘·컴포넌트·패턴·모션 위젯 |
 | [`xerkonix_error_handler`](xerkonix-error-handler/) | 1.1.0 | 구조화된 에러 타입·예외·메시지 핸들러·다이얼로그/토스트 UI |
 | [`xerkonix_http`](xerkonix-http/) | 1.1.0 | 전 HTTP 메서드 클라이언트 + 자동 에러 파싱·로깅 통합 |
 | [`xerkonix_logger`](xerkonix-logger/) | 1.1.0 | 레벨별 로깅 + HTTP 요청/응답 로깅 |
@@ -47,6 +40,10 @@ flutter pub get
 flutter analyze
 flutter test
 ```
+
+같은 두 명령을 `.github/workflows/ci.yml` 이 패키지 5종 각각에 대해 push·PR 마다 돈다
+(Flutter 3.44.6 핀). 디자인 시스템의 토큰 파리티 테스트는 형제 리포가 없는 CI 에서
+`xerkonix-design-system/test/fixtures/tokens.css` 스냅샷과 대조한다 — skip 하지 않는다.
 
 ## 라이선스
 

@@ -1,0 +1,180 @@
+/* XERKONIX TACTILE Design Tokens · v2.6.0 — 2026.08
+   원칙: 광원은 좌상단 하나 · 조명(그림자)은 "만지는" 층에만 · 다크 모드는
+   어두운 표면 위 하이라이트 그림자를 금지한다.
+   버전 규칙: 토큰 값이 하나라도 바뀌면 마이너 승급. 변경 내역은 CHANGELOG.md.
+   [v2.3] 가독성 개편 — 면 분리(캔버스 하강+순백 카드 1.09:1) · 우물(--well) 신설 ·
+   muted/anchor 잉크 상향(anchor 는 2.88:1 AA 위반 수정) · 포인트 컬러(아쿠아마린,
+   텍스트/인디케이터 2단) 신설. 외부 심사 2건 교차검증 후 확정.
+   [v2.5] 포인트 계약 축소 — 켜짐 상태(토글/체크/라디오)를 근흑(--action)으로 환원.
+   [v2.6] 아쿠아마린 원석(--gem) — 유리 재질. 면은 만지고, 빛은 보석 테두리에만. */
+:root {
+  /* 무채 12단 (000=가장 밝음 … 950=가장 어두움) — [v2.3] 스케일 불변 */
+  --gray-000:#FBFBFC; --gray-050:#F4F4F6; --gray-100:#EAEAEE; --gray-200:#DBDBE0;
+  --gray-300:#C4C5CC; --gray-400:#ACADB7; --gray-500:#8F909C; --gray-600:#71727F;
+  --gray-700:#575866; --gray-800:#3F404C; --gray-900:#2A2B35; --gray-950:#1A1B22;
+
+  /* 표면 · 경계 · 텍스트
+     [v2.3] 면 분리 — 구 캔버스/카드는 1.06:1 로 사실상 한 면이었고 구조를 그림자가
+     전담했다. 캔버스를 #F5F5F7 로 내리고 카드를 순백으로 올려 1.09:1 — 구분을
+     틴트가 맡고 그림자는 만지는 층의 질감으로 물러난다. 다크 면은 이미 1.11:1 로
+     목표를 상회하므로 불변. */
+  --bg:#F5F5F7; --surface:#FFFFFF; --surface-2:#EFF0F3;
+  --border:#E3E5EA; --border-soft:rgba(172,173,183,.28);
+  /* [v2.3] 우물 — 입력·트랙 전용 면. 구판은 우물이 캔버스와 동색이라 그림자
+     지각이 무너지면 경계가 소실됐다. 캔버스 대비 1.13:1. */
+  --well:#E6E8EC;
+  /* muted: [v2.3] #686975(4.94:1 AA 턱걸이) → #575866 — bg 6.44 · surface 7.02 ·
+     surface-2 6.16. 본문(--text-body)은 7.85:1 로 이미 AAA — 더 검게 밀지 않는다. */
+  --text-strong:#232430; --text-body:#4A4B57; --text-muted:#575866;
+  /* [v2.2] 잉크 2단 — 디스플레이 잉크는 큰 제목(d1·d2)·핵심 수치 전용, 앵커는
+     섹션 훅·라벨 전용(모노+자간). 위계를 크기 하나에 걸지 않기 위한 축이다.
+     [v2.3] anchor: var(--gray-500) 2.88:1 은 텍스트 AA(4.5:1) 위반이었다 →
+     #686975 (bg 4.94 · 신 bg 4.99). */
+  --ink-display:var(--gray-950); --anchor:#686975;
+
+  /* 액션 — 화면당 1개, 근-흑색. [v2.3] 불변 — 유채 포인트는 액션 계약을 바꾸지
+     않는다(아래 --point 참조). [v2.5] 켜짐 상태(토글 노브·체크 면·라디오 점)도
+     이 색이다 — 컨트롤의 켜짐은 강조가 아니라 상태이므로 무채로 답한다. */
+  --action:#232430; --action-hover:#3F404C; --action-text:#FBFBFC;
+  /* 어휘 별칭 — 값은 --action 계열과 동일 */
+  --accent:var(--action); --accent-deep:var(--action-hover); --accent-soft:#EAEAEE; --accent-text:var(--action-text);
+  --brand:var(--gray-400);
+
+  /* [v2.3] 포인트 — 아쿠아마린(190°). [v2.5] 문구·인디케이터. [v2.6] 원석
+     (--gem)은 유리 재질 — 테두리·하이라이트·패널 빛. 면 채움으로 CTA 를 칠하지
+     않는다. 주 액션은 근흑 화면당 1개. 보조 제품 액션은 회색 융기 + --gem 테두리
+     (.btn.gem). 라이트에서 --gem 은 1.74:1 이라 문구 금지. --point 는 문구 가능. */
+  --point:#007A91; --point-deep:#006B7F; --point-ind:#0090AE;
+  --gem:#62CBDB;
+
+  /* 기능색 — 성공 · 주황(경고) · 빨강(에러)
+     [v2.3] 값 불변. AA 실측은 신 캔버스(#F5F5F7) 기준으로도 유지된다
+     (success 4.57 · warning 4.56 · error 5.16). */
+  --success:#4F7868; --success-soft:#E2EEE9;
+  --warning:#A95C11; --warning-soft:#FBE9D3;
+  --error:#C13030;   --error-soft:#F8DBDB;
+  /* [v2.1] on-soft — soft 틴트 배경 위 텍스트 전용. hue 동일, 명도만 하강해
+     soft 위에서도 ≥4.5:1. */
+  --success-on-soft:#4B7263; --warning-on-soft:#A05710; --error-on-soft:#B92E2E;
+  /* [v2.2] vivid — 아이콘·상태 글리프·게이지 전용(비텍스트 3:1). 문구 금지. */
+  --success-vivid:#2F9066; --warning-vivid:#C96A05; --error-vivid:#D63C3C;
+  /* [v2.2] border — soft 면(콜아웃·배지 틀)의 가장자리, 본색 저알파. */
+  --success-border:rgba(79,120,104,.30); --warning-border:rgba(169,92,17,.30);
+  --error-border:rgba(193,48,48,.28);
+
+  /* 온도 — 따뜻함/차가움 한 쌍 (관계 온도 전용) — [v2.3] 불변 */
+  --temp-warm:#B75138; --temp-warm-soft:#F9E8E2;
+  --temp-cool:#5F6AB8; --temp-cool-soft:#EDEEF7;
+
+  /* 모달·시트 뒤를 덮는 스크림. 테마별로 값이 달라야 한다. */
+  --scrim:rgba(26,27,34,.45);
+
+  /* 조명 — 뉴모픽 그림자(좌상단 광원: 밝은쪽 -x-y, 어두운쪽 +x+y)
+     [v2.3] 캔버스가 밝아진 만큼 그림자 톤 미세 조정. */
+  --hl-dark:rgba(120,122,140,.35); --hl-light:rgba(255,255,255,.85);
+  --neu-shadow:rgba(144,147,166,.5); --neu-light:#FFFFFF;
+  --neu-raise:7px 7px 16px var(--neu-shadow),-6px -6px 14px var(--neu-light);
+  --neu-raise-sm:4px 4px 9px var(--neu-shadow),-3px -3px 8px var(--neu-light);
+  --neu-inset:inset 4px 4px 10px var(--neu-shadow),inset -3px -3px 8px var(--neu-light);
+  --neu-inset-sm:inset 3px 3px 7px var(--neu-shadow),inset -2px -2px 5px var(--neu-light);
+  /* [v2.1] 떠 있는 층(단방향)은 --float. --raise 는 하위호환 별칭, v3 에서 제거. */
+  --float:0 14px 40px rgba(35,36,48,.14);
+  --raise:var(--float);                            /* @deprecated → --float */
+  /* 드롭 섀도우(앱 어휘) — 오버레이/토스트/모달 */
+  --shadow:0 10px 34px rgba(42,43,53,.10); --shadow-lg:0 24px 60px rgba(42,43,53,.14);
+  /* [v2.2] 정보 층 전용 1단 그림자 — elevated 카드. 섹션당 1~2장만. */
+  --shadow-sm:0 2px 10px rgba(42,43,53,.07),0 1px 3px rgba(42,43,53,.05);
+
+  /* 신호선 · 빗금(비활성·미가방) · 이온 아래 빛 */
+  --spec-line:rgba(255,255,255,.85);
+  --hatch-line:rgba(113,114,127,.26);
+  --hatch:repeating-linear-gradient(135deg,transparent 0 5px,var(--hatch-line) 5px 6px);
+  --dim:rgba(26,27,34,.06);
+
+  /* 타이포 — 명조 디스플레이 · Pretendard 본문 · 기계값은 IBM Plex Mono */
+  --serif:'MaruBuri','MaruBuri OTF','Noto Serif KR','Apple Myungjo',Georgia,serif;
+  --sans:'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo',sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,monospace;
+
+  /* 모션 — 반응 · 전환 · 등장 (가장 긴 값) */
+  --t-observe:180ms; --t-resolve:260ms; --t-settle:320ms;
+  --ease:cubic-bezier(.33,.02,.2,1); --ease-sharp:var(--ease);
+  /* 스프링 상수(구현 tactile.js): 노브 k320·c18 / 팝 k420·c12 */
+
+  /* 곡률 · 간격 (4px 기점) */
+  --radius-xs:6px; --radius-sm:10px; --radius-ctl:12px; --radius-md:14px;
+  --radius-lg:18px; --radius-xl:22px; --radius-pill:999px;
+  --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-4h:20px;
+  --sp-5:24px; --sp-6:32px; --sp-7:48px; --sp-8:64px;
+  /* [v2.2] 섹션 패딩 — 내용 무게에 따라 가변. 요소 8 · 컴포넌트 16–24 ·
+     묶음 32–48 · 섹션 72–112. */
+  --sp-section-lo:72px; --sp-section-hi:112px;
+
+  /* [v2.3] 타이포 크기 사다리 — 본문 15→16 (한글은 같은 px 의 라틴보다 작게
+     읽힌다). 유의미한 텍스트의 바닥은 13px, 기계값(모노) 캡션만 12.5px 예외.
+     11–12px 신규 사용 금지. 명조(--serif)는 --fs-t1(20px) 이상에서만 — 이제
+     실제로 집행된다(카드 제목은 고딕 600). */
+  --fs-d1:48px; --fs-d2:32px; --fs-t1:20px; --fs-t2:16px;
+  --fs-b:16px; --fs-b2:14px; --fs-s:13.5px; --fs-c:13px; --fs-cap:12.5px;
+  --fs-mini:11.5px;   /* @deprecated [v2.3] 바닥 계약(13px) 위반 — v3 에서 제거 */
+  /* [v2.2] 운영 화면(어드민·콘솔) 타이포 계약 — Page Title 28/36 · Section 은
+     --fs-t1(20) 재사용 · Row Key(표 첫 열)는 13px/500(.rowkey). */
+  --fs-page-title:28px;
+
+  /* [v2.1] 채도 팔레트 — 분류 구분 전용 8색. [v2.3] 불변 — 포인트(아쿠아마린
+     190°)는 hue-4 틸(171°)과 과가 갈라져 공존한다.
+     허용: 점 · 게이지 · 태그 워시(14% 알파) · 차트 계열.
+     금지: 본문 텍스트 · 버튼 · 상태 표시. */
+  --hue-1:#D98B8B; --hue-2:#7FB069; --hue-3:#5D8FC0; --hue-4:#3FA89B;
+  --hue-5:#9B7FC0; --hue-6:#E06EA8; --hue-7:#C8A84E; --hue-8:#8A8578;
+
+  /* [v2.1] 코드(신택스) 팔레트 — 잉크 패널은 라이트/다크 공통 무채 최암부. */
+  --ink-bg:var(--gray-950); --ink-line:var(--gray-900); --ink-text:var(--gray-100);
+  --syn-key:#939CD6; --syn-str:#7FB59E; --syn-num:#EC9A50; --syn-com:var(--gray-600);
+}
+
+/* 다크 — 표면을 낮추고, 하이라이트 그림자를 미광으로 감쇠(0에 가깝게)
+   [v2.3] 다크 면(bg/surface/surface-2/border)은 불변 — 1.11:1 로 이미 라이트
+   목표(1.09)를 상회한다. 우물·muted·포인트만 갱신. */
+:root[data-theme="dark"], [data-theme="dark"] {
+  --bg:var(--gray-950); --surface:#23242C; --surface-2:#2C2D37;
+  --scrim:rgba(0,0,0,.66);
+  --border:#373844; --border-soft:rgba(172,173,183,.15);
+  /* [v2.3] 다크 우물 — 캔버스보다 더 어둡게 판다. 값만으로는 1.13:1 이 한계라
+     컴포넌트 레이어가 1px 링(inset 0 0 0 1px rgba(172,173,183,.16))을 병기한다. */
+  --well:#0C0D11;
+  /* muted: [v2.3] #93949D(5.69) → #9FA0A9 — bg 6.60 · surface 5.70 */
+  --text-strong:#F1F1F4; --text-body:#B4B5BE; --text-muted:#9FA0A9;
+  --ink-display:var(--gray-000); --anchor:var(--gray-400);
+  --action:#F1F1F4; --action-hover:#DBDBE0; --action-text:#1A1B22;
+  --accent:var(--action); --accent-deep:var(--action-hover); --accent-soft:rgba(241,241,244,.14); --accent-text:var(--action-text);
+  --brand:var(--gray-400);
+  /* [v2.3] 다크 포인트 — 원석 그대로(#62CBDB, 캔버스 9.06:1).
+     [v2.5] 다크의 켜짐도 --action(#F1F1F4, 근-백) 이다.
+     [v2.6] --gem 은 라이트와 같은 원석. 다크에서 --point 와 동색. */
+  --point:#62CBDB; --point-deep:#78D5E3; --point-ind:var(--point);
+  --gem:#62CBDB;
+  --success:#7FB59E; --success-soft:rgba(127,181,158,.14);
+  --warning:#EC9A50; --warning-soft:rgba(236,154,80,.15);
+  --error:#E67274;   --error-soft:rgba(228,105,107,.15);
+  --success-on-soft:var(--success); --warning-on-soft:var(--warning); --error-on-soft:var(--error);
+  --success-vivid:var(--success); --warning-vivid:var(--warning); --error-vivid:var(--error);
+  --success-border:rgba(127,181,158,.32); --warning-border:rgba(236,154,80,.32);
+  --error-border:rgba(228,105,107,.30);
+  --temp-warm:#DE9074; --temp-warm-soft:rgba(222,144,116,.15);
+  --temp-cool:#939CD6; --temp-cool-soft:rgba(147,156,214,.14);
+  --hl-dark:rgba(0,0,0,.55); --hl-light:rgba(255,255,255,.035);
+  --hatch-line:rgba(172,173,183,.22);
+  --neu-shadow:rgba(0,0,0,.62); --neu-light:rgba(255,255,255,0);
+  --neu-raise:8px 8px 18px var(--neu-shadow),-5px -5px 12px var(--neu-light);
+  --neu-raise-sm:5px 5px 10px var(--neu-shadow),-3px -3px 7px var(--neu-light);
+  --neu-inset:inset 4px 4px 11px var(--neu-shadow),inset -3px -3px 8px var(--neu-light);
+  --neu-inset-sm:inset 3px 3px 8px var(--neu-shadow),inset -2px -2px 5px var(--neu-light);
+  --float:0 16px 44px rgba(0,0,0,.55);
+  --raise:var(--float);                            /* @deprecated → --float */
+  --shadow:0 10px 34px rgba(0,0,0,.32); --shadow-lg:0 24px 60px rgba(0,0,0,.42);
+  --shadow-sm:0 2px 10px rgba(0,0,0,.42),0 1px 3px rgba(0,0,0,.30);
+  --spec-line:rgba(255,255,255,.55);
+  --dim:rgba(0,0,0,.34);
+  --ink-line:#373844;                              /* [v2.1] 잉크 패널 경계만 다크에서 승격 */
+}

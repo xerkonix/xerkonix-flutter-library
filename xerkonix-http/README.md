@@ -35,7 +35,13 @@ await http.client.post(path: '/posts', body: {'title': 'New'});
 
 // Custom / Multipart
 await http.client.custom(uriAddress: '...', method: 'GET');
-await http.client.multipart(uriAddress: '...', method: 'POST', file: file);
+// bytes + filename 필수 (dart:io File 이 아님 — Web 포함).
+await http.client.multipart(
+  uriAddress: 'https://api.example.com/upload',
+  method: 'POST',
+  bytes: bytes, // file.readAsBytes() 또는 XFile.readAsBytes()
+  filename: 'photo.jpg',
+);
 ```
 
 ### 설정

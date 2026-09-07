@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Shape tokens from Weave v3 (tokens.css).
+/// Shape tokens from TACTILE (tokens.css).
 ///
 /// Radius: 28 / 18 / 16 / 12 / pill 980.
 class XkShape {

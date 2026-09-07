@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../palette/color.dart';
 
-/// Weave icon names from the design-system HTML reference.
+/// TACTILE icon names from the design-system HTML reference.
 enum XkIconName {
   chevLeft('chev-left'),
   chevRight('chev-right'),
@@ -69,7 +69,7 @@ class XkIconSize {
   static const double hero = 48;
 }
 
-/// Stroke-based Weave icon widget.
+/// Stroke-based TACTILE icon widget.
 class XkIcon extends StatelessWidget {
   const XkIcon(
     this.name, {

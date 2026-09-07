@@ -1,4 +1,4 @@
-// Weave tokens.css ↔ 라이브러리 토큰 대조.
+// TACTILE tokens.css ↔ 라이브러리 토큰 대조.
 //
 // 2026-07-27 라이트 기능색 WCAG AA 승급, 2026-08 v2.1(다크 error 보정 ·
 // on-soft · radius-ctl · sp-4h 편입) 때 미러가 늦게 따라오는 사고가 반복됐다.

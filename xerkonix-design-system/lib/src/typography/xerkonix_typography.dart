@@ -2,7 +2,7 @@ import 'package:flutter/painting.dart';
 
 import 'typo_constants.dart';
 
-/// XERKONIX Weave typography
+/// XERKONIX TACTILE typography
 ///
 /// Canonical v1.3 styles (unchanged from v1.2):
 /// - display 52 / 700

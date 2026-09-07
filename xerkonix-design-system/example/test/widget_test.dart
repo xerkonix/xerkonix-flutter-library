@@ -3,7 +3,7 @@ import 'package:xerkonix_design_system_example/main.dart';
 
 void main() {
   testWidgets('Example should render major sections', (tester) async {
-    await tester.pumpWidget(const WeaveExampleApp());
+    await tester.pumpWidget(const TACTILEExampleApp());
     await tester.pumpAndSettle();
 
     expect(find.text('Iconography'), findsOneWidget);
@@ -13,7 +13,7 @@ void main() {
   });
 
   testWidgets('Example should render icon and motion labels', (tester) async {
-    await tester.pumpWidget(const WeaveExampleApp());
+    await tester.pumpWidget(const TACTILEExampleApp());
     await tester.pumpAndSettle();
 
     expect(find.text('chev-left'), findsWidgets);

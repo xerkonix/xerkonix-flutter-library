@@ -92,7 +92,7 @@ scales.
 
 ## 3.0.0 (BREAKING) — TACTILE Design System
 
-Full re-skin from Weave v1.5 to **TACTILE**, a neumorphic system. Elevation is
+Full re-skin from 구 플랫 to **TACTILE**, a neumorphic system. Elevation is
 now carried by paired highlight + lowlight shadows (and inset inner shadows)
 rather than by a single soft drop, and the indigo accent collapses to a
 monochrome ink accent (near-black in light, near-white in dark). Token *names*
@@ -200,9 +200,9 @@ backward-incompatible way; all new behavior is opt-in.
 - `environment.sdk` `>=3.9.0 <4.0.0`, `flutter` `>=3.35.0`.
 - `flutter_svg` `^2.3.0`.
 
-## 2.0.0 (BREAKING) — Weave Design System v1.5
+## 2.0.0 (BREAKING) — TACTILE Design System v1.5
 
-Full re-skin to Weave v1.5: warm beige/gold system replaced by a cool
+Full re-skin to 구 플랫: warm beige/gold system replaced by a cool
 gray-blue neutral scale with a single indigo accent. Token vocabulary is
 replaced with no backward-compat aliases, so this is a breaking release.
 
@@ -220,7 +220,7 @@ replaced with no backward-compat aliases, so this is a breaking release.
 
 ## 1.3.0 (BREAKING)
 
-Aligned with Weave Design System v1.3 (`design system/v1.3/`). This release
+Aligned with TACTILE Design System v1.3 (`design system/v1.3/`). This release
 drops v1.2 backward-compat shims; v1.3 canonical names are the only API.
 
 ### Changed
@@ -233,7 +233,7 @@ drops v1.2 backward-compat shims; v1.3 canonical names are the only API.
 - Rounded motion durations to remove fake precision:
   `statusPulse 2500ms` (was 2600), `rhythmLine 3500ms` (was 3800),
   `signalSweep 2500ms` (was 2600).
-- Updated Weave interpretation-stage timings to v1.3 values:
+- Updated TACTILE interpretation-stage timings to v1.3 values:
   `observe 160→180ms`, `interpret 230→250ms`.
 - `XkDomainPatternTabs` default labels changed from
   `Input/Pattern/State/Action Layer` to `수집 · 분석 · 상태 · 실행`.
@@ -290,7 +290,7 @@ durations.
 - Added reduced-motion handling for motion widgets
 
 ### Changed
-- Updated `XkColor` palette to align with `weave` design system v1.1 references
+- Updated `XkColor` palette to align with `tactile` design system v1.1 references
 - Updated light/dark color schemes to v1.1 token mapping
 - Updated `XkLightTheme` and `XkDarkTheme` defaults (typography, form, and button styling)
 - Updated typography scale (`display/h1/h2/h3/body/label/meta`) to v1.1

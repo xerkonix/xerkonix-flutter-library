@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-/// XERKONIX Weave v3 color tokens. Source: tokens.css. No v2 aliases.
+/// XERKONIX TACTILE color tokens. Source: tokens.css. No v2 aliases.
 class XkColor {
   XkColor._();
 

@@ -21,15 +21,7 @@ class XkTypo {
 
   static const List<String> _sansFallback = [
     'Apple SD Gothic Neo',
-    IBMPlexSansKR.fontFamily,
-  ];
-  static const List<String> _serifFallback = [
-    'Noto Serif KR',
-    IBMPlexSansKR.fontFamily,
-  ];
-  static const List<String> _monoFallback = [
-    IBMPlexMono.fontFamily,
-    Pretendard.fontFamily,
+    'Pretendard',
   ];
 
   static TextStyle _sans({
@@ -49,23 +41,13 @@ class XkTypo {
     );
   }
 
-  /// v1.5 display serif — MaruBuri. Reserved for 28px+ display styles.
   static TextStyle _serif({
     required double size,
     required FontWeight weight,
     required double height,
     double letterSpacing = 0,
-  }) {
-    return TextStyle(
-      fontFamily: MaruBuri.fontFamily,
-      package: MaruBuri.package,
-      fontFamilyFallback: _serifFallback,
-      fontSize: size,
-      fontWeight: weight,
-      height: height,
-      letterSpacing: letterSpacing,
-    );
-  }
+  }) =>
+      _sans(size: size, weight: weight, height: height, letterSpacing: letterSpacing);
 
   static TextStyle _mono({
     required double size,
@@ -74,18 +56,18 @@ class XkTypo {
     double letterSpacing = 0,
   }) {
     return TextStyle(
-      fontFamily: IBMPlexMono.fontFamily,
-      package: IBMPlexMono.package,
-      fontFamilyFallback: _monoFallback,
+      fontFamily: Pretendard.fontFamily,
+      package: Pretendard.package,
+      fontFamilyFallback: _sansFallback,
       fontSize: size,
       fontWeight: weight,
       height: height,
       letterSpacing: letterSpacing,
+      fontFeatures: const <FontFeature>[FontFeature.tabularFigures()],
     );
   }
 
-  // Display styles (28px+) use the MaruBuri serif per v1.5.
-  static final TextStyle display = _serif(
+  static final TextStyle display = _sans(
     size: TypoConst.fontSize.displayMax,
     weight: TypoConst.fontWeight.bold,
     height: 1.15,
@@ -251,7 +233,7 @@ class M3Typo {
       package: Pretendard.package,
       fontFamilyFallback: const [
         'Apple SD Gothic Neo',
-        IBMPlexSansKR.fontFamily,
+        Pretendard.fontFamily,
       ],
       fontSize: size,
       fontWeight: weight,
@@ -308,8 +290,8 @@ TextStyle _familyStyle({
 class SFPro {
   SFPro._();
 
-  static const String fontFamily = IBMPlexSans.fontFamily;
-  static const String package = IBMPlexSans.package;
+  static const String fontFamily = Pretendard.fontFamily;
+  static const String package = Pretendard.package;
 
   static TextStyle thin({required double fontSize}) => _familyStyle(
     fontFamily: fontFamily,
@@ -370,8 +352,8 @@ class SFPro {
 class AppleSDGothicNeo {
   AppleSDGothicNeo._();
 
-  static const String fontFamily = IBMPlexSans.fontFamily;
-  static const String package = IBMPlexSans.package;
+  static const String fontFamily = Pretendard.fontFamily;
+  static const String package = Pretendard.package;
 
   static TextStyle thin({required double fontSize}) => _familyStyle(
     fontFamily: fontFamily,
@@ -432,8 +414,8 @@ class AppleSDGothicNeo {
 class Roboto {
   Roboto._();
 
-  static const String fontFamily = IBMPlexSans.fontFamily;
-  static const String package = IBMPlexSans.package;
+  static const String fontFamily = Pretendard.fontFamily;
+  static const String package = Pretendard.package;
 
   static TextStyle thin({required double fontSize}) => _familyStyle(
     fontFamily: fontFamily,
@@ -476,8 +458,8 @@ class Roboto {
 class NotoSansKR {
   NotoSansKR._();
 
-  static const String fontFamily = IBMPlexSans.fontFamily;
-  static const String package = IBMPlexSans.package;
+  static const String fontFamily = Pretendard.fontFamily;
+  static const String package = Pretendard.package;
 
   static TextStyle thin({required double fontSize}) => _familyStyle(
     fontFamily: fontFamily,

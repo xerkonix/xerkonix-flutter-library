@@ -14,19 +14,19 @@ class XkAvatar extends StatelessWidget {
   final double size;
 
   static const List<List<Color>> _lightGradients = <List<Color>>[
-    <Color>[XkColor.tempCool, XkColor.gray800],
-    <Color>[XkColor.success, XkColor.gray800],
-    <Color>[XkColor.tempWarm, XkColor.gray700],
-    <Color>[XkColor.warning, XkColor.gray800],
-    <Color>[XkColor.accent, XkColor.gray600],
+    <Color>[XkColor.cool, XkColor.ink],
+    <Color>[XkColor.ok, XkColor.ink],
+    <Color>[XkColor.warm, XkColor.ink],
+    <Color>[XkColor.warn, XkColor.ink],
+    <Color>[XkColor.tintFill, XkColor.muted],
   ];
 
   static const List<List<Color>> _darkGradients = <List<Color>>[
-    <Color>[XkColor.darkTempCool, XkColor.gray700],
-    <Color>[XkColor.darkSuccess, XkColor.gray600],
-    <Color>[XkColor.darkTempWarm, XkColor.gray700],
-    <Color>[XkColor.darkWarning, XkColor.gray600],
-    <Color>[XkColor.gray400, XkColor.gray600],
+    <Color>[XkColor.darkCool, XkColor.ink],
+    <Color>[XkColor.darkOk, XkColor.muted],
+    <Color>[XkColor.darkWarm, XkColor.ink],
+    <Color>[XkColor.darkWarn, XkColor.muted],
+    <Color>[XkColor.muted, XkColor.muted],
   ];
 
   String get _initial {
@@ -55,7 +55,7 @@ class XkAvatar extends StatelessWidget {
         ? _darkGradients
         : _lightGradients;
     final List<Color> colors = palettes[_bucket % palettes.length];
-    final Color onColor = isDark ? XkColor.darkAccentText : XkColor.accentText;
+    final Color onColor = isDark ? XkColor.darkTintOnFill : XkColor.tintOnFill;
     return Container(
       width: size,
       height: size,

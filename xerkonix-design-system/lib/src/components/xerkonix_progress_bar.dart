@@ -25,7 +25,7 @@ class XkProgressBar extends StatelessWidget {
     // [v2.3] 트랙=우물(--well) · 채움=포인트 인디케이터(--point-ind).
     final Color track = isDark ? XkColor.darkWell : XkColor.well;
     final Color fill =
-        color ?? (isDark ? XkColor.darkPointInd : XkColor.pointInd);
+        color ?? (isDark ? XkColor.darkTint : XkColor.tint);
     return ClipRRect(
       borderRadius: BorderRadius.circular(minHeight / 2),
       child: LinearProgressIndicator(

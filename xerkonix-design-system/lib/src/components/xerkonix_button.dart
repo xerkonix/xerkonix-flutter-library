@@ -273,7 +273,7 @@ class XkButton extends StatelessWidget {
       key: key,
       onPressed: onPressed,
       buttonType: ButtonType.semantic,
-      semanticColor: XkColor.success,
+      semanticColor: XkColor.ok,
       expanded: expanded,
       child: child,
     );
@@ -289,7 +289,7 @@ class XkButton extends StatelessWidget {
       key: key,
       onPressed: onPressed,
       buttonType: ButtonType.semantic,
-      semanticColor: XkColor.warning,
+      semanticColor: XkColor.warn,
       expanded: expanded,
       child: child,
     );
@@ -305,7 +305,7 @@ class XkButton extends StatelessWidget {
       key: key,
       onPressed: onPressed,
       buttonType: ButtonType.semantic,
-      semanticColor: XkColor.error,
+      semanticColor: XkColor.bad,
       expanded: expanded,
       child: child,
     );
@@ -321,7 +321,7 @@ class XkButton extends StatelessWidget {
       key: key,
       onPressed: onPressed,
       buttonType: ButtonType.semantic,
-      semanticColor: XkColor.gray600,
+      semanticColor: XkColor.muted,
       expanded: expanded,
       child: child,
     );
@@ -339,8 +339,8 @@ class XkButton extends StatelessWidget {
       textColor: spec.textColor,
       border: spec.border,
       elevated: spec.elevated,
-      disabledFill: isDark ? XkColor.darkSurface2 : XkColor.gray400,
-      disabledTextColor: isDark ? XkColor.darkTextMuted : XkColor.textMuted,
+      disabledFill: isDark ? XkColor.darkHairSoft : XkColor.muted,
+      disabledTextColor: isDark ? XkColor.darkMuted : XkColor.muted,
       child: child,
     );
     if (expanded) {
@@ -353,72 +353,72 @@ class XkButton extends StatelessWidget {
     switch (buttonType) {
       case ButtonType.primary:
         return _XkButtonSpec(
-          fill: isDark ? XkColor.darkTextStrong : XkColor.textStrong,
+          fill: isDark ? XkColor.darkInk : XkColor.ink,
           textColor: isDark ? XkColor.darkBg : XkColor.bg,
         );
       case ButtonType.action:
         return _XkButtonSpec(
-          fill: isDark ? XkColor.darkAccent : XkColor.accent,
-          textColor: isDark ? XkColor.darkAccentText : XkColor.accentText,
+          fill: isDark ? XkColor.darkTintFill : XkColor.tintFill,
+          textColor: isDark ? XkColor.darkTintOnFill : XkColor.tintOnFill,
           gradient: LinearGradient(
             colors: isDark
-                ? const <Color>[XkColor.darkAccent, XkColor.darkAccentDeep]
-                : const <Color>[XkColor.accent, XkColor.accentDeep],
+                ? const <Color>[XkColor.darkTintFill, XkColor.darkTintLight]
+                : const <Color>[XkColor.tintFill, XkColor.tintTextHover],
           ),
         );
       case ButtonType.brand:
         return _XkButtonSpec(
-          fill: isDark ? XkColor.darkAccentDeep : XkColor.accentDeep,
-          textColor: isDark ? XkColor.darkAccentText : XkColor.accentText,
+          fill: isDark ? XkColor.darkTintLight : XkColor.tintTextHover,
+          textColor: isDark ? XkColor.darkTintOnFill : XkColor.tintOnFill,
         );
       case ButtonType.support:
         return _XkButtonSpec(
-          fill: isDark ? XkColor.darkSuccess : XkColor.success,
-          textColor: isDark ? XkColor.darkBg : XkColor.accentText,
+          fill: isDark ? XkColor.darkOk : XkColor.ok,
+          textColor: isDark ? XkColor.darkBg : XkColor.tintOnFill,
         );
       case ButtonType.accent:
         return _XkButtonSpec(
-          fill: isDark ? XkColor.darkAccent : XkColor.accent,
-          textColor: isDark ? XkColor.darkAccentText : XkColor.accentText,
+          fill: isDark ? XkColor.darkTintFill : XkColor.tintFill,
+          textColor: isDark ? XkColor.darkTintOnFill : XkColor.tintOnFill,
         );
       case ButtonType.tonal:
         return _XkButtonSpec(
-          fill: isDark ? XkColor.darkSurface2 : XkColor.surface,
-          textColor: isDark ? XkColor.darkTextStrong : XkColor.textStrong,
+          fill: isDark ? XkColor.darkHairSoft : XkColor.panel,
+          textColor: isDark ? XkColor.darkInk : XkColor.ink,
         );
       case ButtonType.point:
         // [v2.4] 필드 글자는 표면색 — 라이트 순백(5.96:1) · 다크 어두운 면(6.21:1).
         return _XkButtonSpec(
-          fill: isDark ? XkColor.darkPoint : XkColor.point,
-          textColor: isDark ? XkColor.darkSurface : XkColor.surface,
+          fill: isDark ? XkColor.darkTintText : XkColor.tintText,
+          textColor: isDark ? XkColor.darkPanel : XkColor.panel,
         );
       case ButtonType.pointOutline:
         return _XkButtonSpec(
           fill: Colors.transparent,
-          textColor: isDark ? XkColor.darkPoint : XkColor.point,
+          textColor: isDark ? XkColor.darkTintText : XkColor.tintText,
           border: Border.all(
             width: 1.5,
-            color: isDark ? XkColor.darkPoint : XkColor.point,
+            color: isDark ? XkColor.darkTintText : XkColor.tintText,
           ),
           elevated: false,
         );
       case ButtonType.pointText:
         return _XkButtonSpec(
           fill: Colors.transparent,
-          textColor: isDark ? XkColor.darkPoint : XkColor.point,
+          textColor: isDark ? XkColor.darkTintText : XkColor.tintText,
           elevated: false,
         );
       case ButtonType.pointElevated:
         return _XkButtonSpec(
-          fill: isDark ? XkColor.darkSurface : XkColor.surface,
-          textColor: isDark ? XkColor.darkPoint : XkColor.point,
+          fill: isDark ? XkColor.darkPanel : XkColor.panel,
+          textColor: isDark ? XkColor.darkTintText : XkColor.tintText,
         );
       case ButtonType.outline:
         return _XkButtonSpec(
           fill: Colors.transparent,
-          textColor: isDark ? XkColor.darkTextBody : XkColor.textBody,
+          textColor: isDark ? XkColor.darkInk : XkColor.ink,
           border: Border.all(
-            color: isDark ? XkColor.darkBorder : XkColor.border,
+            color: isDark ? XkColor.darkHair : XkColor.hair,
           ),
           elevated: false,
         );
@@ -433,8 +433,8 @@ class XkButton extends StatelessWidget {
 
   static Color _onColor(Color color, bool isDark) {
     return ThemeData.estimateBrightnessForColor(color) == Brightness.dark
-        ? XkColor.accentText
-        : (isDark ? XkColor.darkBg : XkColor.textStrong);
+        ? XkColor.tintOnFill
+        : (isDark ? XkColor.darkBg : XkColor.ink);
   }
 }
 
@@ -561,9 +561,9 @@ class _NeumorphicButtonState extends State<_NeumorphicButton> {
             borderRadius: _NeumorphicButton._radius,
             lowlight: isDark
                 ? XkShadow.darkLowlight
-                : XkColor.textStrong.withValues(alpha: 0.28),
+                : XkColor.ink.withValues(alpha: 0.28),
             highlight: isDark
-                ? XkColor.darkTextStrong.withValues(alpha: 0.06)
+                ? XkColor.darkInk.withValues(alpha: 0.06)
                 : Colors.white.withValues(alpha: 0.35),
             distance: 3,
             blur: 6,

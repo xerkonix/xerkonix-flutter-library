@@ -24,8 +24,8 @@ class XkLoadingOverlay extends StatelessWidget {
     }
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
     final Color bg = isDark ? XkColor.darkBg : XkColor.bg;
-    final Color accent = isDark ? XkColor.darkAccent : XkColor.accent;
-    final Color accentDeep = isDark ? XkColor.darkAccentDeep : XkColor.accentDeep;
+    final Color accent = isDark ? XkColor.darkTintFill : XkColor.tintFill;
+    final Color accentDeep = isDark ? XkColor.darkTintLight : XkColor.tintTextHover;
     return Positioned.fill(
       child: ColoredBox(
         color: bg.withValues(alpha: 0.92),

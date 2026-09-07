@@ -15,30 +15,30 @@ class XkDarkTheme extends XkTheme {
     colorScheme: darkColorScheme,
     scaffoldBackgroundColor: XkColor.darkBg,
     textTheme: TextTheme(
-      displayLarge: XkTypo.display.copyWith(color: XkColor.darkTextStrong),
-      displayMedium: XkTypo.h1.copyWith(color: XkColor.darkTextStrong),
-      displaySmall: XkTypo.h2.copyWith(color: XkColor.darkTextStrong),
-      headlineLarge: XkTypo.h1.copyWith(color: XkColor.darkTextStrong),
-      headlineMedium: XkTypo.h2.copyWith(color: XkColor.darkTextStrong),
-      headlineSmall: XkTypo.h3.copyWith(color: XkColor.darkTextStrong),
-      titleLarge: XkTypo.h3.copyWith(color: XkColor.darkTextStrong),
-      titleMedium: XkTypo.label.copyWith(color: XkColor.darkTextBody),
-      titleSmall: XkTypo.label.copyWith(color: XkColor.darkTextMuted),
-      bodyLarge: XkTypo.bodyLarge.copyWith(color: XkColor.darkTextBody),
-      bodyMedium: XkTypo.body.copyWith(color: XkColor.darkTextBody),
-      bodySmall: XkTypo.label.copyWith(color: XkColor.darkTextMuted),
-      labelLarge: _buttonLabel.copyWith(color: XkColor.darkTextStrong),
-      labelMedium: XkTypo.label.copyWith(color: XkColor.darkTextMuted),
-      labelSmall: XkTypo.metaMono.copyWith(color: XkColor.darkTextMuted),
+      displayLarge: XkTypo.display.copyWith(color: XkColor.darkInk),
+      displayMedium: XkTypo.h1.copyWith(color: XkColor.darkInk),
+      displaySmall: XkTypo.h2.copyWith(color: XkColor.darkInk),
+      headlineLarge: XkTypo.h1.copyWith(color: XkColor.darkInk),
+      headlineMedium: XkTypo.h2.copyWith(color: XkColor.darkInk),
+      headlineSmall: XkTypo.h3.copyWith(color: XkColor.darkInk),
+      titleLarge: XkTypo.h3.copyWith(color: XkColor.darkInk),
+      titleMedium: XkTypo.label.copyWith(color: XkColor.darkInk),
+      titleSmall: XkTypo.label.copyWith(color: XkColor.darkMuted),
+      bodyLarge: XkTypo.bodyLarge.copyWith(color: XkColor.darkInk),
+      bodyMedium: XkTypo.body.copyWith(color: XkColor.darkInk),
+      bodySmall: XkTypo.label.copyWith(color: XkColor.darkMuted),
+      labelLarge: _buttonLabel.copyWith(color: XkColor.darkInk),
+      labelMedium: XkTypo.label.copyWith(color: XkColor.darkMuted),
+      labelSmall: XkTypo.metaMono.copyWith(color: XkColor.darkMuted),
     ),
     cardTheme: CardThemeData(
-      color: XkColor.darkSurface,
+      color: XkColor.darkPanel,
       elevation: 0,
-      shadowColor: XkColor.darkShadow,
+      shadowColor: XkColor.darkSh,
       surfaceTintColor: Colors.transparent,
       shape: RoundedRectangleBorder(
         borderRadius: XkShape.lgBorderRadius,
-        side: BorderSide(color: XkColor.darkBorderSoft),
+        side: BorderSide(color: XkColor.darkHairSoft),
       ),
       margin: const EdgeInsets.symmetric(
         horizontal: XkLayout.spacingSm,
@@ -51,63 +51,63 @@ class XkDarkTheme extends XkTheme {
       scrolledUnderElevation: 0,
       elevation: 0,
       centerTitle: true,
-      titleTextStyle: XkTypo.h3.copyWith(color: XkColor.darkTextStrong),
-      iconTheme: const IconThemeData(color: XkColor.darkTextStrong),
+      titleTextStyle: XkTypo.h3.copyWith(color: XkColor.darkInk),
+      iconTheme: const IconThemeData(color: XkColor.darkInk),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: _elevatedStyle(
-        baseColor: XkColor.darkAccent,
-        hoverColor: XkColor.darkAccentDeep,
-        textColor: XkColor.darkAccentText,
-        disabledColor: XkColor.gray400,
-        disabledTextColor: XkColor.darkSurface,
+        baseColor: XkColor.darkTintFill,
+        hoverColor: XkColor.darkTintLight,
+        textColor: XkColor.darkTintOnFill,
+        disabledColor: XkColor.muted,
+        disabledTextColor: XkColor.darkPanel,
       ),
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: _outlinedStyle(
-        borderColor: XkColor.darkBorder,
-        textColor: XkColor.darkTextBody,
+        borderColor: XkColor.darkHair,
+        textColor: XkColor.darkInk,
       ),
     ),
     textButtonTheme: TextButtonThemeData(
       style: _tonalStyle(
-        backgroundColor: XkColor.darkSurface2,
-        textColor: XkColor.darkTextStrong,
-        borderColor: XkColor.darkBorder,
+        backgroundColor: XkColor.darkHairSoft,
+        textColor: XkColor.darkInk,
+        borderColor: XkColor.darkHair,
       ),
     ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: XkColor.darkBg,
-      hintStyle: XkTypo.hint.copyWith(color: XkColor.darkTextMuted),
+      hintStyle: XkTypo.hint.copyWith(color: XkColor.darkMuted),
       border: OutlineInputBorder(
         borderRadius: XkShape.smBorderRadius,
-        borderSide: BorderSide(color: XkColor.darkBorderSoft),
+        borderSide: BorderSide(color: XkColor.darkHairSoft),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: XkShape.smBorderRadius,
-        borderSide: BorderSide(color: XkColor.darkBorderSoft),
+        borderSide: BorderSide(color: XkColor.darkHairSoft),
       ),
       focusedBorder: const OutlineInputBorder(
         borderRadius: XkShape.smBorderRadius,
-        borderSide: BorderSide(color: XkColor.darkAccent, width: 1.5),
+        borderSide: BorderSide(color: XkColor.darkTintFill, width: 1.5),
       ),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
     ),
     switchTheme: _switchTheme(
-      accent: XkColor.darkAccent,
-      onAccent: XkColor.darkAccentText,
-      thumbOff: XkColor.darkTextMuted,
-      trackOff: XkColor.darkSurface2,
-      border: XkColor.darkBorder,
-      disabled: XkColor.gray600,
+      accent: XkColor.darkTintFill,
+      onAccent: XkColor.darkTintOnFill,
+      thumbOff: XkColor.darkMuted,
+      trackOff: XkColor.darkHairSoft,
+      border: XkColor.darkHair,
+      disabled: XkColor.muted,
     ),
     dividerTheme: const DividerThemeData(
-      color: XkColor.darkBorderSoft,
+      color: XkColor.darkHairSoft,
       space: 1,
       thickness: 1,
     ),
-    dividerColor: XkColor.darkBorderSoft,
+    dividerColor: XkColor.darkHairSoft,
   );
 
   static final TextStyle _buttonLabel = XkTypo.label.copyWith(
@@ -191,10 +191,10 @@ class XkDarkTheme extends XkTheme {
       }),
       backgroundColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.pressed)) {
-          return XkColor.darkSurface2;
+          return XkColor.darkHairSoft;
         }
         if (states.contains(WidgetState.hovered)) {
-          return XkColor.darkSurface.withValues(alpha: 0.85);
+          return XkColor.darkPanel.withValues(alpha: 0.85);
         }
         return Colors.transparent;
       }),
@@ -230,10 +230,10 @@ class XkDarkTheme extends XkTheme {
           return backgroundColor.withValues(alpha: 0.5);
         }
         if (states.contains(WidgetState.pressed)) {
-          return XkColor.darkSurface2;
+          return XkColor.darkHairSoft;
         }
         if (states.contains(WidgetState.hovered)) {
-          return XkColor.darkSurface2.withValues(alpha: 0.9);
+          return XkColor.darkHairSoft.withValues(alpha: 0.9);
         }
         return backgroundColor;
       }),

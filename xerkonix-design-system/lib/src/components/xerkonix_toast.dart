@@ -21,7 +21,7 @@ void showXkToast(BuildContext context, String message, {bool isError = false}) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: isDark ? XkColor.darkSurface2 : XkColor.surface2,
+        backgroundColor: isDark ? XkColor.darkHairSoft : XkColor.hairSoft,
       ),
     );
     return;
@@ -114,10 +114,10 @@ class _XkToastState extends State<XkToast> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     final bool dark = widget.isDark;
     final bool err = widget.isError;
-    final Color warn = dark ? XkColor.darkError : XkColor.error;
-    final Color surface2 = dark ? XkColor.darkSurface2 : XkColor.surface2;
-    final Color line = dark ? XkColor.darkBorder : XkColor.border;
-    final Color text = dark ? XkColor.darkTextStrong : XkColor.textStrong;
+    final Color warn = dark ? XkColor.darkBad : XkColor.bad;
+    final Color surface2 = dark ? XkColor.darkHairSoft : XkColor.hairSoft;
+    final Color line = dark ? XkColor.darkHair : XkColor.hair;
+    final Color text = dark ? XkColor.darkInk : XkColor.ink;
     final Color accent = err ? warn : line;
     return Positioned(
       top: 0,

@@ -15,33 +15,33 @@ class XkLightTheme extends XkTheme {
     colorScheme: lightColorScheme,
     scaffoldBackgroundColor: XkColor.bg,
     textTheme: TextTheme(
-      displayLarge: XkTypo.display.copyWith(color: XkColor.textStrong),
-      displayMedium: XkTypo.h1.copyWith(color: XkColor.textStrong),
-      displaySmall: XkTypo.h2.copyWith(color: XkColor.textStrong),
-      headlineLarge: XkTypo.h1.copyWith(color: XkColor.textStrong),
-      headlineMedium: XkTypo.h2.copyWith(color: XkColor.textStrong),
-      headlineSmall: XkTypo.h3.copyWith(color: XkColor.textStrong),
-      titleLarge: XkTypo.h3.copyWith(color: XkColor.textStrong),
-      titleMedium: XkTypo.label.copyWith(color: XkColor.textBody),
-      titleSmall: XkTypo.label.copyWith(color: XkColor.textMuted),
-      bodyLarge: XkTypo.bodyLarge.copyWith(color: XkColor.textBody),
-      bodyMedium: XkTypo.body.copyWith(color: XkColor.textBody),
-      bodySmall: XkTypo.label.copyWith(color: XkColor.textMuted),
-      labelLarge: _buttonLabel.copyWith(color: XkColor.textStrong),
-      labelMedium: XkTypo.label.copyWith(color: XkColor.textMuted),
-      labelSmall: XkTypo.metaMono.copyWith(color: XkColor.textMuted),
+      displayLarge: XkTypo.display.copyWith(color: XkColor.ink),
+      displayMedium: XkTypo.h1.copyWith(color: XkColor.ink),
+      displaySmall: XkTypo.h2.copyWith(color: XkColor.ink),
+      headlineLarge: XkTypo.h1.copyWith(color: XkColor.ink),
+      headlineMedium: XkTypo.h2.copyWith(color: XkColor.ink),
+      headlineSmall: XkTypo.h3.copyWith(color: XkColor.ink),
+      titleLarge: XkTypo.h3.copyWith(color: XkColor.ink),
+      titleMedium: XkTypo.label.copyWith(color: XkColor.ink),
+      titleSmall: XkTypo.label.copyWith(color: XkColor.muted),
+      bodyLarge: XkTypo.bodyLarge.copyWith(color: XkColor.ink),
+      bodyMedium: XkTypo.body.copyWith(color: XkColor.ink),
+      bodySmall: XkTypo.label.copyWith(color: XkColor.muted),
+      labelLarge: _buttonLabel.copyWith(color: XkColor.ink),
+      labelMedium: XkTypo.label.copyWith(color: XkColor.muted),
+      labelSmall: XkTypo.metaMono.copyWith(color: XkColor.muted),
     ),
     // Cards read as extruded from the canvas. Material's CardTheme can only
     // express a single drop shadow, so the raised surface uses a matched fill
     // and hairline; use `XkCard` / `XkNeumorphic` for the full paired shadow.
     cardTheme: CardThemeData(
-      color: XkColor.surface,
+      color: XkColor.panel,
       elevation: 0,
-      shadowColor: XkColor.shadow,
+      shadowColor: XkColor.sh,
       surfaceTintColor: Colors.transparent,
       shape: RoundedRectangleBorder(
         borderRadius: XkShape.lgBorderRadius,
-        side: BorderSide(color: XkColor.borderSoft),
+        side: BorderSide(color: XkColor.hairSoft),
       ),
       margin: const EdgeInsets.symmetric(
         horizontal: XkLayout.spacingSm,
@@ -54,63 +54,63 @@ class XkLightTheme extends XkTheme {
       scrolledUnderElevation: 0,
       elevation: 0,
       centerTitle: true,
-      titleTextStyle: XkTypo.h3.copyWith(color: XkColor.textStrong),
-      iconTheme: const IconThemeData(color: XkColor.textStrong),
+      titleTextStyle: XkTypo.h3.copyWith(color: XkColor.ink),
+      iconTheme: const IconThemeData(color: XkColor.ink),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: _elevatedStyle(
-        baseColor: XkColor.accent,
-        textColor: XkColor.accentText,
-        disabledColor: XkColor.gray400,
-        disabledTextColor: XkColor.textMuted,
+        baseColor: XkColor.tintFill,
+        textColor: XkColor.tintOnFill,
+        disabledColor: XkColor.muted,
+        disabledTextColor: XkColor.muted,
       ),
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: _outlinedStyle(
-        borderColor: XkColor.border,
-        textColor: XkColor.textBody,
+        borderColor: XkColor.hair,
+        textColor: XkColor.ink,
       ),
     ),
     textButtonTheme: TextButtonThemeData(
       style: _tonalStyle(
-        backgroundColor: XkColor.surface,
-        textColor: XkColor.textStrong,
-        borderColor: XkColor.border,
+        backgroundColor: XkColor.panel,
+        textColor: XkColor.ink,
+        borderColor: XkColor.hair,
       ),
     ),
     // Inputs are sunken wells: a recessed fill + hairline, focus ring in ink.
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: XkColor.surface2,
-      hintStyle: XkTypo.hint.copyWith(color: XkColor.textMuted),
+      fillColor: XkColor.hairSoft,
+      hintStyle: XkTypo.hint.copyWith(color: XkColor.muted),
       border: OutlineInputBorder(
         borderRadius: XkShape.smBorderRadius,
-        borderSide: BorderSide(color: XkColor.borderSoft),
+        borderSide: BorderSide(color: XkColor.hairSoft),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: XkShape.smBorderRadius,
-        borderSide: BorderSide(color: XkColor.borderSoft),
+        borderSide: BorderSide(color: XkColor.hairSoft),
       ),
       focusedBorder: const OutlineInputBorder(
         borderRadius: XkShape.smBorderRadius,
-        borderSide: BorderSide(color: XkColor.accent, width: 1.5),
+        borderSide: BorderSide(color: XkColor.tintFill, width: 1.5),
       ),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
     ),
     switchTheme: _switchTheme(
-      accent: XkColor.accent,
-      onAccent: XkColor.accentText,
-      thumbOff: XkColor.surface,
-      trackOff: XkColor.surface2,
-      border: XkColor.border,
-      disabled: XkColor.gray400,
+      accent: XkColor.tintFill,
+      onAccent: XkColor.tintOnFill,
+      thumbOff: XkColor.panel,
+      trackOff: XkColor.hairSoft,
+      border: XkColor.hair,
+      disabled: XkColor.muted,
     ),
     dividerTheme: const DividerThemeData(
-      color: XkColor.borderSoft,
+      color: XkColor.hairSoft,
       space: 1,
       thickness: 1,
     ),
-    dividerColor: XkColor.borderSoft,
+    dividerColor: XkColor.hairSoft,
   );
 
   static final TextStyle _buttonLabel = XkTypo.label.copyWith(
@@ -144,7 +144,7 @@ class XkLightTheme extends XkTheme {
         }
         if (states.contains(WidgetState.hovered) ||
             states.contains(WidgetState.focused)) {
-          return XkColor.accentDeep;
+          return XkColor.tintTextHover;
         }
         return baseColor;
       }),
@@ -193,10 +193,10 @@ class XkLightTheme extends XkTheme {
       }),
       backgroundColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.pressed)) {
-          return XkColor.surface2;
+          return XkColor.hairSoft;
         }
         if (states.contains(WidgetState.hovered)) {
-          return XkColor.surface.withValues(alpha: 0.8);
+          return XkColor.panel.withValues(alpha: 0.8);
         }
         return Colors.transparent;
       }),
@@ -232,10 +232,10 @@ class XkLightTheme extends XkTheme {
           return backgroundColor.withValues(alpha: 0.5);
         }
         if (states.contains(WidgetState.pressed)) {
-          return XkColor.surface2;
+          return XkColor.hairSoft;
         }
         if (states.contains(WidgetState.hovered)) {
-          return XkColor.surface2.withValues(alpha: 0.92);
+          return XkColor.hairSoft.withValues(alpha: 0.92);
         }
         return backgroundColor;
       }),

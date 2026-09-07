@@ -33,13 +33,13 @@ class XkKpiCard extends StatelessWidget {
     final brightness = Theme.of(context).brightness;
     final isDark = brightness == Brightness.dark;
     final bg =
-        backgroundColor ?? (isDark ? XkColor.darkSurface : XkColor.surface);
+        backgroundColor ?? (isDark ? XkColor.darkPanel : XkColor.panel);
     final bd =
-        borderColor ?? (isDark ? XkColor.darkBorderSoft : XkColor.borderSoft);
-    final labelColor = isDark ? XkColor.darkTextMuted : XkColor.textMuted;
-    final valueColor = isDark ? XkColor.darkTextStrong : XkColor.textStrong;
-    final deltaColor = isDark ? XkColor.darkTextBody : XkColor.textBody;
-    final suffixColor = isDark ? XkColor.darkAccent : XkColor.accent;
+        borderColor ?? (isDark ? XkColor.darkHairSoft : XkColor.hairSoft);
+    final labelColor = isDark ? XkColor.darkMuted : XkColor.muted;
+    final valueColor = isDark ? XkColor.darkInk : XkColor.ink;
+    final deltaColor = isDark ? XkColor.darkInk : XkColor.ink;
+    final suffixColor = isDark ? XkColor.darkTintFill : XkColor.tintFill;
 
     return Container(
       padding: padding,
@@ -112,10 +112,10 @@ class XkConfidenceMeter extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final ratio = value.clamp(0.0, 1.0);
-    final trackColor = isDark ? XkColor.darkSurface2 : XkColor.surface2;
-    final headText = isDark ? XkColor.darkTextBody : XkColor.textBody;
+    final trackColor = isDark ? XkColor.darkHairSoft : XkColor.hairSoft;
+    final headText = isDark ? XkColor.darkInk : XkColor.ink;
     final base =
-        startColor ?? (isDark ? XkColor.darkAccent : XkColor.accent);
+        startColor ?? (isDark ? XkColor.darkTintFill : XkColor.tintFill);
     final end = endColor ?? _resolveGradientEnd(base, isDark);
     final valueLabel = valueText ?? '${(ratio * 100).round()}%';
 
@@ -158,13 +158,13 @@ class XkConfidenceMeter extends StatelessWidget {
   }
 
   Color _resolveGradientEnd(Color color, bool isDark) {
-    if (color == XkColor.accent || color == XkColor.darkAccent) {
-      return isDark ? XkColor.darkAccentSoft : XkColor.accentSoft;
+    if (color == XkColor.tintFill || color == XkColor.darkTintFill) {
+      return isDark ? XkColor.darkTintSoft : XkColor.tintSoft;
     }
-    if (color == XkColor.success || color == XkColor.darkSuccess) {
-      return isDark ? XkColor.darkSuccess : XkColor.successSoft;
+    if (color == XkColor.ok || color == XkColor.darkOk) {
+      return isDark ? XkColor.darkOk : XkColor.ok;
     }
-    if (color == XkColor.gray600 || color == XkColor.gray500) {
+    if (color == XkColor.muted || color == XkColor.muted) {
       return Color.lerp(color, Colors.white, isDark ? 0.18 : 0.38) ?? color;
     }
     return Color.lerp(color, Colors.white, isDark ? 0.18 : 0.32) ?? color;
@@ -206,12 +206,12 @@ class XkSignalTimeline extends StatelessWidget {
     final brightness = Theme.of(context).brightness;
     final isDark = brightness == Brightness.dark;
     final bg =
-        backgroundColor ?? (isDark ? XkColor.darkSurface : XkColor.surface);
+        backgroundColor ?? (isDark ? XkColor.darkPanel : XkColor.panel);
     final bd =
-        borderColor ?? (isDark ? XkColor.darkBorderSoft : XkColor.borderSoft);
-    final timeColor = isDark ? XkColor.darkTextMuted : XkColor.textMuted;
-    final titleColor = isDark ? XkColor.darkTextStrong : XkColor.textStrong;
-    final bodyColor = isDark ? XkColor.darkTextBody : XkColor.textBody;
+        borderColor ?? (isDark ? XkColor.darkHairSoft : XkColor.hairSoft);
+    final timeColor = isDark ? XkColor.darkMuted : XkColor.muted;
+    final titleColor = isDark ? XkColor.darkInk : XkColor.ink;
+    final bodyColor = isDark ? XkColor.darkInk : XkColor.ink;
 
     return Container(
       padding: padding,
@@ -237,7 +237,7 @@ class XkSignalTimeline extends StatelessWidget {
                       shape: BoxShape.circle,
                       color:
                           items[i].color ??
-                          (isDark ? XkColor.darkAccent : XkColor.accent),
+                          (isDark ? XkColor.darkTintFill : XkColor.tintFill),
                     ),
                   ),
                 ),
@@ -341,11 +341,11 @@ class _XkMetricTimelineState extends State<XkMetricTimeline>
     final bg =
         widget.backgroundColor ??
         (isDark
-            ? XkColor.darkSurface.withValues(alpha: 0.82)
-            : XkColor.surface);
+            ? XkColor.darkPanel.withValues(alpha: 0.82)
+            : XkColor.panel);
     final bd =
         widget.borderColor ??
-        (isDark ? XkColor.darkBorderSoft : XkColor.borderSoft);
+        (isDark ? XkColor.darkHairSoft : XkColor.hairSoft);
 
     return Container(
       height: widget.height,
@@ -434,10 +434,10 @@ class _MetricTimelinePainter extends CustomPainter {
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
         colors: [
-          (isDark ? XkColor.darkAccent : XkColor.accent).withValues(
+          (isDark ? XkColor.darkTintFill : XkColor.tintFill).withValues(
             alpha: 0.28,
           ),
-          (isDark ? XkColor.darkAccent : XkColor.accent).withValues(
+          (isDark ? XkColor.darkTintFill : XkColor.tintFill).withValues(
             alpha: 0.02,
           ),
         ],
@@ -448,14 +448,14 @@ class _MetricTimelinePainter extends CustomPainter {
       canvas,
       _stability,
       size,
-      isDark ? XkColor.gray500 : XkColor.gray600,
+      isDark ? XkColor.muted : XkColor.muted,
       1.7,
     );
     _drawLine(
       canvas,
       _variation,
       size,
-      isDark ? XkColor.darkAccent : XkColor.accent,
+      isDark ? XkColor.darkTintFill : XkColor.tintFill,
       1.7,
       dashed: true,
     );
@@ -463,7 +463,7 @@ class _MetricTimelinePainter extends CustomPainter {
       canvas,
       _engagement,
       size,
-      isDark ? XkColor.darkAccent : XkColor.accent,
+      isDark ? XkColor.darkTintFill : XkColor.tintFill,
       2,
     );
 
@@ -471,14 +471,14 @@ class _MetricTimelinePainter extends CustomPainter {
     canvas.drawCircle(
       Offset(dot.dx * size.width, dot.dy * size.height),
       4,
-      Paint()..color = isDark ? XkColor.darkAccent : XkColor.accent,
+      Paint()..color = isDark ? XkColor.darkTintFill : XkColor.tintFill,
     );
   }
 
   void _drawGrid(Canvas canvas, Size size) {
     final color = isDark
-        ? XkColor.darkTextStrong.withValues(alpha: 0.08)
-        : XkColor.textStrong.withValues(alpha: 0.06);
+        ? XkColor.darkInk.withValues(alpha: 0.08)
+        : XkColor.ink.withValues(alpha: 0.06);
     final paint = Paint()
       ..color = color
       ..strokeWidth = 1;
@@ -583,22 +583,22 @@ class XkHexagonRadar extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final brightness = isDark ? Brightness.dark : Brightness.light;
     final resolvedColor = XkColor.themed(
-      color ?? (isDark ? XkColor.darkAccent : XkColor.accent),
+      color ?? (isDark ? XkColor.darkTintFill : XkColor.tintFill),
       brightness,
     );
     final resolvedAccent = XkColor.themed(
-      accentColor ?? (isDark ? XkColor.darkAccent : XkColor.accent),
+      accentColor ?? (isDark ? XkColor.darkTintFill : XkColor.tintFill),
       brightness,
     );
     final resolvedSupport = XkColor.themed(
-      supportColor ?? (isDark ? XkColor.darkSuccess : XkColor.success),
+      supportColor ?? (isDark ? XkColor.darkOk : XkColor.ok),
       brightness,
     );
     final resolvedGrid =
         gridColor ??
         (isDark
-            ? XkColor.darkTextMuted.withValues(alpha: 0.35)
-            : XkColor.border.withValues(alpha: 0.45));
+            ? XkColor.darkMuted.withValues(alpha: 0.35)
+            : XkColor.hair.withValues(alpha: 0.45));
 
     return SizedBox(
       width: size,
@@ -749,9 +749,9 @@ class XkDistributionHeatmap extends StatelessWidget {
     this.columns = 6,
     this.cellSize = 24,
     this.gap = 6,
-    this.baseColor = XkColor.accent,
-    this.accentColor = XkColor.accent,
-    this.supportColor = XkColor.success,
+    this.baseColor = XkColor.tintFill,
+    this.accentColor = XkColor.tintFill,
+    this.supportColor = XkColor.ok,
   });
 
   final List<double> values;
@@ -766,7 +766,7 @@ class XkDistributionHeatmap extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final brightness = isDark ? Brightness.dark : Brightness.light;
-    final surface = isDark ? XkColor.darkSurface : XkColor.surface;
+    final surface = isDark ? XkColor.darkPanel : XkColor.panel;
     final Color base = XkColor.themed(baseColor, brightness);
     final Color accent = XkColor.themed(accentColor, brightness);
     final Color support = XkColor.themed(supportColor, brightness);
@@ -800,9 +800,9 @@ class XkPriorityFunnel extends StatelessWidget {
     this.values = const [0.92, 0.76, 0.58, 0.40, 0.24],
     this.height = 10,
     this.gap = 10,
-    this.color = XkColor.accent,
-    this.accentColor = XkColor.accent,
-    this.supportColor = XkColor.success,
+    this.color = XkColor.tintFill,
+    this.accentColor = XkColor.tintFill,
+    this.supportColor = XkColor.ok,
   });
 
   final List<double> values;
@@ -816,7 +816,7 @@ class XkPriorityFunnel extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final brightness = isDark ? Brightness.dark : Brightness.light;
-    final trackColor = isDark ? XkColor.darkSurface2 : XkColor.surface2;
+    final trackColor = isDark ? XkColor.darkHairSoft : XkColor.hairSoft;
     final Color lane = XkColor.themed(color, brightness);
     final Color accent = XkColor.themed(accentColor, brightness);
     final Color support = XkColor.themed(supportColor, brightness);
@@ -845,19 +845,19 @@ class XkPriorityFunnel extends StatelessWidget {
               title: 'Identity only',
               trackColor: trackColor,
               colorA: lane,
-              colorB: isDark ? XkColor.darkAccentSoft : XkColor.accentSoft,
+              colorB: isDark ? XkColor.darkTintSoft : XkColor.tintSoft,
             ),
             _FunnelVariant(
               title: 'Accent only',
               trackColor: trackColor,
               colorA: accent,
-              colorB: isDark ? XkColor.darkAccentSoft : XkColor.accentSoft,
+              colorB: isDark ? XkColor.darkTintSoft : XkColor.tintSoft,
             ),
             _FunnelVariant(
               title: 'Support only',
               trackColor: trackColor,
               colorA: support,
-              colorB: isDark ? XkColor.darkSuccessSoft : XkColor.successSoft,
+              colorB: isDark ? XkColor.darkOk : XkColor.ok,
             ),
           ],
         ),
@@ -1099,15 +1099,15 @@ class _XkDomainPatternTabsState extends State<XkDomainPatternTabs> {
                   vertical: 9,
                 ),
                 backgroundColor: selected
-                    ? (isDark ? XkColor.darkAccentSoft : XkColor.accentSoft)
+                    ? (isDark ? XkColor.darkTintSoft : XkColor.tintSoft)
                     : Colors.transparent,
                 foregroundColor: selected
-                    ? (isDark ? XkColor.darkAccent : XkColor.accentDeep)
-                    : (isDark ? XkColor.darkTextBody : XkColor.textBody),
+                    ? (isDark ? XkColor.darkTintFill : XkColor.tintTextHover)
+                    : (isDark ? XkColor.darkInk : XkColor.ink),
                 side: BorderSide(
                   color: selected
-                      ? (isDark ? XkColor.darkAccent : XkColor.accent)
-                      : (isDark ? XkColor.darkBorder : XkColor.border),
+                      ? (isDark ? XkColor.darkTintFill : XkColor.tintFill)
+                      : (isDark ? XkColor.darkHair : XkColor.hair),
                 ),
                 shape: RoundedRectangleBorder(
                   borderRadius: XkShape.fullBorderRadius,
@@ -1123,10 +1123,10 @@ class _XkDomainPatternTabsState extends State<XkDomainPatternTabs> {
           width: double.infinity,
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
-            color: isDark ? XkColor.darkSurface : XkColor.surface,
+            color: isDark ? XkColor.darkPanel : XkColor.panel,
             borderRadius: widget.borderRadius ?? XkShape.mdBorderRadius,
             border: Border.all(
-              color: isDark ? XkColor.darkBorderSoft : XkColor.borderSoft,
+              color: isDark ? XkColor.darkHairSoft : XkColor.hairSoft,
             ),
             boxShadow: XkShadow.resolve(brightness),
           ),
@@ -1140,7 +1140,7 @@ class _XkDomainPatternTabsState extends State<XkDomainPatternTabs> {
                   Text(
                     active.phase,
                     style: XkTypo.metaMono.copyWith(
-                      color: isDark ? XkColor.darkTextMuted : XkColor.textMuted,
+                      color: isDark ? XkColor.darkMuted : XkColor.muted,
                     ),
                   ),
                 ],
@@ -1149,7 +1149,7 @@ class _XkDomainPatternTabsState extends State<XkDomainPatternTabs> {
               Text(
                 active.description,
                 style: XkTypo.cardBody.copyWith(
-                  color: isDark ? XkColor.darkTextBody : XkColor.textBody,
+                  color: isDark ? XkColor.darkInk : XkColor.ink,
                 ),
               ),
               const SizedBox(height: XkLayout.spacingSm),
@@ -1171,8 +1171,8 @@ class _XkDomainPatternTabsState extends State<XkDomainPatternTabs> {
                           metric.key,
                           style: XkTypo.bodySmall.copyWith(
                             color: isDark
-                                ? XkColor.darkTextBody
-                                : XkColor.textBody,
+                                ? XkColor.darkInk
+                                : XkColor.ink,
                           ),
                         ),
                         Text(
@@ -1193,11 +1193,11 @@ class _XkDomainPatternTabsState extends State<XkDomainPatternTabs> {
 
   Color _metricValueColor(String label, String value, bool isDark) {
     if (label.contains('Schema') || label.contains('clarity')) {
-      return isDark ? XkColor.darkSuccess : XkColor.success;
+      return isDark ? XkColor.darkOk : XkColor.ok;
     }
     if (label.contains('Noise')) {
-      return isDark ? XkColor.darkWarning : XkColor.warning;
+      return isDark ? XkColor.darkWarn : XkColor.warn;
     }
-    return isDark ? XkColor.darkTextStrong : XkColor.textStrong;
+    return isDark ? XkColor.darkInk : XkColor.ink;
   }
 }

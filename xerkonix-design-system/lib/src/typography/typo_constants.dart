@@ -33,7 +33,7 @@ class _FontSize {
   final double bodyLarge = 17;
   final double body = 14;
   final double label = 12;
-  final double meta = 11;
+  final double meta = 12.5;
 
   // v2.2 운영 화면(어드민·콘솔) 타이포 계약 — Page Title 28/36.
   // 값 자체는 [h2]·[title2] 와 같지만, 운영 화면에서 "제목이 검색창·도구에

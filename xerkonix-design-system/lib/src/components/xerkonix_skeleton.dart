@@ -39,7 +39,7 @@ class _XkSkeletonState extends State<XkSkeleton>
   @override
   Widget build(BuildContext context) {
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
-    final Color base = isDark ? XkColor.darkTextMuted : XkColor.textMuted;
+    final Color base = isDark ? XkColor.darkMuted : XkColor.muted;
     final bool reducedMotion =
         MediaQuery.maybeOf(context)?.disableAnimations ?? false;
     final Widget block = Container(

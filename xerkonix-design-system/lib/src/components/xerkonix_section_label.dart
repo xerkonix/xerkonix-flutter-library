@@ -13,7 +13,7 @@ class XkSectionLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
-    final Color color = isDark ? XkColor.darkTextMuted : XkColor.textMuted;
+    final Color color = isDark ? XkColor.darkMuted : XkColor.muted;
     return Padding(
       padding: const EdgeInsets.fromLTRB(2, 22, 2, 11),
       child: Row(

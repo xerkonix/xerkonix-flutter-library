@@ -82,7 +82,7 @@ class XkNeumorphic extends StatefulWidget {
   }) {
     final bool isDark = brightness == Brightness.dark;
     return BoxDecoration(
-      color: color ?? (isDark ? XkColor.darkSurface : XkColor.surface),
+      color: color ?? (isDark ? XkColor.darkPanel : XkColor.panel),
       borderRadius: borderRadius ?? XkShape.mdBorderRadius,
       boxShadow: _scaleShadows(XkShadow.raised(brightness), intensity),
     );
@@ -118,8 +118,8 @@ class _XkNeumorphicState extends State<XkNeumorphic> {
     final bool isDark = brightness == Brightness.dark;
     final BorderRadius radius = widget.borderRadius ?? XkShape.mdBorderRadius;
     final Color surface =
-        widget.color ?? (isDark ? XkColor.darkSurface : XkColor.surface);
-    final Color hairline = isDark ? XkColor.darkBorder : XkColor.border;
+        widget.color ?? (isDark ? XkColor.darkPanel : XkColor.panel);
+    final Color hairline = isDark ? XkColor.darkHair : XkColor.hair;
 
     // A held raised+tappable surface renders as inset for tactile feedback.
     final XkNeumorphicStyle style =

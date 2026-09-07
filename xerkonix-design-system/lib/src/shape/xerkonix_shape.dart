@@ -1,22 +1,19 @@
 import 'package:flutter/material.dart';
 
-/// Shape tokens from XERKONIX TACTILE Design System (tokens.css v2.1).
+/// Shape tokens from Weave v3 (tokens.css).
 ///
-/// Radius scale (4px grid): xs 6 · sm 10 · ctl 12 · md 14 · lg 18 · xl 22 ·
-/// pill 999. `ctl` (v2.1 `--radius-ctl`) is the control-only step for
-/// buttons / fields / steppers.
+/// Radius: 28 / 18 / 16 / 12 / pill 980.
 class XkShape {
   XkShape._();
 
-  static const double radiusXs = 6.0;
-  static const double radiusSm = 10.0;
-
-  /// v2.1 `--radius-ctl` — controls (button / field / stepper) only.
+  static const double radiusXs = 12.0;
+  static const double radiusSm = 12.0;
   static const double radiusCtl = 12.0;
-  static const double radiusMd = 14.0;
-  static const double radiusLg = 18.0;
-  static const double radiusXl = 22.0;
-  static const double radiusFull = 999.0;
+  static const double radiusMd = 18.0;
+  static const double radiusCard = 16.0;
+  static const double radiusLg = 28.0;
+  static const double radiusXl = 28.0;
+  static const double radiusFull = 980.0;
 
   static const BorderRadius xsBorderRadius = BorderRadius.all(
     Radius.circular(radiusXs),
@@ -61,21 +58,18 @@ class XkLayout {
   static const double gridMax = 1400.0;
   static const double sidebarWidth = 220.0;
 
-  static const double spacingXxs = 4.0; // --sp-1
-  static const double spacingXs = 8.0; // --sp-2
-  static const double spacingSm = 12.0; // --sp-3 (was 10 — off-ladder, fixed)
-  static const double spacingMd = 16.0; // --sp-4
-  static const double spacingLg = 20.0; // --sp-4h (v2.1 official half-step)
-  static const double spacingXl = 24.0; // --sp-5
-  static const double spacing2xl = 32.0; // --sp-6
-  static const double spacing3xl = 48.0; // --sp-7
-  static const double spacing4xl = 64.0; // --sp-8
+  static const double spacingXxs = 4.0; // --x-sp-1
+  static const double spacingXs = 8.0; // --x-sp-2
+  static const double spacingSm = 12.0; // --x-sp-3
+  static const double spacingMd = 16.0; // --x-sp-4
+  static const double spacingLg = 24.0; // --x-sp-5
+  static const double spacingXl = 24.0; // --x-sp-5
+  static const double spacing2xl = 32.0; // --x-sp-6
+  static const double spacing3xl = 48.0; // --x-sp-7
+  static const double spacing4xl = 48.0; // --x-sp-7
 
-  // v2.2 섹션 패딩 — 88 고정을 폐지하고 내용 무게에 따라 가변으로 쓴다.
-  // 간격 역할: 요소 8 · 컴포넌트 16–24 · 묶음 32–48 · 섹션 72–112.
-  // 비어 있던 32–48 묶음 대역([spacing2xl]·[spacing3xl])을 쓰는 것이 규칙이다.
-  static const double sectionLo = 72.0; // --sp-section-lo
-  static const double sectionHi = 112.0; // --sp-section-hi
+  static const double sectionLo = 84.0;
+  static const double sectionHi = 110.0;
 
   // Backward-compatible aliases
   static const double spacingExtraLarge = spacing2xl;
@@ -126,17 +120,37 @@ class XkShadow {
   // "다크는 하이라이트 0" rule; keeping the slot preserves paired geometry.
   static const Color darkHighlight = Color(0x00FFFFFF);
 
-  /// Raised surface (resting card / chip / button) — LIGHT.
+  /// Raised surface — LIGHT. --x-lit, 광원 30° (--x-sx .866 · --x-sy .5).
+  /// xy 오프셋은 양수만. 하이라이트는 inset 이라 BoxShadow 로 표현하지 않는다.
   static const List<BoxShadow> raisedLight = [
-    BoxShadow(color: lightLowlight, offset: Offset(7, 7), blurRadius: 16),
-    BoxShadow(color: lightHighlight, offset: Offset(-6, -6), blurRadius: 14),
+    BoxShadow(
+      color: Color(0x381A1B22),
+      offset: Offset(6.928, 4),
+      blurRadius: 24,
+      spreadRadius: -14,
+    ),
+    BoxShadow(
+      color: Color(0x1F1A1B22),
+      offset: Offset(13.856, 8),
+      blurRadius: 40,
+      spreadRadius: -30,
+    ),
   ];
 
-  /// Raised surface (resting card / chip / button) — DARK
-  /// (canonical dark `--neu-raise`).
+  /// Raised surface — DARK.
   static const List<BoxShadow> raisedDark = [
-    BoxShadow(color: darkLowlight, offset: Offset(8, 8), blurRadius: 18),
-    BoxShadow(color: darkHighlight, offset: Offset(-5, -5), blurRadius: 12),
+    BoxShadow(
+      color: Color(0xBF000000),
+      offset: Offset(6.928, 4),
+      blurRadius: 24,
+      spreadRadius: -14,
+    ),
+    BoxShadow(
+      color: Color(0x80000000),
+      offset: Offset(13.856, 8),
+      blurRadius: 40,
+      spreadRadius: -30,
+    ),
   ];
 
   /// Lifted / floating surface (overlays, menus, toasts) — LIGHT.
@@ -200,15 +214,22 @@ class XkShadow {
   /// Subtle raised treatment for small controls (chips, badges) — LIGHT
   /// (canonical `--neu-raise-sm`).
   static const List<BoxShadow> raisedSoftLight = [
-    BoxShadow(color: lightLowlight, offset: Offset(4, 4), blurRadius: 9),
-    BoxShadow(color: lightHighlight, offset: Offset(-3, -3), blurRadius: 8),
+    BoxShadow(
+      color: Color(0x381A1B22),
+      offset: Offset(3.464, 2),
+      blurRadius: 12,
+      spreadRadius: -4,
+    ),
   ];
 
-  /// Subtle raised treatment for small controls (chips, badges) — DARK
-  /// (canonical dark `--neu-raise-sm`).
+  /// Subtle raised treatment for small controls — DARK.
   static const List<BoxShadow> raisedSoftDark = [
-    BoxShadow(color: darkLowlight, offset: Offset(5, 5), blurRadius: 10),
-    BoxShadow(color: darkHighlight, offset: Offset(-3, -3), blurRadius: 7),
+    BoxShadow(
+      color: Color(0xBF000000),
+      offset: Offset(3.464, 2),
+      blurRadius: 12,
+      spreadRadius: -4,
+    ),
   ];
 
   /// Subtle paired raised shadow for small controls, by [brightness].

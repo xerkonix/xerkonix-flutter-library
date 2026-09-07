@@ -50,7 +50,7 @@ class XkMotion {
       duration: duration,
       minOpacity: minOpacity,
       maxOpacity: maxOpacity,
-      color: color ?? XkColor.accent,
+      color: color ?? XkColor.tintFill,
       respectReducedMotion: respectReducedMotion,
       child: child,
     );
@@ -68,8 +68,8 @@ class XkMotion {
     return _PulseAnimation(
       duration: duration,
       curve: curve,
-      primaryColor: primaryColor ?? XkColor.accent,
-      secondaryColor: secondaryColor ?? XkColor.error,
+      primaryColor: primaryColor ?? XkColor.tintFill,
+      secondaryColor: secondaryColor ?? XkColor.bad,
       respectReducedMotion: respectReducedMotion,
       child: child,
     );
@@ -77,7 +77,7 @@ class XkMotion {
 
   static Widget statusPulse({
     Duration duration = XkMotionToken.statusPulse,
-    Color color = XkColor.accent,
+    Color color = XkColor.tintFill,
     double size = 16,
     bool respectReducedMotion = true,
   }) {
@@ -91,7 +91,7 @@ class XkMotion {
 
   static Widget signalSweep({
     Duration duration = XkMotionToken.signalSweep,
-    Color color = XkColor.accent,
+    Color color = XkColor.tintFill,
     double width = 186,
     bool respectReducedMotion = true,
   }) {
@@ -105,7 +105,7 @@ class XkMotion {
 
   static Widget rhythmLine({
     Duration duration = XkMotionToken.rhythmLine,
-    Color color = XkColor.accent,
+    Color color = XkColor.tintFill,
     bool respectReducedMotion = true,
   }) {
     return XkRhythmLine(
@@ -117,7 +117,7 @@ class XkMotion {
 
   static Widget focusRipple({
     Duration duration = XkMotionToken.focusRipple,
-    Color color = XkColor.accent,
+    Color color = XkColor.tintFill,
     bool respectReducedMotion = true,
   }) {
     return XkFocusRipple(
@@ -141,7 +141,7 @@ class XkMotion {
 
   static Widget alertPulse({
     Duration duration = XkMotionToken.alertPulse,
-    Color color = XkColor.error,
+    Color color = XkColor.bad,
     bool respectReducedMotion = true,
   }) {
     return XkAlertPulse(
@@ -158,7 +158,7 @@ class XkStatusPulse extends StatelessWidget {
     super.key,
     this.duration = XkMotionToken.statusPulse,
     this.size = 16,
-    this.color = XkColor.accent,
+    this.color = XkColor.tintFill,
     this.minScale = 0.8,
     this.maxScale = 1.22,
     this.minOpacity = 0.45,
@@ -213,7 +213,7 @@ class XkSignalSweep extends StatelessWidget {
     this.width = 186,
     this.trackHeight = 5,
     this.dotSize = 11,
-    this.color = XkColor.accent,
+    this.color = XkColor.tintFill,
     this.respectReducedMotion = true,
   });
 
@@ -228,8 +228,8 @@ class XkSignalSweep extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final trackColor = isDark
-        ? XkColor.darkTextBody.withValues(alpha: 0.14)
-        : XkColor.textBody.withValues(alpha: 0.12);
+        ? XkColor.darkInk.withValues(alpha: 0.14)
+        : XkColor.ink.withValues(alpha: 0.12);
 
     return _XkLoopMotion(
       duration: duration,
@@ -280,7 +280,7 @@ class XkRhythmLine extends StatelessWidget {
     this.duration = XkMotionToken.rhythmLine,
     this.width = 192,
     this.height = 40,
-    this.color = XkColor.accent,
+    this.color = XkColor.tintFill,
     this.respectReducedMotion = true,
   });
 
@@ -387,7 +387,7 @@ class XkFocusRipple extends StatelessWidget {
     this.duration = XkMotionToken.focusRipple,
     this.size = 64,
     this.dotSize = 14,
-    this.color = XkColor.accent,
+    this.color = XkColor.tintFill,
     this.respectReducedMotion = true,
   });
 
@@ -497,9 +497,9 @@ class XkCardSettle extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
-                  color: isDark ? XkColor.darkBorder : XkColor.border,
+                  color: isDark ? XkColor.darkHair : XkColor.hair,
                 ),
-                color: isDark ? XkColor.darkSurface : XkColor.surface,
+                color: isDark ? XkColor.darkPanel : XkColor.panel,
               ),
             );
 
@@ -522,7 +522,7 @@ class XkAlertPulse extends StatelessWidget {
     this.duration = XkMotionToken.alertPulse,
     this.size = 72,
     this.dotSize = 16,
-    this.color = XkColor.error,
+    this.color = XkColor.bad,
     this.respectReducedMotion = true,
   });
 

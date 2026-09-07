@@ -194,8 +194,8 @@ class _InsetWell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
-    final Color fill = isDark ? XkColor.darkBg : XkColor.surface2;
-    final Color hairline = isDark ? XkColor.darkBorderSoft : XkColor.borderSoft;
+    final Color fill = isDark ? XkColor.darkBg : XkColor.hairSoft;
+    final Color hairline = isDark ? XkColor.darkHairSoft : XkColor.hairSoft;
     return Opacity(
       opacity: enabled ? 1.0 : 0.6,
       child: DecoratedBox(
@@ -209,9 +209,9 @@ class _InsetWell extends StatelessWidget {
             borderRadius: radius,
             lowlight: isDark
                 ? XkShadow.darkLowlight
-                : XkColor.textStrong.withValues(alpha: 0.16),
+                : XkColor.ink.withValues(alpha: 0.16),
             highlight: isDark
-                ? XkColor.darkTextStrong.withValues(alpha: 0.05)
+                ? XkColor.darkInk.withValues(alpha: 0.05)
                 : Colors.white.withValues(alpha: 0.6),
             distance: 3,
             blur: 7,

@@ -130,8 +130,8 @@ class XkAlert extends StatelessWidget {
                             message,
                             style: XkTypo.bodySmall.copyWith(
                               color: isDark
-                                  ? XkColor.darkTextBody
-                                  : XkColor.textBody,
+                                  ? XkColor.darkInk
+                                  : XkColor.ink,
                             ),
                           ),
                         ],
@@ -165,9 +165,9 @@ class XkAlert extends StatelessWidget {
   }
 
   _AlertPalette _resolvePalette(bool isDark) {
-    final neutralBg = isDark ? XkColor.darkSurface : XkColor.surface;
-    final neutralBorder = isDark ? XkColor.darkBorderSoft : XkColor.borderSoft;
-    final foreground = isDark ? XkColor.darkTextStrong : XkColor.textStrong;
+    final neutralBg = isDark ? XkColor.darkPanel : XkColor.panel;
+    final neutralBorder = isDark ? XkColor.darkHairSoft : XkColor.hairSoft;
+    final foreground = isDark ? XkColor.darkInk : XkColor.ink;
 
     switch (variant) {
       case XkAlertVariant.success:
@@ -175,25 +175,25 @@ class XkAlert extends StatelessWidget {
           background: neutralBg,
           border: neutralBorder,
           foreground: foreground,
-          accent: isDark ? XkColor.darkSuccess : XkColor.success,
+          accent: isDark ? XkColor.darkOk : XkColor.ok,
         );
       case XkAlertVariant.info:
         return _AlertPalette(
           background: neutralBg,
           border: neutralBorder,
           foreground: foreground,
-          accent: isDark ? XkColor.gray500 : XkColor.gray600,
+          accent: isDark ? XkColor.muted : XkColor.muted,
         );
       case XkAlertVariant.warning:
         return _AlertPalette(
           background: neutralBg,
           border: neutralBorder,
           foreground: foreground,
-          accent: isDark ? XkColor.darkWarning : XkColor.warning,
+          accent: isDark ? XkColor.darkWarn : XkColor.warn,
         );
       case XkAlertVariant.danger:
-        final signal = isDark ? XkColor.darkError : XkColor.error;
-        final wash = isDark ? XkColor.darkErrorSoft : XkColor.errorSoft;
+        final signal = isDark ? XkColor.darkBad : XkColor.bad;
+        final wash = isDark ? XkColor.darkBad : XkColor.bad;
         return _AlertPalette(
           background: Color.alphaBlend(wash, neutralBg),
           border: neutralBorder,

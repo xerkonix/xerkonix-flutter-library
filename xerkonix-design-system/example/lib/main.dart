@@ -314,7 +314,7 @@ class _WeaveShowcasePageState extends State<WeaveShowcasePage> {
                             XkTableCell(text: '88.7'),
                             XkTableCell(
                               text: '+5.5',
-                              textColor: XkColor.success,
+                              textColor: XkColor.ok,
                             ),
                             XkTableCell(text: '우선순위 유지'),
                           ]),
@@ -324,7 +324,7 @@ class _WeaveShowcasePageState extends State<WeaveShowcasePage> {
                             XkTableCell(text: '34%'),
                             XkTableCell(
                               text: '-13%',
-                              textColor: XkColor.success,
+                              textColor: XkColor.ok,
                             ),
                             XkTableCell(text: '모니터링 간격 확장'),
                           ]),
@@ -332,7 +332,7 @@ class _WeaveShowcasePageState extends State<WeaveShowcasePage> {
                             XkTableCell(text: 'Signal Stability'),
                             XkTableCell(text: '71'),
                             XkTableCell(text: '76'),
-                            XkTableCell(text: '-5', textColor: XkColor.warning),
+                            XkTableCell(text: '-5', textColor: XkColor.warn),
                             XkTableCell(text: '보조 지표 확인'),
                           ]),
                           XkTableRowData(const [
@@ -341,7 +341,7 @@ class _WeaveShowcasePageState extends State<WeaveShowcasePage> {
                             XkTableCell(text: '72%'),
                             XkTableCell(
                               text: '+6%',
-                              textColor: XkColor.success,
+                              textColor: XkColor.ok,
                             ),
                             XkTableCell(text: '입력 범위 유지'),
                           ]),
@@ -550,7 +550,7 @@ class _Hero extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final eyebrowColor =
-        isDark ? XkColor.darkTextMuted : XkColor.accentDeep;
+        isDark ? XkColor.darkMuted : XkColor.tintTextHover;
 
     return Container(
       width: double.infinity,
@@ -558,13 +558,13 @@ class _Hero extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: XkShape.xlBorderRadius,
         border: Border.all(
-          color: isDark ? XkColor.darkBorderSoft : XkColor.borderSoft,
+          color: isDark ? XkColor.darkHairSoft : XkColor.hairSoft,
         ),
         gradient: LinearGradient(
           colors: [
-            (isDark ? XkColor.darkAccentSoft : XkColor.accentSoft)
+            (isDark ? XkColor.darkTintSoft : XkColor.tintSoft)
                 .withValues(alpha: 0.42),
-            (isDark ? XkColor.darkAccentSoft : XkColor.accentSoft).withValues(
+            (isDark ? XkColor.darkTintSoft : XkColor.tintSoft).withValues(
               alpha: 0.30,
             ),
             Colors.transparent,
@@ -581,7 +581,7 @@ class _Hero extends StatelessWidget {
               Container(
                 width: 26,
                 height: 1,
-                color: XkColor.accent,
+                color: XkColor.tintFill,
               ),
               const SizedBox(width: 8),
               Text(
@@ -673,11 +673,11 @@ class _AxisMotionCard extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: XkShape.mdBorderRadius,
         border: Border.all(
-          color: isDark ? XkColor.darkBorderSoft : XkColor.borderSoft,
+          color: isDark ? XkColor.darkHairSoft : XkColor.hairSoft,
         ),
         color: isDark
-            ? XkColor.darkSurface.withValues(alpha: 0.86)
-            : XkColor.surface.withValues(alpha: 0.86),
+            ? XkColor.darkPanel.withValues(alpha: 0.86)
+            : XkColor.panel.withValues(alpha: 0.86),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -690,11 +690,11 @@ class _AxisMotionCard extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: XkShape.smBorderRadius,
               border: Border.all(
-                color: isDark ? XkColor.darkBorderSoft : XkColor.borderSoft,
+                color: isDark ? XkColor.darkHairSoft : XkColor.hairSoft,
               ),
               color: isDark
-                  ? XkColor.darkSurface2.withValues(alpha: 0.72)
-                  : XkColor.surface2.withValues(alpha: 0.72),
+                  ? XkColor.darkHairSoft.withValues(alpha: 0.72)
+                  : XkColor.hairSoft.withValues(alpha: 0.72),
             ),
             clipBehavior: Clip.antiAlias,
             child: motion,
@@ -714,8 +714,8 @@ class _ThreadAxisMotion extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final guide = isDark
-        ? XkColor.darkTextMuted.withValues(alpha: 0.16)
-        : XkColor.textMuted.withValues(alpha: 0.14);
+        ? XkColor.darkMuted.withValues(alpha: 0.16)
+        : XkColor.muted.withValues(alpha: 0.14);
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -739,7 +739,7 @@ class _ThreadAxisMotion extends StatelessWidget {
               child: XkRhythmLine(
                 width: width,
                 height: 54,
-                color: isDark ? XkColor.darkAccent : XkColor.accent,
+                color: isDark ? XkColor.darkTintFill : XkColor.tintFill,
               ),
             ),
           ],
@@ -804,8 +804,8 @@ class _KnotAxisPainter extends CustomPainter {
     final center = Offset(size.width / 2, size.height / 2);
     final guidePaint = Paint()
       ..color = isDark
-          ? XkColor.darkTextMuted.withValues(alpha: 0.22)
-          : XkColor.textMuted.withValues(alpha: 0.22)
+          ? XkColor.darkMuted.withValues(alpha: 0.22)
+          : XkColor.muted.withValues(alpha: 0.22)
       ..strokeWidth = 1.5
       ..strokeCap = StrokeCap.round;
 
@@ -820,8 +820,8 @@ class _KnotAxisPainter extends CustomPainter {
       canvas.drawLine(start, center, guidePaint);
     }
 
-    final accent = isDark ? XkColor.darkAccent : XkColor.accent;
-    final identity = isDark ? XkColor.darkAccent : XkColor.accent;
+    final accent = isDark ? XkColor.darkTintFill : XkColor.tintFill;
+    final identity = isDark ? XkColor.darkTintFill : XkColor.tintFill;
     final ringProgress = 0.5 - math.cos(progress * math.pi * 2) / 2;
 
     canvas.drawCircle(
@@ -854,7 +854,7 @@ class _MotionInterpretationNote extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final border = isDark ? XkColor.darkBorderSoft : XkColor.borderSoft;
+    final border = isDark ? XkColor.darkHairSoft : XkColor.hairSoft;
 
     return Container(
       width: double.infinity,
@@ -862,7 +862,7 @@ class _MotionInterpretationNote extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: XkShape.mdBorderRadius,
         border: Border.all(color: border),
-        color: isDark ? XkColor.darkSurface2 : XkColor.surface2,
+        color: isDark ? XkColor.darkHairSoft : XkColor.hairSoft,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -900,16 +900,16 @@ class _Section extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final metaColor = isDark ? XkColor.darkTextMuted : XkColor.textMuted;
+    final metaColor = isDark ? XkColor.darkMuted : XkColor.muted;
 
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(XkLayout.spacingMd),
       decoration: BoxDecoration(
-        color: isDark ? XkColor.darkSurface : XkColor.surface,
+        color: isDark ? XkColor.darkPanel : XkColor.panel,
         borderRadius: XkShape.xlBorderRadius,
         border: Border.all(
-          color: isDark ? XkColor.darkBorderSoft : XkColor.borderSoft,
+          color: isDark ? XkColor.darkHairSoft : XkColor.hairSoft,
         ),
       ),
       child: Column(
@@ -970,8 +970,8 @@ class _IconGrid extends StatelessWidget {
                     borderRadius: XkShape.smBorderRadius,
                     border: Border.all(
                       color: Theme.of(context).brightness == Brightness.dark
-                          ? XkColor.darkBorderSoft
-                          : XkColor.borderSoft,
+                          ? XkColor.darkHairSoft
+                          : XkColor.hairSoft,
                     ),
                   ),
                   padding: const EdgeInsets.all(XkLayout.spacingXs),
@@ -1051,8 +1051,8 @@ class _PatternTile extends StatelessWidget {
         borderRadius: XkShape.mdBorderRadius,
         border: Border.all(
           color: Theme.of(context).brightness == Brightness.dark
-              ? XkColor.darkBorderSoft
-              : XkColor.borderSoft,
+              ? XkColor.darkHairSoft
+              : XkColor.hairSoft,
         ),
       ),
       child: Column(
@@ -1078,10 +1078,10 @@ class _ConfidenceCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(XkLayout.spacingMd),
       decoration: BoxDecoration(
-        color: isDark ? XkColor.darkSurface : XkColor.surface,
+        color: isDark ? XkColor.darkPanel : XkColor.panel,
         borderRadius: XkShape.mdBorderRadius,
         border: Border.all(
-          color: isDark ? XkColor.darkBorderSoft : XkColor.borderSoft,
+          color: isDark ? XkColor.darkHairSoft : XkColor.hairSoft,
         ),
       ),
       child: Column(
@@ -1093,24 +1093,24 @@ class _ConfidenceCard extends StatelessWidget {
             label: '역할 적합도 신뢰도',
             value: 0.94,
             valueText: '94%',
-            startColor: XkColor.accentDeep,
-            endColor: XkColor.accentSoft,
+            startColor: XkColor.tintTextHover,
+            endColor: XkColor.tintSoft,
           ),
           const SizedBox(height: XkLayout.spacingSm),
           const XkConfidenceMeter(
             label: '행동 전환 명확도',
             value: 0.91,
             valueText: '91%',
-            startColor: XkColor.accentDeep,
-            endColor: XkColor.accentSoft,
+            startColor: XkColor.tintTextHover,
+            endColor: XkColor.tintSoft,
           ),
           const SizedBox(height: XkLayout.spacingSm),
           const XkConfidenceMeter(
             label: '추천 보조 안정성',
             value: 0.88,
             valueText: '88%',
-            startColor: XkColor.success,
-            endColor: XkColor.successSoft,
+            startColor: XkColor.ok,
+            endColor: XkColor.ok,
           ),
         ],
       ),
@@ -1129,25 +1129,25 @@ class _TimelineCard extends StatelessWidget {
           time: '2026-01-14 09:23',
           title: '이탈 위험 급상승',
           description: '참여율 42% 하락, 3주 내 이탈 확률 78%',
-          color: XkColor.error,
+          color: XkColor.bad,
         ),
         XkTimelineItem(
           time: '2026-01-10 14:07',
           title: '협업 패턴 이상',
           description: '응답 지연 +140%, 피드백 빈도 감소',
-          color: XkColor.warning,
+          color: XkColor.warn,
         ),
         XkTimelineItem(
           time: '2026-01-05 11:30',
           title: '역량 업데이트',
           description: '경력 점수 +8.2',
-          color: XkColor.gray600,
+          color: XkColor.muted,
         ),
         XkTimelineItem(
           time: '2025-12-20 09:00',
           title: '초기 기준선 설정',
           description: 'Baseline 8.6 / 신뢰도 92%',
-          color: XkColor.success,
+          color: XkColor.ok,
         ),
       ],
     );
@@ -1172,10 +1172,10 @@ class _MotionTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(XkLayout.spacingMd),
       decoration: BoxDecoration(
-        color: isDark ? XkColor.darkSurface : XkColor.surface,
+        color: isDark ? XkColor.darkPanel : XkColor.panel,
         borderRadius: XkShape.mdBorderRadius,
         border: Border.all(
-          color: isDark ? XkColor.darkBorderSoft : XkColor.borderSoft,
+          color: isDark ? XkColor.darkHairSoft : XkColor.hairSoft,
         ),
       ),
       child: Column(
@@ -1186,8 +1186,8 @@ class _MotionTile extends StatelessWidget {
               width: double.infinity,
               decoration: BoxDecoration(
                 color: isDark
-                    ? XkColor.darkSurface2.withValues(alpha: 0.55)
-                    : XkColor.surface2,
+                    ? XkColor.darkHairSoft.withValues(alpha: 0.55)
+                    : XkColor.hairSoft,
                 borderRadius: XkShape.smBorderRadius,
               ),
               child: Center(child: child),

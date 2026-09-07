@@ -28,8 +28,8 @@ class XkBrandMark extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
-    final Color arc = primary ?? (isDark ? XkColor.darkAccent : XkColor.accent);
-    final Color dot = secondary ?? (isDark ? XkColor.darkBrand : XkColor.brand);
+    final Color arc = primary ?? (isDark ? XkColor.darkTintFill : XkColor.tintFill);
+    final Color dot = secondary ?? (isDark ? XkColor.darkMuted : XkColor.muted);
     return SizedBox(
       width: size,
       height: size,

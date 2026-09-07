@@ -5,88 +5,86 @@ import 'package:flutter/material.dart';
 void main() {
   group('XkColor Tests', () {
     test('XkColor should have primary color', () {
-      expect(XkColor.primary, isA<Color>());
-      expect(XkColor.primary.toARGB32(), isNotNull);
+      expect(XkColor.tintFill, isA<Color>());
+      expect(XkColor.tintFill.toARGB32(), isNotNull);
     });
 
     test('XkColor should have secondary color', () {
-      expect(XkColor.secondary, isA<Color>());
-      expect(XkColor.secondary.toARGB32(), isNotNull);
+      expect(XkColor.muted, isA<Color>());
+      expect(XkColor.muted.toARGB32(), isNotNull);
     });
 
     test('XkColor should have tertiary color', () {
-      expect(XkColor.tertiary, isA<Color>());
-      expect(XkColor.tertiary.toARGB32(), isNotNull);
+      expect(XkColor.cool, isA<Color>());
+      expect(XkColor.cool.toARGB32(), isNotNull);
     });
 
     test('XkColor should have error color', () {
-      expect(XkColor.error, isA<Color>());
-      expect(XkColor.error.toARGB32(), isNotNull);
+      expect(XkColor.bad, isA<Color>());
+      expect(XkColor.bad.toARGB32(), isNotNull);
     });
 
     test('XkColor should have the full gray-blue scale', () {
-      expect(XkColor.gray000, isA<Color>());
-      expect(XkColor.gray050, isA<Color>());
-      expect(XkColor.gray100, isA<Color>());
-      expect(XkColor.gray200, isA<Color>());
-      expect(XkColor.gray300, isA<Color>());
-      expect(XkColor.gray400, isA<Color>());
-      expect(XkColor.gray500, isA<Color>());
-      expect(XkColor.gray600, isA<Color>());
-      expect(XkColor.gray700, isA<Color>());
-      expect(XkColor.gray800, isA<Color>());
-      expect(XkColor.gray900, isA<Color>());
-      expect(XkColor.gray950, isA<Color>());
+      expect(XkColor.panel, isA<Color>());
+      expect(XkColor.bg, isA<Color>());
+      expect(XkColor.hairSoft, isA<Color>());
+      expect(XkColor.hair, isA<Color>());
+      expect(XkColor.hair, isA<Color>());
+      expect(XkColor.muted, isA<Color>());
+      expect(XkColor.muted, isA<Color>());
+      expect(XkColor.muted, isA<Color>());
+      expect(XkColor.ink, isA<Color>());
+      expect(XkColor.ink, isA<Color>());
+      expect(XkColor.ink, isA<Color>());
+      expect(XkColor.black, isA<Color>());
     });
 
     test('XkColor should have TACTILE semantic tokens', () {
       expect(XkColor.bg, isA<Color>());
-      expect(XkColor.surface, isA<Color>());
-      expect(XkColor.surface2, isA<Color>());
-      expect(XkColor.textStrong, isA<Color>());
-      expect(XkColor.textBody, isA<Color>());
-      expect(XkColor.textMuted, isA<Color>());
-      expect(XkColor.brand, isA<Color>());
-      expect(XkColor.accent, isA<Color>());
-      expect(XkColor.accentSoft, isA<Color>());
-      expect(XkColor.success, isA<Color>());
-      expect(XkColor.warning, isA<Color>());
-      expect(XkColor.error, isA<Color>());
+      expect(XkColor.panel, isA<Color>());
+      expect(XkColor.hairSoft, isA<Color>());
+      expect(XkColor.ink, isA<Color>());
+      expect(XkColor.ink, isA<Color>());
+      expect(XkColor.muted, isA<Color>());
+      expect(XkColor.muted, isA<Color>());
+      expect(XkColor.tintFill, isA<Color>());
+      expect(XkColor.tintSoft, isA<Color>());
+      expect(XkColor.ok, isA<Color>());
+      expect(XkColor.warn, isA<Color>());
+      expect(XkColor.bad, isA<Color>());
     });
 
-    test('XkColor should expose the TACTILE key values', () {
-      // Monochrome ink accent + core surfaces (light).
-      expect(XkColor.accent.toARGB32(), 0xFF232430);
-      expect(XkColor.bg.toARGB32(), 0xFFF5F5F7); // [v2.3]
-      expect(XkColor.surface.toARGB32(), 0xFFFFFFFF); // [v2.3]
-      // Near-white ink accent (dark).
-      expect(XkColor.darkAccent.toARGB32(), 0xFFF1F1F4);
-      expect(XkColor.darkBg.toARGB32(), 0xFF1A1B22);
+    test('XkColor should expose the Weave key values', () {
+      expect(XkColor.tintFill.toARGB32(), 0xFF0081A0);
+      expect(XkColor.bg.toARGB32(), 0xFFF5F5F5);
+      expect(XkColor.panel.toARGB32(), 0xFFFFFFFF);
+      expect(XkColor.darkTintFill.toARGB32(), 0xFF3FB4C8);
+      expect(XkColor.darkBg.toARGB32(), 0xFF000000);
     });
 
     test('XkColor.themed remaps light canon hex in dark, identity in light', () {
-      expect(XkColor.themed(XkColor.point, Brightness.light), XkColor.point);
-      expect(XkColor.themed(XkColor.point, Brightness.dark), XkColor.darkPoint);
+      expect(XkColor.themed(XkColor.tintText, Brightness.light), XkColor.tintText);
+      expect(XkColor.themed(XkColor.tintText, Brightness.dark), XkColor.darkTintText);
       expect(
         XkColor.themed(const Color(0xFF007A91), Brightness.dark),
-        XkColor.darkPoint,
+        XkColor.darkTintText,
       );
-      expect(XkColor.themed(XkColor.success, Brightness.dark), XkColor.darkSuccess);
-      expect(XkColor.themed(XkColor.darkPoint, Brightness.dark), XkColor.darkPoint);
-      expect(XkColor.themed(XkColor.gray400, Brightness.dark), XkColor.gray400);
+      expect(XkColor.themed(XkColor.ok, Brightness.dark), XkColor.darkOk);
+      expect(XkColor.themed(XkColor.darkTintText, Brightness.dark), XkColor.darkTintText);
+      expect(XkColor.themed(XkColor.muted, Brightness.dark), XkColor.darkMuted);
     });
 
     test('XkColor should have the warm/cool temperature accent pair', () {
-      expect(XkColor.tempWarm, isA<Color>());
-      expect(XkColor.tempCool, isA<Color>());
-      expect(XkColor.tempWarmSoft, isA<Color>());
-      expect(XkColor.tempCoolSoft, isA<Color>());
-      expect(XkColor.darkTempWarm, isA<Color>());
-      expect(XkColor.darkTempCool, isA<Color>());
+      expect(XkColor.warm, isA<Color>());
+      expect(XkColor.cool, isA<Color>());
+      expect(XkColor.warm, isA<Color>());
+      expect(XkColor.cool, isA<Color>());
+      expect(XkColor.darkWarm, isA<Color>());
+      expect(XkColor.darkCool, isA<Color>());
       // 2026-07-27 TACTILE 정본 WCAG AA 승급 값. 옛 값(#C65F45 / #7B84C4)은
       // bg 대비 3.3:1 대로 본문 텍스트 기준 미달이었다.
-      expect(XkColor.tempWarm.toARGB32(), 0xFFB75138);
-      expect(XkColor.tempCool.toARGB32(), 0xFF5F6AB8);
+      expect(XkColor.warm.toARGB32(), 0xFFB8503A);
+      expect(XkColor.cool.toARGB32(), 0xFF3E6B8F);
     });
   });
 
@@ -95,7 +93,7 @@ void main() {
         () {
       expect(XkShadow.raised(Brightness.light).length, 2);
       expect(XkShadow.raised(Brightness.dark).length, 2);
-      expect(XkShadow.raisedSoft(Brightness.dark).length, 2);
+      expect(XkShadow.raisedSoft(Brightness.dark).length, 1);
       // v2.1: 떠 있는 층은 정본 --float(단방향 드롭 섀도우) — 페어드 아님.
       expect(XkShadow.lifted(Brightness.light).length, 1);
       expect(XkShadow.lifted(Brightness.dark).length, 1);
@@ -115,15 +113,15 @@ void main() {
       expect(XkShadow.darkHighlight.toARGB32(), 0x00FFFFFF);
     });
 
-    test('raised light pair matches the TACTILE highlight/lowlight spec', () {
-      final BoxShadow low = XkShadow.raisedLight.first;
-      final BoxShadow high = XkShadow.raisedLight.last;
-      expect(low.color.toARGB32(), 0x809093A6); // [v2.3] rgba(144,147,166,.5)
-      expect(low.offset, const Offset(7, 7));
-      expect(low.blurRadius, 16);
-      expect(high.color.toARGB32(), 0xFFFFFFFF);
-      expect(high.offset, const Offset(-6, -6));
-      expect(high.blurRadius, 14);
+    test('raised light pair matches Weave 30° light (positive xy)', () {
+      final BoxShadow near = XkShadow.raisedLight.first;
+      final BoxShadow far = XkShadow.raisedLight.last;
+      expect(near.offset.dx > 0, isTrue);
+      expect(near.offset.dy > 0, isTrue);
+      expect(far.offset.dx > 0, isTrue);
+      expect(far.offset.dy > 0, isTrue);
+      expect(near.blurRadius, 24);
+      expect(far.blurRadius, 40);
     });
 
     test('resolve keeps the legacy 3-tier API', () {

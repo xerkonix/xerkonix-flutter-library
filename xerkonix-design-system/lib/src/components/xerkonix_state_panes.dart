@@ -22,7 +22,7 @@ class XkEmptyPane extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
-    final Color muted = isDark ? XkColor.darkTextMuted : XkColor.textMuted;
+    final Color muted = isDark ? XkColor.darkMuted : XkColor.muted;
     return Center(
       child: Text(
         message,
@@ -52,8 +52,8 @@ class XkErrorPane extends StatelessWidget {
   Widget build(BuildContext context) {
     final Brightness brightness = Theme.of(context).brightness;
     final bool isDark = brightness == Brightness.dark;
-    final Color error = isDark ? XkColor.darkError : XkColor.error;
-    final Color surface = isDark ? XkColor.darkSurface : XkColor.surface;
+    final Color error = isDark ? XkColor.darkBad : XkColor.bad;
+    final Color surface = isDark ? XkColor.darkPanel : XkColor.panel;
     return Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 420),

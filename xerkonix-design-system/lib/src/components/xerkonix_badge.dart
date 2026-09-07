@@ -26,7 +26,7 @@ class XkBadge extends StatelessWidget {
     final Brightness brightness = Theme.of(context).brightness;
     final bool isDark = brightness == Brightness.dark;
     final Color base = XkColor.themed(
-      color ?? (isDark ? XkColor.darkAccent : XkColor.accent),
+      color ?? (isDark ? XkColor.darkTintFill : XkColor.tintFill),
       brightness,
     );
     return Container(

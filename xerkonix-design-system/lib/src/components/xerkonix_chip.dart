@@ -103,9 +103,9 @@ class XkChip extends StatelessWidget {
                 borderRadius: inkBorderRadius,
                 lowlight: isDark
                     ? XkShadow.darkLowlight
-                    : XkColor.textStrong.withValues(alpha: 0.20),
+                    : XkColor.ink.withValues(alpha: 0.20),
                 highlight: isDark
-                    ? XkColor.darkTextStrong.withValues(alpha: 0.05)
+                    ? XkColor.darkInk.withValues(alpha: 0.05)
                     : Colors.white.withValues(alpha: 0.5),
                 distance: 2.5,
                 blur: 5,
@@ -126,10 +126,10 @@ class XkChip extends StatelessWidget {
   }
 
   _ChipPalette _selectableColors(bool isDark, bool isSelected) {
-    final Color accent = isDark ? XkColor.darkAccent : XkColor.accent;
+    final Color accent = isDark ? XkColor.darkTintFill : XkColor.tintFill;
     final Color accentText = isDark
-        ? XkColor.darkAccentDeep
-        : XkColor.accentDeep;
+        ? XkColor.darkTintLight
+        : XkColor.tintTextHover;
     if (isSelected) {
       return _ChipPalette(
         background: accent.withValues(alpha: 0.14),
@@ -139,10 +139,10 @@ class XkChip extends StatelessWidget {
       );
     }
     return _ChipPalette(
-      background: isDark ? XkColor.darkSurface2 : XkColor.surface2,
-      border: isDark ? XkColor.darkBorder : XkColor.border,
-      text: isDark ? XkColor.darkTextBody : XkColor.textBody,
-      dot: isDark ? XkColor.darkTextMuted : XkColor.textMuted,
+      background: isDark ? XkColor.darkHairSoft : XkColor.hairSoft,
+      border: isDark ? XkColor.darkHair : XkColor.hair,
+      text: isDark ? XkColor.darkInk : XkColor.ink,
+      dot: isDark ? XkColor.darkMuted : XkColor.muted,
     );
   }
 
@@ -150,46 +150,46 @@ class XkChip extends StatelessWidget {
     switch (variant) {
       case XkChipVariant.neutral:
         return _ChipPalette(
-          background: isDark ? XkColor.darkSurface2 : XkColor.surface,
-          border: isDark ? XkColor.darkBorder : XkColor.border,
-          text: isDark ? XkColor.darkTextBody : XkColor.textBody,
-          dot: isDark ? XkColor.darkTextMuted : XkColor.textMuted,
+          background: isDark ? XkColor.darkHairSoft : XkColor.panel,
+          border: isDark ? XkColor.darkHair : XkColor.hair,
+          text: isDark ? XkColor.darkInk : XkColor.ink,
+          dot: isDark ? XkColor.darkMuted : XkColor.muted,
         );
       case XkChipVariant.brand:
         return _ChipPalette(
-          background: isDark ? XkColor.darkAccentSoft : XkColor.accentSoft,
-          border: (isDark ? XkColor.darkAccent : XkColor.accent).withValues(
+          background: isDark ? XkColor.darkTintSoft : XkColor.tintSoft,
+          border: (isDark ? XkColor.darkTintFill : XkColor.tintFill).withValues(
             alpha: 0.44,
           ),
-          text: isDark ? XkColor.darkAccentDeep : XkColor.accentDeep,
-          dot: isDark ? XkColor.darkAccent : XkColor.accent,
+          text: isDark ? XkColor.darkTintLight : XkColor.tintTextHover,
+          dot: isDark ? XkColor.darkTintFill : XkColor.tintFill,
         );
       case XkChipVariant.support:
         return _ChipPalette(
-          background: isDark ? XkColor.darkSuccessSoft : XkColor.successSoft,
-          border: (isDark ? XkColor.darkSuccess : XkColor.success).withValues(
+          background: isDark ? XkColor.darkOk : XkColor.ok,
+          border: (isDark ? XkColor.darkOk : XkColor.ok).withValues(
             alpha: 0.44,
           ),
-          text: isDark ? XkColor.darkSuccess : XkColor.success,
-          dot: isDark ? XkColor.darkSuccess : XkColor.success,
+          text: isDark ? XkColor.darkOk : XkColor.ok,
+          dot: isDark ? XkColor.darkOk : XkColor.ok,
         );
       case XkChipVariant.accent:
         return _ChipPalette(
-          background: isDark ? XkColor.darkAccentSoft : XkColor.accentSoft,
-          border: (isDark ? XkColor.darkAccent : XkColor.accent).withValues(
+          background: isDark ? XkColor.darkTintSoft : XkColor.tintSoft,
+          border: (isDark ? XkColor.darkTintFill : XkColor.tintFill).withValues(
             alpha: 0.44,
           ),
-          text: isDark ? XkColor.darkAccentDeep : XkColor.accentDeep,
-          dot: isDark ? XkColor.darkAccent : XkColor.accent,
+          text: isDark ? XkColor.darkTintLight : XkColor.tintTextHover,
+          dot: isDark ? XkColor.darkTintFill : XkColor.tintFill,
         );
       case XkChipVariant.signal:
         return _ChipPalette(
-          background: isDark ? XkColor.darkErrorSoft : XkColor.errorSoft,
-          border: (isDark ? XkColor.darkError : XkColor.error).withValues(
+          background: isDark ? XkColor.darkBad : XkColor.bad,
+          border: (isDark ? XkColor.darkBad : XkColor.bad).withValues(
             alpha: 0.44,
           ),
-          text: isDark ? XkColor.darkError : XkColor.error,
-          dot: isDark ? XkColor.darkError : XkColor.error,
+          text: isDark ? XkColor.darkBad : XkColor.bad,
+          dot: isDark ? XkColor.darkBad : XkColor.bad,
         );
     }
   }

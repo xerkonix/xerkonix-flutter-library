@@ -17,7 +17,7 @@ class XkBackButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
-    final Color color = isDark ? XkColor.darkTextBody : XkColor.textBody;
+    final Color color = isDark ? XkColor.darkInk : XkColor.ink;
     return TextButton.icon(
       onPressed: onPressed,
       icon: Icon(Icons.arrow_back_ios_new_rounded, size: 16, color: color),

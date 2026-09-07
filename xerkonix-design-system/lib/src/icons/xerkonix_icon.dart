@@ -90,7 +90,7 @@ class XkIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final resolvedColor =
-        color ?? (isDark ? XkColor.darkTextBody : XkColor.textBody);
+        color ?? (isDark ? XkColor.darkInk : XkColor.ink);
     final spec = _xkIconSpecs[name]!;
 
     return SvgPicture.string(

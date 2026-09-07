@@ -1,6 +1,6 @@
-/* XERKONIX Weave Design Tokens · v3.0.0 — 2026.09
+/* XERKONIX TACTILE Design Tokens · v3.0.0 — 2026.09
    한 광원, 한 물빛, 한 토큰 파일, 서체는 Pretendard 하나.
-   값의 원천은 이 파일만. 변경은 WEAVE.md → 여기 → 미러 재복사 → Flutter 파리티. */
+   값의 원천은 이 파일만. 변경은 TACTILE.md → 여기 → 미러 재복사 → Flutter 파리티. */
 :root{
   --x-bg:#F5F5F5; --x-panel:#FFFFFF; --x-black:#000000;
   --x-ink:#1D1D1F; --x-muted:#6E6E73; --x-hair:#D2D2D7; --x-hair-soft:#E8E8ED; --x-well:#ECECEF;

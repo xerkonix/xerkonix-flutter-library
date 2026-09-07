@@ -26,7 +26,7 @@ class XkTableRowData {
   final List<XkTableCell> cells;
 }
 
-/// Simple data table component that follows Weave visual defaults.
+/// Simple data table component that follows TACTILE visual defaults.
 class XkTable extends StatelessWidget {
   const XkTable({
     super.key,

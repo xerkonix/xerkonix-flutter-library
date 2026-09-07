@@ -54,7 +54,7 @@ void main() {
       expect(XkColor.bad, isA<Color>());
     });
 
-    test('XkColor should expose the Weave key values', () {
+    test('XkColor should expose the TACTILE key values', () {
       expect(XkColor.tintFill.toARGB32(), 0xFF0081A0);
       expect(XkColor.bg.toARGB32(), 0xFFF5F5F5);
       expect(XkColor.panel.toARGB32(), 0xFFFFFFFF);
@@ -113,7 +113,7 @@ void main() {
       expect(XkShadow.darkHighlight.toARGB32(), 0x00FFFFFF);
     });
 
-    test('raised light pair matches Weave 30° light (positive xy)', () {
+    test('raised light pair matches TACTILE 30° light (positive xy)', () {
       final BoxShadow near = XkShadow.raisedLight.first;
       final BoxShadow far = XkShadow.raisedLight.last;
       expect(near.offset.dx > 0, isTrue);

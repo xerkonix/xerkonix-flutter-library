@@ -6,28 +6,28 @@ import 'package:flutter/material.dart';
 import 'package:xerkonix_design_system/xerkonix_design_system.dart';
 
 void main() {
-  runApp(const WeaveExampleApp());
+  runApp(const TACTILEExampleApp());
 }
 
-class WeaveExampleApp extends StatefulWidget {
-  const WeaveExampleApp({super.key});
+class TACTILEExampleApp extends StatefulWidget {
+  const TACTILEExampleApp({super.key});
 
   @override
-  State<WeaveExampleApp> createState() => _WeaveExampleAppState();
+  State<TACTILEExampleApp> createState() => _TACTILEExampleAppState();
 }
 
-class _WeaveExampleAppState extends State<WeaveExampleApp> {
+class _TACTILEExampleAppState extends State<TACTILEExampleApp> {
   bool _isDark = false;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'XERKONIX Design System v1.3',
+      title: 'XERKONIX Design System',
       theme: XkLightTheme.themeData,
       darkTheme: XkDarkTheme.themeData,
       themeMode: _isDark ? ThemeMode.dark : ThemeMode.light,
-      home: WeaveShowcasePage(
+      home: TACTILEShowcasePage(
         isDark: _isDark,
         onThemeChanged: (value) => setState(() => _isDark = value),
       ),
@@ -35,8 +35,8 @@ class _WeaveExampleAppState extends State<WeaveExampleApp> {
   }
 }
 
-class WeaveShowcasePage extends StatefulWidget {
-  const WeaveShowcasePage({
+class TACTILEShowcasePage extends StatefulWidget {
+  const TACTILEShowcasePage({
     super.key,
     required this.isDark,
     required this.onThemeChanged,
@@ -46,10 +46,10 @@ class WeaveShowcasePage extends StatefulWidget {
   final ValueChanged<bool> onThemeChanged;
 
   @override
-  State<WeaveShowcasePage> createState() => _WeaveShowcasePageState();
+  State<TACTILEShowcasePage> createState() => _TACTILEShowcasePageState();
 }
 
-class _WeaveShowcasePageState extends State<WeaveShowcasePage> {
+class _TACTILEShowcasePageState extends State<TACTILEShowcasePage> {
   final _companyController = TextEditingController();
   final _briefController = TextEditingController();
   String _selectedDomain = '수집 · Collect';
@@ -74,7 +74,7 @@ class _WeaveShowcasePageState extends State<WeaveShowcasePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('XERKONIX Design System · v1.3', style: XkTypo.h3),
+        title: Text('XERKONIX Design System', style: XkTypo.h3),
         actions: [
           Row(
             children: [
@@ -100,7 +100,7 @@ class _WeaveShowcasePageState extends State<WeaveShowcasePage> {
                   sectionId: '04 · Iconography',
                   title: 'Icon Set',
                   subtitle:
-                      'Weave의 최소 단위를 아이콘으로 정리해, 복잡한 화면에서도 의미를 빠르게 읽게 합니다.',
+                      'TACTILE의 최소 단위를 아이콘으로 정리해, 복잡한 화면에서도 의미를 빠르게 읽게 합니다.',
                   child: _IconGrid(),
                 ),
                 const SizedBox(height: XkLayout.spacingMd),
@@ -470,7 +470,7 @@ class _WeaveShowcasePageState extends State<WeaveShowcasePage> {
                   sectionId: '07 · Motion',
                   title: 'Motion',
                   subtitle:
-                      'Weave의 두 축을 기준으로 패턴과 상태의 변화를 모션으로 표현합니다.',
+                      'TACTILE의 두 축을 기준으로 패턴과 상태의 변화를 모션으로 표현합니다.',
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -595,10 +595,10 @@ class _Hero extends StatelessWidget {
             ],
           ),
           const SizedBox(height: XkLayout.spacingSm),
-          Text('XERKONIX Weave', style: XkTypo.h1),
+          Text('XERKONIX TACTILE', style: XkTypo.h1),
           const SizedBox(height: XkLayout.spacingSm),
           Text(
-            'Weave는 ‘기술은 인간을 위해 존재합니다’라는 제르코닉스의 정체성을 담아, '
+            'TACTILE는 ‘기술은 인간을 위해 존재합니다’라는 제르코닉스의 정체성을 담아, '
             '복잡한 데이터를 엮어 맥락을 전달하는 디자인 시스템입니다.',
             style: XkTypo.bodyLarge,
           ),
@@ -606,7 +606,7 @@ class _Hero extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: Text(
-              'Weave의 두 축',
+              'TACTILE의 두 축',
               style: XkTypo.h2.copyWith(fontSize: 22),
               textAlign: TextAlign.center,
             ),

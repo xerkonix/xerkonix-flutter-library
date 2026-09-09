@@ -8,8 +8,8 @@ import '../../palette/color.dart';
 /// the cool temperature accent so the warm/cool pair has a place in the scheme.
 const lightColorScheme = ColorScheme(
   brightness: Brightness.light,
-  primary: XkColor.tintFill,
-  onPrimary: XkColor.tintOnFill,
+  primary: XkColor.ink,
+  onPrimary: XkColor.bg,
   primaryContainer: XkColor.tintSoft,
   onPrimaryContainer: XkColor.ink,
   secondary: XkColor.tintTextHover,

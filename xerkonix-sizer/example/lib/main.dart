@@ -1,7 +1,6 @@
 import 'package:example/home_page.dart';
 import 'package:example/theme_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:xerkonix_design_system/xerkonix_design_system.dart';
 import 'package:xerkonix_sizer/xerkonix_sizer.dart';
 
 void main() {
@@ -20,9 +19,7 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Xerkonix Sizer',
-          theme: XkLightTheme.themeData,
-          darkTheme: XkDarkTheme.themeData,
-          themeMode: ThemeMode.light,
+          theme: themeData,
           home: const HomePage(),
         );
       },

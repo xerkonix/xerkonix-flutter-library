@@ -13,8 +13,12 @@ dependencies:
   flutter:
     sdk: flutter
 
-  xerkonix_error_handler: ^1.0.0
-  xerkonix_design_system: ^1.1.1
+  xerkonix_error_handler:
+    path: ../../xerkonix-error-handler
+  xerkonix_logger:
+    path: ../../xerkonix-logger
+  xerkonix_design_system:
+    path: ../../xerkonix-design-system
   xerkonix_http:
     path: ../
   cupertino_icons: ^1.0.8
@@ -30,3 +34,10 @@ dev_dependencies:
 flutter:
 
   uses-material-design: true
+
+# Resolve all sibling packages consistently for this local example.
+dependency_overrides:
+  xerkonix_logger:
+    path: ../../xerkonix-logger
+  xerkonix_error_handler:
+    path: ../../xerkonix-error-handler

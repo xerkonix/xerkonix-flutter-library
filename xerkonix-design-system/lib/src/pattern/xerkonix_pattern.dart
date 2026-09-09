@@ -127,7 +127,7 @@ class XkConfidenceMeter extends StatelessWidget {
             Expanded(
               child: Text(
                 label,
-                style: XkTypo.bodySmall.copyWith(fontSize: 12, color: headText),
+                style: XkTypo.bodySmall.copyWith(fontSize: 13, color: headText),
               ),
             ),
             Text(valueLabel, style: XkTypo.fieldLabel.copyWith(color: base)),

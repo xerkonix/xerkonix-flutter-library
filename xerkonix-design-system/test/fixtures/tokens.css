@@ -1,10 +1,10 @@
-/* XERKONIX TACTILE Design Tokens · v3.0.0 — 2026.09
-   한 광원, 한 물빛, 한 토큰 파일, 서체는 Pretendard 하나.
+/* XERKONIX TACTILE Design Tokens · v3.1.0 — 2026.09
+   명확한 쓰임과 다음 행동. 중립 표면, Pretendard, 정보에 맞는 구조.
    값의 원천은 이 파일만. 변경은 TACTILE.md → 여기 → 미러 재복사 → Flutter 파리티. */
 :root{
   --x-bg:#F5F5F5; --x-panel:#FFFFFF; --x-black:#000000;
   --x-ink:#1D1D1F; --x-muted:#6E6E73; --x-hair:#D2D2D7; --x-hair-soft:#E8E8ED; --x-well:#ECECEF;
-  --x-tint-text:#007A91; --x-tint-text-hover:#0089A5;
+  --x-tint-text:#007A91; --x-tint-text-hover:#007A91;
   --x-tint-fill:#0081A0; --x-tint-on-fill:#FFFFFF;
   --x-tint:#0FA3BD;
   --x-tint-light:#3FB4C8;
@@ -18,6 +18,12 @@
   --x-mono:'Pretendard Variable',Pretendard,ui-monospace,SFMono-Regular,Menlo,monospace;
   --x-r-lg:28px; --x-r-md:18px; --x-r-card:16px; --x-r-sm:12px; --x-pill:980px;
   --x-sp-1:4px; --x-sp-2:8px; --x-sp-3:12px; --x-sp-4:16px; --x-sp-5:24px; --x-sp-6:32px; --x-sp-7:48px;
+  --x-fs-display:58px; --x-fs-display-mobile:34px; --x-fs-section:44px; --x-fs-section-mobile:30px;
+  --x-fs-page:32px; --x-fs-page-mobile:28px; --x-fs-title:22px; --x-fs-title-mobile:20px;
+  --x-fs-body:17px; --x-fs-body-mobile:16px; --x-fs-small:15px; --x-fs-caption:13px;
+  --x-leading-body:1.6; --x-leading-heading:1.2;
+  --x-content-width:1160px; --x-reading-width:760px; --x-section-space:72px; --x-section-space-mobile:40px;
+  --x-gutter:24px; --x-gutter-mobile:20px; --x-control-height:48px;
   --x-t1:180ms; --x-t2:260ms; --x-t3:320ms; --x-ease:cubic-bezier(.33,.02,.2,1);
   --x-lx:8%; --x-ly:-6%; --x-sx:.866; --x-sy:.5;
   --x-wash:#FFFFFF; --x-far:#EAEAED; --x-far-p:#F1F1F3;

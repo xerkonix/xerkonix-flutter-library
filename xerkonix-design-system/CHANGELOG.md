@@ -1,3 +1,7 @@
+## 4.1.0 — 로컬 디자인 개정
+
+주 행동을 무채 잉크로, 본문을 16–17px로, 캡션 바닥을 13px로 맞췄습니다. 정적 카드는 평면이며 버튼은 키보드 포커스와 기본 Flutter 조작 의미를 유지합니다. `primaryGradient` 등 기존 호출 이름은 보존하지만 기본 액션은 단색으로 표시합니다. TACTILE v3.1.0 토큰·타이포 파리티를 확인합니다. 패키지 게시는 별도입니다.
+
 # Changelog
 
 All notable changes to this project will be documented in this file.

@@ -1,27 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../palette/color.dart';
-import '../shape/xerkonix_shape.dart';
 import '../typography/xerkonix_typography.dart';
-import 'xerkonix_neumorphic.dart';
 
 /// XERKONIX TACTILE button component.
 ///
-/// Every variant renders as a neumorphic surface: extruded (paired
-/// highlight + lowlight) at rest and pressed *into* the canvas (inner shadow)
-/// while held, so the press reads physically.
-///
-/// Variants:
-/// - primary   (strong ink fill)
-/// - action    (default CTA · ink accent · `cta` alias)
-/// - brand     (softer ink, brand-identity moments)
-/// - support   (recommended / stable · success)
-/// - accent    (editorial emphasis · ink accent)
-/// - tonal     (raised neutral surface)
-/// - outline   (flat, bordered)
-///
-/// TACTILE policy: the default CTA is `action`. In TACTILE the accent is a
-/// monochrome ink, so emphasis is carried by elevation, not hue.
+/// The current task uses a solid ink action. Supporting controls use a neutral
+/// surface or text. All variants keep native keyboard and disabled semantics.
+/// Existing factory names remain callable; primaryGradient renders a solid fill.
 class XkButton extends StatelessWidget {
   const XkButton._({
     super.key,
@@ -59,7 +45,7 @@ class XkButton extends StatelessWidget {
     );
   }
 
-  /// Gradient-filled accent CTA. Full-width by default.
+  /// Existing constructor kept for callers; renders a solid action button.
   factory XkButton.primaryGradient({
     Key? key,
     required VoidCallback? onPressed,
@@ -335,11 +321,11 @@ class XkButton extends StatelessWidget {
     Widget button = _NeumorphicButton(
       onPressed: onPressed,
       fill: spec.fill,
-      gradient: gradient ? spec.gradient : null,
+      gradient: null,
       textColor: spec.textColor,
       border: spec.border,
-      elevated: spec.elevated,
-      disabledFill: isDark ? XkColor.darkHairSoft : XkColor.muted,
+      elevated: false,
+      disabledFill: isDark ? XkColor.darkWell : XkColor.well,
       disabledTextColor: isDark ? XkColor.darkMuted : XkColor.muted,
       child: child,
     );
@@ -358,8 +344,8 @@ class XkButton extends StatelessWidget {
         );
       case ButtonType.action:
         return _XkButtonSpec(
-          fill: isDark ? XkColor.darkTintFill : XkColor.tintFill,
-          textColor: isDark ? XkColor.darkTintOnFill : XkColor.tintOnFill,
+          fill: isDark ? XkColor.darkInk : XkColor.ink,
+          textColor: isDark ? XkColor.darkBg : XkColor.bg,
           gradient: LinearGradient(
             colors: isDark
                 ? const <Color>[XkColor.darkTintFill, XkColor.darkTintLight]
@@ -369,7 +355,7 @@ class XkButton extends StatelessWidget {
       case ButtonType.brand:
         return _XkButtonSpec(
           fill: isDark ? XkColor.darkTintLight : XkColor.tintTextHover,
-          textColor: isDark ? XkColor.darkTintOnFill : XkColor.tintOnFill,
+          textColor: isDark ? XkColor.darkBg : XkColor.bg,
         );
       case ButtonType.support:
         return _XkButtonSpec(
@@ -378,8 +364,8 @@ class XkButton extends StatelessWidget {
         );
       case ButtonType.accent:
         return _XkButtonSpec(
-          fill: isDark ? XkColor.darkTintFill : XkColor.tintFill,
-          textColor: isDark ? XkColor.darkTintOnFill : XkColor.tintOnFill,
+          fill: isDark ? XkColor.darkInk : XkColor.ink,
+          textColor: isDark ? XkColor.darkBg : XkColor.bg,
         );
       case ButtonType.tonal:
         return _XkButtonSpec(
@@ -456,180 +442,29 @@ class _XkButtonSpec {
   final bool elevated;
 }
 
-/// A neumorphic pressable surface used to render every [XkButton] variant.
-class _NeumorphicButton extends StatefulWidget {
-  const _NeumorphicButton({
-    required this.onPressed,
-    required this.child,
-    required this.fill,
-    required this.textColor,
-    required this.disabledFill,
-    required this.disabledTextColor,
-    this.gradient,
-    this.border,
-    this.elevated = true,
-  });
-
+/// Native focus, keyboard activation and disabled semantics for all variants.
+class _NeumorphicButton extends StatelessWidget {
+  const _NeumorphicButton({required this.onPressed, required this.child, required this.fill, required this.textColor, required this.disabledFill, required this.disabledTextColor, this.gradient, this.border, this.elevated = false});
   final VoidCallback? onPressed;
   final Widget child;
-  final Color fill;
-  final Color textColor;
-  final Color disabledFill;
-  final Color disabledTextColor;
+  final Color fill, textColor, disabledFill, disabledTextColor;
   final Gradient? gradient;
   final BoxBorder? border;
   final bool elevated;
-
-  static const BorderRadius _radius = XkShape.smBorderRadius;
-  static const EdgeInsets _padding = EdgeInsets.symmetric(
-    horizontal: 18,
-    vertical: 11,
-  );
-
-  @override
-  State<_NeumorphicButton> createState() => _NeumorphicButtonState();
-}
-
-class _NeumorphicButtonState extends State<_NeumorphicButton> {
-  bool _pressed = false;
-  bool _hovered = false;
-
-  bool get _enabled => widget.onPressed != null;
-
-  void _setPressed(bool value) {
-    if (_pressed != value) {
-      setState(() => _pressed = value);
-    }
-  }
-
-  void _setHovered(bool value) {
-    if (_hovered != value) {
-      setState(() => _hovered = value);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    final Brightness brightness = Theme.of(context).brightness;
-    final bool isDark = brightness == Brightness.dark;
-
-    final Color fill = _enabled ? widget.fill : widget.disabledFill;
-    final Color textColor = _enabled
-        ? widget.textColor
-        : widget.disabledTextColor;
-    final Gradient? gradient = _enabled ? widget.gradient : null;
-
-    final Widget label = DefaultTextStyle.merge(
-      textAlign: TextAlign.center,
-      style: XkTypo.buttonLabel.copyWith(
-        color: textColor,
-        fontWeight: FontWeight.w600,
+    final bool dark = Theme.of(context).brightness == Brightness.dark;
+    return TextButton(
+      onPressed: onPressed,
+      style: ButtonStyle(
+        minimumSize: const WidgetStatePropertyAll(Size(48, 48)),
+        padding: const WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 22, vertical: 14)),
+        textStyle: WidgetStatePropertyAll(XkTypo.buttonLabel.copyWith(fontWeight: FontWeight.w600)),
+        backgroundColor: WidgetStateProperty.resolveWith((states) => states.contains(WidgetState.disabled) ? disabledFill : fill),
+        foregroundColor: WidgetStateProperty.resolveWith((states) => states.contains(WidgetState.disabled) ? disabledTextColor : textColor),
+        shape: WidgetStateProperty.resolveWith((states) => StadiumBorder(side: states.contains(WidgetState.focused) ? BorderSide(color: dark ? XkColor.darkTintText : XkColor.tintText, width: 2) : (border?.top ?? BorderSide.none))),
       ),
-      child: IconTheme.merge(
-        data: IconThemeData(color: textColor, size: 18),
-        child: Center(widthFactor: 1, child: widget.child),
-      ),
-    );
-
-    final Widget content = Padding(
-      padding: _NeumorphicButton._padding,
-      child: label,
-    );
-
-    Widget surface;
-    if (!_enabled) {
-      surface = DecoratedBox(
-        decoration: BoxDecoration(
-          color: fill,
-          gradient: gradient,
-          borderRadius: _NeumorphicButton._radius,
-          border: widget.border,
-        ),
-        child: content,
-      );
-    } else if (_pressed) {
-      // Pressed → inset. Base fill + inner shadow.
-      surface = DecoratedBox(
-        decoration: BoxDecoration(
-          color: fill,
-          gradient: gradient,
-          borderRadius: _NeumorphicButton._radius,
-          border: widget.border,
-        ),
-        child: CustomPaint(
-          foregroundPainter: XkInsetShadowPainter(
-            borderRadius: _NeumorphicButton._radius,
-            lowlight: isDark
-                ? XkShadow.darkLowlight
-                : XkColor.ink.withValues(alpha: 0.28),
-            highlight: isDark
-                ? XkColor.darkInk.withValues(alpha: 0.06)
-                : Colors.white.withValues(alpha: 0.35),
-            distance: 3,
-            blur: 6,
-          ),
-          child: content,
-        ),
-      );
-    } else {
-      // Resting (and hovered) → raised.
-      surface = DecoratedBox(
-        decoration: BoxDecoration(
-          color: fill,
-          gradient: gradient,
-          borderRadius: _NeumorphicButton._radius,
-          border: widget.border,
-          boxShadow: widget.elevated
-              ? (_hovered
-                    ? XkShadow.lifted(brightness)
-                    : XkShadow.raised(brightness))
-              : null,
-        ),
-        child: content,
-      );
-    }
-
-    // FocusableActionDetector: 포커스 노드 + Enter/Space 활성화 + 호버 추적.
-    // 예전에는 GestureDetector 뿐이라 웹/데스크톱에서 Tab 이 이 버튼에 닿지
-    // 않았고 Enter/Space 로도 눌리지 않았다 — 마우스 없이는 어떤 주요 액션도
-    // 실행할 수 없었다(WCAG 2.1.1). 포커스 링은 기존 hover 융기를 재사용한다.
-    return Semantics(
-      button: true,
-      enabled: _enabled,
-      child: FocusableActionDetector(
-        enabled: _enabled,
-        mouseCursor: _enabled
-            ? SystemMouseCursors.click
-            : SystemMouseCursors.basic,
-        onShowHoverHighlight: _setHovered,
-        onShowFocusHighlight: _setHovered,
-        actions: <Type, Action<Intent>>{
-          ActivateIntent: CallbackAction<ActivateIntent>(
-            onInvoke: (ActivateIntent intent) {
-              widget.onPressed?.call();
-              return null;
-            },
-          ),
-          ButtonActivateIntent: CallbackAction<ButtonActivateIntent>(
-            onInvoke: (ButtonActivateIntent intent) {
-              widget.onPressed?.call();
-              return null;
-            },
-          ),
-        },
-        child: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: widget.onPressed,
-          onTapDown: _enabled ? (_) => _setPressed(true) : null,
-          onTapUp: _enabled ? (_) => _setPressed(false) : null,
-          onTapCancel: _enabled ? () => _setPressed(false) : null,
-          child: AnimatedScale(
-            scale: _pressed ? 0.98 : 1.0,
-            duration: const Duration(milliseconds: 90),
-            child: surface,
-          ),
-        ),
-      ),
+      child: child,
     );
   }
 }

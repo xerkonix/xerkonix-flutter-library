@@ -3,7 +3,7 @@ import 'package:xerkonix_design_system/xerkonix_design_system.dart';
 
 class ThemeNotifier extends InheritedWidget {
   ThemeNotifier({super.key, required super.child});
-  final ValueNotifier<ThemeData> theme = ValueNotifier(XkLightTheme.themeData);
+  final ValueNotifier<ThemeData> theme = ValueNotifier(WidgetsBinding.instance.platformDispatcher.platformBrightness == Brightness.dark ? XkDarkTheme.themeData : XkLightTheme.themeData);
 
   void setLightMode() {
     theme.value = XkLightTheme.themeData;

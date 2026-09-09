@@ -74,10 +74,10 @@ class XkTable extends StatelessWidget {
           horizontalMargin: 0,
           columnSpacing: columnSpacing,
           headingTextStyle: XkTypo.label.copyWith(
-            fontSize: 12,
+            fontSize: 13,
             color: headerText,
           ),
-          dataTextStyle: XkTypo.body.copyWith(fontSize: 12, color: rowText),
+          dataTextStyle: XkTypo.body.copyWith(fontSize: 13, color: rowText),
           columns: columns
               .map(
                 (column) => DataColumn(
@@ -101,7 +101,7 @@ class XkTable extends StatelessWidget {
                                   style:
                                       cell.textStyle ??
                                       XkTypo.body.copyWith(
-                                        fontSize: 12,
+                                        fontSize: 13,
                                         color: cell.textColor == null
                                             ? rowText
                                             : XkColor.themed(

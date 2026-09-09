@@ -8,7 +8,7 @@ XERKONIX Flutter 공개 패키지 5종의 모노레포. 모두 pub.dev 에 게�
 
 | 패키지 (pub 이름) | 버전 | 요약 |
 |---|---|---|
-| [`xerkonix_design_system`](xerkonix-design-system/) | 3.3.2 | TACTILE 토큰 계약 v2.6.0 · 테마·타이포·아이콘·컴포넌트·패턴·모션 위젯 |
+| [`xerkonix_design_system`](xerkonix-design-system/) | 4.1.0 (로컬) | TACTILE 토큰 계약 v3.1.0 · 테마·타이포·아이콘·컴포넌트·패턴·모션 위젯 |
 | [`xerkonix_error_handler`](xerkonix-error-handler/) | 1.1.0 | 구조화된 에러 타입·예외·메시지 핸들러·다이얼로그/토스트 UI |
 | [`xerkonix_http`](xerkonix-http/) | 1.1.0 | 전 HTTP 메서드 클라이언트 + 자동 에러 파싱·로깅 통합 |
 | [`xerkonix_logger`](xerkonix-logger/) | 1.1.0 | 레벨별 로깅 + HTTP 요청/응답 로깅 |

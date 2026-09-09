@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:xerkonix_logger/xerkonix_logger.dart';
-import 'package:xerkonix_design_system/xerkonix_design_system.dart';
 import 'package:http/http.dart' as http;
 
 import 'theme_notifier.dart';
@@ -135,17 +134,17 @@ class _MyHomePageState extends State<MyHomePage> {
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: XkColor.canvas.withValues(alpha: 0.3),
+                        color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.3),
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
-                          color: XkColor.divider,
+                          color: Theme.of(context).colorScheme.outlineVariant,
                           width: 1,
                         ),
                       ),
                       child: SelectableText(
                       _logResult,
                         style: const TextStyle(
-                          fontSize: 12,
+                          fontSize: 13,
                           fontFamily: 'monospace',
                           height: 1.5,
                         ),
@@ -184,7 +183,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             const SizedBox(height: 24),
             Card(
-              color: XkColor.canvas.withValues(alpha: 0.5),
+              color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.5),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
@@ -192,14 +191,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.article_outlined, color: XkColor.identity),
+                        Icon(Icons.article_outlined, color: Theme.of(context).colorScheme.secondary),
                         const SizedBox(width: 8),
                         Text(
                           'Test Instructions',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: XkColor.structure,
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
                       ],

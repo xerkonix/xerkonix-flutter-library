@@ -34,13 +34,13 @@ class _HomePageState extends State<HomePage> {
         // 창 크기 변경 시 ResponsiveSizer 재계산
         _responsiveSizer?.measure();
         return Scaffold(
-          backgroundColor: XkColor.canvas,
+          backgroundColor: Theme.of(context).colorScheme.surface,
           appBar: AppBar(
             title: Text(
               'Xerkonix Sizer',
-              style: XkTypo.title2.copyWith(color: XkColor.structure),
+              style: XkTypo.title2.copyWith(color: Theme.of(context).colorScheme.onSurface),
             ),
-            backgroundColor: XkColor.canvas,
+            backgroundColor: Theme.of(context).colorScheme.surface,
             elevation: 0,
             centerTitle: true,
           ),
@@ -128,10 +128,10 @@ class _HomePageState extends State<HomePage> {
                     width: _responsiveSizer!.unitWidth.lp200,
                     height: _responsiveSizer!.unitHeight.lp100,
                     decoration: BoxDecoration(
-                      color: XkColor.identity.withValues(alpha: (0.1 * 255).round().toDouble()),
+                      color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.1),
                       borderRadius: XkShape.defaultBorderRadius,
                       border: Border.all(
-                        color: XkColor.identity.withValues(alpha: (0.3 * 255).round().toDouble()),
+                        color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.3),
                         width: 1.5,
                       ),
                     ),
@@ -139,7 +139,7 @@ class _HomePageState extends State<HomePage> {
                       child: Text(
                         'Responsive Container',
                         style: XkTypo.body.copyWith(
-                          color: XkColor.structure,
+                          color: Theme.of(context).colorScheme.onSurface,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -148,7 +148,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 SizedBox(height: Sizer.unitHeight.lp24),
                 Card(
-                  color: XkColor.surface,
+                  color: Theme.of(context).colorScheme.surface,
                   shape: RoundedRectangleBorder(
                     borderRadius: XkShape.defaultBorderRadius,
                   ),
@@ -159,11 +159,11 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         Row(
                           children: [
-                            Icon(Icons.lightbulb_outline, color: XkColor.identity, size: 20),
+                            Icon(Icons.lightbulb_outline, color: Theme.of(context).colorScheme.secondary, size: 20),
                             SizedBox(width: Sizer.unitWidth.lp8),
                             Text(
                               'Test Instructions',
-                              style: XkTypo.headline.copyWith(color: XkColor.structure),
+                              style: XkTypo.headline.copyWith(color: Theme.of(context).colorScheme.onSurface),
                             ),
                           ],
                         ),
@@ -191,7 +191,7 @@ class _HomePageState extends State<HomePage> {
     required Widget child,
   }) {
     return Card(
-      color: XkColor.surface,
+      color: Theme.of(context).colorScheme.surface,
       shape: RoundedRectangleBorder(
         borderRadius: XkShape.defaultBorderRadius,
       ),
@@ -202,11 +202,11 @@ class _HomePageState extends State<HomePage> {
           children: [
             Row(
               children: [
-                Icon(icon, color: XkColor.identity, size: 20),
+                Icon(icon, color: Theme.of(context).colorScheme.secondary, size: 20),
                 SizedBox(width: Sizer.unitWidth.lp8),
                 Text(
                   title,
-                  style: XkTypo.headline.copyWith(color: XkColor.structure),
+                  style: XkTypo.headline.copyWith(color: Theme.of(context).colorScheme.onSurface),
                 ),
               ],
             ),
@@ -227,13 +227,13 @@ class _HomePageState extends State<HomePage> {
           Expanded(
             child: Text(
               label,
-              style: XkTypo.body.copyWith(color: XkColor.bodyText),
+              style: XkTypo.body.copyWith(color: Theme.of(context).colorScheme.onSurface),
             ),
           ),
           Text(
             value,
             style: XkTypo.body.copyWith(
-              color: XkColor.structure,
+              color: Theme.of(context).colorScheme.onSurface,
               fontFamily: 'monospace',
             ),
           ),
@@ -246,7 +246,7 @@ class _HomePageState extends State<HomePage> {
     return Divider(
       height: 1,
       thickness: 1,
-      color: XkColor.divider,
+      color: Theme.of(context).colorScheme.outlineVariant,
     );
   }
 
@@ -259,14 +259,14 @@ class _HomePageState extends State<HomePage> {
           width: Sizer.unitWidth.lp4,
           height: Sizer.unitWidth.lp4,
           decoration: BoxDecoration(
-            color: XkColor.identity,
+            color: Theme.of(context).colorScheme.secondary,
             shape: BoxShape.circle,
           ),
         ),
         Expanded(
           child: Text(
             text,
-            style: XkTypo.body.copyWith(color: XkColor.bodyText),
+            style: XkTypo.body.copyWith(color: Theme.of(context).colorScheme.onSurface),
           ),
         ),
       ],

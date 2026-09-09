@@ -15,7 +15,7 @@ class XkColor {
   static const Color well = Color(0xFFECECEF);
 
   static const Color tintText = Color(0xFF007A91);
-  static const Color tintTextHover = Color(0xFF0089A5);
+  static const Color tintTextHover = Color(0xFF007A91);
   static const Color tintFill = Color(0xFF0081A0);
   static const Color tintOnFill = Color(0xFFFFFFFF);
   static const Color tint = Color(0xFF0FA3BD);

@@ -17,7 +17,7 @@ class TACTILEExampleApp extends StatefulWidget {
 }
 
 class _TACTILEExampleAppState extends State<TACTILEExampleApp> {
-  bool _isDark = false;
+  bool _isDark = WidgetsBinding.instance.platformDispatcher.platformBrightness == Brightness.dark;
 
   @override
   Widget build(BuildContext context) {
@@ -74,12 +74,12 @@ class _TACTILEShowcasePageState extends State<TACTILEShowcasePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('XERKONIX Design System', style: XkTypo.h3),
+        title: Text('TACTILE', style: XkTypo.h3),
         actions: [
           Row(
             children: [
               Text('Light', style: XkTypo.label),
-              Switch(value: widget.isDark, onChanged: widget.onThemeChanged),
+              Semantics(label: "다크 모드", child: Switch(value: widget.isDark, onChanged: widget.onThemeChanged)),
               Text('Dark', style: XkTypo.label),
               const SizedBox(width: XkLayout.spacingMd),
             ],
@@ -97,7 +97,7 @@ class _TACTILEShowcasePageState extends State<TACTILEShowcasePage> {
                 _Hero(isDark: isDark),
                 const SizedBox(height: XkLayout.spacingMd),
                 _Section(
-                  sectionId: '04 · Iconography',
+                  sectionId: '01 · Iconography',
                   title: 'Icon Set',
                   subtitle:
                       'TACTILE의 최소 단위를 아이콘으로 정리해, 복잡한 화면에서도 의미를 빠르게 읽게 합니다.',
@@ -105,7 +105,7 @@ class _TACTILEShowcasePageState extends State<TACTILEShowcasePage> {
                 ),
                 const SizedBox(height: XkLayout.spacingMd),
                 _Section(
-                  sectionId: '05 · Components',
+                  sectionId: '02 · Components',
                   title: 'Components',
                   subtitle:
                       '공통 UI 컴포넌트를 동일한 토큰 규칙으로 사용합니다.',
@@ -352,7 +352,7 @@ class _TACTILEShowcasePageState extends State<TACTILEShowcasePage> {
                 ),
                 const SizedBox(height: XkLayout.spacingMd),
                 _Section(
-                  sectionId: '06 · Pattern',
+                  sectionId: '03 · Pattern',
                   title: 'Pattern',
                   subtitle:
                       '패턴 섹션은 핵심 신호를 일관된 시각 구조로 정리해, 화면 간 해석 기준을 통일합니다.',
@@ -466,6 +466,10 @@ class _TACTILEShowcasePageState extends State<TACTILEShowcasePage> {
                   ),
                 ),
                 const SizedBox(height: XkLayout.spacingMd),
+                ExpansionTile(
+                  title: const Text('선택적 모션 예제'),
+                  subtitle: const Text('상태 변화를 설명할 때만 사용합니다.'),
+                  children: [
                 _Section(
                   sectionId: '07 · Motion',
                   title: 'Motion',
@@ -526,11 +530,13 @@ class _TACTILEShowcasePageState extends State<TACTILEShowcasePage> {
                     ],
                   ),
                 ),
+                  ],
+                ),
                 const SizedBox(height: XkLayout.spacingMd),
                 Center(
                   child: Text(
-                    '© 2026 XERKONIX Inc. · Design System v1.3',
-                    style: XkTypo.metaMono.copyWith(fontSize: 11),
+                    '© 2026 XERKONIX Inc. · Design System 4.1 · TACTILE 3.1',
+                    style: XkTypo.metaMono.copyWith(fontSize: 13),
                   ),
                 ),
               ],
@@ -544,207 +550,29 @@ class _TACTILEShowcasePageState extends State<TACTILEShowcasePage> {
 
 class _Hero extends StatelessWidget {
   const _Hero({required this.isDark});
-
   final bool isDark;
-
   @override
   Widget build(BuildContext context) {
-    final eyebrowColor =
-        isDark ? XkColor.darkMuted : XkColor.tintTextHover;
-
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(XkLayout.spacing2xl),
-      decoration: BoxDecoration(
-        borderRadius: XkShape.xlBorderRadius,
-        border: Border.all(
-          color: isDark ? XkColor.darkHairSoft : XkColor.hairSoft,
-        ),
-        gradient: LinearGradient(
-          colors: [
-            (isDark ? XkColor.darkTintSoft : XkColor.tintSoft)
-                .withValues(alpha: 0.42),
-            (isDark ? XkColor.darkTintSoft : XkColor.tintSoft).withValues(
-              alpha: 0.30,
-            ),
-            Colors.transparent,
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                width: 26,
-                height: 1,
-                color: XkColor.tintFill,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                'DESIGN PHILOSOPHY',
-                style: XkTypo.metaMono.copyWith(
-                  fontSize: 10,
-                  letterSpacing: 2,
-                  color: eyebrowColor,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: XkLayout.spacingSm),
-          Text('XERKONIX TACTILE', style: XkTypo.h1),
-          const SizedBox(height: XkLayout.spacingSm),
-          Text(
-            'TACTILE는 ‘기술은 인간을 위해 존재합니다’라는 제르코닉스의 정체성을 담아, '
-            '복잡한 데이터를 엮어 맥락을 전달하는 디자인 시스템입니다.',
-            style: XkTypo.bodyLarge,
-          ),
-          const SizedBox(height: XkLayout.spacingLg),
-          SizedBox(
-            width: double.infinity,
-            child: Text(
-              'TACTILE의 두 축',
-              style: XkTypo.h2.copyWith(fontSize: 22),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          const SizedBox(height: XkLayout.spacingSm),
-          LayoutBuilder(
-            builder: (context, constraints) {
-              final wide = constraints.maxWidth >= 520;
-              final thread = _AxisMotionCard(
-                isDark: isDark,
-                title: 'Thread',
-                description: '복잡한 데이터에서 발견한 패턴을 표현합니다.',
-                motion: const _ThreadAxisMotion(),
-              );
-              final knot = _AxisMotionCard(
-                isDark: isDark,
-                title: 'Knot',
-                description: '패턴이 모여 드러나는 상태를 표현합니다.',
-                motion: const _KnotAxisMotion(),
-              );
-              if (!wide) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    thread,
-                    const SizedBox(height: XkLayout.spacingXs),
-                    knot,
-                  ],
-                );
-              }
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(child: thread),
-                  const SizedBox(width: XkLayout.spacingXs),
-                  Expanded(child: knot),
-                ],
-              );
-            },
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _AxisMotionCard extends StatelessWidget {
-  const _AxisMotionCard({
-    required this.isDark,
-    required this.title,
-    required this.description,
-    required this.motion,
-  });
-
-  final bool isDark;
-  final String title;
-  final String description;
-  final Widget motion;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(XkLayout.spacingMd),
-      decoration: BoxDecoration(
-        borderRadius: XkShape.mdBorderRadius,
-        border: Border.all(
-          color: isDark ? XkColor.darkHairSoft : XkColor.hairSoft,
-        ),
-        color: isDark
-            ? XkColor.darkPanel.withValues(alpha: 0.86)
-            : XkColor.panel.withValues(alpha: 0.86),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(title, style: XkTypo.h3.copyWith(fontSize: 20)),
-          const SizedBox(height: XkLayout.spacingXs),
-          Container(
-            height: 96,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              borderRadius: XkShape.smBorderRadius,
-              border: Border.all(
-                color: isDark ? XkColor.darkHairSoft : XkColor.hairSoft,
-              ),
-              color: isDark
-                  ? XkColor.darkHairSoft.withValues(alpha: 0.72)
-                  : XkColor.hairSoft.withValues(alpha: 0.72),
-            ),
-            clipBehavior: Clip.antiAlias,
-            child: motion,
-          ),
-          const SizedBox(height: XkLayout.spacingXs),
-          Text(description, style: XkTypo.body.copyWith(fontSize: 13)),
-        ],
-      ),
-    );
-  }
-}
-
-class _ThreadAxisMotion extends StatelessWidget {
-  const _ThreadAxisMotion();
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final guide = isDark
-        ? XkColor.darkMuted.withValues(alpha: 0.16)
-        : XkColor.muted.withValues(alpha: 0.14);
-
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final width = math.max(180.0, constraints.maxWidth - 32);
-        return Stack(
-          alignment: Alignment.center,
-          children: [
-            Positioned(
-              left: 26,
-              right: 26,
-              top: 24,
-              child: Container(height: 1, color: guide),
-            ),
-            Positioned(
-              left: 26,
-              right: 26,
-              bottom: 24,
-              child: Container(height: 1, color: guide),
-            ),
-            Center(
-              child: XkRhythmLine(
-                width: width,
-                height: 54,
-                color: isDark ? XkColor.darkTintFill : XkColor.tintFill,
-              ),
-            ),
-          ],
-        );
-      },
+    final colors = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 28),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text('무엇을 할지, 분명한 화면.', style: Theme.of(context).textTheme.headlineLarge),
+        const SizedBox(height: 16),
+        Text('쓰임을 설명하는 제목, 읽기 쉬운 본문, 다음 행동을 연결합니다. 아래는 가상 대화로 만든 사용 예시입니다.', style: Theme.of(context).textTheme.bodyLarge),
+        const SizedBox(height: 24),
+        XkCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text('입력', style: XkTypo.label.copyWith(color: colors.onSurfaceVariant)),
+          const SizedBox(height: 8),
+          Text('“다음 주 초에 회신드려도 될까요?”', style: Theme.of(context).textTheme.titleLarge),
+          const SizedBox(height: 16),
+          Text('내 상황 · 화요일까지 기다릴 수 있어요.', style: Theme.of(context).textTheme.bodyMedium),
+          const Divider(height: 40),
+          Text('다음에 전할 표현', style: XkTypo.label.copyWith(color: colors.onSurfaceVariant)),
+          const SizedBox(height: 8),
+          Text('“화요일까지는 괜찮습니다. 일정이 더 필요하시면 알려주세요.”', style: Theme.of(context).textTheme.bodyLarge),
+        ])),
+      ]),
     );
   }
 }
@@ -919,7 +747,7 @@ class _Section extends StatelessWidget {
             Text(
               sectionId!,
               style: XkTypo.metaMono.copyWith(
-                fontSize: 11,
+                fontSize: 13,
                 letterSpacing: 0.06,
                 color: metaColor,
               ),
@@ -984,7 +812,7 @@ class _IconGrid extends StatelessWidget {
                         name.token,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: XkTypo.metaMono.copyWith(fontSize: 10),
+                        style: XkTypo.metaMono.copyWith(fontSize: 13),
                       ),
                     ],
                   ),
@@ -1031,7 +859,7 @@ class _IconSizeItem extends StatelessWidget {
       children: [
         XkIcon(XkIconName.chevRight, size: size),
         const SizedBox(width: XkLayout.spacingXs),
-        Text(label, style: XkTypo.metaMono.copyWith(fontSize: 11)),
+        Text(label, style: XkTypo.metaMono.copyWith(fontSize: 13)),
       ],
     );
   }
@@ -1196,7 +1024,7 @@ class _MotionTile extends StatelessWidget {
           const SizedBox(height: XkLayout.spacingSm),
           Text(title, style: XkTypo.label),
           const SizedBox(height: XkLayout.spacingXxs),
-          Text(code, style: XkTypo.metaMono.copyWith(fontSize: 10)),
+          Text(code, style: XkTypo.metaMono.copyWith(fontSize: 13)),
         ],
       ),
     );

@@ -1,7 +1,6 @@
 // ignore_for_file: deprecated_member_use
 import 'package:flutter/material.dart';
 import 'package:xerkonix_error_handler/xerkonix_error_handler.dart';
-import 'package:xerkonix_design_system/xerkonix_design_system.dart';
 
 import 'custom_error.dart';
 import 'custom_exception.dart';
@@ -261,7 +260,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     const SizedBox(height: 8),
                     Text(
                       _testResult,
-                      style: const TextStyle(fontSize: 12),
+                      style: const TextStyle(fontSize: 13),
                     ),
                   ],
                 ),
@@ -321,7 +320,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             const SizedBox(height: 24),
             Card(
-              color: XkColor.canvas.withValues(alpha: 0.5),
+              color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.5),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
@@ -329,14 +328,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.error_outline, color: XkColor.pulse),
+                        Icon(Icons.error_outline, color: Theme.of(context).colorScheme.secondary),
                         const SizedBox(width: 8),
                         Text(
                           'Test Instructions',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: XkColor.structure,
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
                       ],
@@ -359,7 +358,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.terminal, color: XkColor.pulse),
+                        Icon(Icons.terminal, color: Theme.of(context).colorScheme.secondary),
                         const SizedBox(width: 8),
                         const Text(
                           'Console Logs',
@@ -381,7 +380,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     if (_consoleLogs.isEmpty)
                       const Text(
                         'No error logs yet. Click error buttons to see logs here.',
-                        style: TextStyle(fontSize: 12, color: Colors.grey),
+                        style: TextStyle(fontSize: 13, color: Colors.grey),
                       )
                     else
                       Container(
@@ -395,7 +394,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           child: SelectableText(
                             _consoleLogs.join('\n'),
                             style: const TextStyle(
-                              fontSize: 11,
+                              fontSize: 13,
                               fontFamily: 'monospace',
                               color: Colors.greenAccent,
                             ),

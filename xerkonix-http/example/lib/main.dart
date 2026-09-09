@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:xerkonix_http/xerkonix_http.dart';
-import 'package:xerkonix_design_system/xerkonix_design_system.dart';
 
 import 'theme_notifier.dart';
 
@@ -209,7 +208,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     const SizedBox(height: 8),
                     Text(
                       _result,
-                      style: const TextStyle(fontSize: 12),
+                      style: const TextStyle(fontSize: 13),
                     ),
                     if (_isLoading) ...[
                       const SizedBox(height: 8),
@@ -252,7 +251,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             const SizedBox(height: 24),
             Card(
-              color: XkColor.canvas.withValues(alpha: 0.5),
+              color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.5),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
@@ -260,14 +259,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.info_outline, color: XkColor.identity),
+                        Icon(Icons.info_outline, color: Theme.of(context).colorScheme.secondary),
                         const SizedBox(width: 8),
                         Text(
                           'Test Instructions',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: XkColor.structure,
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
                       ],
@@ -281,19 +280,19 @@ class _MyHomePageState extends State<MyHomePage> {
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: XkColor.identity.withValues(alpha: 0.1),
+                        color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(4),
                         border: Border.all(
-                          color: XkColor.identity.withValues(alpha: 0.3),
+                          color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.3),
                           width: 1,
                         ),
                       ),
                       child: Text(
                         'API: jsonplaceholder.typicode.com',
                         style: TextStyle(
-                          fontSize: 12,
+                          fontSize: 13,
                           fontWeight: FontWeight.w500,
-                          color: XkColor.structure,
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
                       ),
                     ),

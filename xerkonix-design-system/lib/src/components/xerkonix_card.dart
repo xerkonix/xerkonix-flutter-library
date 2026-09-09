@@ -47,7 +47,7 @@ class XkInfoCard extends StatelessWidget {
         color: cardBg,
         borderRadius: borderRadius ?? XkShape.mdBorderRadius,
         border: borderColor != null ? Border.all(color: borderColor!) : null,
-        boxShadow: XkShadow.raised(brightness),
+
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -58,7 +58,7 @@ class XkInfoCard extends StatelessWidget {
           ],
           Text(
             metric,
-            style: XkTypo.metaMono.copyWith(fontSize: 11, color: metricColor),
+            style: XkTypo.metaMono.copyWith(fontSize: 13, color: metricColor),
           ),
           const SizedBox(height: XkLayout.spacingXs),
           Text(

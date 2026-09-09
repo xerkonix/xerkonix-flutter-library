@@ -20,6 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:xerkonix_design_system/xerkonix_design_system.dart';
+import 'package:xerkonix_design_system/src/typography/typo_constants.dart';
 
 /// 워크스페이스 루트에 리포들이 나란히 있을 때의 형제 경로.
 /// 테스트 실행 위치는 이 패키지 루트(xerkonix-design-system).
@@ -97,60 +98,6 @@ Color _cssColor(String value, Map<String, String> vars) {
 double _cssPx(String value) => double.parse(value.trim().replaceAll('px', ''));
 
 /// box-shadow 한 겹의 기대값 (offset / blur / color 단위 대조용).
-class _ShadowSpec {
-  const _ShadowSpec(this.offset, this.blur, this.color);
-
-  final Offset offset;
-  final double blur;
-  final Color color;
-}
-
-/// 괄호 안 콤마(rgba)를 건너뛰는 최상위 콤마 분리.
-List<String> _splitTopLevel(String raw) {
-  final List<String> parts = <String>[];
-  int depth = 0;
-  int start = 0;
-  for (int i = 0; i < raw.length; i++) {
-    final String c = raw[i];
-    if (c == '(') {
-      depth++;
-    } else if (c == ')') {
-      depth--;
-    } else if (c == ',' && depth == 0) {
-      parts.add(raw.substring(start, i));
-      start = i + 1;
-    }
-  }
-  parts.add(raw.substring(start));
-  return parts;
-}
-
-/// `8px 8px 18px var(--neu-shadow), -5px -5px 12px var(--neu-light)` 류의
-/// box-shadow 목록 → [_ShadowSpec] 목록.
-List<_ShadowSpec> _cssShadows(String raw, Map<String, String> vars) {
-  return _splitTopLevel(raw).map((String part) {
-    final String p = part.trim();
-    expect(p.startsWith('inset'), isFalse, reason: 'inset 은 대조 대상이 아니다: $p');
-    // 색 부분(var()/rgba()/#hex)을 먼저 떼어내고 남은 숫자를 기하로 읽는다.
-    final RegExpMatch? colorMatch = RegExp(
-      r'var\(--[a-z0-9-]+\)|rgba?\([^)]*\)|#[0-9a-fA-F]{6}',
-    ).firstMatch(p);
-    if (colorMatch == null) {
-      fail('box-shadow 에서 색을 찾을 수 없다: $p');
-    }
-    final Color color = _cssColor(colorMatch.group(0)!, vars);
-    final List<double> nums = p
-        .replaceRange(colorMatch.start, colorMatch.end, '')
-        .trim()
-        .split(RegExp(r'\s+'))
-        .where((String t) => t.isNotEmpty)
-        .map(_cssPx)
-        .toList();
-    expect(nums.length, 3, reason: 'x/y/blur 3값을 기대: $p');
-    return _ShadowSpec(Offset(nums[0], nums[1]), nums[2], color);
-  }).toList();
-}
-
 // ---------------------------------------------------------------------------
 // 대조 헬퍼
 // ---------------------------------------------------------------------------
@@ -177,26 +124,6 @@ void _expectColorParity(
     }
   });
   expect(mismatched, isEmpty, reason: hint);
-}
-
-/// BoxShadow 목록을 offset / blur / color 단위로 대조.
-void _expectShadowParity(
-  String name,
-  List<BoxShadow> actual,
-  List<_ShadowSpec> expected,
-) {
-  expect(actual.length, expected.length, reason: '$name: 그림자 겹 수가 다르다');
-  for (int i = 0; i < expected.length; i++) {
-    expect(actual[i].offset, expected[i].offset, reason: '$name[$i] offset');
-    expect(actual[i].blurRadius, expected[i].blur, reason: '$name[$i] blur');
-    expect(
-      actual[i].color,
-      expected[i].color,
-      reason:
-          '$name[$i] color — 정본 ${_hex(expected[i].color)} '
-          '≠ 라이브러리 ${_hex(actual[i].color)}',
-    );
-  }
 }
 
 void main() {
@@ -238,6 +165,23 @@ void main() {
   // 풀리지 않는다. CSS 캐스케이드대로 :root 위에 다크를 얹어 해석한다.
   late final Map<String, String> darkAll = <String, String>{...light, ...dark};
 
+
+  test('role typography matches shared tokens', () {
+    final Map<String, double> pairs = <String, double>{
+      '--x-fs-display': TypoConst.fontSize.displayMax,
+      '--x-fs-display-mobile': TypoConst.fontSize.displayMin,
+      '--x-fs-section': TypoConst.fontSize.h1Max,
+      '--x-fs-page': TypoConst.fontSize.pageTitle,
+      '--x-fs-title': TypoConst.fontSize.h3,
+      '--x-fs-body': TypoConst.fontSize.bodyLarge,
+      '--x-fs-body-mobile': TypoConst.fontSize.body,
+      '--x-fs-small': TypoConst.fontSize.label,
+      '--x-fs-caption': TypoConst.fontSize.meta,
+    };
+    for (final MapEntry<String, double> pair in pairs.entries) {
+      expect(pair.value, _cssPx(light[pair.key]!), reason: pair.key);
+    }
+  });
 
   group('표면 · 잉크', () {
     test('라이트 표면·잉크가 출처(tokens.css)와 같다', () {
@@ -377,6 +321,7 @@ void main() {
 
   group('커버리지', () {
     const Set<String> mirrored = <String>{
+      '--x-fs-display','--x-fs-display-mobile','--x-fs-section','--x-fs-page','--x-fs-title','--x-fs-body','--x-fs-body-mobile','--x-fs-small','--x-fs-caption',
       '--x-bg', '--x-panel', '--x-black', '--x-ink', '--x-muted',
       '--x-hair', '--x-hair-soft', '--x-well',
       '--x-tint-text', '--x-tint-text-hover', '--x-tint-fill', '--x-tint-on-fill',
@@ -387,6 +332,18 @@ void main() {
       '--x-sp-1', '--x-sp-2', '--x-sp-3', '--x-sp-4', '--x-sp-5', '--x-sp-6', '--x-sp-7',
     };
     const Map<String, String> notMirrored = <String, String>{
+      '--x-fs-section-mobile': 'Flutter 앱의 반응형 테마와 레이아웃에서 대응',
+      '--x-fs-page-mobile': 'Flutter 앱의 반응형 테마와 레이아웃에서 대응',
+      '--x-fs-title-mobile': 'Flutter 앱의 반응형 테마와 레이아웃에서 대응',
+      '--x-leading-body': 'Flutter 앱의 반응형 테마와 레이아웃에서 대응',
+      '--x-leading-heading': 'Flutter 앱의 반응형 테마와 레이아웃에서 대응',
+      '--x-content-width': 'Flutter 앱의 반응형 테마와 레이아웃에서 대응',
+      '--x-reading-width': 'Flutter 앱의 반응형 테마와 레이아웃에서 대응',
+      '--x-section-space': 'Flutter 앱의 반응형 테마와 레이아웃에서 대응',
+      '--x-section-space-mobile': 'Flutter 앱의 반응형 테마와 레이아웃에서 대응',
+      '--x-gutter': 'Flutter 앱의 반응형 테마와 레이아웃에서 대응',
+      '--x-gutter-mobile': 'Flutter 앱의 반응형 테마와 레이아웃에서 대응',
+      '--x-control-height': 'Flutter 앱의 반응형 테마와 레이아웃에서 대응',
       '--x-sans': '폰트 패밀리 — 패키지가 Pretendard 로 지정',
       '--x-mono': '폰트 패밀리 — Pretendard + tabular-nums',
       '--x-t1': 'XkMotion 소관',

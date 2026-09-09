@@ -31,7 +31,8 @@ dependencies:
   flutter:
     sdk: flutter
 
-  xerkonix_design_system: ^1.1.1
+  xerkonix_design_system:
+    path: ../../xerkonix-design-system
   xerkonix_sizer:
     path: ../
 

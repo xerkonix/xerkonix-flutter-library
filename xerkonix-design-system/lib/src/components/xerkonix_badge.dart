@@ -41,7 +41,7 @@ class XkBadge extends StatelessWidget {
         label.toUpperCase(),
         style: TextStyle(
           color: base,
-          fontSize: 9.5,
+          fontSize: 13,
           fontWeight: FontWeight.w700,
           letterSpacing: 1.2,
         ),

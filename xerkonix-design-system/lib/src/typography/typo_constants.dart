@@ -23,48 +23,46 @@ class _FontWeight {
 }
 
 class _FontSize {
-  // XERKONIX TACTILE v2.1 scale
-  final double displayMin = 32;
-  final double displayMax = 52;
-  final double h1Min = 26;
-  final double h1Max = 38;
-  final double h2 = 28;
+  // XERKONIX TACTILE v3.1 role scale
+  final double displayMin = 34;
+  final double displayMax = 58;
+  final double h1Min = 30;
+  final double h1Max = 44;
+  final double h2 = 32;
   final double h3 = 22;
   final double bodyLarge = 17;
-  final double body = 14;
-  final double label = 12;
-  final double meta = 12.5;
+  final double body = 16;
+  final double label = 15;
+  final double meta = 13;
 
-  // v2.2 운영 화면(어드민·콘솔) 타이포 계약 — Page Title 28/36.
-  // 값 자체는 [h2]·[title2] 와 같지만, 운영 화면에서 "제목이 검색창·도구에
-  // 눌리지 않게" 하는 역할 이름을 따로 둔다(정본 --fs-page-title).
-  final double pageTitle = 28;
+  // 업무 페이지 제목은 왼쪽 정렬로 내용과 행동을 연결한다.
+  final double pageTitle = 32;
 
   // Apple alias mapping (backward compatibility)
-  final double largeTitle = 52;
-  final double title1 = 38;
-  final double title2 = 28;
+  final double largeTitle = 58;
+  final double title1 = 44;
+  final double title2 = 32;
   final double title3 = 22;
   final double headline = 22;
-  final double callout = 14;
-  final double subhead = 14;
-  final double footnote = 12;
-  final double caption1 = 12;
-  final double caption2 = 11;
+  final double callout = 16;
+  final double subhead = 15;
+  final double footnote = 13;
+  final double caption1 = 13;
+  final double caption2 = 13;
 
   // Material aliases
-  final double displayLarge = 57;
-  final double displayMedium = 45;
-  final double displaySmall = 36;
+  final double displayLarge = 58;
+  final double displayMedium = 44;
+  final double displaySmall = 34;
   final double headlineLarge = 32;
   final double headlineMedium = 28;
-  final double headlineSmall = 24;
+  final double headlineSmall = 22;
   final double titleLarge = 22;
-  final double titleMedium = 16;
-  final double titleSmall = 14;
-  final double labelLarge = 14;
-  final double labelMedium = 12;
-  final double labelSmall = 11;
-  final double bodyMedium = 14;
-  final double bodySmall = 12;
+  final double titleMedium = 17;
+  final double titleSmall = 15;
+  final double labelLarge = 15;
+  final double labelMedium = 13;
+  final double labelSmall = 13;
+  final double bodyMedium = 16;
+  final double bodySmall = 15;
 }

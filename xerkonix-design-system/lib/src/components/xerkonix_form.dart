@@ -244,7 +244,7 @@ class _LabeledField extends StatelessWidget {
         child,
         if (helperText != null && helperText!.trim().isNotEmpty) ...[
           const SizedBox(height: XkLayout.spacingXs),
-          Text(helperText!, style: XkTypo.metaMono.copyWith(fontSize: 11)),
+          Text(helperText!, style: XkTypo.metaMono.copyWith(fontSize: 13)),
         ],
       ],
     );

@@ -119,25 +119,25 @@ class XkTypo {
   );
 
   static final TextStyle fieldLabel = _sans(
-    size: 12,
+    size: 13,
     weight: TypoConst.fontWeight.medium,
     height: 1.28,
   );
 
   static final TextStyle buttonLabel = _sans(
-    size: 13,
+    size: 15,
     weight: TypoConst.fontWeight.medium,
     height: 1.15,
   );
 
   static final TextStyle chipLabel = _sans(
-    size: 11,
+    size: 13,
     weight: TypoConst.fontWeight.medium,
     height: 1.18,
   );
 
   static final TextStyle hint = _sans(
-    size: 11,
+    size: 13,
     weight: TypoConst.fontWeight.regular,
     height: 1.35,
   );
@@ -155,14 +155,14 @@ class XkTypo {
   );
 
   static final TextStyle cardTitle = _sans(
-    size: 16,
+    size: 20,
     weight: TypoConst.fontWeight.semiBold,
     height: 1.28,
     letterSpacing: -0.1,
   );
 
   static final TextStyle cardBody = _sans(
-    size: 13,
+    size: 16,
     weight: TypoConst.fontWeight.regular,
     height: 1.55,
   );
@@ -189,7 +189,7 @@ class XkTypo {
   );
 
   static final TextStyle tableCode = _mono(
-    size: 11,
+    size: 13,
     weight: TypoConst.fontWeight.medium,
     height: 1.3,
     letterSpacing: 0.2,

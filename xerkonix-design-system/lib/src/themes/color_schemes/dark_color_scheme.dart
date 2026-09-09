@@ -8,8 +8,8 @@ import '../../palette/color.dart';
 /// cool temperature accent.
 const darkColorScheme = ColorScheme(
   brightness: Brightness.dark,
-  primary: XkColor.darkTintFill,
-  onPrimary: XkColor.darkTintOnFill,
+  primary: XkColor.darkInk,
+  onPrimary: XkColor.darkBg,
   primaryContainer: XkColor.darkTintSoft,
   onPrimaryContainer: XkColor.darkInk,
   secondary: XkColor.darkTintLight,

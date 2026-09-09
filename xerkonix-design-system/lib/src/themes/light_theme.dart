@@ -53,15 +53,15 @@ class XkLightTheme extends XkTheme {
       surfaceTintColor: Colors.transparent,
       scrolledUnderElevation: 0,
       elevation: 0,
-      centerTitle: true,
+      centerTitle: false,
       titleTextStyle: XkTypo.h3.copyWith(color: XkColor.ink),
       iconTheme: const IconThemeData(color: XkColor.ink),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: _elevatedStyle(
-        baseColor: XkColor.tintFill,
-        textColor: XkColor.tintOnFill,
-        disabledColor: XkColor.muted,
+        baseColor: XkColor.ink,
+        textColor: XkColor.bg,
+        disabledColor: XkColor.well,
         disabledTextColor: XkColor.muted,
       ),
     ),
@@ -98,8 +98,8 @@ class XkLightTheme extends XkTheme {
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
     ),
     switchTheme: _switchTheme(
-      accent: XkColor.tintFill,
-      onAccent: XkColor.tintOnFill,
+      accent: XkColor.ink,
+      onAccent: XkColor.bg,
       thumbOff: XkColor.panel,
       trackOff: XkColor.hairSoft,
       border: XkColor.hair,
@@ -114,7 +114,7 @@ class XkLightTheme extends XkTheme {
   );
 
   static final TextStyle _buttonLabel = XkTypo.label.copyWith(
-    fontSize: 13,
+    fontSize: 15,
     fontWeight: FontWeight.w500,
     height: 1.15,
   );
@@ -130,7 +130,7 @@ class XkLightTheme extends XkTheme {
       padding: WidgetStateProperty.all(
         const EdgeInsets.symmetric(horizontal: 18, vertical: 11),
       ),
-      minimumSize: WidgetStateProperty.all(const Size(0, 40)),
+      minimumSize: WidgetStateProperty.all(const Size(48, 48)),
       shape: WidgetStateProperty.all(
         RoundedRectangleBorder(borderRadius: XkShape.smBorderRadius),
       ),
@@ -178,7 +178,7 @@ class XkLightTheme extends XkTheme {
       padding: WidgetStateProperty.all(
         const EdgeInsets.symmetric(horizontal: 18, vertical: 11),
       ),
-      minimumSize: WidgetStateProperty.all(const Size(0, 40)),
+      minimumSize: WidgetStateProperty.all(const Size(48, 48)),
       shape: WidgetStateProperty.all(
         RoundedRectangleBorder(borderRadius: XkShape.smBorderRadius),
       ),
@@ -222,7 +222,7 @@ class XkLightTheme extends XkTheme {
       padding: WidgetStateProperty.all(
         const EdgeInsets.symmetric(horizontal: 18, vertical: 11),
       ),
-      minimumSize: WidgetStateProperty.all(const Size(0, 40)),
+      minimumSize: WidgetStateProperty.all(const Size(48, 48)),
       shape: WidgetStateProperty.all(
         RoundedRectangleBorder(borderRadius: XkShape.smBorderRadius),
       ),

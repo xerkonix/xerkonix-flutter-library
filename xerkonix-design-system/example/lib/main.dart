@@ -632,8 +632,8 @@ class _KnotAxisPainter extends CustomPainter {
     final center = Offset(size.width / 2, size.height / 2);
     final guidePaint = Paint()
       ..color = isDark
-          ? XkColor.darkMuted.withValues(alpha: 0.22)
-          : XkColor.muted.withValues(alpha: 0.22)
+          ? XkColor.darkInk2.withValues(alpha: 0.22)
+          : XkColor.ink2.withValues(alpha: 0.22)
       ..strokeWidth = 1.5
       ..strokeCap = StrokeCap.round;
 
@@ -648,8 +648,8 @@ class _KnotAxisPainter extends CustomPainter {
       canvas.drawLine(start, center, guidePaint);
     }
 
-    final accent = isDark ? XkColor.darkTintFill : XkColor.tintFill;
-    final identity = isDark ? XkColor.darkTintFill : XkColor.tintFill;
+    final accent = isDark ? XkColor.darkAquaMid : XkColor.aquaMid;
+    final identity = isDark ? XkColor.darkAquaMid : XkColor.aquaMid;
     final ringProgress = 0.5 - math.cos(progress * math.pi * 2) / 2;
 
     canvas.drawCircle(
@@ -682,7 +682,7 @@ class _MotionInterpretationNote extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final border = isDark ? XkColor.darkHairSoft : XkColor.hairSoft;
+    final border = isDark ? XkColor.darkRule : XkColor.rule;
 
     return Container(
       width: double.infinity,
@@ -690,7 +690,7 @@ class _MotionInterpretationNote extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: XkShape.mdBorderRadius,
         border: Border.all(color: border),
-        color: isDark ? XkColor.darkHairSoft : XkColor.hairSoft,
+        color: isDark ? XkColor.darkRule : XkColor.rule,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -728,16 +728,16 @@ class _Section extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final metaColor = isDark ? XkColor.darkMuted : XkColor.muted;
+    final metaColor = isDark ? XkColor.darkInk2 : XkColor.ink2;
 
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(XkLayout.spacingMd),
       decoration: BoxDecoration(
-        color: isDark ? XkColor.darkPanel : XkColor.panel,
+        color: isDark ? XkColor.darkGroundHi : XkColor.groundHi,
         borderRadius: XkShape.xlBorderRadius,
         border: Border.all(
-          color: isDark ? XkColor.darkHairSoft : XkColor.hairSoft,
+          color: isDark ? XkColor.darkRule : XkColor.rule,
         ),
       ),
       child: Column(
@@ -798,8 +798,8 @@ class _IconGrid extends StatelessWidget {
                     borderRadius: XkShape.smBorderRadius,
                     border: Border.all(
                       color: Theme.of(context).brightness == Brightness.dark
-                          ? XkColor.darkHairSoft
-                          : XkColor.hairSoft,
+                          ? XkColor.darkRule
+                          : XkColor.rule,
                     ),
                   ),
                   padding: const EdgeInsets.all(XkLayout.spacingXs),
@@ -879,8 +879,8 @@ class _PatternTile extends StatelessWidget {
         borderRadius: XkShape.mdBorderRadius,
         border: Border.all(
           color: Theme.of(context).brightness == Brightness.dark
-              ? XkColor.darkHairSoft
-              : XkColor.hairSoft,
+              ? XkColor.darkRule
+              : XkColor.rule,
         ),
       ),
       child: Column(
@@ -906,10 +906,10 @@ class _ConfidenceCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(XkLayout.spacingMd),
       decoration: BoxDecoration(
-        color: isDark ? XkColor.darkPanel : XkColor.panel,
+        color: isDark ? XkColor.darkGroundHi : XkColor.groundHi,
         borderRadius: XkShape.mdBorderRadius,
         border: Border.all(
-          color: isDark ? XkColor.darkHairSoft : XkColor.hairSoft,
+          color: isDark ? XkColor.darkRule : XkColor.rule,
         ),
       ),
       child: Column(
@@ -921,16 +921,16 @@ class _ConfidenceCard extends StatelessWidget {
             label: '역할 적합도 신뢰도',
             value: 0.94,
             valueText: '94%',
-            startColor: XkColor.tintTextHover,
-            endColor: XkColor.tintSoft,
+            startColor: XkColor.ink,
+            endColor: XkColor.aqua100,
           ),
           const SizedBox(height: XkLayout.spacingSm),
           const XkConfidenceMeter(
             label: '행동 전환 명확도',
             value: 0.91,
             valueText: '91%',
-            startColor: XkColor.tintTextHover,
-            endColor: XkColor.tintSoft,
+            startColor: XkColor.ink,
+            endColor: XkColor.aqua100,
           ),
           const SizedBox(height: XkLayout.spacingSm),
           const XkConfidenceMeter(
@@ -969,7 +969,7 @@ class _TimelineCard extends StatelessWidget {
           time: '2026-01-05 11:30',
           title: '역량 업데이트',
           description: '경력 점수 +8.2',
-          color: XkColor.muted,
+          color: XkColor.ink2,
         ),
         XkTimelineItem(
           time: '2025-12-20 09:00',
@@ -1000,10 +1000,10 @@ class _MotionTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(XkLayout.spacingMd),
       decoration: BoxDecoration(
-        color: isDark ? XkColor.darkPanel : XkColor.panel,
+        color: isDark ? XkColor.darkGroundHi : XkColor.groundHi,
         borderRadius: XkShape.mdBorderRadius,
         border: Border.all(
-          color: isDark ? XkColor.darkHairSoft : XkColor.hairSoft,
+          color: isDark ? XkColor.darkRule : XkColor.rule,
         ),
       ),
       child: Column(
@@ -1014,8 +1014,8 @@ class _MotionTile extends StatelessWidget {
               width: double.infinity,
               decoration: BoxDecoration(
                 color: isDark
-                    ? XkColor.darkHairSoft.withValues(alpha: 0.55)
-                    : XkColor.hairSoft,
+                    ? XkColor.darkRule.withValues(alpha: 0.55)
+                    : XkColor.rule,
                 borderRadius: XkShape.smBorderRadius,
               ),
               child: Center(child: child),

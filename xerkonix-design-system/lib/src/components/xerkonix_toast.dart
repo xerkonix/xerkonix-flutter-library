@@ -21,7 +21,7 @@ void showXkToast(BuildContext context, String message, {bool isError = false}) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: isDark ? XkColor.darkHairSoft : XkColor.hairSoft,
+        backgroundColor: isDark ? XkColor.darkGroundHi : XkColor.groundHi,
       ),
     );
     return;
@@ -115,8 +115,8 @@ class _XkToastState extends State<XkToast> with SingleTickerProviderStateMixin {
     final bool dark = widget.isDark;
     final bool err = widget.isError;
     final Color warn = dark ? XkColor.darkBad : XkColor.bad;
-    final Color surface2 = dark ? XkColor.darkHairSoft : XkColor.hairSoft;
-    final Color line = dark ? XkColor.darkHair : XkColor.hair;
+    final Color surface2 = dark ? XkColor.darkGroundHi : XkColor.groundHi;
+    final Color line = dark ? XkColor.darkRule : XkColor.rule;
     final Color text = dark ? XkColor.darkInk : XkColor.ink;
     final Color accent = err ? warn : line;
     return Positioned(
@@ -134,7 +134,7 @@ class _XkToastState extends State<XkToast> with SingleTickerProviderStateMixin {
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 520),
                 child: Material(
-                  color: Colors.transparent,
+                  color: XkColor.mixWhite.withValues(alpha: 0),
                   child: GestureDetector(
                     onTap: _dismiss,
                     child: Container(
@@ -144,10 +144,10 @@ class _XkToastState extends State<XkToast> with SingleTickerProviderStateMixin {
                         vertical: 13,
                       ),
                       decoration: BoxDecoration(
-                        color: err ? warn.withValues(alpha: 0.14) : surface2,
-                        borderRadius: XkShape.mdBorderRadius,
+                        color: surface2,
+                        borderRadius: XkRadius.panelBorderRadius,
                         border: Border.all(color: accent),
-                        boxShadow: XkShadow.lifted(
+                        boxShadow: XkShadow.glass(
                           dark ? Brightness.dark : Brightness.light,
                         ),
                       ),

@@ -13,7 +13,7 @@ class XkSectionLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
-    final Color color = isDark ? XkColor.darkMuted : XkColor.muted;
+    final Color color = isDark ? XkColor.darkInk2 : XkColor.ink2;
     return Padding(
       padding: const EdgeInsets.fromLTRB(2, 22, 2, 11),
       child: Row(
@@ -24,7 +24,8 @@ class XkSectionLabel extends StatelessWidget {
               style:
                   (Theme.of(context).textTheme.bodySmall ?? const TextStyle())
                       .copyWith(
-                        letterSpacing: 1.6,
+                        letterSpacing: 0.12,
+                        fontSize: 11,
                         color: color,
                         fontWeight: FontWeight.w500,
                       ),

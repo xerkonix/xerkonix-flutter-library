@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../motion/xerkonix_motion.dart';
 import '../palette/color.dart';
-import '../shape/xerkonix_shape.dart';
+import 'xerkonix_button.dart';
+import 'xerkonix_glass.dart';
 
 /// A centered loading spinner pane. Covers the admin `LoadingPane`.
 class XkLoadingPane extends StatelessWidget {
@@ -9,7 +11,12 @@ class XkLoadingPane extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(child: CircularProgressIndicator());
+    return const Center(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 48),
+        child: XkLoader(semanticLabel: 'loading'),
+      ),
+    );
   }
 }
 
@@ -22,7 +29,7 @@ class XkEmptyPane extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
-    final Color muted = isDark ? XkColor.darkMuted : XkColor.muted;
+    final Color muted = isDark ? XkColor.darkInk2 : XkColor.ink2;
     return Center(
       child: Text(
         message,
@@ -53,17 +60,11 @@ class XkErrorPane extends StatelessWidget {
     final Brightness brightness = Theme.of(context).brightness;
     final bool isDark = brightness == Brightness.dark;
     final Color error = isDark ? XkColor.darkBad : XkColor.bad;
-    final Color surface = isDark ? XkColor.darkPanel : XkColor.panel;
     return Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 420),
-        child: Container(
+        child: XkGlass(
           padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: surface,
-            borderRadius: XkShape.mdBorderRadius,
-            boxShadow: XkShadow.raised(brightness),
-          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
@@ -72,10 +73,9 @@ class XkErrorPane extends StatelessWidget {
               Text(message, textAlign: TextAlign.center),
               if (onRetry != null) ...<Widget>[
                 const SizedBox(height: 16),
-                FilledButton.icon(
+                XkButton.outline(
                   onPressed: onRetry,
-                  icon: const Icon(Icons.refresh),
-                  label: Text(retryLabel),
+                  child: Text(retryLabel),
                 ),
               ],
             ],

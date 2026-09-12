@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 void main() {
   group('XkColor Tests', () {
     test('XkColor should have primary color', () {
-      expect(XkColor.tintFill, isA<Color>());
-      expect(XkColor.tintFill.toARGB32(), isNotNull);
+      expect(XkColor.aquaMid, isA<Color>());
+      expect(XkColor.aquaMid.toARGB32(), isNotNull);
     });
 
     test('XkColor should have secondary color', () {
-      expect(XkColor.muted, isA<Color>());
-      expect(XkColor.muted.toARGB32(), isNotNull);
+      expect(XkColor.ink2, isA<Color>());
+      expect(XkColor.ink2.toARGB32(), isNotNull);
     });
 
     test('XkColor should have tertiary color', () {
@@ -24,54 +24,44 @@ void main() {
       expect(XkColor.bad.toARGB32(), isNotNull);
     });
 
-    test('XkColor should have the full gray-blue scale', () {
-      expect(XkColor.panel, isA<Color>());
-      expect(XkColor.bg, isA<Color>());
-      expect(XkColor.hairSoft, isA<Color>());
-      expect(XkColor.hair, isA<Color>());
-      expect(XkColor.hair, isA<Color>());
-      expect(XkColor.muted, isA<Color>());
-      expect(XkColor.muted, isA<Color>());
-      expect(XkColor.muted, isA<Color>());
+    test('XkColor should have the full v4 scale', () {
+      expect(XkColor.groundHi, isA<Color>());
+      expect(XkColor.canvas, isA<Color>());
+      expect(XkColor.rule, isA<Color>());
+      expect(XkColor.ink2, isA<Color>());
       expect(XkColor.ink, isA<Color>());
-      expect(XkColor.ink, isA<Color>());
-      expect(XkColor.ink, isA<Color>());
-      expect(XkColor.black, isA<Color>());
+      expect(XkColor.ink3, isA<Color>());
     });
 
     test('XkColor should have TACTILE semantic tokens', () {
-      expect(XkColor.bg, isA<Color>());
-      expect(XkColor.panel, isA<Color>());
-      expect(XkColor.hairSoft, isA<Color>());
+      expect(XkColor.canvas, isA<Color>());
+      expect(XkColor.groundHi, isA<Color>());
       expect(XkColor.ink, isA<Color>());
-      expect(XkColor.ink, isA<Color>());
-      expect(XkColor.muted, isA<Color>());
-      expect(XkColor.muted, isA<Color>());
-      expect(XkColor.tintFill, isA<Color>());
-      expect(XkColor.tintSoft, isA<Color>());
+      expect(XkColor.ink2, isA<Color>());
+      expect(XkColor.aquaMid, isA<Color>());
+      expect(XkColor.aqua100, isA<Color>());
       expect(XkColor.ok, isA<Color>());
       expect(XkColor.warn, isA<Color>());
       expect(XkColor.bad, isA<Color>());
     });
 
-    test('XkColor should expose the TACTILE key values', () {
-      expect(XkColor.tintFill.toARGB32(), 0xFF0081A0);
-      expect(XkColor.bg.toARGB32(), 0xFFF5F5F5);
-      expect(XkColor.panel.toARGB32(), 0xFFFFFFFF);
-      expect(XkColor.darkTintFill.toARGB32(), 0xFF3FB4C8);
-      expect(XkColor.darkBg.toARGB32(), 0xFF000000);
+    test('XkColor should expose the TACTILE v4 key values', () {
+      expect(XkColor.aquaMid.toARGB32(), 0xFF59A1B0);
+      expect(XkColor.canvas.toARGB32(), 0xFFF5F5F5);
+      expect(XkColor.groundHi.toARGB32(), 0xFFFFFFFF);
+      expect(XkColor.darkAquaMid.toARGB32(), 0xFF4F97A8);
+      expect(XkColor.darkCanvas.toARGB32(), 0xFF0B0F11);
     });
 
     test('XkColor.themed remaps light canon hex in dark, identity in light', () {
-      expect(XkColor.themed(XkColor.tintText, Brightness.light), XkColor.tintText);
-      expect(XkColor.themed(XkColor.tintText, Brightness.dark), XkColor.darkTintText);
-      expect(
-        XkColor.themed(const Color(0xFF007A91), Brightness.dark),
-        XkColor.darkTintText,
-      );
+      expect(XkColor.themed(XkColor.ink, Brightness.light), XkColor.ink);
+      expect(XkColor.themed(XkColor.ink, Brightness.dark), XkColor.darkInk);
       expect(XkColor.themed(XkColor.ok, Brightness.dark), XkColor.darkOk);
-      expect(XkColor.themed(XkColor.darkTintText, Brightness.dark), XkColor.darkTintText);
-      expect(XkColor.themed(XkColor.muted, Brightness.dark), XkColor.darkMuted);
+      expect(XkColor.themed(XkColor.canvas, Brightness.dark), XkColor.darkCanvas);
+      expect(XkColor.themed(XkColor.darkInk, Brightness.dark), XkColor.darkInk);
+      // Hex collisions (ink2/ink3, aqua-deep/aqua-shade) use *Of, not themed.
+      expect(XkColor.ink2Of(Brightness.dark), XkColor.darkInk2);
+      expect(XkColor.aquaDeepOf(Brightness.dark), XkColor.darkAquaDeep);
     });
 
     test('XkColor should have the warm/cool temperature accent pair', () {
@@ -88,47 +78,29 @@ void main() {
     });
   });
 
-  group('Neumorphic elevation tokens', () {
-    test('XkShadow.raised is paired (2); lifted is single-direction --float',
-        () {
-      expect(XkShadow.raised(Brightness.light).length, 2);
-      expect(XkShadow.raised(Brightness.dark).length, 2);
-      expect(XkShadow.raisedSoft(Brightness.dark).length, 1);
-      // v2.1: 떠 있는 층은 정본 --float(단방향 드롭 섀도우) — 페어드 아님.
-      expect(XkShadow.lifted(Brightness.light).length, 1);
-      expect(XkShadow.lifted(Brightness.dark).length, 1);
-      expect(
-        XkShadow.liftedLight.single.color.toARGB32(),
-        0x24232430, // rgba(35,36,48,.14)
-      );
-      expect(XkShadow.liftedLight.single.offset, const Offset(0, 14));
-      expect(XkShadow.liftedLight.single.blurRadius, 40);
-      expect(
-        XkShadow.liftedDark.single.color.toARGB32(),
-        0x8C000000, // rgba(0,0,0,.55)
-      );
-      expect(XkShadow.liftedDark.single.offset, const Offset(0, 16));
-      expect(XkShadow.liftedDark.single.blurRadius, 44);
-      // 다크 하이라이트 0 규칙 — raised 페어의 하이라이트는 완전 투명.
-      expect(XkShadow.darkHighlight.toARGB32(), 0x00FFFFFF);
+  group('Glass elevation tokens', () {
+    test('XkShadow.glass is two layers matching --glass-shadow', () {
+      expect(XkShadow.glass(Brightness.light).length, 2);
+      expect(XkShadow.glass(Brightness.dark).length, 2);
+      expect(XkShadow.glassLight.first.offset, const Offset(0, 24));
+      expect(XkShadow.glassLight.first.blurRadius, 60);
+      expect(XkShadow.glassLight.first.spreadRadius, -36);
+      expect(XkShadow.glassLight.last.offset, const Offset(0, 1));
+      expect(XkShadow.glassLight.last.blurRadius, 3);
     });
 
-    test('raised light pair matches TACTILE 30° light (positive xy)', () {
-      final BoxShadow near = XkShadow.raisedLight.first;
-      final BoxShadow far = XkShadow.raisedLight.last;
-      expect(near.offset.dx > 0, isTrue);
-      expect(near.offset.dy > 0, isTrue);
-      expect(far.offset.dx > 0, isTrue);
-      expect(far.offset.dy > 0, isTrue);
-      expect(near.blurRadius, 24);
-      expect(far.blurRadius, 40);
+    test('raised light xy offsets are non-negative (top-left light)', () {
+      for (final BoxShadow s in XkShadow.raisedLight) {
+        expect(s.offset.dx >= 0, isTrue, reason: '${s.offset}');
+        expect(s.offset.dy >= 0, isTrue, reason: '${s.offset}');
+      }
     });
 
     test('resolve keeps the legacy 3-tier API', () {
       expect(XkShadow.resolve(Brightness.light), isA<List<BoxShadow>>());
       expect(
         XkShadow.resolve(Brightness.dark, XkShadowLevel.lg),
-        XkShadow.liftedDark,
+        XkShadow.glassDark,
       );
     });
   });

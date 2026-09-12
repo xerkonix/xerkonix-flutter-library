@@ -11,7 +11,10 @@ export 'src/typography/xerkonix_typography.dart';
 // Shape & Layout - Shape, layout, and neumorphic elevation utilities
 export 'src/shape/xerkonix_shape.dart';
 
-// Neumorphic elevation primitive (raised / inset surfaces)
+// Glass / gem / tag / ground primitives (v4)
+export 'src/components/xerkonix_glass.dart';
+
+// Neumorphic elevation primitive (raised / inset surfaces) — now glass wrappers
 export 'src/components/xerkonix_neumorphic.dart';
 
 // Motion - Animation components

@@ -47,8 +47,6 @@ class XkAlert extends StatelessWidget {
   final Color? accentColor;
   final Color? textColor;
 
-  static const double _accentWidth = 8;
-
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -58,12 +56,7 @@ class XkAlert extends StatelessWidget {
     final bg = backgroundColor ?? palette.background;
     final resolvedRadius =
         borderRadius ??
-        const BorderRadius.only(
-          topLeft: Radius.zero,
-          bottomLeft: Radius.zero,
-          topRight: Radius.circular(XkShape.radiusMd),
-          bottomRight: Radius.circular(XkShape.radiusMd),
-        );
+        XkRadius.cardBorderRadius;
 
     final trailingWidget =
         trailing ??
@@ -84,68 +77,48 @@ class XkAlert extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: resolvedRadius,
-        boxShadow: XkShadow.raised(isDark ? Brightness.dark : Brightness.light),
+        color: bg,
+        border: Border.all(color: borderColor ?? palette.border),
       ),
-      child: ClipRRect(
-        borderRadius: resolvedRadius,
-        child: Container(
-          decoration: BoxDecoration(
-            color: bg,
-            borderRadius: resolvedRadius,
-            border: Border.all(color: borderColor ?? palette.border),
-          ),
-          child: Stack(
-            children: [
-              Positioned(
-                top: 0,
-                bottom: 0,
-                left: 0,
-                width: _accentWidth,
-                child: Container(color: accent),
-              ),
-              Padding(
-                padding: padding,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (leading != null) ...[
-                      leading!,
-                      const SizedBox(width: XkLayout.spacingSm),
-                    ],
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            title,
-                            style: XkTypo.fieldLabel.copyWith(
-                              color: foreground,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: -0.05,
-                            ),
-                          ),
-                          const SizedBox(height: 3),
-                          Text(
-                            message,
-                            style: XkTypo.bodySmall.copyWith(
-                              color: isDark
-                                  ? XkColor.darkInk
-                                  : XkColor.ink,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    if (trailingWidget != null) ...[
-                      const SizedBox(width: XkLayout.spacingSm),
-                      trailingWidget,
-                    ],
-                  ],
-                ),
-              ),
+      child: Padding(
+        padding: padding,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (leading != null) ...[
+              leading!,
+              const SizedBox(width: XkLayout.spacingSm),
+            ] else ...[
+              Icon(Icons.info_outline, size: 18, color: accent),
+              const SizedBox(width: XkLayout.spacingSm),
             ],
-          ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: XkTypo.fieldLabel.copyWith(
+                      color: foreground,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 3),
+                  Text(
+                    message,
+                    style: XkTypo.bodySmall.copyWith(
+                      color: isDark ? XkColor.darkInk : XkColor.ink,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (trailingWidget != null) ...[
+              const SizedBox(width: XkLayout.spacingSm),
+              trailingWidget,
+            ],
+          ],
         ),
       ),
     );
@@ -165,8 +138,8 @@ class XkAlert extends StatelessWidget {
   }
 
   _AlertPalette _resolvePalette(bool isDark) {
-    final neutralBg = isDark ? XkColor.darkPanel : XkColor.panel;
-    final neutralBorder = isDark ? XkColor.darkHairSoft : XkColor.hairSoft;
+    final neutralBg = isDark ? XkColor.darkGroundHi : XkColor.groundHi;
+    final neutralBorder = isDark ? XkColor.darkRule : XkColor.rule;
     final foreground = isDark ? XkColor.darkInk : XkColor.ink;
 
     switch (variant) {
@@ -182,7 +155,7 @@ class XkAlert extends StatelessWidget {
           background: neutralBg,
           border: neutralBorder,
           foreground: foreground,
-          accent: isDark ? XkColor.muted : XkColor.muted,
+          accent: isDark ? XkColor.darkInk2 : XkColor.ink2,
         );
       case XkAlertVariant.warning:
         return _AlertPalette(
@@ -193,9 +166,8 @@ class XkAlert extends StatelessWidget {
         );
       case XkAlertVariant.danger:
         final signal = isDark ? XkColor.darkBad : XkColor.bad;
-        final wash = isDark ? XkColor.darkBad : XkColor.bad;
         return _AlertPalette(
-          background: Color.alphaBlend(wash, neutralBg),
+          background: neutralBg,
           border: neutralBorder,
           foreground: signal,
           accent: signal,

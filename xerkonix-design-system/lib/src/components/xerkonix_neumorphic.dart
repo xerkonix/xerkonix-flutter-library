@@ -1,33 +1,13 @@
-import 'dart:ui' as ui;
-
 import 'package:flutter/material.dart';
 
 import '../palette/color.dart';
 import '../shape/xerkonix_shape.dart';
+import 'xerkonix_glass.dart';
 
-/// Neumorphic surface treatment.
-///
-/// - [raised]: extruded from the canvas (paired highlight + lowlight drop).
-/// - [inset]: pressed into the canvas (paired inner shadow, drawn by
-///   [XkInsetShadowPainter] because Flutter cannot express an inset [BoxShadow]).
-/// - [flat]: filled surface with a hairline border and no shadow.
+/// Surface treatment. v4 maps raised/flat → glass, inset → inset.
 enum XkNeumorphicStyle { raised, inset, flat }
 
-/// A neumorphic container — the core TACTILE primitive.
-///
-/// Material's `CardTheme` / `ButtonStyle` can only express a single outward
-/// drop shadow, so they cannot render the dual (highlight + lowlight) or inset
-/// treatments TACTILE relies on. [XkNeumorphic] fills that gap: a rounded,
-/// theme-aware surface that can be [XkNeumorphicStyle.raised],
-/// [XkNeumorphicStyle.inset], or [XkNeumorphicStyle.flat].
-///
-/// When [onTap] is provided (and [pressable] is true) a resting `raised`
-/// surface momentarily presses to `inset` while held, giving physical
-/// button-press feedback. For a static surface just omit [onTap].
-///
-/// The raised decoration alone is also available without a widget via
-/// [XkNeumorphic.decoration], for callers that already build their own
-/// [BoxDecoration].
+/// Compatibility wrapper. New code should use [XkGlass] / [XkInset].
 class XkNeumorphic extends StatefulWidget {
   const XkNeumorphic({
     super.key,
@@ -46,45 +26,27 @@ class XkNeumorphic extends StatefulWidget {
 
   final Widget child;
   final XkNeumorphicStyle style;
-
-  /// Corner radius. Defaults to [XkShape.mdBorderRadius].
   final BorderRadius? borderRadius;
   final EdgeInsetsGeometry padding;
-
-  /// Surface fill. Defaults to the theme surface token.
   final Color? color;
-
   final VoidCallback? onTap;
-
-  /// When true and [onTap] is set, a resting `raised` surface presses to
-  /// `inset` while held.
   final bool pressable;
-
-  /// Scales the strength (alpha + offset) of the elevation, `0`..`~1.5`.
   final double intensity;
-
   final double? width;
   final double? height;
-
-  /// 스크린리더가 읽을 이름. 아이콘만 담은 탭 가능 표면은 지정해야 한다 —
-  /// 없으면 이름 없는 button 노드로 읽힌다.
   final String? semanticLabel;
 
-  /// The raised paired-shadow [BoxDecoration] for the given [brightness].
-  ///
-  /// Only covers the raised treatment — the inset treatment needs an inner
-  /// shadow and must go through the [XkNeumorphic] widget / [XkInsetShadowPainter].
   static BoxDecoration decoration({
     required Brightness brightness,
     BorderRadius? borderRadius,
     Color? color,
     double intensity = 1.0,
   }) {
-    final bool isDark = brightness == Brightness.dark;
     return BoxDecoration(
-      color: color ?? (isDark ? XkColor.darkPanel : XkColor.panel),
-      borderRadius: borderRadius ?? XkShape.mdBorderRadius,
-      boxShadow: _scaleShadows(XkShadow.raised(brightness), intensity),
+      color: color ?? XkColor.glassOf(brightness),
+      borderRadius: borderRadius ?? XkRadius.panelBorderRadius,
+      border: Border.all(color: XkColor.glassEdge2Of(brightness)),
+      boxShadow: XkShadow.glass(brightness),
     );
   }
 
@@ -94,7 +56,6 @@ class XkNeumorphic extends StatefulWidget {
 
 class _XkNeumorphicState extends State<XkNeumorphic> {
   bool _pressed = false;
-  bool _focused = false;
 
   bool get _interactive => widget.onTap != null;
 
@@ -104,24 +65,12 @@ class _XkNeumorphicState extends State<XkNeumorphic> {
     }
   }
 
-  /// 키보드 포커스는 눌림과 같은 인셋으로 표시한다 — 이 프리미티브에는 별도의
-  /// 포커스 링 레이어가 없고, 지금 어디에 있는지 보이지 않으면 Tab 이동이 무용하다.
-  void _setFocused(bool value) {
-    if (_focused != value) {
-      setState(() => _focused = value);
-    }
-  }
+  void _setFocused(bool value) {}
 
   @override
   Widget build(BuildContext context) {
-    final Brightness brightness = Theme.of(context).brightness;
-    final bool isDark = brightness == Brightness.dark;
-    final BorderRadius radius = widget.borderRadius ?? XkShape.mdBorderRadius;
-    final Color surface =
-        widget.color ?? (isDark ? XkColor.darkPanel : XkColor.panel);
-    final Color hairline = isDark ? XkColor.darkHair : XkColor.hair;
-
-    // A held raised+tappable surface renders as inset for tactile feedback.
+    final BorderRadius radius =
+        widget.borderRadius ?? XkRadius.panelBorderRadius;
     final XkNeumorphicStyle style =
         (_pressed &&
             widget.pressable &&
@@ -130,71 +79,26 @@ class _XkNeumorphicState extends State<XkNeumorphic> {
         ? XkNeumorphicStyle.inset
         : widget.style;
 
-    final Widget content = Padding(
-      padding: widget.padding,
-      child: widget.child,
-    );
-
-    Widget surfaceWidget;
-    switch (style) {
-      case XkNeumorphicStyle.raised:
-        surfaceWidget = DecoratedBox(
-          decoration: BoxDecoration(
-            color: surface,
+    final Widget surface = style == XkNeumorphicStyle.inset
+        ? XkInset(
             borderRadius: radius,
-            boxShadow: _scaleShadows(
-              XkShadow.raised(brightness),
-              widget.intensity,
-            ),
-          ),
-          child: content,
-        );
-        break;
-      case XkNeumorphicStyle.inset:
-        surfaceWidget = DecoratedBox(
-          decoration: BoxDecoration(
-            color: surface,
+            padding: widget.padding,
+            width: widget.width,
+            height: widget.height,
+            child: widget.child,
+          )
+        : XkGlass(
             borderRadius: radius,
-            border: Border.all(color: hairline.withValues(alpha: 0.6)),
-          ),
-          child: CustomPaint(
-            foregroundPainter: XkInsetShadowPainter(
-              borderRadius: radius,
-              lowlight: isDark ? XkShadow.darkLowlight : XkShadow.lightLowlight,
-              // 다크는 하이라이트 0 (정본 --neu-light: rgba(255,255,255,0)).
-              highlight: isDark
-                  ? XkShadow.darkHighlight
-                  : XkShadow.lightHighlight,
-              intensity: widget.intensity,
-            ),
-            child: content,
-          ),
-        );
-        break;
-      case XkNeumorphicStyle.flat:
-        surfaceWidget = DecoratedBox(
-          decoration: BoxDecoration(
-            color: surface,
-            borderRadius: radius,
-            border: Border.all(color: hairline),
-          ),
-          child: content,
-        );
-        break;
-    }
-
-    Widget result = SizedBox(
-      width: widget.width,
-      height: widget.height,
-      child: surfaceWidget,
-    );
+            padding: widget.padding,
+            width: widget.width,
+            height: widget.height,
+            child: widget.child,
+          );
 
     if (!_interactive) {
-      return result;
+      return surface;
     }
 
-    // 탭 가능한 뉴모픽 표면도 키보드로 도달·활성화돼야 한다 — XkButton 과 같은
-    // 뿌리의 결함이었다(GestureDetector 만 있어 Tab/Enter 불가).
     return Semantics(
       button: true,
       label: widget.semanticLabel,
@@ -221,119 +125,9 @@ class _XkNeumorphicState extends State<XkNeumorphic> {
           onTapDown: (_) => _setPressed(true),
           onTapUp: (_) => _setPressed(false),
           onTapCancel: () => _setPressed(false),
-          child: result,
+          child: surface,
         ),
       ),
     );
-  }
-}
-
-/// Scales the alpha and offset of a paired shadow list by [intensity].
-List<BoxShadow> _scaleShadows(List<BoxShadow> shadows, double intensity) {
-  if (intensity == 1.0) {
-    return shadows;
-  }
-  final double k = intensity.clamp(0.0, 2.0);
-  return <BoxShadow>[
-    for (final BoxShadow s in shadows)
-      BoxShadow(
-        color: s.color.withValues(
-          alpha: (s.color.a * k).clamp(0.0, 1.0).toDouble(),
-        ),
-        offset: s.offset * k,
-        blurRadius: s.blurRadius * k,
-        spreadRadius: s.spreadRadius,
-      ),
-  ];
-}
-
-/// Paints a neumorphic **inset** (inner) shadow clipped to a rounded rect.
-///
-/// Flutter's [BoxShadow] only casts outward, so an inset surface — a control
-/// pressed *into* the canvas — is emulated here: a lowlight inner shadow along
-/// the top-left edge and a highlight along the bottom-right edge, matching the
-/// single top-left light source used by [XkShadow].
-///
-/// Intended as a `foregroundPainter` over a filled, rounded child (see
-/// [XkNeumorphic] with [XkNeumorphicStyle.inset], and the TACTILE inputs).
-class XkInsetShadowPainter extends CustomPainter {
-  const XkInsetShadowPainter({
-    required this.borderRadius,
-    required this.lowlight,
-    required this.highlight,
-    this.distance = 4.0,
-    this.blur = 9.0,
-    this.intensity = 1.0,
-  });
-
-  /// Must match the child's clip radius.
-  final BorderRadius borderRadius;
-
-  /// Top-left inner shadow color.
-  final Color lowlight;
-
-  /// Bottom-right inner highlight color.
-  final Color highlight;
-
-  /// Offset magnitude of the inner shadow.
-  final double distance;
-
-  /// Blur of the inner shadow.
-  final double blur;
-
-  /// Scales [distance] / [blur].
-  final double intensity;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final double k = intensity.clamp(0.0, 2.0);
-    final double d = distance * k;
-    final double b = blur * k;
-    if (size.isEmpty || d <= 0) {
-      return;
-    }
-
-    final Rect rect = Offset.zero & size;
-    final RRect rrect = borderRadius.toRRect(rect);
-
-    canvas.save();
-    canvas.clipRRect(rrect);
-
-    // Filled region = a big rect with the rrect punched out (even-odd). When
-    // translated it slides its edge into the clip, leaving a soft crescent.
-    final Path punched = Path()
-      ..addRect(rect.inflate(d + b + 4))
-      ..addRRect(rrect)
-      ..fillType = ui.PathFillType.evenOdd;
-
-    // Lowlight along the top-left edge (slide fill toward bottom-right).
-    final Paint low = Paint()
-      ..color = lowlight
-      ..maskFilter = ui.MaskFilter.blur(ui.BlurStyle.normal, b);
-    canvas.save();
-    canvas.translate(d, d);
-    canvas.drawPath(punched, low);
-    canvas.restore();
-
-    // Highlight along the bottom-right edge (slide fill toward top-left).
-    final Paint high = Paint()
-      ..color = highlight
-      ..maskFilter = ui.MaskFilter.blur(ui.BlurStyle.normal, b);
-    canvas.save();
-    canvas.translate(-d, -d);
-    canvas.drawPath(punched, high);
-    canvas.restore();
-
-    canvas.restore();
-  }
-
-  @override
-  bool shouldRepaint(covariant XkInsetShadowPainter old) {
-    return old.borderRadius != borderRadius ||
-        old.lowlight != lowlight ||
-        old.highlight != highlight ||
-        old.distance != distance ||
-        old.blur != blur ||
-        old.intensity != intensity;
   }
 }

@@ -5,35 +5,38 @@ import 'package:xerkonix_design_system/xerkonix_design_system.dart';
 Widget _wrap({required bool disableAnimations, required Widget child}) {
   return MediaQuery(
     data: MediaQueryData(disableAnimations: disableAnimations),
-    child: Directionality(textDirection: TextDirection.ltr, child: child),
+    child: Theme(
+      data: XkLightTheme.themeData,
+      child: Directionality(textDirection: TextDirection.ltr, child: child),
+    ),
   );
 }
 
 void main() {
   group('L9 — reduced motion halts repeating tickers', () {
-    testWidgets('breathingLight: no running animation when reduced motion on',
+    testWidgets('XkLoader: no running animation when reduced motion on',
         (WidgetTester tester) async {
       await tester.pumpWidget(
         _wrap(
           disableAnimations: true,
-          child: XkMotion.breathingLight(
-            child: const SizedBox(width: 10, height: 10),
+          child: const SizedBox(
+            width: 200,
+            child: XkLoader(),
           ),
         ),
       );
       await tester.pump();
-      // Regression: previously the controller kept `repeat()`ing behind a
-      // static frame, so a ticker stayed scheduled forever.
       expect(tester.hasRunningAnimations, isFalse);
     });
 
-    testWidgets('breathingLight: animates when reduced motion off',
+    testWidgets('XkLoader: animates when reduced motion off',
         (WidgetTester tester) async {
       await tester.pumpWidget(
         _wrap(
           disableAnimations: false,
-          child: XkMotion.breathingLight(
-            child: const SizedBox(width: 10, height: 10),
+          child: const SizedBox(
+            width: 200,
+            child: XkLoader(),
           ),
         ),
       );
@@ -41,12 +44,16 @@ void main() {
       expect(tester.hasRunningAnimations, isTrue);
     });
 
-    testWidgets('pulse: ticker stops when reduced motion toggles on',
+    testWidgets('XkGemSweep: ticker stops when reduced motion on',
         (WidgetTester tester) async {
       await tester.pumpWidget(
         _wrap(
           disableAnimations: false,
-          child: XkMotion.pulse(child: const SizedBox(width: 10, height: 10)),
+          child: const SizedBox(
+            width: 80,
+            height: 40,
+            child: XkGemSweep(enabled: true),
+          ),
         ),
       );
       await tester.pump();
@@ -55,7 +62,25 @@ void main() {
       await tester.pumpWidget(
         _wrap(
           disableAnimations: true,
-          child: XkMotion.pulse(child: const SizedBox(width: 10, height: 10)),
+          child: const SizedBox(
+            width: 80,
+            height: 40,
+            child: XkGemSweep(enabled: true),
+          ),
+        ),
+      );
+      await tester.pump();
+      expect(tester.hasRunningAnimations, isFalse);
+    });
+
+    testWidgets('breathingLight/pulse are static (no ticker)',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(
+        _wrap(
+          disableAnimations: false,
+          child: XkMotion.breathingLight(
+            child: const SizedBox(width: 10, height: 10),
+          ),
         ),
       );
       await tester.pump();

@@ -24,7 +24,7 @@ class XkCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return XkNeumorphic(
       style: XkNeumorphicStyle.flat,
-      borderRadius: XkShape.lgBorderRadius,
+      borderRadius: XkRadius.panelBorderRadius,
       padding: padding ?? const EdgeInsets.all(16),
       onTap: onTap,
       width: double.infinity,

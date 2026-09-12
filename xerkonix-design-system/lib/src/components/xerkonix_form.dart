@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../palette/color.dart';
 import '../shape/xerkonix_shape.dart';
 import '../typography/xerkonix_typography.dart';
-import 'xerkonix_neumorphic.dart';
+
 
 class XkSelectOption<T> {
   const XkSelectOption({required this.value, required this.label});
@@ -42,7 +42,7 @@ class XkTextInputField extends StatelessWidget {
       label: label,
       helperText: helperText,
       child: _InsetWell(
-        radius: borderRadius ?? XkShape.smBorderRadius,
+        radius: borderRadius ?? XkRadius.ctlBorderRadius,
         enabled: enabled,
         child: TextField(
           controller: controller,
@@ -96,7 +96,7 @@ class XkTextAreaField extends StatelessWidget {
       label: label,
       helperText: helperText,
       child: _InsetWell(
-        radius: borderRadius ?? XkShape.smBorderRadius,
+        radius: borderRadius ?? XkRadius.ctlBorderRadius,
         enabled: enabled,
         child: TextField(
           controller: controller,
@@ -148,7 +148,7 @@ class XkSelectField<T> extends StatelessWidget {
       label: label,
       helperText: helperText,
       child: _InsetWell(
-        radius: borderRadius ?? XkShape.smBorderRadius,
+        radius: borderRadius ?? XkRadius.ctlBorderRadius,
         enabled: enabled,
         child: DropdownButtonFormField<T>(
           key: ValueKey<T?>(value),
@@ -194,8 +194,8 @@ class _InsetWell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
-    final Color fill = isDark ? XkColor.darkBg : XkColor.hairSoft;
-    final Color hairline = isDark ? XkColor.darkHairSoft : XkColor.hairSoft;
+    final Color fill = isDark ? XkColor.darkGlass : XkColor.glass;
+    final Color hairline = isDark ? XkColor.darkRule : XkColor.rule;
     return Opacity(
       opacity: enabled ? 1.0 : 0.6,
       child: DecoratedBox(
@@ -204,20 +204,7 @@ class _InsetWell extends StatelessWidget {
           borderRadius: radius,
           border: Border.all(color: hairline),
         ),
-        child: CustomPaint(
-          foregroundPainter: XkInsetShadowPainter(
-            borderRadius: radius,
-            lowlight: isDark
-                ? XkShadow.darkLowlight
-                : XkColor.ink.withValues(alpha: 0.16),
-            highlight: isDark
-                ? XkColor.darkInk.withValues(alpha: 0.05)
-                : Colors.white.withValues(alpha: 0.6),
-            distance: 3,
-            blur: 7,
-          ),
-          child: ClipRRect(borderRadius: radius, child: child),
-        ),
+        child: ClipRRect(borderRadius: radius, child: child),
       ),
     );
   }

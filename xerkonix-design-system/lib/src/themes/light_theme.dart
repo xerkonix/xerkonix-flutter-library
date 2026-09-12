@@ -6,14 +6,16 @@ import '../typography/xerkonix_typography.dart';
 import 'color_schemes/light_color_scheme.dart';
 import 'xerkonix_theme.dart';
 
-/// Light Theme (XERKONIX DS · TACTILE)
+/// Light Theme (XERKONIX DS · TACTILE v4)
 class XkLightTheme extends XkTheme {
   XkLightTheme._();
 
   static ThemeData themeData = ThemeData(
     useMaterial3: true,
+    brightness: Brightness.light,
     colorScheme: lightColorScheme,
-    scaffoldBackgroundColor: XkColor.bg,
+    scaffoldBackgroundColor: XkColor.canvas,
+    fontFamily: Pretendard.fontFamily,
     textTheme: TextTheme(
       displayLarge: XkTypo.display.copyWith(color: XkColor.ink),
       displayMedium: XkTypo.h1.copyWith(color: XkColor.ink),
@@ -23,258 +25,176 @@ class XkLightTheme extends XkTheme {
       headlineSmall: XkTypo.h3.copyWith(color: XkColor.ink),
       titleLarge: XkTypo.h3.copyWith(color: XkColor.ink),
       titleMedium: XkTypo.label.copyWith(color: XkColor.ink),
-      titleSmall: XkTypo.label.copyWith(color: XkColor.muted),
+      titleSmall: XkTypo.eyebrow.copyWith(color: XkColor.ink2),
       bodyLarge: XkTypo.bodyLarge.copyWith(color: XkColor.ink),
       bodyMedium: XkTypo.body.copyWith(color: XkColor.ink),
-      bodySmall: XkTypo.label.copyWith(color: XkColor.muted),
+      bodySmall: XkTypo.label.copyWith(color: XkColor.ink2),
       labelLarge: _buttonLabel.copyWith(color: XkColor.ink),
-      labelMedium: XkTypo.label.copyWith(color: XkColor.muted),
-      labelSmall: XkTypo.metaMono.copyWith(color: XkColor.muted),
+      labelMedium: XkTypo.eyebrow.copyWith(color: XkColor.ink2),
+      labelSmall: XkTypo.eyebrow.copyWith(color: XkColor.ink2),
     ),
-    // Cards read as extruded from the canvas. Material's CardTheme can only
-    // express a single drop shadow, so the raised surface uses a matched fill
-    // and hairline; use `XkCard` / `XkNeumorphic` for the full paired shadow.
     cardTheme: CardThemeData(
-      color: XkColor.panel,
+      color: XkColor.glass,
       elevation: 0,
-      shadowColor: XkColor.sh,
-      surfaceTintColor: Colors.transparent,
+      shadowColor: XkColor.glassShadowNear,
+      surfaceTintColor: XkColor.none,
       shape: RoundedRectangleBorder(
-        borderRadius: XkShape.lgBorderRadius,
-        side: BorderSide(color: XkColor.hairSoft),
+        borderRadius: XkRadius.panelBorderRadius,
+        side: const BorderSide(color: XkColor.glassEdge2),
       ),
       margin: const EdgeInsets.symmetric(
         horizontal: XkLayout.spacingSm,
         vertical: XkLayout.spacingXs,
       ),
     ),
-    appBarTheme: AppBarTheme(
-      backgroundColor: XkColor.bg,
-      surfaceTintColor: Colors.transparent,
+    appBarTheme: const AppBarTheme(
+      backgroundColor: XkColor.none,
+      surfaceTintColor: XkColor.none,
       scrolledUnderElevation: 0,
       elevation: 0,
       centerTitle: false,
-      titleTextStyle: XkTypo.h3.copyWith(color: XkColor.ink),
-      iconTheme: const IconThemeData(color: XkColor.ink),
+      titleTextStyle: TextStyle(
+        fontFamily: Pretendard.fontFamily,
+        package: Pretendard.package,
+        fontSize: 22,
+        fontWeight: FontWeight.w600,
+        color: XkColor.ink,
+      ),
+      iconTheme: IconThemeData(color: XkColor.ink),
+      shape: Border(bottom: BorderSide(color: XkColor.rule, width: 1)),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
-      style: _elevatedStyle(
-        baseColor: XkColor.ink,
-        textColor: XkColor.bg,
-        disabledColor: XkColor.well,
-        disabledTextColor: XkColor.muted,
+      style: _ctlStyle(
+        foreground: XkColor.aquaInk,
+        background: XkColor.aquaMid,
       ),
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(
-      style: _outlinedStyle(
-        borderColor: XkColor.hair,
-        textColor: XkColor.ink,
+      style: _ctlStyle(
+        foreground: XkColor.ink,
+        background: XkColor.none,
+        border: XkColor.glassEdge2,
       ),
     ),
     textButtonTheme: TextButtonThemeData(
-      style: _tonalStyle(
-        backgroundColor: XkColor.panel,
-        textColor: XkColor.ink,
-        borderColor: XkColor.hair,
+      style: _ctlStyle(
+        foreground: XkColor.ink,
+        background: XkColor.none,
       ),
     ),
-    // Inputs are sunken wells: a recessed fill + hairline, focus ring in ink.
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: XkColor.hairSoft,
-      hintStyle: XkTypo.hint.copyWith(color: XkColor.muted),
+      fillColor: XkColor.glass,
+      hintStyle: XkTypo.hint.copyWith(color: XkColor.ink3),
       border: OutlineInputBorder(
-        borderRadius: XkShape.smBorderRadius,
-        borderSide: BorderSide(color: XkColor.hairSoft),
+        borderRadius: XkRadius.ctlBorderRadius,
+        borderSide: const BorderSide(color: XkColor.rule),
       ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: XkShape.smBorderRadius,
-        borderSide: BorderSide(color: XkColor.hairSoft),
+        borderRadius: XkRadius.ctlBorderRadius,
+        borderSide: const BorderSide(color: XkColor.rule),
       ),
       focusedBorder: const OutlineInputBorder(
-        borderRadius: XkShape.smBorderRadius,
-        borderSide: BorderSide(color: XkColor.tintFill, width: 1.5),
+        borderRadius: XkRadius.ctlBorderRadius,
+        borderSide: BorderSide(color: XkColor.aqua, width: 2),
       ),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
     ),
-    switchTheme: _switchTheme(
-      accent: XkColor.ink,
-      onAccent: XkColor.bg,
-      thumbOff: XkColor.panel,
-      trackOff: XkColor.hairSoft,
-      border: XkColor.hair,
-      disabled: XkColor.muted,
+    switchTheme: _switchTheme(),
+    checkboxTheme: CheckboxThemeData(
+      fillColor: WidgetStateProperty.resolveWith((Set<WidgetState> states) {
+        if (states.contains(WidgetState.selected)) {
+          return XkColor.aquaMid;
+        }
+        return XkColor.none;
+      }),
+      checkColor: WidgetStateProperty.all(XkColor.aquaInk),
+      side: const BorderSide(color: XkColor.rule),
+    ),
+    radioTheme: RadioThemeData(
+      fillColor: WidgetStateProperty.resolveWith((Set<WidgetState> states) {
+        if (states.contains(WidgetState.selected)) {
+          return XkColor.aquaMid;
+        }
+        return XkColor.rule;
+      }),
     ),
     dividerTheme: const DividerThemeData(
-      color: XkColor.hairSoft,
+      color: XkColor.rule,
       space: 1,
       thickness: 1,
     ),
-    dividerColor: XkColor.hairSoft,
+    dividerColor: XkColor.rule,
+    focusColor: XkColor.aqua.withValues(alpha: 0.2),
   );
 
-  static final TextStyle _buttonLabel = XkTypo.label.copyWith(
+  static final TextStyle _buttonLabel = XkTypo.buttonLabel.copyWith(
     fontSize: 15,
-    fontWeight: FontWeight.w500,
+    fontWeight: FontWeight.w600,
     height: 1.15,
   );
 
-  static ButtonStyle _elevatedStyle({
-    required Color baseColor,
-    required Color textColor,
-    required Color disabledColor,
-    required Color disabledTextColor,
+  static ButtonStyle _ctlStyle({
+    required Color foreground,
+    required Color background,
+    Color? border,
   }) {
     return ButtonStyle(
       textStyle: WidgetStateProperty.all(_buttonLabel),
       padding: WidgetStateProperty.all(
-        const EdgeInsets.symmetric(horizontal: 18, vertical: 11),
+        const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
       ),
-      minimumSize: WidgetStateProperty.all(const Size(48, 48)),
+      minimumSize: WidgetStateProperty.all(
+        const Size(48, XkLayout.controlHeight),
+      ),
       shape: WidgetStateProperty.all(
-        RoundedRectangleBorder(borderRadius: XkShape.smBorderRadius),
+        RoundedRectangleBorder(borderRadius: XkRadius.ctlBorderRadius),
       ),
-      side: WidgetStateProperty.all(BorderSide.none),
-      backgroundColor: WidgetStateProperty.resolveWith((states) {
-        if (states.contains(WidgetState.disabled)) {
-          return disabledColor;
+      side: WidgetStateProperty.all(
+        border == null ? BorderSide.none : BorderSide(color: border),
+      ),
+      backgroundColor: WidgetStateProperty.resolveWith((Set<WidgetState> s) {
+        if (s.contains(WidgetState.disabled)) {
+          return XkColor.insetBg;
         }
-        if (states.contains(WidgetState.pressed)) {
-          return baseColor.withValues(alpha: 0.92);
-        }
-        if (states.contains(WidgetState.hovered) ||
-            states.contains(WidgetState.focused)) {
-          return XkColor.tintTextHover;
-        }
-        return baseColor;
+        return background;
       }),
-      foregroundColor: WidgetStateProperty.resolveWith((states) {
-        if (states.contains(WidgetState.disabled)) {
-          return disabledTextColor;
+      foregroundColor: WidgetStateProperty.resolveWith((Set<WidgetState> s) {
+        if (s.contains(WidgetState.disabled)) {
+          return XkColor.ink3;
         }
-        return textColor;
+        return foreground;
       }),
-      overlayColor: WidgetStateProperty.resolveWith((states) {
-        if (states.contains(WidgetState.pressed)) {
-          return Colors.white.withValues(alpha: 0.14);
-        }
-        if (states.contains(WidgetState.hovered)) {
-          return Colors.white.withValues(alpha: 0.08);
-        }
-        return null;
-      }),
+      overlayColor: WidgetStateProperty.all(XkColor.none),
       elevation: WidgetStateProperty.all(0),
-      shadowColor: WidgetStateProperty.all(Colors.transparent),
-      surfaceTintColor: WidgetStateProperty.all(Colors.transparent),
+      shadowColor: WidgetStateProperty.all(XkColor.none),
+      surfaceTintColor: WidgetStateProperty.all(XkColor.none),
     );
   }
 
-  static ButtonStyle _outlinedStyle({
-    required Color borderColor,
-    required Color textColor,
-  }) {
-    return ButtonStyle(
-      textStyle: WidgetStateProperty.all(_buttonLabel),
-      padding: WidgetStateProperty.all(
-        const EdgeInsets.symmetric(horizontal: 18, vertical: 11),
-      ),
-      minimumSize: WidgetStateProperty.all(const Size(48, 48)),
-      shape: WidgetStateProperty.all(
-        RoundedRectangleBorder(borderRadius: XkShape.smBorderRadius),
-      ),
-      side: WidgetStateProperty.resolveWith((states) {
-        if (states.contains(WidgetState.disabled)) {
-          return BorderSide(color: borderColor.withValues(alpha: 0.5));
-        }
-        if (states.contains(WidgetState.pressed)) {
-          return BorderSide(color: borderColor.withValues(alpha: 0.9));
-        }
-        return BorderSide(color: borderColor);
-      }),
-      backgroundColor: WidgetStateProperty.resolveWith((states) {
-        if (states.contains(WidgetState.pressed)) {
-          return XkColor.hairSoft;
-        }
-        if (states.contains(WidgetState.hovered)) {
-          return XkColor.panel.withValues(alpha: 0.8);
-        }
-        return Colors.transparent;
-      }),
-      foregroundColor: WidgetStateProperty.resolveWith((states) {
-        if (states.contains(WidgetState.disabled)) {
-          return textColor.withValues(alpha: 0.5);
-        }
-        return textColor;
-      }),
-      elevation: WidgetStateProperty.all(0),
-      shadowColor: WidgetStateProperty.all(Colors.transparent),
-      surfaceTintColor: WidgetStateProperty.all(Colors.transparent),
-    );
-  }
-
-  static ButtonStyle _tonalStyle({
-    required Color backgroundColor,
-    required Color textColor,
-    required Color borderColor,
-  }) {
-    return ButtonStyle(
-      textStyle: WidgetStateProperty.all(_buttonLabel),
-      padding: WidgetStateProperty.all(
-        const EdgeInsets.symmetric(horizontal: 18, vertical: 11),
-      ),
-      minimumSize: WidgetStateProperty.all(const Size(48, 48)),
-      shape: WidgetStateProperty.all(
-        RoundedRectangleBorder(borderRadius: XkShape.smBorderRadius),
-      ),
-      side: WidgetStateProperty.all(BorderSide(color: borderColor)),
-      backgroundColor: WidgetStateProperty.resolveWith((states) {
-        if (states.contains(WidgetState.disabled)) {
-          return backgroundColor.withValues(alpha: 0.5);
-        }
-        if (states.contains(WidgetState.pressed)) {
-          return XkColor.hairSoft;
-        }
-        if (states.contains(WidgetState.hovered)) {
-          return XkColor.hairSoft.withValues(alpha: 0.92);
-        }
-        return backgroundColor;
-      }),
-      foregroundColor: WidgetStateProperty.resolveWith((states) {
-        if (states.contains(WidgetState.disabled)) {
-          return textColor.withValues(alpha: 0.45);
-        }
-        return textColor;
-      }),
-      elevation: WidgetStateProperty.all(0),
-      shadowColor: WidgetStateProperty.all(Colors.transparent),
-      surfaceTintColor: WidgetStateProperty.all(Colors.transparent),
-    );
-  }
-
-  static SwitchThemeData _switchTheme({
-    required Color accent,
-    required Color onAccent,
-    required Color thumbOff,
-    required Color trackOff,
-    required Color border,
-    required Color disabled,
-  }) {
+  static SwitchThemeData _switchTheme() {
     return SwitchThemeData(
-      thumbColor: WidgetStateProperty.resolveWith((states) {
+      thumbColor: WidgetStateProperty.resolveWith((Set<WidgetState> states) {
         if (states.contains(WidgetState.disabled)) {
-          return disabled;
+          return XkColor.ink3;
         }
-        return states.contains(WidgetState.selected) ? onAccent : thumbOff;
+        return XkColor.groundHi;
       }),
-      trackColor: WidgetStateProperty.resolveWith((states) {
+      trackColor: WidgetStateProperty.resolveWith((Set<WidgetState> states) {
         if (states.contains(WidgetState.disabled)) {
-          return trackOff.withValues(alpha: 0.5);
+          return XkColor.insetBg;
         }
-        return states.contains(WidgetState.selected) ? accent : trackOff;
+        return states.contains(WidgetState.selected)
+            ? XkColor.aquaMid
+            : XkColor.insetBg;
       }),
-      trackOutlineColor: WidgetStateProperty.resolveWith((states) {
-        return states.contains(WidgetState.selected) ? accent : border;
-      }),
+      trackOutlineColor: WidgetStateProperty.resolveWith(
+        (Set<WidgetState> states) {
+          return states.contains(WidgetState.selected)
+              ? XkColor.aquaMid
+              : XkColor.rule;
+        },
+      ),
     );
   }
 }

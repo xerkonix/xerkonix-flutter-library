@@ -1,83 +1,95 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 
 import '../palette/color.dart';
 import '../shape/xerkonix_shape.dart';
 
-/// Motion token values from XERKONIX TACTILE tokens.css v2.1.
+/// Motion tokens from tokens.css v4.0.0.
 ///
-/// v2.1 motion grammar (see tokens.css `--t-*` / `--ease`):
-/// - observe 180ms (micro state change: hover, icon active)
-/// - resolve 260ms (state transition: card entry, chip state)
-/// - settle  320ms (screen / palette transition, the longest value)
+/// `--t-state` .9s · `--t-hover` .25s · `--ease-out` · `--ease-sweep`.
 class XkMotionToken {
   XkMotionToken._();
 
-  static const Duration observe = Duration(milliseconds: 180);
-  static const Duration resolve = Duration(milliseconds: 260);
-  static const Duration settle = Duration(milliseconds: 320);
+  static const Duration hover = Duration(milliseconds: 250);
+  static const Duration state = Duration(milliseconds: 900);
+  static const Duration sweep = Duration(seconds: 6);
+  static const Duration loader = Duration(milliseconds: 1400);
 
-  static const Duration statusPulse = Duration(milliseconds: 2500);
-  static const Duration signalSweep = Duration(milliseconds: 2500);
-  static const Duration rhythmLine = Duration(milliseconds: 3500);
-  static const Duration focusRipple = Duration(milliseconds: 2200);
-  static const Duration cardSettle = Duration(milliseconds: 2800);
-  static const Duration alertPulse = Duration(milliseconds: 1900);
+  /// v3 aliases.
+  @Deprecated('Use XkMotionToken.hover')
+  static const Duration observe = hover;
+  @Deprecated('Use XkMotionToken.hover')
+  static const Duration resolve = hover;
+  @Deprecated('Use XkMotionToken.state')
+  static const Duration settle = state;
 
-  /// v2.1 easing — `cubic-bezier(0.33, 0.02, 0.2, 1)` (`--ease`).
-  static const Curve ease = Cubic(0.33, 0.02, 0.2, 1);
+  @Deprecated('Removed in v4 — no pulse')
+  static const Duration statusPulse = Duration(milliseconds: 0);
+  @Deprecated('Removed in v4 — sweep lives on gem only')
+  static const Duration signalSweep = sweep;
+  @Deprecated('Removed in v4')
+  static const Duration rhythmLine = Duration(milliseconds: 0);
+  @Deprecated('Removed in v4')
+  static const Duration focusRipple = Duration(milliseconds: 0);
+  @Deprecated('Removed in v4')
+  static const Duration cardSettle = state;
+  @Deprecated('Removed in v4 — no pulse')
+  static const Duration alertPulse = Duration(milliseconds: 0);
 
-  /// 정본 스프링 상수(구현 tactile.js) k320·c18(노브) / k420·c12(팝)의
-  /// CSS cubic-bezier 근사. 값은 근사 커브 그대로 유지한다(동작 회귀 위험).
-  static const Curve spring = Cubic(0.34, 1.35, 0.64, 1);
+  /// `--ease-out`: cubic-bezier(.2,.8,.2,1)
+  static const Curve easeOut = Cubic(0.2, 0.8, 0.2, 1);
+
+  /// `--ease-sweep`: cubic-bezier(.4,0,.5,1)
+  static const Curve easeSweep = Cubic(0.4, 0, 0.5, 1);
+
+  @Deprecated('Use XkMotionToken.easeOut')
+  static const Curve ease = easeOut;
+
+  /// v3 spring — empty compat, maps to ease-out (no bounce).
+  @Deprecated('Use XkMotionToken.easeOut — bounce/spring is gone')
+  static const Curve spring = easeOut;
 }
 
-/// Motion API surface for package users.
+/// Motion API. Sweep is gem-only; loaders are LTR bars.
 class XkMotion {
   XkMotion._();
 
-  /// 밝기 기반 숨쉬기 효과.
+  static const Duration hover = XkMotionToken.hover;
+  static const Duration state = XkMotionToken.state;
+
+  @Deprecated('Use XkMotion.hover')
+  static const Duration observe = hover;
+  @Deprecated('Use XkMotion.hover')
+  static const Duration resolve = hover;
+  @Deprecated('Use XkMotion.state')
+  static const Duration settle = state;
+
+  /// v3 breathing — returns [child] unchanged (pulse is gone).
   static Widget breathingLight({
-    Duration duration = XkMotionToken.statusPulse,
+    Duration duration = XkMotionToken.hover,
     double minOpacity = 0.35,
     double maxOpacity = 1.0,
     Color? color,
     bool respectReducedMotion = true,
     required Widget child,
   }) {
-    return _BreathingLight(
-      duration: duration,
-      minOpacity: minOpacity,
-      maxOpacity: maxOpacity,
-      color: color ?? XkColor.tintFill,
-      respectReducedMotion: respectReducedMotion,
-      child: child,
-    );
+    return child;
   }
 
-  /// 색상 펄스 효과.
+  /// v3 pulse — returns [child] unchanged.
   static Widget pulse({
-    Duration duration = XkMotionToken.alertPulse,
-    Curve curve = XkMotionToken.ease,
+    Duration duration = XkMotionToken.hover,
+    Curve curve = XkMotionToken.easeOut,
     Color? primaryColor,
     Color? secondaryColor,
     bool respectReducedMotion = true,
     required Widget child,
   }) {
-    return _PulseAnimation(
-      duration: duration,
-      curve: curve,
-      primaryColor: primaryColor ?? XkColor.tintFill,
-      secondaryColor: secondaryColor ?? XkColor.bad,
-      respectReducedMotion: respectReducedMotion,
-      child: child,
-    );
+    return child;
   }
 
   static Widget statusPulse({
-    Duration duration = XkMotionToken.statusPulse,
-    Color color = XkColor.tintFill,
+    Duration duration = XkMotionToken.hover,
+    Color color = XkColor.aquaMid,
     double size = 16,
     bool respectReducedMotion = true,
   }) {
@@ -90,8 +102,8 @@ class XkMotion {
   }
 
   static Widget signalSweep({
-    Duration duration = XkMotionToken.signalSweep,
-    Color color = XkColor.tintFill,
+    Duration duration = XkMotionToken.loader,
+    Color color = XkColor.aquaMid,
     double width = 186,
     bool respectReducedMotion = true,
   }) {
@@ -104,8 +116,8 @@ class XkMotion {
   }
 
   static Widget rhythmLine({
-    Duration duration = XkMotionToken.rhythmLine,
-    Color color = XkColor.tintFill,
+    Duration duration = XkMotionToken.hover,
+    Color color = XkColor.aquaMid,
     bool respectReducedMotion = true,
   }) {
     return XkRhythmLine(
@@ -116,8 +128,8 @@ class XkMotion {
   }
 
   static Widget focusRipple({
-    Duration duration = XkMotionToken.focusRipple,
-    Color color = XkColor.tintFill,
+    Duration duration = XkMotionToken.hover,
+    Color color = XkColor.aquaMid,
     bool respectReducedMotion = true,
   }) {
     return XkFocusRipple(
@@ -128,7 +140,7 @@ class XkMotion {
   }
 
   static Widget cardSettle({
-    Duration duration = XkMotionToken.cardSettle,
+    Duration duration = XkMotionToken.state,
     Widget? child,
     bool respectReducedMotion = true,
   }) {
@@ -140,7 +152,7 @@ class XkMotion {
   }
 
   static Widget alertPulse({
-    Duration duration = XkMotionToken.alertPulse,
+    Duration duration = XkMotionToken.hover,
     Color color = XkColor.bad,
     bool respectReducedMotion = true,
   }) {
@@ -152,13 +164,13 @@ class XkMotion {
   }
 }
 
-/// Reference: `Status Pulse` (v1.2 name: `Status Breath`).
+/// Static status dot — pulse loops are gone in v4.
 class XkStatusPulse extends StatelessWidget {
   const XkStatusPulse({
     super.key,
-    this.duration = XkMotionToken.statusPulse,
+    this.duration = XkMotionToken.hover,
     this.size = 16,
-    this.color = XkColor.tintFill,
+    this.color = XkColor.aquaMid,
     this.minScale = 0.8,
     this.maxScale = 1.22,
     this.minOpacity = 0.45,
@@ -177,43 +189,24 @@ class XkStatusPulse extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _XkLoopMotion(
-      duration: duration,
-      curve: Curves.easeInOut,
-      respectReducedMotion: respectReducedMotion,
-      builder: (context, value, reducedMotion) {
-        final t = 0.5 - math.cos(value * math.pi * 2) / 2;
-        final scale =
-            reducedMotion ? 1.0 : (minScale + (maxScale - minScale) * t);
-        final opacity =
-            reducedMotion ? 1.0 : (minOpacity + (maxOpacity - minOpacity) * t);
-        final Color ink = XkColor.themed(color, Theme.of(context).brightness);
-
-        return Transform.scale(
-          scale: scale,
-          child: Opacity(
-            opacity: opacity,
-            child: Container(
-              width: size,
-              height: size,
-              decoration: BoxDecoration(shape: BoxShape.circle, color: ink),
-            ),
-          ),
-        );
-      },
+    final Color ink = XkColor.themed(color, Theme.of(context).brightness);
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(shape: BoxShape.circle, color: ink),
     );
   }
 }
 
-/// HTML reference: Signal Sweep
+/// LTR loader bar on a `--rule` track. Replaces the v3 traveling-dot sweep.
 class XkSignalSweep extends StatelessWidget {
   const XkSignalSweep({
     super.key,
-    this.duration = XkMotionToken.signalSweep,
+    this.duration = XkMotionToken.loader,
     this.width = 186,
-    this.trackHeight = 5,
+    this.trackHeight = 2,
     this.dotSize = 11,
-    this.color = XkColor.tintFill,
+    this.color = XkColor.aquaMid,
     this.respectReducedMotion = true,
   });
 
@@ -226,61 +219,25 @@ class XkSignalSweep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final trackColor = isDark
-        ? XkColor.darkInk.withValues(alpha: 0.14)
-        : XkColor.ink.withValues(alpha: 0.12);
-
-    return _XkLoopMotion(
-      duration: duration,
-      curve: Curves.linear,
-      respectReducedMotion: respectReducedMotion,
-      builder: (context, value, reducedMotion) {
-        final travel = reducedMotion ? 0.5 : value;
-        final left = -dotSize / 2 + (width + dotSize / 2) * travel;
-
-        return SizedBox(
-          width: width,
-          height: math.max(trackHeight, dotSize),
-          child: Stack(
-            alignment: Alignment.centerLeft,
-            clipBehavior: Clip.none,
-            children: [
-              Container(
-                width: width,
-                height: trackHeight,
-                decoration: BoxDecoration(
-                  borderRadius: XkShape.fullBorderRadius,
-                  color: trackColor,
-                ),
-              ),
-              Positioned(
-                left: left,
-                child: Container(
-                  width: dotSize,
-                  height: dotSize,
-                  decoration: BoxDecoration(
-                    color: color,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
+    return SizedBox(
+      width: width,
+      child: XkLoader(
+        duration: duration,
+        respectReducedMotion: respectReducedMotion,
+        color: color,
+      ),
     );
   }
 }
 
-/// Reference: `Rhythm Line` (v1.2 name: `Wave Drift`).
+/// Static rhythm line — infinite dash drift is gone.
 class XkRhythmLine extends StatelessWidget {
   const XkRhythmLine({
     super.key,
-    this.duration = XkMotionToken.rhythmLine,
+    this.duration = XkMotionToken.hover,
     this.width = 192,
     this.height = 40,
-    this.color = XkColor.tintFill,
+    this.color = XkColor.aquaMid,
     this.respectReducedMotion = true,
   });
 
@@ -292,102 +249,47 @@ class XkRhythmLine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _XkLoopMotion(
-      duration: duration,
-      curve: Curves.linear,
-      respectReducedMotion: respectReducedMotion,
-      builder: (context, value, reducedMotion) {
-        return CustomPaint(
-          size: Size(width, height),
-          painter: _RhythmLinePainter(
-            color: color,
-            phase: reducedMotion ? 0 : (value * 102),
-          ),
-        );
-      },
+    return SizedBox(
+      width: width,
+      height: height,
+      child: CustomPaint(
+        painter: _StaticLinePainter(
+          color: XkColor.themed(color, Theme.of(context).brightness),
+        ),
+      ),
     );
   }
 }
 
-class _RhythmLinePainter extends CustomPainter {
-  const _RhythmLinePainter({required this.color, required this.phase});
+class _StaticLinePainter extends CustomPainter {
+  const _StaticLinePainter({required this.color});
 
   final Color color;
-  final double phase;
 
   @override
   void paint(Canvas canvas, Size size) {
-    final sx = size.width / 160;
-    final sy = size.height / 28;
-
-    final path = Path()
-      ..moveTo(0 * sx, 14 * sy)
-      ..cubicTo(10 * sx, 14 * sy, 14 * sx, 6 * sy, 24 * sx, 6 * sy)
-      ..cubicTo(34 * sx, 6 * sy, 38 * sx, 18 * sy, 48 * sx, 18 * sy)
-      ..cubicTo(58 * sx, 18 * sy, 62 * sx, 8 * sy, 72 * sx, 8 * sy)
-      ..cubicTo(82 * sx, 8 * sy, 86 * sx, 18 * sy, 96 * sx, 18 * sy)
-      ..cubicTo(106 * sx, 18 * sy, 110 * sx, 10 * sy, 120 * sx, 10 * sy)
-      ..cubicTo(130 * sx, 10 * sy, 134 * sx, 16 * sy, 144 * sx, 16 * sy)
-      ..cubicTo(152 * sx, 16 * sy, 156 * sx, 12 * sy, 160 * sx, 12 * sy);
-
-    final dashedPath = _dashPath(path, dash: 10, gap: 7, phase: phase);
-    final paint = Paint()
+    final Paint paint = Paint()
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 2
+      ..strokeWidth = 1.5
       ..strokeCap = StrokeCap.round
       ..color = color;
-
-    canvas.drawPath(dashedPath, paint);
-  }
-
-  Path _dashPath(
-    Path source, {
-    required double dash,
-    required double gap,
-    required double phase,
-  }) {
-    final result = Path();
-    final step = dash + gap;
-
-    for (final metric in source.computeMetrics()) {
-      var distance = -phase;
-      while (distance < metric.length) {
-        final start = _clamp(distance, 0, metric.length);
-        final end = _clamp(distance + dash, 0, metric.length);
-        if (end > start) {
-          result.addPath(metric.extractPath(start, end), Offset.zero);
-        }
-        distance += step;
-      }
-    }
-
-    return result;
-  }
-
-  double _clamp(double value, double min, double max) {
-    if (value < min) {
-      return min;
-    }
-    if (value > max) {
-      return max;
-    }
-    return value;
+    final double y = size.height / 2;
+    canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
   }
 
   @override
-  bool shouldRepaint(covariant _RhythmLinePainter oldDelegate) {
-    return oldDelegate.phase != phase || oldDelegate.color != color;
-  }
+  bool shouldRepaint(covariant _StaticLinePainter oldDelegate) =>
+      oldDelegate.color != color;
 }
 
-/// HTML reference: Focus Ripple
+/// Static focus mark — ripple loops are gone.
 class XkFocusRipple extends StatelessWidget {
   const XkFocusRipple({
     super.key,
-    this.duration = XkMotionToken.focusRipple,
+    this.duration = XkMotionToken.hover,
     this.size = 64,
     this.dotSize = 14,
-    this.color = XkColor.tintFill,
+    this.color = XkColor.aquaMid,
     this.respectReducedMotion = true,
   });
 
@@ -399,61 +301,17 @@ class XkFocusRipple extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _XkLoopMotion(
-      duration: duration,
-      curve: Curves.easeOut,
-      respectReducedMotion: respectReducedMotion,
-      builder: (context, value, reducedMotion) {
-        final p1 = reducedMotion ? 0.0 : value;
-        final p2 = reducedMotion ? 0.0 : ((value + 0.5) % 1.0);
-
-        return SizedBox(
-          width: size,
-          height: size,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              _RippleRing(color: color, progress: p1, maxOpacity: 0.58),
-              _RippleRing(color: color, progress: p2, maxOpacity: 0.58),
-              Container(
-                width: dotSize,
-                height: dotSize,
-                decoration: BoxDecoration(shape: BoxShape.circle, color: color),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-}
-
-class _RippleRing extends StatelessWidget {
-  const _RippleRing({
-    required this.color,
-    required this.progress,
-    required this.maxOpacity,
-  });
-
-  final Color color;
-  final double progress;
-  final double maxOpacity;
-
-  @override
-  Widget build(BuildContext context) {
-    final scale = 0.5 + (2.2 - 0.5) * progress;
-    final opacity = (1 - progress) * maxOpacity;
-
-    return Transform.scale(
-      scale: scale,
-      child: Opacity(
-        opacity: opacity,
+    final Color ink = XkColor.themed(color, Theme.of(context).brightness);
+    return SizedBox(
+      width: size,
+      height: size,
+      child: Center(
         child: Container(
-          width: 32,
-          height: 32,
+          width: dotSize,
+          height: dotSize,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(width: 1, color: color),
+            border: Border.all(width: 1.5, color: ink),
           ),
         ),
       ),
@@ -461,11 +319,11 @@ class _RippleRing extends StatelessWidget {
   }
 }
 
-/// HTML reference: Card Settle
+/// One-shot card entry (`--t-state`). No loop, no scale.
 class XkCardSettle extends StatelessWidget {
   const XkCardSettle({
     super.key,
-    this.duration = XkMotionToken.cardSettle,
+    this.duration = XkMotionToken.state,
     this.child,
     this.respectReducedMotion = true,
   });
@@ -476,50 +334,26 @@ class XkCardSettle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    return _XkLoopMotion(
-      duration: duration,
-      curve: XkMotionToken.ease,
-      respectReducedMotion: respectReducedMotion,
-      builder: (context, value, reducedMotion) {
-        final t = reducedMotion
-            ? 1.0
-            : (value <= 0.35 ? Curves.ease.transform(value / 0.35) : 1.0);
-        final translateY = 7 * (1 - t);
-        final scale = 0.97 + (1 - 0.97) * t;
-        final opacity = 0.55 + (1 - 0.55) * t;
-
-        final content = child ??
-            Container(
-              width: 120,
-              height: 64,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: isDark ? XkColor.darkHair : XkColor.hair,
-                ),
-                color: isDark ? XkColor.darkPanel : XkColor.panel,
-              ),
-            );
-
-        return Transform.translate(
-          offset: Offset(0, translateY),
-          child: Transform.scale(
-            scale: scale,
-            child: Opacity(opacity: opacity, child: content),
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
+    final Widget content = child ??
+        Container(
+          width: 120,
+          height: 64,
+          decoration: BoxDecoration(
+            borderRadius: XkRadius.cardBorderRadius,
+            border: Border.all(color: XkColor.ruleOf(Theme.of(context).brightness)),
+            color: isDark ? XkColor.darkGroundHi : XkColor.groundHi,
           ),
         );
-      },
-    );
+    return content;
   }
 }
 
-/// Reference: `Alert Pulse` (v1.2 name: `Alert Beat`).
+/// Static alert mark — pulse loops are gone.
 class XkAlertPulse extends StatelessWidget {
   const XkAlertPulse({
     super.key,
-    this.duration = XkMotionToken.alertPulse,
+    this.duration = XkMotionToken.hover,
     this.size = 72,
     this.dotSize = 16,
     this.color = XkColor.bad,
@@ -535,108 +369,61 @@ class XkAlertPulse extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Color ink = XkColor.themed(color, Theme.of(context).brightness);
-    return _XkLoopMotion(
-      duration: duration,
-      curve: Curves.easeInOut,
-      respectReducedMotion: respectReducedMotion,
-      builder: (context, value, reducedMotion) {
-        final p1 = reducedMotion ? 0.0 : value;
-        final p2 = reducedMotion ? 0.0 : ((value + 0.35) % 1.0);
-
-        return SizedBox(
-          width: size,
-          height: size,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              _AlertRing(color: ink, progress: p1, maxOpacity: 0.45),
-              _AlertRing(color: ink, progress: p2, maxOpacity: 0.25),
-              Container(
-                width: dotSize,
-                height: dotSize,
-                decoration: BoxDecoration(shape: BoxShape.circle, color: ink),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-}
-
-class _AlertRing extends StatelessWidget {
-  const _AlertRing({
-    required this.color,
-    required this.progress,
-    required this.maxOpacity,
-  });
-
-  final Color color;
-  final double progress;
-  final double maxOpacity;
-
-  @override
-  Widget build(BuildContext context) {
-    final scale = 1 + ((31 / 16) * progress);
-    final opacity = (1 - progress) * maxOpacity;
-
-    return Transform.scale(
-      scale: scale,
-      child: Opacity(
-        opacity: opacity,
+    return SizedBox(
+      width: size,
+      height: size,
+      child: Center(
         child: Container(
-          width: 16,
-          height: 16,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(color: color, width: 1.6),
-          ),
+          width: dotSize,
+          height: dotSize,
+          decoration: BoxDecoration(shape: BoxShape.circle, color: ink),
         ),
       ),
     );
   }
 }
 
-class _XkLoopMotion extends StatefulWidget {
-  const _XkLoopMotion({
-    required this.duration,
-    required this.curve,
-    required this.builder,
-    required this.respectReducedMotion,
+/// `.x-loader` — `--rule` track, `--aqua-mid` bar left → right 1.4s.
+///
+/// No infinite spin. Reduced motion / disableAnimations freezes the bar.
+class XkLoader extends StatefulWidget {
+  const XkLoader({
+    super.key,
+    this.duration = XkMotionToken.loader,
+    this.color,
+    this.respectReducedMotion = true,
+    this.height = 2,
+    this.semanticLabel,
   });
 
   final Duration duration;
-  final Curve curve;
-  final Widget Function(BuildContext context, double value, bool reducedMotion)
-      builder;
+  final Color? color;
   final bool respectReducedMotion;
+  final double height;
+  final String? semanticLabel;
 
   @override
-  State<_XkLoopMotion> createState() => _XkLoopMotionState();
+  State<XkLoader> createState() => _XkLoaderState();
 }
 
-class _XkLoopMotionState extends State<_XkLoopMotion>
+class _XkLoaderState extends State<XkLoader>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
-  late Animation<double> _animation;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(duration: widget.duration, vsync: this)
-      ..repeat();
-    _animation = CurvedAnimation(parent: _controller, curve: widget.curve);
+    _controller = AnimationController(vsync: this, duration: widget.duration);
   }
 
   @override
-  void didUpdateWidget(covariant _XkLoopMotion oldWidget) {
+  void didUpdateWidget(covariant XkLoader oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.duration != oldWidget.duration) {
       _controller.duration = widget.duration;
-      _controller.repeat();
-    }
-    if (widget.curve != oldWidget.curve) {
-      _animation = CurvedAnimation(parent: _controller, curve: widget.curve);
+      if (_controller.isAnimating) {
+        _controller.repeat();
+      }
     }
   }
 
@@ -648,201 +435,95 @@ class _XkLoopMotionState extends State<_XkLoopMotion>
 
   @override
   Widget build(BuildContext context) {
-    final reducedMotion =
-        MediaQuery.maybeOf(context)?.disableAnimations ?? false;
-    if (widget.respectReducedMotion && reducedMotion) {
-      // Actually halt the ticker — returning a static frame while the
-      // controller keeps repeating wastes CPU/battery indefinitely.
+    final Brightness brightness = Theme.of(context).brightness;
+    final Color track = XkColor.ruleOf(brightness);
+    final Color fill =
+        widget.color ?? XkColor.aquaMidOf(brightness);
+    final bool reduced = widget.respectReducedMotion &&
+        (MediaQuery.maybeOf(context)?.disableAnimations ?? false);
+
+    if (reduced) {
       if (_controller.isAnimating) {
         _controller.stop();
       }
-      return widget.builder(context, 0.5, true);
+      return Semantics(
+        label: widget.semanticLabel,
+        child: _LoaderTrack(
+          height: widget.height,
+          track: track,
+          fill: fill,
+          t: 0.35,
+        ),
+      );
     }
 
     if (!_controller.isAnimating) {
       _controller.repeat();
     }
-    return AnimatedBuilder(
-      animation: _animation,
-      builder: (context, _) => widget.builder(context, _animation.value, false),
+    return Semantics(
+      label: widget.semanticLabel,
+      child: AnimatedBuilder(
+        animation: _controller,
+        builder: (BuildContext context, Widget? _) {
+          return _LoaderTrack(
+            height: widget.height,
+            track: track,
+            fill: fill,
+            t: _controller.value,
+          );
+        },
+      ),
     );
   }
 }
 
-class _BreathingLight extends StatefulWidget {
-  const _BreathingLight({
-    required this.child,
-    required this.duration,
-    required this.minOpacity,
-    required this.maxOpacity,
-    required this.color,
-    required this.respectReducedMotion,
+class _LoaderTrack extends StatelessWidget {
+  const _LoaderTrack({
+    required this.height,
+    required this.track,
+    required this.fill,
+    required this.t,
   });
 
-  final Widget child;
-  final Duration duration;
-  final double minOpacity;
-  final double maxOpacity;
-  final Color color;
-  final bool respectReducedMotion;
-
-  @override
-  State<_BreathingLight> createState() => _BreathingLightState();
-}
-
-class _BreathingLightState extends State<_BreathingLight>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _controller;
-  late Animation<double> _animation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(duration: widget.duration, vsync: this)
-      ..repeat(reverse: true);
-
-    _animation = Tween<double>(
-      begin: widget.minOpacity,
-      end: widget.maxOpacity,
-    ).animate(CurvedAnimation(parent: _controller, curve: XkMotionToken.ease));
-  }
-
-  @override
-  void didUpdateWidget(covariant _BreathingLight oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.duration != oldWidget.duration) {
-      _controller.duration = widget.duration;
-      _controller.repeat(reverse: true);
-    }
-    if (widget.minOpacity != oldWidget.minOpacity ||
-        widget.maxOpacity != oldWidget.maxOpacity) {
-      _animation = Tween<double>(
-        begin: widget.minOpacity,
-        end: widget.maxOpacity,
-      ).animate(CurvedAnimation(parent: _controller, curve: XkMotionToken.ease));
-    }
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
+  final double height;
+  final Color track;
+  final Color fill;
+  final double t;
 
   @override
   Widget build(BuildContext context) {
-    final reducedMotion =
-        MediaQuery.maybeOf(context)?.disableAnimations ?? false;
-    if (widget.respectReducedMotion && reducedMotion) {
-      if (_controller.isAnimating) {
-        _controller.stop();
-      }
-      return widget.child;
-    }
-
-    if (!_controller.isAnimating) {
-      _controller.repeat(reverse: true);
-    }
-    return AnimatedBuilder(
-      animation: _animation,
-      builder: (context, _) {
-        return Opacity(opacity: _animation.value, child: widget.child);
-      },
-    );
-  }
-}
-
-class _PulseAnimation extends StatefulWidget {
-  const _PulseAnimation({
-    required this.child,
-    required this.duration,
-    required this.curve,
-    required this.primaryColor,
-    required this.secondaryColor,
-    required this.respectReducedMotion,
-  });
-
-  final Widget child;
-  final Duration duration;
-  final Curve curve;
-  final Color primaryColor;
-  final Color secondaryColor;
-  final bool respectReducedMotion;
-
-  @override
-  State<_PulseAnimation> createState() => _PulseAnimationState();
-}
-
-class _PulseAnimationState extends State<_PulseAnimation>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _controller;
-  late Animation<double> _animation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(duration: widget.duration, vsync: this)
-      ..repeat(reverse: true);
-
-    _animation = Tween<double>(
-      begin: 0,
-      end: 1,
-    ).animate(CurvedAnimation(parent: _controller, curve: widget.curve));
-  }
-
-  @override
-  void didUpdateWidget(covariant _PulseAnimation oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.duration != oldWidget.duration) {
-      _controller.duration = widget.duration;
-      _controller.repeat(reverse: true);
-    }
-    if (widget.curve != oldWidget.curve) {
-      _animation = Tween<double>(
-        begin: 0,
-        end: 1,
-      ).animate(CurvedAnimation(parent: _controller, curve: widget.curve));
-    }
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  Color _blend(Color color1, Color color2, double ratio) {
-    return Color.lerp(color1, color2, ratio) ?? color2;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final reducedMotion =
-        MediaQuery.maybeOf(context)?.disableAnimations ?? false;
-    if (widget.respectReducedMotion && reducedMotion) {
-      if (_controller.isAnimating) {
-        _controller.stop();
-      }
-      return widget.child;
-    }
-
-    if (!_controller.isAnimating) {
-      _controller.repeat(reverse: true);
-    }
-    return AnimatedBuilder(
-      animation: _animation,
-      builder: (context, _) {
-        final blendedColor = _blend(
-          widget.primaryColor,
-          widget.secondaryColor,
-          _animation.value,
-        );
-
-        return ColorFiltered(
-          colorFilter: ColorFilter.mode(blendedColor, BlendMode.modulate),
-          child: widget.child,
-        );
-      },
+    return SizedBox(
+      height: height,
+      width: double.infinity,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: track,
+          borderRadius: BorderRadius.circular(height / 2),
+        ),
+        child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints c) {
+            final double bar = c.maxWidth * 0.28;
+            // 0: fully left of track, 1: fully right (translateX 360% in CSS).
+            final double x = (c.maxWidth + bar) * t - bar;
+            return Stack(
+              children: <Widget>[
+                Positioned(
+                  left: x,
+                  top: 0,
+                  bottom: 0,
+                  width: bar,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: fill,
+                      borderRadius: BorderRadius.circular(height / 2),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+      ),
     );
   }
 }

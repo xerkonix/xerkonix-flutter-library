@@ -2,26 +2,23 @@ import 'package:flutter/painting.dart';
 
 import 'typo_constants.dart';
 
-/// XERKONIX TACTILE typography
+/// XERKONIX TACTILE v4 typography — Pretendard only, weights ≤ 600.
 ///
-/// Canonical v1.3 styles (unchanged from v1.2):
-/// - display 52 / 700
-/// - h1 38 / 700
-/// - h2 28 / 700
-/// - h3 22 / 600
-/// - bodyLarge 17 / 400
-/// - body 14 / 400
-/// - bodySmall 13 / 400
-/// - label 12 / 600
-/// - buttonLabel 13 / 500
-/// - metaMono 11 / 500
-/// - metricMono 10 / 500
+/// Headlines 500 (−.03em) · subheads 600 · body 400 · labels 11px .12em.
+class XkFont {
+  XkFont._();
+
+  static const String sans = Pretendard.fontFamily;
+  static const String serif = Pretendard.fontFamily;
+  static const String mono = Pretendard.fontFamily;
+}
+
 class XkTypo {
   XkTypo._();
 
   static const List<String> _sansFallback = [
-    'Apple SD Gothic Neo',
     'Pretendard',
+    'Apple SD Gothic Neo',
   ];
 
   static TextStyle _sans({
@@ -69,29 +66,29 @@ class XkTypo {
 
   static final TextStyle display = _sans(
     size: TypoConst.fontSize.displayMax,
-    weight: TypoConst.fontWeight.bold,
-    height: 1.15,
-    letterSpacing: -0.4,
+    weight: TypoConst.fontWeight.medium,
+    height: 1.16,
+    letterSpacing: -0.03,
   );
 
   static final TextStyle h1 = _serif(
     size: TypoConst.fontSize.h1Max,
-    weight: TypoConst.fontWeight.bold,
-    height: 1.18,
-    letterSpacing: -0.2,
+    weight: TypoConst.fontWeight.medium,
+    height: 1.2,
+    letterSpacing: -0.03,
   );
 
   static final TextStyle h2 = _serif(
     size: TypoConst.fontSize.h2,
-    weight: TypoConst.fontWeight.bold,
-    height: 1.24,
-    letterSpacing: -0.1,
+    weight: TypoConst.fontWeight.medium,
+    height: 1.25,
+    letterSpacing: -0.03,
   );
 
   static final TextStyle h3 = _sans(
     size: TypoConst.fontSize.h3,
     weight: TypoConst.fontWeight.semiBold,
-    height: 1.3,
+    height: 1.4,
   );
 
   static final TextStyle bodyLarge = _sans(
@@ -114,8 +111,16 @@ class XkTypo {
 
   static final TextStyle label = _sans(
     size: TypoConst.fontSize.label,
-    weight: TypoConst.fontWeight.semiBold,
+    weight: TypoConst.fontWeight.regular,
     height: 1.32,
+  );
+
+  /// 11px · .12em · `--ink-2` role. Tag / eyebrow / section label.
+  static final TextStyle eyebrow = _sans(
+    size: XkFontSize.label,
+    weight: TypoConst.fontWeight.regular,
+    height: 1.5,
+    letterSpacing: 0.12,
   );
 
   static final TextStyle fieldLabel = _sans(
@@ -149,9 +154,9 @@ class XkTypo {
   /// Page Anchor → Summary → Primary Workspace 순서를 따른다.
   static final TextStyle pageTitle = _serif(
     size: TypoConst.fontSize.pageTitle,
-    weight: TypoConst.fontWeight.semiBold,
-    height: 1.3,
-    letterSpacing: -0.42,
+    weight: TypoConst.fontWeight.medium,
+    height: 1.25,
+    letterSpacing: -0.03,
   );
 
   static final TextStyle cardTitle = _sans(
@@ -333,19 +338,19 @@ class SFPro {
     fontFamily: fontFamily,
     package: package,
     fontSize: fontSize,
-    weight: FontWeight.w700,
+    weight: FontWeight.w600,
   );
   static TextStyle extraBold({required double fontSize}) => _familyStyle(
     fontFamily: fontFamily,
     package: package,
     fontSize: fontSize,
-    weight: FontWeight.w800,
+    weight: FontWeight.w600,
   );
   static TextStyle black({required double fontSize}) => _familyStyle(
     fontFamily: fontFamily,
     package: package,
     fontSize: fontSize,
-    weight: FontWeight.w900,
+    weight: FontWeight.w600,
   );
 }
 
@@ -395,19 +400,19 @@ class AppleSDGothicNeo {
     fontFamily: fontFamily,
     package: package,
     fontSize: fontSize,
-    weight: FontWeight.w700,
+    weight: FontWeight.w600,
   );
   static TextStyle extraBold({required double fontSize}) => _familyStyle(
     fontFamily: fontFamily,
     package: package,
     fontSize: fontSize,
-    weight: FontWeight.w800,
+    weight: FontWeight.w600,
   );
   static TextStyle black({required double fontSize}) => _familyStyle(
     fontFamily: fontFamily,
     package: package,
     fontSize: fontSize,
-    weight: FontWeight.w900,
+    weight: FontWeight.w600,
   );
 }
 
@@ -445,13 +450,13 @@ class Roboto {
     fontFamily: fontFamily,
     package: package,
     fontSize: fontSize,
-    weight: FontWeight.w700,
+    weight: FontWeight.w600,
   );
   static TextStyle black({required double fontSize}) => _familyStyle(
     fontFamily: fontFamily,
     package: package,
     fontSize: fontSize,
-    weight: FontWeight.w900,
+    weight: FontWeight.w600,
   );
 }
 
@@ -489,13 +494,13 @@ class NotoSansKR {
     fontFamily: fontFamily,
     package: package,
     fontSize: fontSize,
-    weight: FontWeight.w700,
+    weight: FontWeight.w600,
   );
   static TextStyle black({required double fontSize}) => _familyStyle(
     fontFamily: fontFamily,
     package: package,
     fontSize: fontSize,
-    weight: FontWeight.w900,
+    weight: FontWeight.w600,
   );
 }
 
@@ -545,19 +550,19 @@ class Pretendard {
     fontFamily: fontFamily,
     package: package,
     fontSize: fontSize,
-    weight: FontWeight.w700,
+    weight: FontWeight.w600,
   );
   static TextStyle extraBold({required double fontSize}) => _familyStyle(
     fontFamily: fontFamily,
     package: package,
     fontSize: fontSize,
-    weight: FontWeight.w800,
+    weight: FontWeight.w600,
   );
   static TextStyle black({required double fontSize}) => _familyStyle(
     fontFamily: fontFamily,
     package: package,
     fontSize: fontSize,
-    weight: FontWeight.w900,
+    weight: FontWeight.w600,
   );
 }
 
@@ -565,7 +570,7 @@ class Pretendard {
 class MaruBuri {
   MaruBuri._();
 
-  static const String fontFamily = 'MaruBuri';
+  static const String fontFamily = Pretendard.fontFamily;
   static const String package = 'xerkonix_design_system';
 
   static TextStyle light({required double fontSize}) => _familyStyle(
@@ -590,14 +595,14 @@ class MaruBuri {
     fontFamily: fontFamily,
     package: package,
     fontSize: fontSize,
-    weight: FontWeight.w700,
+    weight: FontWeight.w600,
   );
 }
 
 class IBMPlexSansKR {
   IBMPlexSansKR._();
 
-  static const String fontFamily = 'IBMPlexSansKR';
+  static const String fontFamily = Pretendard.fontFamily;
   static const String package = 'xerkonix_design_system';
 
   static TextStyle thin({required double fontSize}) => _familyStyle(
@@ -640,26 +645,26 @@ class IBMPlexSansKR {
     fontFamily: fontFamily,
     package: package,
     fontSize: fontSize,
-    weight: FontWeight.w700,
+    weight: FontWeight.w600,
   );
   static TextStyle extraBold({required double fontSize}) => _familyStyle(
     fontFamily: fontFamily,
     package: package,
     fontSize: fontSize,
-    weight: FontWeight.w800,
+    weight: FontWeight.w600,
   );
   static TextStyle black({required double fontSize}) => _familyStyle(
     fontFamily: fontFamily,
     package: package,
     fontSize: fontSize,
-    weight: FontWeight.w900,
+    weight: FontWeight.w600,
   );
 }
 
 class IBMPlexMono {
   IBMPlexMono._();
 
-  static const String fontFamily = 'IBMPlexMono';
+  static const String fontFamily = Pretendard.fontFamily;
   static const String package = 'xerkonix_design_system';
 
   static TextStyle thin({required double fontSize}) => _familyStyle(
@@ -702,19 +707,19 @@ class IBMPlexMono {
     fontFamily: fontFamily,
     package: package,
     fontSize: fontSize,
-    weight: FontWeight.w700,
+    weight: FontWeight.w600,
   );
   static TextStyle extraBold({required double fontSize}) => _familyStyle(
     fontFamily: fontFamily,
     package: package,
     fontSize: fontSize,
-    weight: FontWeight.w800,
+    weight: FontWeight.w600,
   );
   static TextStyle black({required double fontSize}) => _familyStyle(
     fontFamily: fontFamily,
     package: package,
     fontSize: fontSize,
-    weight: FontWeight.w900,
+    weight: FontWeight.w600,
   );
 }
 
@@ -765,18 +770,18 @@ class IBMPlexSans {
     fontFamily: fontFamily,
     package: package,
     fontSize: fontSize,
-    weight: FontWeight.w700,
+    weight: FontWeight.w600,
   );
   static TextStyle extraBold({required double fontSize}) => _familyStyle(
     fontFamily: fontFamily,
     package: package,
     fontSize: fontSize,
-    weight: FontWeight.w800,
+    weight: FontWeight.w600,
   );
   static TextStyle black({required double fontSize}) => _familyStyle(
     fontFamily: fontFamily,
     package: package,
     fontSize: fontSize,
-    weight: FontWeight.w900,
+    weight: FontWeight.w600,
   );
 }

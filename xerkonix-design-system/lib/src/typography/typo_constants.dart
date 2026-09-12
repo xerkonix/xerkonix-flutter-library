@@ -1,5 +1,24 @@
 import 'dart:ui';
 
+/// Font size tokens from tokens.css `--fs-*`.
+class XkFontSize {
+  XkFontSize._();
+
+  static const double display = 58;
+  static const double displayMobile = 34;
+  static const double section = 44;
+  static const double sectionMobile = 30;
+  static const double page = 32;
+  static const double pageMobile = 28;
+  static const double title = 22;
+  static const double titleMobile = 20;
+  static const double body = 17;
+  static const double bodyMobile = 16;
+  static const double small = 15;
+  static const double caption = 13;
+  static const double label = 11;
+}
+
 class TypoConst {
   TypoConst._();
 
@@ -17,52 +36,49 @@ class _FontWeight {
   final FontWeight regular = FontWeight.w400;
   final FontWeight medium = FontWeight.w500;
   final FontWeight semiBold = FontWeight.w600;
-  final FontWeight bold = FontWeight.w700;
-  final FontWeight extraBold = FontWeight.w800;
-  final FontWeight black = FontWeight.w900;
+  /// v4 cap: 700+ is forbidden. Alias keeps compile; value is 600.
+  final FontWeight bold = FontWeight.w600;
+  final FontWeight extraBold = FontWeight.w600;
+  final FontWeight black = FontWeight.w600;
 }
 
 class _FontSize {
-  // XERKONIX TACTILE v3.1 role scale
-  final double displayMin = 34;
-  final double displayMax = 58;
-  final double h1Min = 30;
-  final double h1Max = 44;
-  final double h2 = 32;
-  final double h3 = 22;
-  final double bodyLarge = 17;
-  final double body = 16;
-  final double label = 15;
-  final double meta = 13;
+  final double displayMin = XkFontSize.displayMobile;
+  final double displayMax = XkFontSize.display;
+  final double h1Min = XkFontSize.sectionMobile;
+  final double h1Max = XkFontSize.section;
+  final double h2 = XkFontSize.page;
+  final double h3 = XkFontSize.title;
+  final double bodyLarge = XkFontSize.body;
+  final double body = XkFontSize.bodyMobile;
+  final double label = XkFontSize.small;
+  final double meta = XkFontSize.caption;
+  final double eyebrow = XkFontSize.label;
+  final double pageTitle = XkFontSize.page;
 
-  // 업무 페이지 제목은 왼쪽 정렬로 내용과 행동을 연결한다.
-  final double pageTitle = 32;
+  final double largeTitle = XkFontSize.display;
+  final double title1 = XkFontSize.section;
+  final double title2 = XkFontSize.page;
+  final double title3 = XkFontSize.title;
+  final double headline = XkFontSize.title;
+  final double callout = XkFontSize.bodyMobile;
+  final double subhead = XkFontSize.small;
+  final double footnote = XkFontSize.caption;
+  final double caption1 = XkFontSize.caption;
+  final double caption2 = XkFontSize.caption;
 
-  // Apple alias mapping (backward compatibility)
-  final double largeTitle = 58;
-  final double title1 = 44;
-  final double title2 = 32;
-  final double title3 = 22;
-  final double headline = 22;
-  final double callout = 16;
-  final double subhead = 15;
-  final double footnote = 13;
-  final double caption1 = 13;
-  final double caption2 = 13;
-
-  // Material aliases
-  final double displayLarge = 58;
-  final double displayMedium = 44;
-  final double displaySmall = 34;
-  final double headlineLarge = 32;
-  final double headlineMedium = 28;
-  final double headlineSmall = 22;
-  final double titleLarge = 22;
-  final double titleMedium = 17;
-  final double titleSmall = 15;
-  final double labelLarge = 15;
-  final double labelMedium = 13;
-  final double labelSmall = 13;
-  final double bodyMedium = 16;
-  final double bodySmall = 15;
+  final double displayLarge = XkFontSize.display;
+  final double displayMedium = XkFontSize.section;
+  final double displaySmall = XkFontSize.displayMobile;
+  final double headlineLarge = XkFontSize.page;
+  final double headlineMedium = XkFontSize.pageMobile;
+  final double headlineSmall = XkFontSize.title;
+  final double titleLarge = XkFontSize.title;
+  final double titleMedium = XkFontSize.body;
+  final double titleSmall = XkFontSize.small;
+  final double labelLarge = XkFontSize.small;
+  final double labelMedium = XkFontSize.caption;
+  final double labelSmall = XkFontSize.label;
+  final double bodyMedium = XkFontSize.bodyMobile;
+  final double bodySmall = XkFontSize.small;
 }

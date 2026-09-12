@@ -13,7 +13,8 @@ tactile_gate.json. 소비 리포에는 이 파일을 그대로 복사하고, 달
 검사는 TACTILE.md §8 를 정적 범위에서 집행한다. 썸네일·워드마크 가리기·axe 는
 이 스크립트가 돌리지 않는다(단계 보고에서 해당 없음으로 적는다).
 
-v4.0.0 어휘: 캔버스/잉크/아쿠아마린/글래스. v3 의 --x-* 토큰은 선언도 사용도 실패다.
+v4.0.1 어휘: 캔버스/잉크/아쿠아마린/글래스. v3 의 --x-* 토큰은 선언도 사용도 실패다.
+라이트 --glass/.32 · --glass-strong/.52 (v4.0.0 의 .55/.78 은 흰 판).
 """
 
 from __future__ import annotations
@@ -25,7 +26,7 @@ import os
 import re
 import sys
 
-EXPECT_VERSION = "v4.0.0"
+EXPECT_VERSION = "v4.0.1"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # v4.0.0 기대 테이블 (tokens.css 정본)
@@ -41,7 +42,7 @@ LIGHT: dict[str, str] = {
     "--aqua": "#6EB4C4", "--aqua-mid": "#59A1B0", "--aqua-shade": "#33778D",
     "--aqua-deep": "#2E6774", "--aqua-ink": "#1B4650",
     # 글래스 재질
-    "--glass": "rgba(255,255,255,.55)", "--glass-strong": "rgba(255,255,255,.78)",
+    "--glass": "rgba(255,255,255,.32)", "--glass-strong": "rgba(255,255,255,.52)",
     "--glass-edge": "rgba(255,255,255,.90)", "--glass-edge-2": "rgba(255,255,255,.40)",
     "--glass-shadow": "0 24px 60px -36px rgba(12,17,20,.30),0 1px 3px -1px rgba(12,17,20,.08)",
     "--spec": "rgba(255,255,255,.95)", "--inset-bg": "rgba(12,17,20,.035)",

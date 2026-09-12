@@ -24,8 +24,8 @@ class XkColor {
   static const Color aquaDeep = Color(0xFF2E6774);
   static const Color aquaInk = Color(0xFF1B4650);
 
-  static const Color glass = Color(0x8CFFFFFF); // rgba(255,255,255,.55)
-  static const Color glassStrong = Color(0xC7FFFFFF); // rgba(255,255,255,.78)
+  static const Color glass = Color(0x52FFFFFF); // rgba(255,255,255,.32)
+  static const Color glassStrong = Color(0x85FFFFFF); // rgba(255,255,255,.52)
   static const Color glassEdge = Color(0xE6FFFFFF); // rgba(255,255,255,.90)
   static const Color glassEdge2 = Color(0x66FFFFFF); // rgba(255,255,255,.40)
   static const Color spec = Color(0xF2FFFFFF); // rgba(255,255,255,.95)

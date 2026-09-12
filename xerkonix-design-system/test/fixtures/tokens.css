@@ -1,4 +1,4 @@
-/* XERKONIX TACTILE Design Tokens · v4.0.0 — 2026.09
+/* XERKONIX TACTILE Design Tokens · v4.0.1 — 2026.09
    리퀴드 글래스 · 아쿠아마린 원석 · 좌상단 단일 광원. 값의 원천은 이 파일만.
    변경 순서: TACTILE.md → 여기 → 미러 재복사(tools/sync_consumers.py --write) → Flutter 파리티.
    서체 로딩(Pretendard CDN <link> 또는 셀프호스팅 @font-face)은 각 표면의 HTML 이 한다.
@@ -13,8 +13,9 @@
   /* 아쿠아마린 — 원석에서 샘플링한 스케일. 텍스트에는 deep 이상만 */
   --aqua-100:#E3F3F7; --aqua-tint:#C0E3EC; --aqua-hi:#92CCDC; --aqua:#6EB4C4;
   --aqua-mid:#59A1B0; --aqua-shade:#33778D; --aqua-deep:#2E6774; --aqua-ink:#1B4650;
-  /* 글래스 재질 */
-  --glass:rgba(255,255,255,.55); --glass-strong:rgba(255,255,255,.78);
+  /* 글래스 재질 — 라이트 알파는 캔버스(#F5F5F5)에서 광원이 비치도록 0.32/0.52.
+     0.55/0.78 은 흰 판이 되어 blur·specular 가 읽히지 않는다(v4.0.1). */
+  --glass:rgba(255,255,255,.32); --glass-strong:rgba(255,255,255,.52);
   --glass-edge:rgba(255,255,255,.90); --glass-edge-2:rgba(255,255,255,.40);
   --glass-shadow:0 24px 60px -36px rgba(12,17,20,.30),0 1px 3px -1px rgba(12,17,20,.08);
   --spec:rgba(255,255,255,.95); --inset-bg:rgba(12,17,20,.035); --head-glass:rgba(245,245,245,.84);

@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-/// XERKONIX TACTILE v4.0.0 color tokens. Source: tokens.css.
+/// XERKONIX TACTILE v4.1.0 color tokens. Source: tokens.css.
 ///
 /// Names strip `--` and camelCase. Dark overrides are `dark*`.
 /// v3 names remain as deprecated aliases so existing apps still compile.
@@ -8,12 +8,13 @@ class XkColor {
   XkColor._();
 
   // --- Light (tokens.css :root) ---
-  static const Color canvas = Color(0xFFF5F5F5);
-  static const Color groundHi = Color(0xFFFFFFFF);
-  static const Color ink = Color(0xFF0C1114);
-  static const Color ink2 = Color(0xFF5E6A6E);
+  static const Color canvas = Color(0xFFF6F7F7);
+  static const Color groundHi = Color(0xFFFDFEFE);
+  static const Color solid = Color(0xFFFDFEFE);
+  static const Color ink = Color(0xFF1A3036);
+  static const Color ink2 = Color(0xFF596F75);
   static const Color ink3 = Color(0xFF9AA5A8);
-  static const Color rule = Color(0x1A0C1114); // rgba(12,17,20,.10)
+  static const Color rule = Color(0x1F305962); // rgba(48,89,98,.12)
 
   static const Color aqua100 = Color(0xFFE3F3F7);
   static const Color aquaTint = Color(0xFFC0E3EC);
@@ -21,16 +22,29 @@ class XkColor {
   static const Color aqua = Color(0xFF6EB4C4);
   static const Color aquaMid = Color(0xFF59A1B0);
   static const Color aquaShade = Color(0xFF33778D);
-  static const Color aquaDeep = Color(0xFF2E6774);
+  static const Color aquaDeep = Color(0xFF2E6B79);
   static const Color aquaInk = Color(0xFF1B4650);
 
-  static const Color glass = Color(0x52FFFFFF); // rgba(255,255,255,.32)
-  static const Color glassStrong = Color(0x85FFFFFF); // rgba(255,255,255,.52)
-  static const Color glassEdge = Color(0xE6FFFFFF); // rgba(255,255,255,.90)
-  static const Color glassEdge2 = Color(0x66FFFFFF); // rgba(255,255,255,.40)
-  static const Color spec = Color(0xF2FFFFFF); // rgba(255,255,255,.95)
+  static const Color accent = Color(0xFFB1DAE1);
+  static const Color accentInk = Color(0xFF1C4C58);
+
+  static const Color glass = Color(0xBFFFFFFF); // rgba(255,255,255,.75)
+  static const Color glassStrong = Color(0xBFFFFFFF);
+  static const Color glassNavigation = Color(0x73FFFFFF); // .45
+  static const Color glassAction = Color(0x38FFFFFF); // .22
+  static const Color glassAccent = Color(0x38B1DAE1);
+  static const Color planeEdge = Color(0x3B659BA9); // rgba(101,155,169,.23)
+  static const Color planeRim = Color(0xD1FFFFFF); // rgba(255,255,255,.82)
+  static const Color planeShadow = Color(0x1F285C6A); // rgba(40,92,106,.12)
+  static const Color glassEdge = Color(0xD1FFFFFF);
+  static const Color glassEdge2 = Color(0x3B659BA9);
+  static const Color spec = Color(0xD1FFFFFF);
   static const Color insetBg = Color(0x090C1114); // rgba(12,17,20,.035)
-  static const Color headGlass = Color(0xD6F5F5F5); // rgba(245,245,245,.84)
+  static const Color headGlass = Color(0x73FFFFFF);
+  static const Color glossSheen = Color(0xA6FFFFFF);
+  static const Color glossRim = Color(0xF5FFFFFF);
+  static const Color glossLow = Color(0x4A5797A6);
+  static const Color glossContact = Color(0x1A335D69);
 
   static const Color ok = Color(0xFF4F7868);
   static const Color warn = Color(0xFFA95C11);
@@ -44,16 +58,17 @@ class XkColor {
   /// Fully transparent — token-file home for overlays that need no fill.
   static const Color none = Color(0x00000000);
 
-  static const Color glassShadowNear = Color(0x4D0C1114); // rgba(12,17,20,.30)
-  static const Color glassShadowFar = Color(0x140C1114); // rgba(12,17,20,.08)
+  static const Color glassShadowNear = Color(0x1F285C6A);
+  static const Color glassShadowFar = Color(0x1F285C6A);
 
   // --- Dark (tokens.css :root[data-theme="dark"]) ---
-  static const Color darkCanvas = Color(0xFF0B0F11);
-  static const Color darkGroundHi = Color(0xFF1A2023);
-  static const Color darkInk = Color(0xFFF2F5F5);
-  static const Color darkInk2 = Color(0xFF98A4A7);
+  static const Color darkCanvas = Color(0xFF131B1D);
+  static const Color darkGroundHi = Color(0xFF233338);
+  static const Color darkSolid = Color(0xFF233338);
+  static const Color darkInk = Color(0xFFE5F0F2);
+  static const Color darkInk2 = Color(0xFFA3B8BD);
   static const Color darkInk3 = Color(0xFF5E6A6E);
-  static const Color darkRule = Color(0x1AF2F5F5); // rgba(242,245,245,.10)
+  static const Color darkRule = Color(0x1FB9DDE6); // rgba(185,221,230,.12)
 
   static const Color darkAqua100 = Color(0xFF12333C);
   static const Color darkAquaTint = Color(0xFF1F4C58);
@@ -61,16 +76,29 @@ class XkColor {
   static const Color darkAqua = Color(0xFF6EB4C4);
   static const Color darkAquaMid = Color(0xFF4F97A8);
   static const Color darkAquaShade = Color(0xFF2E6774);
-  static const Color darkAquaDeep = Color(0xFF92CCDC);
+  static const Color darkAquaDeep = Color(0xFFA7DCE6);
   static const Color darkAquaInk = Color(0xFF10303A);
 
-  static const Color darkGlass = Color(0x0FFFFFFF); // rgba(255,255,255,.06)
-  static const Color darkGlassStrong = Color(0x1AFFFFFF); // rgba(255,255,255,.10)
-  static const Color darkGlassEdge = Color(0x38FFFFFF); // rgba(255,255,255,.22)
-  static const Color darkGlassEdge2 = Color(0x12FFFFFF); // rgba(255,255,255,.07)
-  static const Color darkSpec = Color(0x73FFFFFF); // rgba(255,255,255,.45)
-  static const Color darkInsetBg = Color(0x0DFFFFFF); // rgba(255,255,255,.05)
-  static const Color darkHeadGlass = Color(0xC70B0F11); // rgba(11,15,17,.78)
+  static const Color darkAccent = Color(0xFF89C0CD);
+  static const Color darkAccentInk = Color(0xFF0B2B35);
+
+  static const Color darkGlass = Color(0xBF223034); // rgba(34,48,52,.75)
+  static const Color darkGlassStrong = Color(0xBF223034);
+  static const Color darkGlassNavigation = Color(0x73223034);
+  static const Color darkGlassAction = Color(0x38223034);
+  static const Color darkGlassAccent = Color(0x3889C0CD);
+  static const Color darkPlaneEdge = Color(0x458CC3D1);
+  static const Color darkPlaneRim = Color(0x61E0FAFF);
+  static const Color darkPlaneShadow = Color(0x3D000000);
+  static const Color darkGlassEdge = Color(0x61E0FAFF);
+  static const Color darkGlassEdge2 = Color(0x458CC3D1);
+  static const Color darkSpec = Color(0x61E0FAFF);
+  static const Color darkInsetBg = Color(0x0DFFFFFF);
+  static const Color darkHeadGlass = Color(0x73223034);
+  static const Color darkGlossSheen = Color(0x38BCEAF5);
+  static const Color darkGlossRim = Color(0x9EDCF9FF);
+  static const Color darkGlossLow = Color(0x4771BED0);
+  static const Color darkGlossContact = Color(0x45000000);
 
   static const Color darkOk = Color(0xFF7FB59E);
   static const Color darkWarn = Color(0xFFEC9A50);
@@ -78,8 +106,8 @@ class XkColor {
   static const Color darkWarm = Color(0xFFDE9074);
   static const Color darkCool = Color(0xFF8AA8C2);
 
-  static const Color darkGlassShadowNear = Color(0xCC000000); // rgba(0,0,0,.8)
-  static const Color darkGlassShadowFar = Color(0x80000000); // rgba(0,0,0,.5)
+  static const Color darkGlassShadowNear = Color(0x3D000000);
+  static const Color darkGlassShadowFar = Color(0x3D000000);
 
   // --- v3 aliases (compile compatibility) ---
   @Deprecated('Use XkColor.canvas')
@@ -260,6 +288,8 @@ class XkColor {
 
   static Color canvasOf(Brightness b) =>
       b == Brightness.dark ? darkCanvas : canvas;
+  static Color solidOf(Brightness b) =>
+      b == Brightness.dark ? darkSolid : solid;
   static Color groundHiOf(Brightness b) =>
       b == Brightness.dark ? darkGroundHi : groundHi;
   static Color inkOf(Brightness b) => b == Brightness.dark ? darkInk : ink;
@@ -279,10 +309,32 @@ class XkColor {
       b == Brightness.dark ? darkAquaInk : aquaInk;
   static Color aqua100Of(Brightness b) =>
       b == Brightness.dark ? darkAqua100 : aqua100;
+  static Color accentOf(Brightness b) =>
+      b == Brightness.dark ? darkAccent : accent;
+  static Color accentInkOf(Brightness b) =>
+      b == Brightness.dark ? darkAccentInk : accentInk;
   static Color glassOf(Brightness b) =>
       b == Brightness.dark ? darkGlass : glass;
   static Color glassStrongOf(Brightness b) =>
       b == Brightness.dark ? darkGlassStrong : glassStrong;
+  static Color glassNavigationOf(Brightness b) =>
+      b == Brightness.dark ? darkGlassNavigation : glassNavigation;
+  static Color glassActionOf(Brightness b) =>
+      b == Brightness.dark ? darkGlassAction : glassAction;
+  static Color glassAccentOf(Brightness b) =>
+      b == Brightness.dark ? darkGlassAccent : glassAccent;
+  static Color planeEdgeOf(Brightness b) =>
+      b == Brightness.dark ? darkPlaneEdge : planeEdge;
+  static Color planeRimOf(Brightness b) =>
+      b == Brightness.dark ? darkPlaneRim : planeRim;
+  static Color planeShadowOf(Brightness b) =>
+      b == Brightness.dark ? darkPlaneShadow : planeShadow;
+  static Color glossSheenOf(Brightness b) =>
+      b == Brightness.dark ? darkGlossSheen : glossSheen;
+  static Color glossRimOf(Brightness b) =>
+      b == Brightness.dark ? darkGlossRim : glossRim;
+  static Color glossLowOf(Brightness b) =>
+      b == Brightness.dark ? darkGlossLow : glossLow;
   static Color glassEdgeOf(Brightness b) =>
       b == Brightness.dark ? darkGlassEdge : glassEdge;
   static Color glassEdge2Of(Brightness b) =>

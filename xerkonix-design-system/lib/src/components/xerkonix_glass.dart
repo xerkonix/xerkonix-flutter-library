@@ -30,7 +30,7 @@ class XkGround extends StatelessWidget {
   }
 }
 
-/// Liquid glass panel: blur + 135° gradient + edge + top-left specular.
+/// Thin planar glass: role fill + two radials + single edge. No 135° linear.
 class XkGlass extends StatelessWidget {
   const XkGlass({
     super.key,
@@ -61,48 +61,38 @@ class XkGlass extends StatelessWidget {
     final List<BoxShadow> shadows =
         ctl ? XkShadow.ctl(b) : XkShadow.glass(b);
 
-    Widget surface = ClipRRect(
+    final Color fill =
+        ctl ? XkColor.glassActionOf(b) : XkColor.glassOf(b);
+    final double blur = ctl ? 8 : 36;
+    Widget surface = DecoratedBox(
+      decoration: BoxDecoration(borderRadius: radius, boxShadow: shadows),
+      child: ClipRRect(
       borderRadius: radius,
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 14, sigmaY: 14),
+        filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
         child: Stack(
           children: <Widget>[
             Positioned.fill(
               child: DecoratedBox(
                 decoration: BoxDecoration(
+                  color: fill,
                   borderRadius: radius,
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: <Color>[
-                      XkColor.glassStrongOf(b),
-                      XkColor.glassOf(b),
-                      XkColor.glassOf(b),
-                    ],
-                    stops: const <double>[0, 0.55, 1],
-                  ),
-                  border: Border.all(color: XkColor.glassEdge2Of(b)),
-                  boxShadow: shadows,
+                  border: Border.all(color: XkColor.planeEdgeOf(b)),
                 ),
               ),
             ),
             Positioned.fill(
               child: IgnorePointer(
-                child: Opacity(
-                  opacity: 0.55,
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      borderRadius: radius,
-                      gradient: RadialGradient(
-                        center: const Alignment(-1, -1),
-                        radius: 1.2,
-                        colors: <Color>[
-                          XkColor.specOf(b),
-                          XkColor.specOf(b).withValues(alpha: 0),
-                        ],
-                        stops: const <double>[0, 0.55],
-                      ),
-                      backgroundBlendMode: BlendMode.softLight,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    borderRadius: radius,
+                    gradient: RadialGradient(
+                      center: const Alignment(-0.8, -2.3),
+                      radius: 1.4,
+                      colors: <Color>[
+                        XkColor.glossSheenOf(b),
+                        XkColor.glossSheenOf(b).withValues(alpha: 0),
+                      ],
                     ),
                   ),
                 ),
@@ -110,13 +100,17 @@ class XkGlass extends StatelessWidget {
             ),
             Positioned.fill(
               child: IgnorePointer(
-                child: CustomPaint(
-                  painter: XkInsetShadowPainter(
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
                     borderRadius: radius,
-                    lowlight: XkColor.glassEdgeOf(b),
-                    highlight: XkColor.glassEdgeOf(b).withValues(alpha: 0),
-                    distance: 1,
-                    blur: 0.4,
+                    gradient: RadialGradient(
+                      center: const Alignment(1.1, 1.7),
+                      radius: 1.3,
+                      colors: <Color>[
+                        XkColor.glossLowOf(b).withValues(alpha: 0.17),
+                        XkColor.glossLowOf(b).withValues(alpha: 0),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -130,6 +124,7 @@ class XkGlass extends StatelessWidget {
             ),
           ],
         ),
+      ),
       ),
     );
 

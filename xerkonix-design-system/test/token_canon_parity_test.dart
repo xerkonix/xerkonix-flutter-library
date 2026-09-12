@@ -173,6 +173,19 @@ void main() {
         '--rule': XkColor.rule,
         '--inset-bg': XkColor.insetBg,
         '--head-glass': XkColor.headGlass,
+        '--solid': XkColor.solid,
+        '--accent': XkColor.accent,
+        '--accent-ink': XkColor.accentInk,
+        '--glass-navigation': XkColor.glassNavigation,
+        '--glass-action': XkColor.glassAction,
+        '--glass-accent': XkColor.glassAccent,
+        '--plane-edge': XkColor.planeEdge,
+        '--plane-rim': XkColor.planeRim,
+        '--plane-shadow': XkColor.planeShadow,
+        '--gloss-sheen': XkColor.glossSheen,
+        '--gloss-rim': XkColor.glossRim,
+        '--gloss-low': XkColor.glossLow,
+        '--gloss-contact': XkColor.glossContact,
       }, 'XkColor 표면을 tokens.css 라이트 값으로 맞춰라.');
     });
     test('다크 표면·잉크가 출처(tokens.css)와 같다', () {
@@ -185,6 +198,19 @@ void main() {
         '--rule': XkColor.darkRule,
         '--inset-bg': XkColor.darkInsetBg,
         '--head-glass': XkColor.darkHeadGlass,
+        '--solid': XkColor.darkSolid,
+        '--accent': XkColor.darkAccent,
+        '--accent-ink': XkColor.darkAccentInk,
+        '--glass-navigation': XkColor.darkGlassNavigation,
+        '--glass-action': XkColor.darkGlassAction,
+        '--glass-accent': XkColor.darkGlassAccent,
+        '--plane-edge': XkColor.darkPlaneEdge,
+        '--plane-rim': XkColor.darkPlaneRim,
+        '--plane-shadow': XkColor.darkPlaneShadow,
+        '--gloss-sheen': XkColor.darkGlossSheen,
+        '--gloss-rim': XkColor.darkGlossRim,
+        '--gloss-low': XkColor.darkGlossLow,
+        '--gloss-contact': XkColor.darkGlossContact,
       }, 'XkColor 표면을 tokens.css 다크 값으로 맞춰라.');
     });
   });
@@ -236,13 +262,10 @@ void main() {
       }, 'XkColor 글래스를 tokens.css 다크 값으로 맞춰라.');
     });
     test('glass-shadow 레이어가 정본과 같다', () {
-      expect(XkShadow.glassLight.length, 2);
-      expect(XkShadow.glassLight.first.offset, const Offset(0, 24));
-      expect(XkShadow.glassLight.first.blurRadius, 60);
-      expect(XkShadow.glassLight.first.spreadRadius, -36);
-      expect(XkShadow.glassLight.last.offset, const Offset(0, 1));
-      expect(XkShadow.glassLight.last.blurRadius, 3);
-      expect(XkShadow.glassLight.last.spreadRadius, -1);
+      expect(XkShadow.glassLight.length, 1);
+      expect(XkShadow.glassLight.first.offset, const Offset(0, 5));
+      expect(XkShadow.glassLight.first.blurRadius, 15);
+      expect(XkShadow.glassLight.first.spreadRadius, -12);
       expect(XkShadow.glassLight.first.offset.dx >= 0, isTrue);
       expect(XkShadow.glassLight.first.offset.dy >= 0, isTrue);
     });
@@ -277,6 +300,8 @@ void main() {
         '--r-inset': XkRadius.inset,
         '--r-ctl': XkRadius.ctl,
         '--r-tag': XkRadius.tag,
+        '--r-graphic': XkRadius.graphic,
+        '--r-graphic-mobile': XkRadius.graphicMobile,
       };
       final Map<String, String> mismatched = <String, String>{};
       pairs.forEach((String name, double actual) {
@@ -376,6 +401,15 @@ void main() {
       '--spec',
       '--inset-bg',
       '--head-glass',
+      '--solid',
+      '--accent',
+      '--accent-ink',
+      '--glass-navigation',
+      '--glass-action',
+      '--glass-accent',
+      '--plane-edge',
+      '--plane-rim',
+      '--plane-shadow',
       '--ok',
       '--warn',
       '--bad',
@@ -386,6 +420,8 @@ void main() {
       '--r-inset',
       '--r-ctl',
       '--r-tag',
+      '--r-graphic',
+      '--r-graphic-mobile',
       '--sp-1',
       '--sp-2',
       '--sp-3',
@@ -413,6 +449,26 @@ void main() {
       '--ease-out': 'XkMotionToken.easeOut Cubic 근사',
       '--ease-sweep': 'XkMotionToken.easeSweep Cubic 근사',
       '--glass-shadow': 'XkShadow.glass List<BoxShadow> 로 미러 (색·offset 별도 대조)',
+      '--ctl-shadow': 'XkShadow.ctl List<BoxShadow>',
+      '--graphic-shadow': 'XkShadow.graphic List<BoxShadow>',
+      '--accent-rgb': 'XkColor.accent hex 미러. RGB 튜플은 Color 가 아님',
+      '--glass-rgb': 'XkColor.glass 알파 합성에 사용. RGB 튜플은 Color 가 아님',
+      '--glass-reading-alpha': '역할 알파. Color 가 아님',
+      '--glass-reading-blur': '역할 blur. Color 가 아님',
+      '--glass-reading-contrast': '역할 contrast',
+      '--glass-reading-saturation': '역할 saturation',
+      '--glass-navigation-alpha': '역할 알파',
+      '--glass-navigation-blur': '역할 blur',
+      '--glass-navigation-contrast': '역할 contrast',
+      '--glass-navigation-saturation': '역할 saturation',
+      '--glass-action-alpha': '역할 알파',
+      '--glass-action-blur': '역할 blur',
+      '--glass-action-contrast': '역할 contrast',
+      '--glass-action-saturation': '역할 saturation',
+      '--gloss-rim': 'XkColor.glossRim',
+      '--gloss-low': 'XkColor.glossLow',
+      '--gloss-contact': 'XkColor.glossContact',
+      '--gloss-sheen': 'XkColor.glossSheen',
     };
     test('출처 라이트 블록의 모든 토큰이 미러링되거나 이유가 적혀 있다', () {
       final Set<String> unaccounted = light.keys

@@ -47,10 +47,10 @@ void main() {
 
     test('XkColor should expose the TACTILE v4 key values', () {
       expect(XkColor.aquaMid.toARGB32(), 0xFF59A1B0);
-      expect(XkColor.canvas.toARGB32(), 0xFFF5F5F5);
-      expect(XkColor.groundHi.toARGB32(), 0xFFFFFFFF);
+      expect(XkColor.canvas.toARGB32(), 0xFFF6F7F7);
+      expect(XkColor.groundHi.toARGB32(), 0xFFFDFEFE);
       expect(XkColor.darkAquaMid.toARGB32(), 0xFF4F97A8);
-      expect(XkColor.darkCanvas.toARGB32(), 0xFF0B0F11);
+      expect(XkColor.darkCanvas.toARGB32(), 0xFF131B1D);
     });
 
     test('XkColor.themed remaps light canon hex in dark, identity in light', () {
@@ -79,14 +79,12 @@ void main() {
   });
 
   group('Glass elevation tokens', () {
-    test('XkShadow.glass is two layers matching --glass-shadow', () {
-      expect(XkShadow.glass(Brightness.light).length, 2);
-      expect(XkShadow.glass(Brightness.dark).length, 2);
-      expect(XkShadow.glassLight.first.offset, const Offset(0, 24));
-      expect(XkShadow.glassLight.first.blurRadius, 60);
-      expect(XkShadow.glassLight.first.spreadRadius, -36);
-      expect(XkShadow.glassLight.last.offset, const Offset(0, 1));
-      expect(XkShadow.glassLight.last.blurRadius, 3);
+    test('XkShadow.glass is one faint layer matching --glass-shadow', () {
+      expect(XkShadow.glass(Brightness.light).length, 1);
+      expect(XkShadow.glass(Brightness.dark).length, 1);
+      expect(XkShadow.glassLight.first.offset, const Offset(0, 5));
+      expect(XkShadow.glassLight.first.blurRadius, 15);
+      expect(XkShadow.glassLight.first.spreadRadius, -12);
     });
 
     test('raised light xy offsets are non-negative (top-left light)', () {

@@ -1,32 +1,37 @@
-/* XERKONIX TACTILE Design Tokens · v4.0.1 — 2026.09
-   리퀴드 글래스 · 아쿠아마린 원석 · 좌상단 단일 광원. 값의 원천은 이 파일만.
-   변경 순서: TACTILE.md → 여기 → 미러 재복사(tools/sync_consumers.py --write) → Flutter 파리티.
+/* XERKONIX TACTILE Design Tokens · v4.1.0 — 2026.09
+   얇고 평평한 유리 · 읽기/탐색/행동 역할 · 단일 가장자리 · 미약한 그림자.
+   시안 이름은 v8. 이 파일 버전은 값 변경 마이너(v4.0.1 → v4.1.0).
+   값의 원천은 이 파일만. 시안 HTML의 임시 덮어쓰기 스택을 복제하지 않는다.
+   변경 순서: TACTILE.md → 여기 → 미러 재복사 → Flutter 파리티.
    서체 로딩(Pretendard CDN <link> 또는 셀프호스팅 @font-face)은 각 표면의 HTML 이 한다.
-   확장 블록(시맨틱 잉크·간격·글자 크기·폭)은 v3.1.0 스케일을 이름만 바꿔 유지한다(값 변경 0).
-   --fs-label(11px) 은 v4 에서 새로 생긴 토큰이다(라벨·태그의 11px 리터럴을 토큰화). */
+   확장 블록(시맨틱 잉크·간격·글자 크기·폭)은 v3.1.0 스케일 값 유지. */
 :root{
   --font:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo",system-ui,sans-serif;
-  /* 캔버스와 광원 */
-  --canvas:#F5F5F5; --ground-hi:#FFFFFF;
-  /* 잉크 — --ink-3 는 비활성·플레이스홀더·장식 전용(캔버스 대비 2.31:1). 정보 텍스트는 --ink-2 까지 */
-  --ink:#0C1114; --ink-2:#5E6A6E; --ink-3:#9AA5A8; --rule:rgba(12,17,20,.10);
-  /* 아쿠아마린 — 원석에서 샘플링한 스케일. 텍스트에는 deep 이상만 */
+  --canvas:#F6F7F7; --ground-hi:#FDFEFE; --solid:#FDFEFE;
+  --ink:#1A3036; --ink-2:#596F75; --ink-3:#9AA5A8; --rule:rgba(48,89,98,.12);
   --aqua-100:#E3F3F7; --aqua-tint:#C0E3EC; --aqua-hi:#92CCDC; --aqua:#6EB4C4;
-  --aqua-mid:#59A1B0; --aqua-shade:#33778D; --aqua-deep:#2E6774; --aqua-ink:#1B4650;
-  /* 글래스 재질 — 라이트 알파는 캔버스(#F5F5F5)에서 광원이 비치도록 0.32/0.52.
-     0.55/0.78 은 흰 판이 되어 blur·specular 가 읽히지 않는다(v4.0.1). */
-  --glass:rgba(255,255,255,.32); --glass-strong:rgba(255,255,255,.52);
-  --glass-edge:rgba(255,255,255,.90); --glass-edge-2:rgba(255,255,255,.40);
-  --glass-shadow:0 24px 60px -36px rgba(12,17,20,.30),0 1px 3px -1px rgba(12,17,20,.08);
-  --spec:rgba(255,255,255,.95); --inset-bg:rgba(12,17,20,.035); --head-glass:rgba(245,245,245,.84);
-  /* 라운드 */
-  --r-panel:16px; --r-card:14px; --r-inset:12px; --r-ctl:12px; --r-tag:6px;
-  /* 모션 — --t-state 는 상태 전환(선택 이동·카드 등장·패널 열림), --t-hover 는 hover 만 */
+  --aqua-mid:#59A1B0; --aqua-shade:#33778D; --aqua-deep:#2E6B79; --aqua-ink:#1B4650;
+  --accent-rgb:177,218,225; --accent:#B1DAE1; --accent-ink:#1C4C58;
+  --glass-rgb:255,255,255;
+  --glass-reading-alpha:.75; --glass-reading-blur:36px; --glass-reading-contrast:.85; --glass-reading-saturation:.95;
+  --glass-navigation-alpha:.45; --glass-navigation-blur:20px; --glass-navigation-contrast:.95; --glass-navigation-saturation:1;
+  --glass-action-alpha:.22; --glass-action-blur:8px; --glass-action-contrast:1.05; --glass-action-saturation:1.05;
+  --glass:rgba(255,255,255,.75); --glass-strong:rgba(255,255,255,.75);
+  --glass-navigation:rgba(255,255,255,.45); --glass-action:rgba(255,255,255,.22);
+  --glass-accent:rgba(177,218,225,.22);
+  --plane-edge:rgba(101,155,169,.23); --plane-rim:rgba(255,255,255,.82); --plane-shadow:rgba(40,92,106,.12);
+  --glass-edge:rgba(255,255,255,.82); --glass-edge-2:rgba(101,155,169,.23);
+  --glass-shadow:0 5px 15px -12px rgba(40,92,106,.12);
+  --ctl-shadow:0 2px 6px -5px rgba(40,92,106,.12);
+  --graphic-shadow:0 9px 20px -15px rgba(40,92,106,.12);
+  --spec:rgba(255,255,255,.82); --inset-bg:rgba(12,17,20,.035); --head-glass:rgba(255,255,255,.45);
+  --gloss-rim:rgba(255,255,255,.96); --gloss-low:rgba(87,151,166,.29);
+  --gloss-contact:rgba(51,93,105,.1); --gloss-sheen:rgba(255,255,255,.65);
+  --r-panel:11px; --r-card:11px; --r-inset:8px; --r-ctl:7px; --r-tag:6px;
+  --r-graphic:10px; --r-graphic-mobile:8px;
   --ease-out:cubic-bezier(.2,.8,.2,1); --ease-sweep:cubic-bezier(.4,0,.5,1); --t-state:.9s; --t-hover:.25s;
-  /* ── 확장: 시맨틱 잉크(성공·경고·오류 — 면 채움 금지, 글리프·문구와 함께) · 관계 온도(Cosentio 데이터 채널) ── */
   --ok:#4F7868; --warn:#A95C11; --bad:#C13030;
   --warm:#B8503A; --cool:#3E6B8F;
-  /* ── 확장: 간격 · 글자 크기 · 폭 (v3.1.0 스케일 유지) ── */
   --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:24px; --sp-6:32px; --sp-7:48px;
   --fs-display:58px; --fs-display-mobile:34px; --fs-section:44px; --fs-section-mobile:30px;
   --fs-page:32px; --fs-page-mobile:28px; --fs-title:22px; --fs-title-mobile:20px;
@@ -37,25 +42,43 @@
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --canvas:#0B0F11; --ground-hi:#1A2023;
-    --ink:#F2F5F5; --ink-2:#98A4A7; --ink-3:#5E6A6E; --rule:rgba(242,245,245,.10);
+    --canvas:#131B1D; --ground-hi:#233338; --solid:#233338;
+    --ink:#E5F0F2; --ink-2:#A3B8BD; --ink-3:#5E6A6E; --rule:rgba(185,221,230,.12);
     --aqua-100:#12333C; --aqua-tint:#1F4C58; --aqua-hi:#A6D8E5; --aqua:#6EB4C4; --aqua-mid:#4F97A8;
-    --aqua-shade:#2E6774; --aqua-deep:#92CCDC; --aqua-ink:#10303A;
-    --glass:rgba(255,255,255,.06); --glass-strong:rgba(255,255,255,.10);
-    --glass-edge:rgba(255,255,255,.22); --glass-edge-2:rgba(255,255,255,.07);
-    --glass-shadow:0 24px 60px -36px rgba(0,0,0,.8),0 1px 3px -1px rgba(0,0,0,.5);
-    --spec:rgba(255,255,255,.45); --inset-bg:rgba(255,255,255,.05); --head-glass:rgba(11,15,17,.78);
+    --aqua-shade:#2E6774; --aqua-deep:#A7DCE6; --aqua-ink:#10303A;
+    --accent-rgb:137,192,205; --accent:#89C0CD; --accent-ink:#0B2B35;
+    --glass-rgb:34,48,52;
+    --glass:rgba(34,48,52,.75); --glass-strong:rgba(34,48,52,.75);
+    --glass-navigation:rgba(34,48,52,.45); --glass-action:rgba(34,48,52,.22);
+    --glass-accent:rgba(137,192,205,.22);
+    --plane-edge:rgba(140,195,209,.27); --plane-rim:rgba(224,250,255,.38); --plane-shadow:rgba(0,0,0,.24);
+    --glass-edge:rgba(224,250,255,.38); --glass-edge-2:rgba(140,195,209,.27);
+    --glass-shadow:0 5px 15px -12px rgba(0,0,0,.24);
+    --ctl-shadow:0 2px 6px -5px rgba(0,0,0,.24);
+    --graphic-shadow:0 9px 20px -15px rgba(0,0,0,.24);
+    --spec:rgba(224,250,255,.38); --inset-bg:rgba(255,255,255,.05); --head-glass:rgba(34,48,52,.45);
+    --gloss-rim:rgba(220,249,255,.62); --gloss-low:rgba(113,190,208,.28);
+    --gloss-contact:rgba(0,0,0,.27); --gloss-sheen:rgba(188,234,245,.22);
     --ok:#7FB59E; --warn:#EC9A50; --bad:#E67274; --warm:#DE9074; --cool:#8AA8C2;
   }
 }
 :root[data-theme="dark"]{
-  --canvas:#0B0F11; --ground-hi:#1A2023;
-  --ink:#F2F5F5; --ink-2:#98A4A7; --ink-3:#5E6A6E; --rule:rgba(242,245,245,.10);
+  --canvas:#131B1D; --ground-hi:#233338; --solid:#233338;
+  --ink:#E5F0F2; --ink-2:#A3B8BD; --ink-3:#5E6A6E; --rule:rgba(185,221,230,.12);
   --aqua-100:#12333C; --aqua-tint:#1F4C58; --aqua-hi:#A6D8E5; --aqua:#6EB4C4; --aqua-mid:#4F97A8;
-  --aqua-shade:#2E6774; --aqua-deep:#92CCDC; --aqua-ink:#10303A;
-  --glass:rgba(255,255,255,.06); --glass-strong:rgba(255,255,255,.10);
-  --glass-edge:rgba(255,255,255,.22); --glass-edge-2:rgba(255,255,255,.07);
-  --glass-shadow:0 24px 60px -36px rgba(0,0,0,.8),0 1px 3px -1px rgba(0,0,0,.5);
-  --spec:rgba(255,255,255,.45); --inset-bg:rgba(255,255,255,.05); --head-glass:rgba(11,15,17,.78);
+  --aqua-shade:#2E6774; --aqua-deep:#A7DCE6; --aqua-ink:#10303A;
+  --accent-rgb:137,192,205; --accent:#89C0CD; --accent-ink:#0B2B35;
+  --glass-rgb:34,48,52;
+  --glass:rgba(34,48,52,.75); --glass-strong:rgba(34,48,52,.75);
+  --glass-navigation:rgba(34,48,52,.45); --glass-action:rgba(34,48,52,.22);
+  --glass-accent:rgba(137,192,205,.22);
+  --plane-edge:rgba(140,195,209,.27); --plane-rim:rgba(224,250,255,.38); --plane-shadow:rgba(0,0,0,.24);
+  --glass-edge:rgba(224,250,255,.38); --glass-edge-2:rgba(140,195,209,.27);
+  --glass-shadow:0 5px 15px -12px rgba(0,0,0,.24);
+  --ctl-shadow:0 2px 6px -5px rgba(0,0,0,.24);
+  --graphic-shadow:0 9px 20px -15px rgba(0,0,0,.24);
+  --spec:rgba(224,250,255,.38); --inset-bg:rgba(255,255,255,.05); --head-glass:rgba(34,48,52,.45);
+  --gloss-rim:rgba(220,249,255,.62); --gloss-low:rgba(113,190,208,.28);
+  --gloss-contact:rgba(0,0,0,.27); --gloss-sheen:rgba(188,234,245,.22);
   --ok:#7FB59E; --warn:#EC9A50; --bad:#E67274; --warm:#DE9074; --cool:#8AA8C2;
 }

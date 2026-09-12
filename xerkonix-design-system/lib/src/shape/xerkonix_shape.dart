@@ -2,17 +2,19 @@ import 'package:flutter/material.dart';
 
 import '../palette/color.dart';
 
-/// Radius tokens from TACTILE v4.0.0 (`--r-panel/card/inset/ctl/tag`).
+/// Radius tokens from TACTILE v4.1.0 (`--r-panel/card/inset/ctl/tag/graphic`).
 ///
-/// 16 / 14 / 12 / 12 / 6. No pill (980/999).
+/// 11 / 11 / 8 / 7 / 6. Graphic 10, mobile 8. No pill (980/999).
 class XkRadius {
   XkRadius._();
 
-  static const double panel = 16.0;
-  static const double card = 14.0;
-  static const double inset = 12.0;
-  static const double ctl = 12.0;
+  static const double panel = 11.0;
+  static const double card = 11.0;
+  static const double inset = 8.0;
+  static const double ctl = 7.0;
   static const double tag = 6.0;
+  static const double graphic = 10.0;
+  static const double graphicMobile = 8.0;
 
   static const BorderRadius panelBorderRadius = BorderRadius.all(
     Radius.circular(panel),
@@ -28,6 +30,9 @@ class XkRadius {
   );
   static const BorderRadius tagBorderRadius = BorderRadius.all(
     Radius.circular(tag),
+  );
+  static const BorderRadius graphicBorderRadius = BorderRadius.all(
+    Radius.circular(graphic),
   );
 
   /// v3 aliases — apps that still say `sm`/`md`/`lg`/`pill` keep compiling.
@@ -137,65 +142,58 @@ class XkShadow {
   static const Color darkLowlight = XkColor.darkGlassShadowNear;
   static const Color darkHighlight = XkColor.none;
 
-  /// `--glass-shadow` light: 0 24 60 -36 / 0 1 3 -1.
+  /// `--glass-shadow` light: 0 5 15 -12.
   static const List<BoxShadow> glassLight = <BoxShadow>[
     BoxShadow(
-      color: XkColor.glassShadowNear,
-      offset: Offset(0, 24),
-      blurRadius: 60,
-      spreadRadius: -36,
-    ),
-    BoxShadow(
-      color: XkColor.glassShadowFar,
-      offset: Offset(0, 1),
-      blurRadius: 3,
-      spreadRadius: -1,
+      color: XkColor.planeShadow,
+      offset: Offset(0, 5),
+      blurRadius: 15,
+      spreadRadius: -12,
     ),
   ];
 
   /// `--glass-shadow` dark.
   static const List<BoxShadow> glassDark = <BoxShadow>[
     BoxShadow(
-      color: XkColor.darkGlassShadowNear,
-      offset: Offset(0, 24),
-      blurRadius: 60,
-      spreadRadius: -36,
-    ),
-    BoxShadow(
-      color: XkColor.darkGlassShadowFar,
-      offset: Offset(0, 1),
-      blurRadius: 3,
-      spreadRadius: -1,
+      color: XkColor.darkPlaneShadow,
+      offset: Offset(0, 5),
+      blurRadius: 15,
+      spreadRadius: -12,
     ),
   ];
 
   static List<BoxShadow> glass(Brightness brightness) =>
       brightness == Brightness.dark ? glassDark : glassLight;
 
-  /// Gem-ctl: `0 14px 34px -18px aquaMid 80%`.
-  static List<BoxShadow> gem(Brightness brightness) {
-    final Color mid = XkColor.aquaMidOf(brightness).withValues(alpha: 0.80);
+  /// Primary control uses the same faint ctl shadow as `--ctl-shadow`.
+  static List<BoxShadow> gem(Brightness brightness) => ctl(brightness);
+
+  /// `--ctl-shadow`: `0 2px 6px -5px`.
+  static List<BoxShadow> ctl(Brightness brightness) {
+    final Color color = brightness == Brightness.dark
+        ? XkColor.darkPlaneShadow
+        : XkColor.planeShadow;
     return <BoxShadow>[
       BoxShadow(
-        color: mid,
-        offset: const Offset(0, 14),
-        blurRadius: 34,
-        spreadRadius: -18,
+        color: color,
+        offset: const Offset(0, 2),
+        blurRadius: 6,
+        spreadRadius: -5,
       ),
     ];
   }
 
-  /// Glass-ctl: `0 10px 30px -18px rgba(12,17,20,.5)`.
-  static List<BoxShadow> ctl(Brightness brightness) {
+  /// `--graphic-shadow`: `0 9px 20px -15px`.
+  static List<BoxShadow> graphic(Brightness brightness) {
     final Color color = brightness == Brightness.dark
-        ? XkColor.darkGlassShadowFar
-        : XkColor.ink.withValues(alpha: 0.50);
+        ? XkColor.darkPlaneShadow
+        : XkColor.planeShadow;
     return <BoxShadow>[
       BoxShadow(
         color: color,
-        offset: const Offset(0, 10),
-        blurRadius: 30,
-        spreadRadius: -18,
+        offset: const Offset(0, 9),
+        blurRadius: 20,
+        spreadRadius: -15,
       ),
     ];
   }

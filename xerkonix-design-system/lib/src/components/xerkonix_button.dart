@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 import '../motion/xerkonix_motion.dart';
@@ -343,10 +345,6 @@ class _GemButtonState extends State<_GemButton> {
   Widget build(BuildContext context) {
     final Brightness b = Theme.of(context).brightness;
     final bool enabled = widget.onPressed != null;
-    final Color hi = XkColor.aquaHiOf(b);
-    final Color mid = XkColor.aquaOf(b);
-    final Color lo = XkColor.aquaMidOf(b);
-    final Color border = Color.lerp(hi, XkColor.mixWhite, 0.35)!;
     return MouseRegion(
       onEnter: enabled ? (_) => setState(() => _hover = true) : null,
       onExit: enabled ? (_) => setState(() => _hover = false) : null,
@@ -368,60 +366,87 @@ class _GemButtonState extends State<_GemButton> {
             onTap: widget.onPressed,
             child: ConstrainedBox(
               constraints: const BoxConstraints(minHeight: XkLayout.controlHeight),
-              child: ClipRRect(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  borderRadius: XkRadius.ctlBorderRadius,
+                  boxShadow: XkShadow.ctl(b),
+                ),
+                child: ClipRRect(
                 borderRadius: XkRadius.ctlBorderRadius,
-                child: Stack(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                  child: Stack(
                   children: <Widget>[
                     DecoratedBox(
                       decoration: BoxDecoration(
+                        color: XkColor.glassAccentOf(b),
                         borderRadius: XkRadius.ctlBorderRadius,
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: <Color>[hi, mid, lo],
-                          stops: const <double>[0, 0.55, 1],
-                        ),
-                        border: Border.all(color: border),
-                        boxShadow: XkShadow.gem(b),
+                        border: Border.all(color: XkColor.planeEdgeOf(b)),
                       ),
-                      child: CustomPaint(
-                        foregroundPainter: XkInsetShadowPainter(
-                          borderRadius: XkRadius.ctlBorderRadius,
-                          lowlight: XkColor.mixWhite.withValues(alpha: 0.80),
-                          highlight: XkColor.mixWhite.withValues(alpha: 0),
-                          distance: 1,
-                          blur: 0.4,
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 24,
-                            vertical: 12,
-                          ),
-                          child: DefaultTextStyle(
-                            style: XkTypo.buttonLabel.copyWith(
-                              color: XkColor.aquaInkOf(b),
-                              fontWeight: FontWeight.w600,
-                            ),
-                            child: IconTheme(
-                              data: IconThemeData(
-                                color: XkColor.aquaInkOf(b),
-                                size: 18,
-                              ),
-                              child: Center(child: widget.child),
+                    ),
+                    Positioned.fill(
+                      child: IgnorePointer(
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            borderRadius: XkRadius.ctlBorderRadius,
+                            gradient: RadialGradient(
+                              center: const Alignment(-0.1, -4.1),
+                              radius: 1.6,
+                              colors: const <Color>[
+                                Color(0xFAFFFFFF),
+                                Color(0x29FFFFFF),
+                                Color(0x00FFFFFF),
+                              ],
+                              stops: const <double>[0, 0.67, 0.70],
                             ),
                           ),
                         ),
                       ),
                     ),
                     Positioned.fill(
-                      child: XkGemSweep(enabled: enabled),
+                      child: IgnorePointer(
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            borderRadius: XkRadius.ctlBorderRadius,
+                            gradient: RadialGradient(
+                              center: const Alignment(0.92, 2.4),
+                              radius: 1.2,
+                              colors: <Color>[
+                                const Color(0x4F58AABF),
+                                const Color(0x0058AABF),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    DefaultTextStyle(
+                      style: XkTypo.buttonLabel.copyWith(
+                        color: XkColor.inkOf(b),
+                        fontWeight: FontWeight.w600,
+                      ),
+                      child: IconTheme(
+                        data: IconThemeData(
+                          color: XkColor.inkOf(b),
+                          size: 18,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 12,
+                          ),
+                          child: Center(child: widget.child),
+                        ),
+                      ),
                     ),
                   ],
+                ),
                 ),
               ),
             ),
           ),
         ),
+      ),
       ),
     );
   }

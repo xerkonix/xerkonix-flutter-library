@@ -1,10 +1,18 @@
+## 4.3.0 — TACTILE v4.2.0 무채색 베이스 · 검정 CTA
+
+패키지 버전 4.3.0. 디자인 계약은 TACTILE v4.2.0. 두 번호는 별개다. 주 액션은 `--surface-inverse` + `--ink-inverse`. 아쿠아는 작은 선택/토글만.
+
+## 4.2.0 — TACTILE v4.1.0 얇은 평면 유리
+
+패키지 버전 4.2.0. 디자인 계약은 TACTILE v4.1.0. 두 번호는 별개다. 패키지 게시는 별도.
+
 ## 4.1.0 — 로컬 디자인 개정
 
 주 행동을 무채 잉크로, 본문을 16–17px로, 캡션 바닥을 13px로 맞췄습니다. 정적 카드는 평면이며 버튼은 키보드 포커스와 기본 Flutter 조작 의미를 유지합니다. `primaryGradient` 등 기존 호출 이름은 보존하지만 기본 액션은 단색으로 표시합니다. TACTILE v3.1.0 토큰·타이포 파리티를 확인합니다. 패키지 게시는 별도입니다.
 
 # xerkonix_design_system
 
-XERKONIX TACTILE 디자인 시스템의 Flutter 구현 패키지. 색·타이포·형태·모션 토큰과 라이트/다크 테마, 아이콘, 컴포넌트, 패턴/모션 위젯을 제공한다. 현재 버전은 **4.1.0**(TACTILE 토큰 계약 v3.1.0)이다. tokens.css 와의 정합은 `test/token_canon_parity_test.dart` 가 매 실행마다 확인하며(형제 리포가 없으면 `test/fixtures/tokens.css` 스냅샷과 대조 — skip 하지 않는다), 그중 **커버리지 그물**은 tokens.css 에 토큰이 새로 생기면 "미러링하거나 이유를 적어라"로 실패한다 — 값 어긋남뿐 아니라 **빠짐**까지 잡는다.
+XERKONIX TACTILE 디자인 시스템의 Flutter 구현 패키지. 색·타이포·형태·모션 토큰과 라이트/다크 테마, 아이콘, 컴포넌트, 패턴/모션 위젯을 제공한다. 패키지 버전은 **4.3.0**, 따르는 디자인 계약은 **TACTILE v4.2.0**이다. 두 번호는 별개다. tokens.css 와의 정합은 `test/token_canon_parity_test.dart` 가 매 실행마다 확인하며(형제 리포가 없으면 `test/fixtures/tokens.css` 스냅샷과 대조 — skip 하지 않는다), 그중 **커버리지 그물**은 tokens.css 에 토큰이 새로 생기면 "미러링하거나 이유를 적어라"로 실패한다 — 값 어긋남뿐 아니라 **빠짐**까지 잡는다.
 
 `XkButton.point`(포인트 면 채움)는 주 CTA 가 아닌 **보조 변형**이다 — 화면당 근흑 액션(`XkButton.accent`) 1개 규칙 안에서 보조 행동에만 쓴다. TACTILE v2.6 의 "CTA 면을 `--point`/`--gem` 으로 칠하지 않는다" 는 주 CTA 에 대한 규칙이다.
 
@@ -12,7 +20,7 @@ XERKONIX TACTILE 디자인 시스템의 Flutter 구현 패키지. 색·타이포
 
 ```yaml
 dependencies:
-  xerkonix_design_system: ^3.0.0
+  xerkonix_design_system: ^4.3.0
 ```
 
 - Dart SDK: `>=3.9.0 <4.0.0`

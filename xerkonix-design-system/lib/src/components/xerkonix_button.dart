@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 import '../motion/xerkonix_motion.dart';
@@ -8,7 +6,8 @@ import '../shape/xerkonix_shape.dart';
 import '../typography/xerkonix_typography.dart';
 import 'xerkonix_glass.dart';
 
-/// TACTILE v4 buttons: gem (primary) or glass-ctl (secondary).
+/// TACTILE v4.2 buttons: black inverse primary, or glass-ctl secondary.
+/// Aqua is not the main action fill.
 class XkButton extends StatelessWidget {
   const XkButton._({
     super.key,
@@ -340,6 +339,7 @@ class _GemButton extends StatefulWidget {
 
 class _GemButtonState extends State<_GemButton> {
   bool _hover = false;
+  bool _focus = false;
 
   @override
   Widget build(BuildContext context) {
@@ -353,7 +353,7 @@ class _GemButtonState extends State<_GemButton> {
         offset: _hover && enabled ? const Offset(0, -1) : Offset.zero,
         child: FocusableActionDetector(
           enabled: enabled,
-          onShowFocusHighlight: (_) {},
+          onFocusChange: (bool has) => setState(() => _focus = has),
           actions: <Type, Action<Intent>>{
             ActivateIntent: CallbackAction<ActivateIntent>(
               onInvoke: (ActivateIntent intent) {
@@ -365,88 +365,83 @@ class _GemButtonState extends State<_GemButton> {
           child: GestureDetector(
             onTap: widget.onPressed,
             child: ConstrainedBox(
-              constraints: const BoxConstraints(minHeight: XkLayout.controlHeight),
+              constraints: const BoxConstraints(
+                minHeight: XkLayout.controlHeight,
+              ),
               child: DecoratedBox(
                 decoration: BoxDecoration(
-                  borderRadius: XkRadius.ctlBorderRadius,
-                  boxShadow: XkShadow.ctl(b),
+                  borderRadius: BorderRadius.circular(XkRadius.ctl + 3),
+                  border: Border.all(
+                    color: _focus ? XkColor.aquaDeepOf(b) : XkColor.none,
+                    width: 2,
+                  ),
                 ),
-                child: ClipRRect(
-                borderRadius: XkRadius.ctlBorderRadius,
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-                  child: Stack(
-                  children: <Widget>[
-                    DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: XkColor.glassAccentOf(b),
-                        borderRadius: XkRadius.ctlBorderRadius,
-                        border: Border.all(color: XkColor.planeEdgeOf(b)),
-                      ),
+                child: Padding(
+                  padding: const EdgeInsets.all(3),
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      borderRadius: XkRadius.ctlBorderRadius,
+                      boxShadow: XkShadow.ctl(b),
                     ),
-                    Positioned.fill(
-                      child: IgnorePointer(
-                        child: DecoratedBox(
-                          decoration: BoxDecoration(
-                            borderRadius: XkRadius.ctlBorderRadius,
-                            gradient: RadialGradient(
-                              center: const Alignment(-0.1, -4.1),
-                              radius: 1.6,
-                              colors: const <Color>[
-                                Color(0xFAFFFFFF),
-                                Color(0x29FFFFFF),
-                                Color(0x00FFFFFF),
-                              ],
-                              stops: const <double>[0, 0.67, 0.70],
+                    child: ClipRRect(
+                      borderRadius: XkRadius.ctlBorderRadius,
+                      child: Stack(
+                        children: <Widget>[
+                          const Positioned.fill(
+                            child: DecoratedBox(
+                              key: ValueKey<String>('xk-gem-fill'),
+                              decoration: BoxDecoration(
+                                color: XkColor.surfaceInverse,
+                                borderRadius: XkRadius.ctlBorderRadius,
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                    ),
-                    Positioned.fill(
-                      child: IgnorePointer(
-                        child: DecoratedBox(
-                          decoration: BoxDecoration(
-                            borderRadius: XkRadius.ctlBorderRadius,
-                            gradient: RadialGradient(
-                              center: const Alignment(0.92, 2.4),
-                              radius: 1.2,
-                              colors: <Color>[
-                                const Color(0x4F58AABF),
-                                const Color(0x0058AABF),
-                              ],
+                          const Positioned.fill(
+                            child: IgnorePointer(
+                              child: DecoratedBox(
+                                decoration: BoxDecoration(
+                                  borderRadius: XkRadius.ctlBorderRadius,
+                                  gradient: RadialGradient(
+                                    center: Alignment(-0.1, -4.1),
+                                    radius: 1.6,
+                                    colors: <Color>[
+                                      Color(0x29FFFFFF),
+                                      Color(0x00FFFFFF),
+                                    ],
+                                    stops: <double>[0, 0.70],
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                    ),
-                    DefaultTextStyle(
-                      style: XkTypo.buttonLabel.copyWith(
-                        color: XkColor.inkOf(b),
-                        fontWeight: FontWeight.w600,
-                      ),
-                      child: IconTheme(
-                        data: IconThemeData(
-                          color: XkColor.inkOf(b),
-                          size: 18,
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 24,
-                            vertical: 12,
+                          DefaultTextStyle(
+                            style: XkTypo.buttonLabel.copyWith(
+                              color: XkColor.inkInverse,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            child: IconTheme(
+                              data: const IconThemeData(
+                                color: XkColor.inkInverse,
+                                size: 18,
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 24,
+                                  vertical: 12,
+                                ),
+                                child: Center(child: widget.child),
+                              ),
+                            ),
                           ),
-                          child: Center(child: widget.child),
-                        ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
                 ),
               ),
             ),
           ),
         ),
-      ),
       ),
     );
   }
@@ -469,6 +464,7 @@ class _GlassCtlButton extends StatefulWidget {
 
 class _GlassCtlButtonState extends State<_GlassCtlButton> {
   bool _hover = false;
+  bool _focus = false;
 
   @override
   Widget build(BuildContext context) {
@@ -484,20 +480,49 @@ class _GlassCtlButtonState extends State<_GlassCtlButton> {
       cursor: enabled ? SystemMouseCursors.click : SystemMouseCursors.basic,
       child: AnimatedTranslate(
         offset: _hover && enabled ? const Offset(0, -1) : Offset.zero,
-        child: GestureDetector(
-          onTap: widget.onPressed,
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(minHeight: XkLayout.controlHeight),
-            child: XkGlass(
-              ctl: true,
-              borderRadius: XkRadius.ctlBorderRadius,
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              child: DefaultTextStyle(
-                style: XkTypo.buttonLabel.copyWith(
-                  color: enabled ? fg : XkColor.ink3Of(b),
-                  fontWeight: FontWeight.w600,
+        child: FocusableActionDetector(
+          enabled: enabled,
+          onFocusChange: (bool has) => setState(() => _focus = has),
+          actions: <Type, Action<Intent>>{
+            ActivateIntent: CallbackAction<ActivateIntent>(
+              onInvoke: (ActivateIntent intent) {
+                widget.onPressed?.call();
+                return null;
+              },
+            ),
+          },
+          child: GestureDetector(
+            onTap: widget.onPressed,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(
+                minHeight: XkLayout.controlHeight,
+              ),
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(XkRadius.ctl + 3),
+                  border: Border.all(
+                    color: _focus ? XkColor.aquaDeepOf(b) : XkColor.none,
+                    width: 2,
+                  ),
                 ),
-                child: Center(child: widget.child),
+                child: Padding(
+                  padding: const EdgeInsets.all(3),
+                  child: XkGlass(
+                    ctl: true,
+                    borderRadius: XkRadius.ctlBorderRadius,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 12,
+                    ),
+                    child: DefaultTextStyle(
+                      style: XkTypo.buttonLabel.copyWith(
+                        color: enabled ? fg : XkColor.ink3Of(b),
+                        fontWeight: FontWeight.w600,
+                      ),
+                      child: Center(child: widget.child),
+                    ),
+                  ),
+                ),
               ),
             ),
           ),

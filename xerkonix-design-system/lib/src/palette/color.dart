@@ -1,20 +1,22 @@
 import 'dart:ui';
 
-/// XERKONIX TACTILE v4.1.0 color tokens. Source: tokens.css.
+/// XERKONIX TACTILE color tokens. Hex comes from `tokens.css` (sibling file or
+/// `test/fixtures/tokens.css` copy). Package version is pubspec; contract
+/// version is the tokens.css header. Do not paste draft hex into this file.
 ///
 /// Names strip `--` and camelCase. Dark overrides are `dark*`.
 /// v3 names remain as deprecated aliases so existing apps still compile.
 class XkColor {
   XkColor._();
 
-  // --- Light (tokens.css :root) ---
-  static const Color canvas = Color(0xFFF6F7F7);
-  static const Color groundHi = Color(0xFFFDFEFE);
-  static const Color solid = Color(0xFFFDFEFE);
-  static const Color ink = Color(0xFF1A3036);
-  static const Color ink2 = Color(0xFF596F75);
-  static const Color ink3 = Color(0xFF9AA5A8);
-  static const Color rule = Color(0x1F305962); // rgba(48,89,98,.12)
+  // --- Light (tokens.css :root, TACTILE v4.2.0) ---
+  static const Color canvas = Color(0xFFF7F7F7);
+  static const Color groundHi = Color(0xFFFFFFFF);
+  static const Color solid = Color(0xFFFFFFFF);
+  static const Color ink = Color(0xFF111111);
+  static const Color ink2 = Color(0xFF555555);
+  static const Color ink3 = Color(0xFF888888);
+  static const Color rule = Color(0x1F000000); // rgba(0,0,0,.12)
 
   static const Color aqua100 = Color(0xFFE3F3F7);
   static const Color aquaTint = Color(0xFFC0E3EC);
@@ -33,18 +35,27 @@ class XkColor {
   static const Color glassNavigation = Color(0x73FFFFFF); // .45
   static const Color glassAction = Color(0x38FFFFFF); // .22
   static const Color glassAccent = Color(0x38B1DAE1);
-  static const Color planeEdge = Color(0x3B659BA9); // rgba(101,155,169,.23)
+  static const Color planeEdge = Color(0x1F000000); // rgba(0,0,0,.12)
   static const Color planeRim = Color(0xD1FFFFFF); // rgba(255,255,255,.82)
-  static const Color planeShadow = Color(0x1F285C6A); // rgba(40,92,106,.12)
+  static const Color planeShadow = Color(0x1F000000);
   static const Color glassEdge = Color(0xD1FFFFFF);
-  static const Color glassEdge2 = Color(0x3B659BA9);
+  static const Color glassEdge2 = Color(0x1F000000);
   static const Color spec = Color(0xD1FFFFFF);
-  static const Color insetBg = Color(0x090C1114); // rgba(12,17,20,.035)
-  static const Color headGlass = Color(0x73FFFFFF);
+  static const Color insetBg = Color(0x09000000); // rgba(0,0,0,.035)
+  static const Color headGlass = Color(0xD1FFFFFF); // rgba(255,255,255,.82)
   static const Color glossSheen = Color(0xA6FFFFFF);
   static const Color glossRim = Color(0xF5FFFFFF);
-  static const Color glossLow = Color(0x4A5797A6);
-  static const Color glossContact = Color(0x1A335D69);
+  static const Color glossLow = Color(0x1F000000);
+  static const Color glossContact = Color(0x1A000000);
+  /// Inverse-surface sheen. Theme-invariant (`:root` only).
+  static const Color glossInverse = Color(0x1FFFFFFF); // rgba(255,255,255,.12)
+
+  /// Inverse surface — theme-invariant. Primary CTA fill.
+  static const Color surfaceInverse = Color(0xFF000000);
+  static const Color inkInverse = Color(0xFFFFFFFF);
+  static const Color inkInverse2 = Color(0xFFC4C4C4);
+  static const Color surfaceInverseCard = Color(0xFF151515);
+  static const Color ruleInverse = Color(0xFF333333);
 
   static const Color ok = Color(0xFF4F7868);
   static const Color warn = Color(0xFFA95C11);
@@ -58,17 +69,17 @@ class XkColor {
   /// Fully transparent — token-file home for overlays that need no fill.
   static const Color none = Color(0x00000000);
 
-  static const Color glassShadowNear = Color(0x1F285C6A);
-  static const Color glassShadowFar = Color(0x1F285C6A);
+  static const Color glassShadowNear = Color(0x1F000000);
+  static const Color glassShadowFar = Color(0x1F000000);
 
   // --- Dark (tokens.css :root[data-theme="dark"]) ---
-  static const Color darkCanvas = Color(0xFF131B1D);
-  static const Color darkGroundHi = Color(0xFF233338);
-  static const Color darkSolid = Color(0xFF233338);
-  static const Color darkInk = Color(0xFFE5F0F2);
-  static const Color darkInk2 = Color(0xFFA3B8BD);
-  static const Color darkInk3 = Color(0xFF5E6A6E);
-  static const Color darkRule = Color(0x1FB9DDE6); // rgba(185,221,230,.12)
+  static const Color darkCanvas = Color(0xFF141414);
+  static const Color darkGroundHi = Color(0xFF202020);
+  static const Color darkSolid = Color(0xFF202020);
+  static const Color darkInk = Color(0xFFF5F5F5);
+  static const Color darkInk2 = Color(0xFFBBBBBB);
+  static const Color darkInk3 = Color(0xFF777777);
+  static const Color darkRule = Color(0x1FFFFFFF); // rgba(255,255,255,.12)
 
   static const Color darkAqua100 = Color(0xFF12333C);
   static const Color darkAquaTint = Color(0xFF1F4C58);
@@ -82,22 +93,22 @@ class XkColor {
   static const Color darkAccent = Color(0xFF89C0CD);
   static const Color darkAccentInk = Color(0xFF0B2B35);
 
-  static const Color darkGlass = Color(0xBF223034); // rgba(34,48,52,.75)
-  static const Color darkGlassStrong = Color(0xBF223034);
-  static const Color darkGlassNavigation = Color(0x73223034);
-  static const Color darkGlassAction = Color(0x38223034);
+  static const Color darkGlass = Color(0xBF202020); // rgba(32,32,32,.75)
+  static const Color darkGlassStrong = Color(0xBF202020);
+  static const Color darkGlassNavigation = Color(0x73202020);
+  static const Color darkGlassAction = Color(0x38202020);
   static const Color darkGlassAccent = Color(0x3889C0CD);
-  static const Color darkPlaneEdge = Color(0x458CC3D1);
-  static const Color darkPlaneRim = Color(0x61E0FAFF);
+  static const Color darkPlaneEdge = Color(0x2EFFFFFF);
+  static const Color darkPlaneRim = Color(0x61FFFFFF);
   static const Color darkPlaneShadow = Color(0x3D000000);
-  static const Color darkGlassEdge = Color(0x61E0FAFF);
-  static const Color darkGlassEdge2 = Color(0x458CC3D1);
-  static const Color darkSpec = Color(0x61E0FAFF);
+  static const Color darkGlassEdge = Color(0x61FFFFFF);
+  static const Color darkGlassEdge2 = Color(0x2EFFFFFF);
+  static const Color darkSpec = Color(0x61FFFFFF);
   static const Color darkInsetBg = Color(0x0DFFFFFF);
-  static const Color darkHeadGlass = Color(0x73223034);
-  static const Color darkGlossSheen = Color(0x38BCEAF5);
-  static const Color darkGlossRim = Color(0x9EDCF9FF);
-  static const Color darkGlossLow = Color(0x4771BED0);
+  static const Color darkHeadGlass = Color(0xD1202020); // rgba(32,32,32,.82)
+  static const Color darkGlossSheen = Color(0x38FFFFFF);
+  static const Color darkGlossRim = Color(0x9EFFFFFF);
+  static const Color darkGlossLow = Color(0x24FFFFFF);
   static const Color darkGlossContact = Color(0x45000000);
 
   static const Color darkOk = Color(0xFF7FB59E);
@@ -223,10 +234,15 @@ class XkColor {
   static const Color darkNav = darkHeadGlass;
 
   /// Light-canon color → dark remap. Identity in light.
+  ///
+  /// Neutralization made several roles share a Color value (`groundHi` /
+  /// `inkInverse` are both #FFF). This method must not infer inverse identity
+  /// from that value — inverse UI uses [inkInverseOf] / [surfaceInverseOf].
+  /// Overlapping gloss/edge neutrals also share values; callers that need a
+  /// specific role in dark should use the `*Of` getter, not [themed].
   static Color themed(Color color, Brightness brightness) {
     if (brightness != Brightness.dark) return color;
-    // Dark tokens first — some light/dark hexes collide (e.g. aqua-hi light
-    // equals aqua-deep dark).
+    // Already-dark tokens first (aqua-hi light == aqua-deep dark, etc.).
     if (color == darkCanvas ||
         color == darkGroundHi ||
         color == darkInk ||
@@ -349,6 +365,14 @@ class XkColor {
   static Color badOf(Brightness b) => b == Brightness.dark ? darkBad : bad;
   static Color warmOf(Brightness b) => b == Brightness.dark ? darkWarm : warm;
   static Color coolOf(Brightness b) => b == Brightness.dark ? darkCool : cool;
+
+  /// Inverse roles are theme-invariant (tokens.css `:root` only).
+  static Color surfaceInverseOf(Brightness b) => surfaceInverse;
+  static Color inkInverseOf(Brightness b) => inkInverse;
+  static Color inkInverse2Of(Brightness b) => inkInverse2;
+  static Color surfaceInverseCardOf(Brightness b) => surfaceInverseCard;
+  static Color ruleInverseOf(Brightness b) => ruleInverse;
+  static Color glossInverseOf(Brightness b) => glossInverse;
 
   /// `.selected` fill: `--aqua-tint` at 30%.
   static Color selectedFill(Brightness b) =>

@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 
 import '../../palette/color.dart';
 
-/// Dark color scheme based on TACTILE v4 tokens.
+/// Dark color scheme based on TACTILE v4.2 tokens.
+/// Primary CTA stays inverse (black + white ink). Aqua is a small point only.
 const darkColorScheme = ColorScheme(
   brightness: Brightness.dark,
-  primary: XkColor.darkAquaMid,
-  onPrimary: XkColor.darkAquaInk,
-  primaryContainer: XkColor.darkAqua100,
-  onPrimaryContainer: XkColor.darkInk,
+  primary: XkColor.surfaceInverse,
+  onPrimary: XkColor.inkInverse,
+  primaryContainer: XkColor.surfaceInverseCard,
+  onPrimaryContainer: XkColor.inkInverse,
   secondary: XkColor.darkInk,
   onSecondary: XkColor.darkGroundHi,
   secondaryContainer: XkColor.darkInsetBg,
@@ -29,8 +30,8 @@ const darkColorScheme = ColorScheme(
   outlineVariant: XkColor.darkRule,
   shadow: XkColor.darkGlassShadowNear,
   scrim: XkColor.darkCanvas,
-  inverseSurface: XkColor.darkInk,
-  onInverseSurface: XkColor.darkCanvas,
-  inversePrimary: XkColor.aquaMid,
+  inverseSurface: XkColor.surfaceInverse,
+  onInverseSurface: XkColor.inkInverse,
+  inversePrimary: XkColor.darkAquaMid,
   surfaceTint: XkColor.none,
 );

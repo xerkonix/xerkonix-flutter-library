@@ -1,6 +1,6 @@
 {
   "$comment": "Flutter library — CSS surface is the tokens.css fixture only. Dart Color literals live in the token mirror (lib/src/palette/color.dart).",
-  "expect_version": "v4.0.1",
+  "expect_version": "v4.2.0",
   "include": [
     "**/*.html",
     "**/*.css"

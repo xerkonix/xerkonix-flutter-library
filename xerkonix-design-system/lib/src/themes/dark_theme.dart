@@ -65,8 +65,8 @@ class XkDarkTheme extends XkTheme {
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: _ctlStyle(
-        foreground: XkColor.darkAquaInk,
-        background: XkColor.darkAquaMid,
+        foreground: XkColor.inkInverse,
+        background: XkColor.surfaceInverse,
       ),
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(
@@ -96,7 +96,7 @@ class XkDarkTheme extends XkTheme {
       ),
       focusedBorder: const OutlineInputBorder(
         borderRadius: XkRadius.ctlBorderRadius,
-        borderSide: BorderSide(color: XkColor.darkAqua, width: 2),
+        borderSide: BorderSide(color: XkColor.darkAquaDeep, width: 2),
       ),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
     ),
@@ -125,7 +125,7 @@ class XkDarkTheme extends XkTheme {
       thickness: 1,
     ),
     dividerColor: XkColor.darkRule,
-    focusColor: XkColor.darkAqua.withValues(alpha: 0.2),
+    focusColor: XkColor.darkAquaDeep.withValues(alpha: 0.2),
   );
 
   static final TextStyle _buttonLabel = XkTypo.buttonLabel.copyWith(

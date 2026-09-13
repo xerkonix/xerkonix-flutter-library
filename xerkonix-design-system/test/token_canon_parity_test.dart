@@ -1,7 +1,11 @@
-// TACTILE tokens.css ↔ 라이브러리 토큰 대조 (v4.0.0).
+// TACTILE tokens.css ↔ 라이브러리 토큰 대조.
 //
-// 사람이 두 파일을 기억으로 맞추는 대신 이 테스트가 tokens.css 를 실제로 읽어
-// 파싱·대조한다 — 값이 다시 어긋나면 어느 변수 쌍인지 즉시 나온다.
+// 이 패키지에는 tokens.css → Dart 코드젠이 없다. 값은
+//   1) tactile-design `tools/sync_consumers.py` 가 fixture 로 복사하고
+//   2) `lib/src/palette/color.dart` 를 그 파일과 손으로 맞춘 뒤
+//   3) 이 테스트가 CSS 를 읽어 상수와 대조한다.
+// 초안 hex 를 여기나 color.dart 에 미리 넣지 않는다. 계약 헤더가 바뀌면
+// fixture 복사 → color.dart → 이 테스트 순이다.
 //
 // 어느 tokens.css 를 읽는가 (둘 중 하나, skip 은 없다):
 //   1. 워크스페이스 형제 리포의 tokens.css
@@ -73,6 +77,21 @@ Color _cssColor(String value, Map<String, String> vars) {
   );
 }
 
+Color _cssShadowColor(String value, Map<String, String> vars) {
+  final String v = value.trim();
+  final RegExpMatch? rgba = RegExp(
+    r'rgba?\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*(?:,\s*[0-9.]+)?\s*\)',
+  ).firstMatch(v);
+  if (rgba != null) {
+    return _cssColor(rgba.group(0)!, vars);
+  }
+  final RegExpMatch? hex = RegExp(r'#[0-9A-Fa-f]{6}').firstMatch(v);
+  if (hex != null) {
+    return _cssColor(hex.group(0)!, vars);
+  }
+  fail('그림자 색을 해석할 수 없다: $v');
+}
+
 double _cssPx(String value) => double.parse(value.trim().replaceAll('px', ''));
 
 Duration _cssDuration(String value) {
@@ -99,12 +118,12 @@ void _expectColorParity(
   pairs.forEach((String name, Color actual) {
     final String? raw = vars[name];
     if (raw == null) {
-      mismatched[name] = '정본에서 변수가 사라졌다 — 매핑도 함께 고쳐라';
+      mismatched[name] = '계약에서 변수가 사라졌다 — 매핑도 함께 고쳐라';
       return;
     }
     final Color expected = _cssColor(raw, vars);
     if (expected != actual) {
-      mismatched[name] = '정본 ${_hex(expected)} ≠ 라이브러리 ${_hex(actual)}';
+      mismatched[name] = '계약 ${_hex(expected)} ≠ 라이브러리 ${_hex(actual)}';
     }
   });
   expect(mismatched, isEmpty, reason: hint);
@@ -186,6 +205,12 @@ void main() {
         '--gloss-rim': XkColor.glossRim,
         '--gloss-low': XkColor.glossLow,
         '--gloss-contact': XkColor.glossContact,
+        '--gloss-inverse': XkColor.glossInverse,
+        '--surface-inverse': XkColor.surfaceInverse,
+        '--ink-inverse': XkColor.inkInverse,
+        '--ink-inverse-2': XkColor.inkInverse2,
+        '--surface-inverse-card': XkColor.surfaceInverseCard,
+        '--rule-inverse': XkColor.ruleInverse,
       }, 'XkColor 표면을 tokens.css 라이트 값으로 맞춰라.');
     });
     test('다크 표면·잉크가 출처(tokens.css)와 같다', () {
@@ -211,6 +236,12 @@ void main() {
         '--gloss-rim': XkColor.darkGlossRim,
         '--gloss-low': XkColor.darkGlossLow,
         '--gloss-contact': XkColor.darkGlossContact,
+        '--gloss-inverse': XkColor.glossInverse,
+        '--surface-inverse': XkColor.surfaceInverse,
+        '--ink-inverse': XkColor.inkInverse,
+        '--ink-inverse-2': XkColor.inkInverse2,
+        '--surface-inverse-card': XkColor.surfaceInverseCard,
+        '--rule-inverse': XkColor.ruleInverse,
       }, 'XkColor 표면을 tokens.css 다크 값으로 맞춰라.');
     });
   });
@@ -261,13 +292,26 @@ void main() {
         '--spec': XkColor.darkSpec,
       }, 'XkColor 글래스를 tokens.css 다크 값으로 맞춰라.');
     });
-    test('glass-shadow 레이어가 정본과 같다', () {
+    test('glass-shadow 레이어가 계약과 같다', () {
       expect(XkShadow.glassLight.length, 1);
       expect(XkShadow.glassLight.first.offset, const Offset(0, 5));
       expect(XkShadow.glassLight.first.blurRadius, 15);
       expect(XkShadow.glassLight.first.spreadRadius, -12);
       expect(XkShadow.glassLight.first.offset.dx >= 0, isTrue);
       expect(XkShadow.glassLight.first.offset.dy >= 0, isTrue);
+      final Color glassShadowColor = _cssShadowColor(
+        light['--glass-shadow']!,
+        light,
+      );
+      expect(XkShadow.glassLight.first.color, glassShadowColor);
+      expect(
+        XkShadow.ctl(Brightness.light).first.color,
+        _cssShadowColor(light['--ctl-shadow']!, light),
+      );
+      expect(
+        XkShadow.graphic(Brightness.light).first.color,
+        _cssShadowColor(light['--graphic-shadow']!, light),
+      );
     });
   });
 
@@ -307,9 +351,9 @@ void main() {
       pairs.forEach((String name, double actual) {
         final String? raw = light[name];
         if (raw == null) {
-          mismatched[name] = '정본에서 변수가 사라졌다';
+          mismatched[name] = '계약에서 변수가 사라졌다';
         } else if (_cssPx(raw) != actual) {
-          mismatched[name] = '정본 ${_cssPx(raw)} ≠ 라이브러리 $actual';
+          mismatched[name] = '계약 ${_cssPx(raw)} ≠ 라이브러리 $actual';
         }
       });
       expect(mismatched, isEmpty, reason: 'XkRadius 를 tokens.css 값으로 맞춰라.');
@@ -334,9 +378,9 @@ void main() {
       pairs.forEach((String name, double actual) {
         final String? raw = light[name];
         if (raw == null) {
-          mismatched[name] = '정본에서 변수가 사라졌다';
+          mismatched[name] = '계약에서 변수가 사라졌다';
         } else if (_cssPx(raw) != actual) {
-          mismatched[name] = '정본 ${_cssPx(raw)} ≠ 라이브러리 $actual';
+          mismatched[name] = '계약 ${_cssPx(raw)} ≠ 라이브러리 $actual';
         }
       });
       expect(mismatched, isEmpty, reason: 'XkLayout spacing 을 tokens.css 값으로 맞춰라.');
@@ -410,6 +454,16 @@ void main() {
       '--plane-edge',
       '--plane-rim',
       '--plane-shadow',
+      '--gloss-rim',
+      '--gloss-low',
+      '--gloss-contact',
+      '--gloss-sheen',
+      '--gloss-inverse',
+      '--surface-inverse',
+      '--ink-inverse',
+      '--ink-inverse-2',
+      '--surface-inverse-card',
+      '--rule-inverse',
       '--ok',
       '--warn',
       '--bad',
@@ -465,10 +519,13 @@ void main() {
       '--glass-action-blur': '역할 blur',
       '--glass-action-contrast': '역할 contrast',
       '--glass-action-saturation': '역할 saturation',
-      '--gloss-rim': 'XkColor.glossRim',
-      '--gloss-low': 'XkColor.glossLow',
-      '--gloss-contact': 'XkColor.glossContact',
-      '--gloss-sheen': 'XkColor.glossSheen',
+    };
+    const Set<String> inverseRolesWhenPresent = <String>{
+      '--surface-inverse',
+      '--ink-inverse',
+      '--ink-inverse-2',
+      '--surface-inverse-card',
+      '--rule-inverse',
     };
     test('출처 라이트 블록의 모든 토큰이 미러링되거나 이유가 적혀 있다', () {
       final Set<String> unaccounted = light.keys
@@ -479,19 +536,30 @@ void main() {
       expect(
         unaccounted,
         isEmpty,
-        reason: '정본에 새 토큰이 생겼다. 미러하거나 notMirrored 에 이유를 적어라.',
+        reason: '계약에 새 토큰이 생겼다. 미러하거나 notMirrored 에 이유를 적어라.',
       );
     });
     test('mirrored 에 적힌 이름이 출처 tokens.css 에 실제로 있다', () {
       final Set<String> stale =
           mirrored.where((String n) => !light.containsKey(n)).toSet();
-      expect(stale, isEmpty, reason: '정본에서 사라진 토큰이 mirrored 에 남아 있다.');
+      expect(stale, isEmpty, reason: '계약에서 사라진 토큰이 mirrored 에 남아 있다.');
     });
-    test('v3 --x- 이름이 정본 라이트 블록에 없다', () {
+    test('v3 --x- 이름이 계약 라이트 블록에 없다', () {
       final Set<String> leftover = light.keys
           .where((String n) => n.startsWith('--x-'))
           .toSet();
-      expect(leftover, isEmpty, reason: 'v4 정본에 --x- 잔재가 있다.');
+      expect(leftover, isEmpty, reason: 'v4 계약에 --x- 잔재가 있다.');
+    });
+    test('역상 역할이 계약에 있으면 미러 목록에 있어야 한다', () {
+      final Set<String> present = inverseRolesWhenPresent
+          .where((String n) => light.containsKey(n))
+          .toSet();
+      expect(
+        present.difference(mirrored),
+        isEmpty,
+        reason:
+            '역상 면 토큰은 notMirrored 로 숨기지 말고 XkColor 미러 + 이 목록에 올려라.',
+      );
     });
   });
 }

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # ruff: noqa: E501
-"""TACTILE 파리티 게이트 — 정적 HTML/CSS 표면이 디자인 정본에서 이탈하지 않게 막는다.
+"""TACTILE 파리티 게이트 — 정적 HTML/CSS 표면이 디자인 계약에서 이탈하지 않게 막는다.
 
-정본 스크립트는 xerkonix-tactile-design/tools/tactile_gate.py, 리포별 설정은
+계약 스크립트는 xerkonix-tactile-design/tools/tactile_gate.py, 리포별 설정은
 tactile_gate.json. 소비 리포에는 이 파일을 그대로 복사하고, 달라지는 것(검사
 대상 glob·미러 목록·예외 목록)은 옆의 tactile_gate.json 에만 적는다.
 
@@ -10,11 +10,12 @@ tactile_gate.json. 소비 리포에는 이 파일을 그대로 복사하고, 달
   python3 tools/tactile_gate.py --verbose
   python3 tools/tactile_gate.py --selftest
 
-검사는 TACTILE.md §8 를 정적 범위에서 집행한다. 썸네일·워드마크 가리기·axe 는
+검사는 TACTILE.md 를 정적 범위에서 집행한다. 썸네일·워드마크 가리기·axe 는
 이 스크립트가 돌리지 않는다(단계 보고에서 해당 없음으로 적는다).
 
-v4.0.1 어휘: 캔버스/잉크/아쿠아마린/글래스. v3 의 --x-* 토큰은 선언도 사용도 실패다.
-라이트 --glass/.32 · --glass-strong/.52 (v4.0.0 의 .55/.78 은 흰 판).
+v4.2.0 어휘: 무채색 캔버스/잉크, 작은 아쿠아 포인트, 검정 역상 면, 얇은 유리 역할.
+v3 의 --x-* 토큰은 선언도 사용도 실패다. 라이트 --glass/.75 읽기 면.
+구 v4.0.1 .32/.52 볼록 글래스는 실패.
 """
 
 from __future__ import annotations
@@ -26,36 +27,49 @@ import os
 import re
 import sys
 
-EXPECT_VERSION = "v4.0.1"
+EXPECT_VERSION = "v4.2.0"
 
 # ─────────────────────────────────────────────────────────────────────────────
-# v4.0.0 기대 테이블 (tokens.css 정본)
+# v4.2.0 기대 테이블 (tokens.css)
 # ─────────────────────────────────────────────────────────────────────────────
 LIGHT: dict[str, str] = {
-    # 캔버스와 광원
-    "--canvas": "#F5F5F5", "--ground-hi": "#FFFFFF",
-    # 잉크 — --ink-3 는 비활성·플레이스홀더·장식 전용(캔버스 대비 2.31:1)
-    "--ink": "#0C1114", "--ink-2": "#5E6A6E", "--ink-3": "#9AA5A8",
-    "--rule": "rgba(12,17,20,.10)",
-    # 아쿠아마린 — 텍스트에는 deep 이상만
+    "--canvas": "#F7F7F7", "--ground-hi": "#FFFFFF", "--solid": "#FFFFFF",
+    "--ink": "#111111", "--ink-2": "#555555", "--ink-3": "#888888",
+    "--rule": "rgba(0,0,0,.12)",
     "--aqua-100": "#E3F3F7", "--aqua-tint": "#C0E3EC", "--aqua-hi": "#92CCDC",
     "--aqua": "#6EB4C4", "--aqua-mid": "#59A1B0", "--aqua-shade": "#33778D",
-    "--aqua-deep": "#2E6774", "--aqua-ink": "#1B4650",
-    # 글래스 재질
-    "--glass": "rgba(255,255,255,.32)", "--glass-strong": "rgba(255,255,255,.52)",
-    "--glass-edge": "rgba(255,255,255,.90)", "--glass-edge-2": "rgba(255,255,255,.40)",
-    "--glass-shadow": "0 24px 60px -36px rgba(12,17,20,.30),0 1px 3px -1px rgba(12,17,20,.08)",
-    "--spec": "rgba(255,255,255,.95)", "--inset-bg": "rgba(12,17,20,.035)",
-    "--head-glass": "rgba(245,245,245,.84)",
-    # 라운드
-    "--r-panel": "16px", "--r-card": "14px", "--r-inset": "12px", "--r-ctl": "12px", "--r-tag": "6px",
-    # 모션
+    "--aqua-deep": "#2E6B79", "--aqua-ink": "#1B4650",
+    "--accent-rgb": "177,218,225", "--accent": "#B1DAE1", "--accent-ink": "#1C4C58",
+    "--glass-rgb": "255,255,255",
+    "--glass-reading-alpha": ".75", "--glass-reading-blur": "36px",
+    "--glass-reading-contrast": ".85", "--glass-reading-saturation": ".95",
+    "--glass-navigation-alpha": ".45", "--glass-navigation-blur": "20px",
+    "--glass-navigation-contrast": ".95", "--glass-navigation-saturation": "1",
+    "--glass-action-alpha": ".22", "--glass-action-blur": "8px",
+    "--glass-action-contrast": "1.05", "--glass-action-saturation": "1.05",
+    "--glass": "rgba(255,255,255,.75)", "--glass-strong": "rgba(255,255,255,.75)",
+    "--glass-navigation": "rgba(255,255,255,.45)", "--glass-action": "rgba(255,255,255,.22)",
+    "--glass-accent": "rgba(177,218,225,.22)",
+    "--plane-edge": "rgba(0,0,0,.12)", "--plane-rim": "rgba(255,255,255,.82)",
+    "--plane-shadow": "rgba(0,0,0,.12)",
+    "--glass-edge": "rgba(255,255,255,.82)", "--glass-edge-2": "rgba(0,0,0,.12)",
+    "--glass-shadow": "0 5px 15px -12px rgba(0,0,0,.12)",
+    "--ctl-shadow": "0 2px 6px -5px rgba(0,0,0,.12)",
+    "--graphic-shadow": "0 9px 20px -15px rgba(0,0,0,.12)",
+    "--spec": "rgba(255,255,255,.82)", "--inset-bg": "rgba(0,0,0,.035)",
+    "--head-glass": "rgba(255,255,255,.82)",
+    "--gloss-rim": "rgba(255,255,255,.96)", "--gloss-low": "rgba(0,0,0,.12)",
+    "--gloss-contact": "rgba(0,0,0,.1)", "--gloss-sheen": "rgba(255,255,255,.65)",
+    "--gloss-inverse": "rgba(255,255,255,.12)",
+    "--surface-inverse": "#000000", "--ink-inverse": "#FFFFFF",
+    "--ink-inverse-2": "#C4C4C4", "--surface-inverse-card": "#151515",
+    "--rule-inverse": "#333333",
+    "--r-panel": "11px", "--r-card": "11px", "--r-inset": "8px", "--r-ctl": "7px", "--r-tag": "6px",
+    "--r-graphic": "10px", "--r-graphic-mobile": "8px",
     "--ease-out": "cubic-bezier(.2,.8,.2,1)", "--ease-sweep": "cubic-bezier(.4,0,.5,1)",
     "--t-state": ".9s", "--t-hover": ".25s",
-    # 확장: 시맨틱 잉크 · 관계 온도
     "--ok": "#4F7868", "--warn": "#A95C11", "--bad": "#C13030",
     "--warm": "#B8503A", "--cool": "#3E6B8F",
-    # 확장: 간격 · 글자 크기 · 폭 (v3.1.0 스케일 유지)
     "--sp-1": "4px", "--sp-2": "8px", "--sp-3": "12px", "--sp-4": "16px",
     "--sp-5": "24px", "--sp-6": "32px", "--sp-7": "48px",
     "--fs-display": "58px", "--fs-display-mobile": "34px",
@@ -71,17 +85,27 @@ LIGHT: dict[str, str] = {
 }
 
 DARK_OVERRIDE: dict[str, str] = {
-    "--canvas": "#0B0F11", "--ground-hi": "#1A2023",
-    "--ink": "#F2F5F5", "--ink-2": "#98A4A7", "--ink-3": "#5E6A6E",
-    "--rule": "rgba(242,245,245,.10)",
+    "--canvas": "#141414", "--ground-hi": "#202020", "--solid": "#202020",
+    "--ink": "#F5F5F5", "--ink-2": "#BBBBBB", "--ink-3": "#777777",
+    "--rule": "rgba(255,255,255,.12)",
     "--aqua-100": "#12333C", "--aqua-tint": "#1F4C58", "--aqua-hi": "#A6D8E5",
     "--aqua": "#6EB4C4", "--aqua-mid": "#4F97A8", "--aqua-shade": "#2E6774",
-    "--aqua-deep": "#92CCDC", "--aqua-ink": "#10303A",
-    "--glass": "rgba(255,255,255,.06)", "--glass-strong": "rgba(255,255,255,.10)",
-    "--glass-edge": "rgba(255,255,255,.22)", "--glass-edge-2": "rgba(255,255,255,.07)",
-    "--glass-shadow": "0 24px 60px -36px rgba(0,0,0,.8),0 1px 3px -1px rgba(0,0,0,.5)",
-    "--spec": "rgba(255,255,255,.45)", "--inset-bg": "rgba(255,255,255,.05)",
-    "--head-glass": "rgba(11,15,17,.78)",
+    "--aqua-deep": "#A7DCE6", "--aqua-ink": "#10303A",
+    "--accent-rgb": "137,192,205", "--accent": "#89C0CD", "--accent-ink": "#0B2B35",
+    "--glass-rgb": "32,32,32",
+    "--glass": "rgba(32,32,32,.75)", "--glass-strong": "rgba(32,32,32,.75)",
+    "--glass-navigation": "rgba(32,32,32,.45)", "--glass-action": "rgba(32,32,32,.22)",
+    "--glass-accent": "rgba(137,192,205,.22)",
+    "--plane-edge": "rgba(255,255,255,.18)", "--plane-rim": "rgba(255,255,255,.38)",
+    "--plane-shadow": "rgba(0,0,0,.24)",
+    "--glass-edge": "rgba(255,255,255,.38)", "--glass-edge-2": "rgba(255,255,255,.18)",
+    "--glass-shadow": "0 5px 15px -12px rgba(0,0,0,.24)",
+    "--ctl-shadow": "0 2px 6px -5px rgba(0,0,0,.24)",
+    "--graphic-shadow": "0 9px 20px -15px rgba(0,0,0,.24)",
+    "--spec": "rgba(255,255,255,.38)", "--inset-bg": "rgba(255,255,255,.05)",
+    "--head-glass": "rgba(32,32,32,.82)",
+    "--gloss-rim": "rgba(255,255,255,.62)", "--gloss-low": "rgba(255,255,255,.14)",
+    "--gloss-contact": "rgba(0,0,0,.27)", "--gloss-sheen": "rgba(255,255,255,.22)",
     "--ok": "#7FB59E", "--warn": "#EC9A50", "--bad": "#E67274",
     "--warm": "#DE9074", "--cool": "#8AA8C2",
 }
@@ -102,18 +126,26 @@ AQUA_TEXT_HEX = ("#6EB4C4", "#59A1B0", "#4F97A8", "#E3F3F7", "#C0E3EC", "#33778D
                  "#12333C", "#1F4C58", "#A6D8E5")
 # 면을 아쿠아로 칠해도 되는 자리
 AQUA_FILL_ALLOW = (
-    "gem", "x-btn", "x-tgl", "x-scan", "x-loader", "bar", "selected", "flag",
+    "gem", "x-tgl", "x-scan", "x-loader", "bar", "selected", "flag",
     "indicator", "gauge", "fill", '[aria-pressed="true"]', ".on", ".active", ".cur", "aria-current",
 )
 # --ink-3 는 비활성·플레이스홀더·장식 전용
 INK3_ALLOW = (":disabled", "::placeholder", "[aria-disabled", "placeholder", "disabled")
 # 13px 바닥의 예외 — 라벨·태그 계열은 11px 까지
 LABEL_HINTS = ("tag", "label", "eyebrow", "anchor", "badge", "bdg", "group",
-               "techpart", "part-label", "x-eyebrow")
+               "techpart", "part-label", "x-eyebrow", "caption", "meta", "kbd")
 # 무한 반복이 허용된 keyframes
-INFINITE_OK = ("tactile-sweep", "tactile-loader")
-# raw-color 를 면제받는 파일(팔레트와 재질 원본)
-RAW_COLOR_EXEMPT_FILES = ("tokens.css", "light.css", "tactile.css")
+INFINITE_OK = (
+    "tactile-sweep", "tactile-loader",
+    "collect-left", "collect-right", "collect-front",
+    "review-focus", "review-mark", "review-status",
+    "update-in", "update-old", "update-new",
+    "hero-back", "hero-mid", "hero-front", "cg-breathe",
+)
+# raw-color 를 면제받는 파일(팔레트·재질·그래픽 원본)
+RAW_COLOR_EXEMPT_FILES = ("tokens.css", "light.css", "tactile.css", "graphics.css", "catalog-public.css")
+# 13px 바닥은 제품 면(light/workspace/master-doc/catalog.css). 그래픽·공개 쇼케이스는 시안 스케일.
+TEXT_FLOOR_EXEMPT_FILES = ("graphics.css", "catalog-public.css")
 
 TEXT_FLOOR_PX = 13.0
 LABEL_FLOOR_PX = 11.0
@@ -134,7 +166,7 @@ RE_FONT_LINK = re.compile(
     r"maru-buri|hangeul\.(?:pstatic|naver)\.net|IBM\+Plex|IBM Plex|JetBrains(\+| )Mono",
     re.I,
 )
-RE_STAR_NONE = re.compile(r"\*\s*\{[^}]*(?:transition|animation)\s*:\s*none", re.I | re.S)
+RE_STAR_NONE = re.compile(r"(?:^|\}|,)\s*\*\s*\{[^}]*(?:transition|animation)\s*:\s*none", re.I | re.S)
 RE_LINK_TOKENS = re.compile(r"""<link[^>]+href\s*=\s*["'][^"']*\btokens\.css""", re.I)
 RE_LINK_LIGHT = re.compile(r"""<link[^>]+href\s*=\s*["'][^"']*\blight\.css""", re.I)
 RE_INLINE_TOKEN_ROOT = re.compile(r":root\s*\{[^}]*--canvas\s*:", re.I)
@@ -484,7 +516,7 @@ def scan_aqua(path: str, raw: str, is_html: bool, fill_allow: list[str] | None =
                 out.append(Finding(
                     path, line_of(css, idx), "aqua-text",
                     f"color:{hit} — {short(enclosing_selector(css, idx))}. "
-                    "글자 아쿠아는 --aqua-deep(라이트 5.82:1) 과 원석 위 --aqua-ink 만"))
+                    "글자 아쿠아는 --aqua-deep(라이트 5.61:1) 과 --aqua-ink 만"))
         if prop in ("background", "background-color", "background-image"):
             hit = next((v for v in ("--aqua", "--aqua-hi", "--aqua-mid", "--aqua-100",
                                     "--aqua-tint", "--aqua-shade", "--aqua-deep")
@@ -499,7 +531,98 @@ def scan_aqua(path: str, raw: str, is_html: bool, fill_allow: list[str] | None =
             out.append(Finding(
                 path, line_of(css, idx), "aqua-fill",
                 f"아쿠아 면 칠 {hit} — {short(sel)}. "
-                "면은 원석(.gem/.x-btn)·선택 하나·인디케이터·게이지·스캔선에만"))
+                "면은 선택(.gem/.selected)·토글·인디케이터·게이지·스캔선에만. "
+                "주 액션 채움·큰 배경·푸터·카드 면 금지"))
+    return out
+
+
+def is_primary_action_sel(sel: str) -> bool:
+    """주 액션 셀렉터인가. :not(.x-btn--ghost) 는 주 액션으로 본다."""
+    cleaned = re.sub(r":not\([^)]*\)", "", sel)
+    if ".gem-ctl" in cleaned or ".btn-primary" in cleaned:
+        return True
+    if ".x-btn" in cleaned and ".x-btn--ghost" not in cleaned and ".x-btn--text" not in cleaned:
+        return True
+    return False
+
+
+ACTION_FILL_VARS = (
+    "--aqua", "--aqua-hi", "--aqua-mid", "--aqua-100", "--aqua-tint",
+    "--aqua-shade", "--aqua-deep", "--accent", "--accent-rgb", "--glass-accent",
+)
+
+
+def scan_action_fill(path: str, raw: str, is_html: bool, fill_allow: list[str] | None = None) -> list[Finding]:
+    """넓은 주 액션 채움은 검정(--surface-inverse). 아쿠아/accent 면은 실패."""
+    css = css_of(raw, is_html)
+    out: list[Finding] = []
+    allow = list(fill_allow or [])
+    for prop, value, idx in iter_declarations(css):
+        if prop not in ("background", "background-color", "background-image"):
+            continue
+        sel = enclosing_selector(css, idx)
+        if not is_primary_action_sel(sel):
+            continue
+        if any(a in sel for a in allow):
+            continue
+        low = value.lower()
+        hit = next((v for v in ACTION_FILL_VARS
+                    if re.search(r"var\(\s*" + re.escape(v) + r"\s*\)", low)), None)
+        if not hit:
+            hit = next((h for h in AQUA_TEXT_HEX if h.lower() in low), None)
+        if not hit:
+            continue
+        out.append(Finding(
+            path, line_of(css, idx), "action-fill",
+            f"{prop}:{hit} — {short(sel)}. "
+            "주 액션 채움은 --surface-inverse, 글자는 --ink-inverse. 아쿠아는 선택·토글·포커스만"))
+    return out
+
+
+def _css_block_end(css: str, body_start: int) -> int:
+    depth = 1
+    i = body_start
+    while i < len(css) and depth:
+        if css[i] == "{":
+            depth += 1
+        elif css[i] == "}":
+            depth -= 1
+        i += 1
+    return i - 1
+
+
+def scan_primary_fallback(path: str, raw: str, is_html: bool) -> list[Finding]:
+    """prefers-reduced-transparency 가 주 액션을 --solid 로 덮으면 검정/흰 글자를 다시 지정해야 한다."""
+    if os.path.basename(path).lower() != "light.css":
+        return []
+    css = css_of(raw, is_html)
+    out: list[Finding] = []
+    for m in re.finditer(r"@media\s*\(\s*prefers-reduced-transparency\s*:\s*reduce\s*\)\s*\{", css, re.I):
+        body = css[m.end():_css_block_end(css, m.end())]
+        if not re.search(r"\.gem-ctl|\.x-btn|\.btn-primary", body):
+            continue
+        if "var(--solid)" not in body.replace(" ", ""):
+            continue
+        restore = list(re.finditer(
+            r"\{[^{}]*background-color\s*:\s*var\(\s*--surface-inverse\s*\)[^{}]*color\s*:\s*var\(\s*--ink-inverse\s*\)[^{}]*\}"
+            r"|\{[^{}]*color\s*:\s*var\(\s*--ink-inverse\s*\)[^{}]*background-color\s*:\s*var\(\s*--surface-inverse\s*\)[^{}]*\}",
+            body, re.I))
+        solid_hits = list(re.finditer(r"background-color\s*:\s*var\(\s*--solid\s*\)", body, re.I))
+        if not restore:
+            out.append(Finding(path, line_of(css, m.start()), "primary-fallback",
+                               "prefers-reduced-transparency 가 .x-btn/.gem-ctl 을 --solid 로 덮고 "
+                               "주 액션 --surface-inverse/--ink-inverse 재지정이 없다"))
+            continue
+        last_solid = solid_hits[-1].start() if solid_hits else -1
+        if restore[-1].start() < last_solid:
+            out.append(Finding(path, line_of(css, m.start()), "primary-fallback",
+                               "주 액션 검정 재지정이 --solid 덮개보다 앞에 있다"))
+        else:
+            rsel = body[:restore[-1].start()]
+            last_rule_sel = rsel[rsel.rfind("}"):] if "}" in rsel else rsel
+            if ".gem-ctl" not in last_rule_sel and ".btn-primary" not in last_rule_sel:
+                out.append(Finding(path, line_of(css, m.start()), "primary-fallback",
+                                   "검정 재지정 셀렉터에 주 액션(.gem-ctl/.btn-primary)이 없다"))
     return out
 
 
@@ -518,7 +641,7 @@ def scan_ink3(path: str, raw: str, is_html: bool, allow: list[str] | None = None
         out.append(Finding(
             path, line_of(css, idx), "ink3-text",
             f"{prop}:var(--ink-3) — {short(sel)}. "
-            "--ink-3 는 캔버스 대비 2.31:1 이라 비활성·플레이스홀더·장식 전용. 읽는 글자는 --ink-2 까지"))
+            "--ink-3 는 캔버스 대비 2.35:1 이라 비활성·플레이스홀더·장식 전용. 읽는 글자는 --ink-2 까지"))
     return out
 
 
@@ -698,6 +821,8 @@ def scan_motion(path: str, raw: str, is_html: bool) -> list[Finding]:
 
 
 def scan_text_floor(path: str, raw: str, is_html: bool, allow: list[str]) -> list[Finding]:
+    if os.path.basename(path).lower() in TEXT_FLOOR_EXEMPT_FILES:
+        return []
     css = css_of(raw, is_html)
     out: list[Finding] = []
     for prop, value, idx in iter_declarations(css):
@@ -841,24 +966,29 @@ def contrast_ratio(a: str, b: str) -> float:
 
 
 CONTRAST_PAIRS = [
-    ("--ink", "#0C1114", "--canvas", "#F5F5F5", 4.5, "라이트 본문"),
-    ("--ink-2", "#5E6A6E", "--canvas", "#F5F5F5", 4.5, "라이트 보조 텍스트"),
-    ("--aqua-deep", "#2E6774", "--canvas", "#F5F5F5", 4.5, "라이트 글자 아쿠아 / 캔버스"),
-    ("--aqua-deep", "#2E6774", "--ground-hi", "#FFFFFF", 4.5, "라이트 글자 아쿠아 / 흰 면"),
-    ("--aqua-ink", "#1B4650", "--aqua-hi", "#92CCDC", 4.5, "원석 글자 / 밝은 아쿠아"),
-    ("--aqua-ink", "#1B4650", "--aqua", "#6EB4C4", 3.0, "원석 글자 / 아쿠아"),
-    ("--ink(다크)", "#F2F5F5", "--canvas(다크)", "#0B0F11", 4.5, "다크 본문"),
-    ("--ink-2(다크)", "#98A4A7", "--canvas(다크)", "#0B0F11", 4.5, "다크 보조 텍스트"),
-    ("--aqua-deep(다크)", "#92CCDC", "--canvas(다크)", "#0B0F11", 4.5, "다크 글자 아쿠아"),
-    ("--aqua-ink(다크)", "#10303A", "--aqua-hi(다크)", "#A6D8E5", 4.5, "다크 원석 글자"),
+    ("--ink", "#111111", "--canvas", "#F7F7F7", 4.5, "라이트 본문"),
+    ("--ink-2", "#555555", "--canvas", "#F7F7F7", 4.5, "라이트 보조 텍스트"),
+    ("--aqua-deep", "#2E6B79", "--canvas", "#F7F7F7", 4.5, "라이트 글자 아쿠아 / 캔버스"),
+    ("--aqua-deep", "#2E6B79", "--ground-hi", "#FFFFFF", 4.5, "라이트 글자 아쿠아 / 흰 면"),
+    ("--aqua-ink", "#1B4650", "--aqua-hi", "#92CCDC", 4.5, "짙은 물빛 글자 / 밝은 아쿠아"),
+    ("--aqua-ink", "#1B4650", "--aqua", "#6EB4C4", 3.0, "짙은 물빛 글자 / 아쿠아"),
+    ("--ink(다크)", "#F5F5F5", "--canvas(다크)", "#141414", 4.5, "다크 본문"),
+    ("--ink-2(다크)", "#BBBBBB", "--canvas(다크)", "#141414", 4.5, "다크 보조 텍스트"),
+    ("--aqua-deep(다크)", "#A7DCE6", "--canvas(다크)", "#141414", 4.5, "다크 글자 아쿠아"),
+    ("--aqua-ink(다크)", "#10303A", "--aqua-hi(다크)", "#A6D8E5", 4.5, "다크 짙은 물빛 글자"),
+    ("--ink-inverse", "#FFFFFF", "--surface-inverse", "#000000", 4.5, "역상 본문"),
+    ("--ink-inverse-2", "#C4C4C4", "--surface-inverse", "#000000", 4.5, "역상 보조"),
+    ("--ink-inverse", "#FFFFFF", "--surface-inverse-card", "#151515", 4.5, "역상 카드 본문"),
 ]
 
 # 실패시키지 않고 기록만 남기는 쌍(보고서용 고정값)
 CONTRAST_RECORD = [
-    ("--aqua-ink on --aqua", "#1B4650", "#6EB4C4", 4.41, "원석 버튼 글자"),
-    ("--aqua-ink on --aqua-mid", "#1B4650", "#59A1B0", 3.51, "원석 그라디언트 끝 — 15px 600 이상에서만"),
-    ("--ink-3 on --canvas", "#9AA5A8", "#F5F5F5", 2.31, "비활성·플레이스홀더 전용 — 읽는 글자 금지"),
-    ("--aqua outline on --canvas", "#6EB4C4", "#F5F5F5", 2.14, "포커스 링 — 비텍스트 3:1 미달, 2px+오프셋 3px 로 보완"),
+    ("--aqua-ink on --aqua", "#1B4650", "#6EB4C4", 4.41, "잔여 토큰 — 주 액션 아님"),
+    ("--aqua-ink on --aqua-mid", "#1B4650", "#59A1B0", 3.51, "잔여 토큰 — 주 액션 아님"),
+    ("--ink-3 on --canvas", "#888888", "#F7F7F7", 3.31, "비활성·플레이스홀더 전용 — 읽는 글자 금지"),
+    ("--aqua-deep outline on --canvas", "#2E6B79", "#F7F7F7", 5.61, "포커스 링 — 비텍스트 3:1 충족"),
+    ("--aqua on --canvas", "#6EB4C4", "#F7F7F7", 2.18, "잔여 토큰 — 포커스 링이 아님"),
+    ("--ink on --accent (dark)", "#F5F5F5", "#89C0CD", 1.84, "잔여 토큰 — 주 액션이 아님"),
 ]
 
 
@@ -985,6 +1115,9 @@ def scan_file(rel: str, raw: str, cfg: dict, known: set[str]) -> tuple[list[Find
     f += scan_neumorphic(rel, raw, is_html)
     f += scan_aqua(rel, raw, is_html,
                    list(cfg.get("aqua_fill_allow", [])) + list(cfg.get("tint_fill_allow", [])))
+    f += scan_action_fill(rel, raw, is_html,
+                          list(cfg.get("aqua_fill_allow", [])) + list(cfg.get("action_fill_allow", [])))
+    f += scan_primary_fallback(rel, raw, is_html)
     f += scan_ink3(rel, raw, is_html, list(cfg.get("ink3_allow", [])))
     f += scan_raw_color(rel, raw, is_html, list(cfg.get("raw_color_allow", [])))
     f += scan_font(rel, raw, is_html)
@@ -1056,8 +1189,8 @@ def run(root: str, cfg: dict, verbose: bool = False) -> list[Finding]:
 # ─────────────────────────────────────────────────────────────────────────────
 # 셀프테스트
 # ─────────────────────────────────────────────────────────────────────────────
-ANCHOR = "--canvas:#F5F5F5;--ink:#0C1114;"
-DARK_ANCHOR = "--canvas:#0B0F11;--ink:#F2F5F5;"
+ANCHOR = "--canvas:#F7F7F7;--ink:#111111;"
+DARK_ANCHOR = "--canvas:#141414;--ink:#F5F5F5;"
 TOKENS_DARK_OK = (
     '@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){' + DARK_ANCHOR + "}}"
     ':root[data-theme="dark"]{' + DARK_ANCHOR + "}"
@@ -1098,22 +1231,25 @@ SELFTEST_BAD = [
     ("u.css", ".hint{color:var(--ink-3)}", "ink3-text"),
     ("v.css", ".a{color:var(--x-ink)}", "undefined-var"),
     ("tokens.css", TOKENS_DARK_BAD, "dark-parity"),
+    ("w.css", ".gem-ctl{background:var(--aqua)}", "action-fill"),
+    ("w2.css", ".btn-primary{background:var(--accent)}", "action-fill"),
+    ("light.css", "@media (prefers-reduced-transparency:reduce){.x-btn,.gem-ctl{background-color:var(--solid);color:var(--ink-inverse)}}", "primary-fallback"),
 ]
 
 SELFTEST_OK = [
     ("p01.css", ".glass{box-shadow:inset 1px 1px 0 var(--glass-edge),var(--glass-shadow);}"),
     ("p02.css", ".x-well{box-shadow:inset 1px 1px 0 var(--glass-edge),inset 0 0 0 1px var(--rule),0 10px 30px -18px rgba(12,17,20,.5)}"),
-    ("p03.css", ".gem-ctl{color:var(--aqua-ink)}"),
+    ("p03.css", ".gem-ctl{color:var(--ink-inverse)}"),
     ("p04.css", ".x-lnk{color:var(--aqua-deep)}"),
-    ("p05.css", ".gem-ctl{background:linear-gradient(135deg,var(--aqua-hi),var(--aqua) 55%,var(--aqua-mid))}"),
+    ("p05.css", ".gem-ctl{background:var(--surface-inverse);color:var(--ink-inverse)}"),
     ("p06.css", ".x-tgl.on{background:var(--aqua-mid)}"),
     ("p07.html", "<p>제르코닉스 디자인 시스템 / TACTILE</p>"),
     ("p08.css", ".x-scan{transition:transform var(--t-hover) linear,opacity var(--t-hover) var(--ease-out)}"),
     ("p09.css", ".tag{font-size:var(--fs-label)}"),
     ("p10.css", ".x-mono{font-family:var(--font);font-size:var(--fs-caption)}"),
-    ("p11.css", ":root{" + ANCHOR + "--aqua-deep:#2E6774;}"),
-    ("p12.css", ':root[data-theme="dark"]{' + DARK_ANCHOR + "--aqua-deep:#92CCDC;}"),
-    ("p13.css", '@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){' + DARK_ANCHOR + "--aqua-deep:#92CCDC;}}"),
+    ("p11.css", ":root{" + ANCHOR + "--aqua-deep:#2E6B79;}"),
+    ("p12.css", ':root[data-theme="dark"]{' + DARK_ANCHOR + "--aqua-deep:#A7DCE6;}"),
+    ("p13.css", '@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){' + DARK_ANCHOR + "--aqua-deep:#A7DCE6;}}"),
     ("p14.css", ".gem-ctl:hover{transform:translateY(-1px)}"),
     ("p15.css", ".gem::after{animation:tactile-sweep 7s var(--ease-sweep) infinite}"),
     ("p16.css", ".x-loader::after{animation:tactile-loader 1.4s var(--ease-sweep) infinite}"),
@@ -1124,7 +1260,7 @@ SELFTEST_OK = [
     ("p21.css", "input::placeholder{color:var(--ink-3)}"),
     ("p22.css", '.x-btn[aria-disabled="true"]{color:var(--ink-3)}'),
     ("p23.css", ".tag.flag{color:var(--aqua-deep);border-color:color-mix(in srgb,var(--aqua) 50%,transparent);background:color-mix(in srgb,var(--aqua-tint) 45%,transparent)}"),
-    ("p24.css", ".x-btn{border:1px solid color-mix(in srgb,var(--aqua-hi) 70%,white)}"),
+    ("p24.css", ".x-btn{border:1px solid var(--surface-inverse)}"),
     ("p25.css", ".x-btn:active{transform:none}"),
     ("p26.css", "@media(forced-colors:active){.x-btn{border:1px solid ButtonText}:focus-visible{outline-color:Highlight}.x-loader::after{background:Highlight}}"),
     ("p27.css", ".x-lnk::after{background:currentColor}"),
@@ -1150,6 +1286,8 @@ def selftest() -> int:
                 + scan_light_source(name, src, is_html)
                 + scan_neumorphic(name, src, is_html)
                 + scan_aqua(name, src, is_html)
+                + scan_action_fill(name, src, is_html)
+                + scan_primary_fallback(name, src, is_html)
                 + scan_ink3(name, src, is_html)
                 + scan_raw_color(name, src, is_html)
                 + scan_font(name, src, is_html)
@@ -1252,10 +1390,10 @@ def main() -> int:
     print(f"TACTILE 게이트 · 기대 {cfg['expect_version']} · 루트 {os.path.basename(os.path.abspath(root))}")
     findings = run(root, cfg, args.verbose)
     if findings:
-        print(f"\n실패 {len(findings)}건 — TACTILE 정본({EXPECT_VERSION}) 이탈:")
+        print(f"\n실패 {len(findings)}건 — TACTILE 계약({EXPECT_VERSION}) 이탈:")
         for f in findings:
             print(f"  {f}")
-        print("\n정본: tokens.css · 계약: TACTILE.md")
+        print("\n값: tokens.css · 계약: TACTILE.md")
         return 1
     print("통과 — TACTILE 파리티 이상 없음")
     return 0

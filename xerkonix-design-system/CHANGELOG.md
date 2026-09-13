@@ -1,3 +1,13 @@
+## 4.3.0 — TACTILE v4.2.0 무채색 베이스 · 검정 primary CTA
+
+패키지 마이너. 계약 헤더 v4.2.0.
+
+- 캔버스/잉크/글래스 비강조 층을 무채색 hex에 맞춤. 아쿠아 스케일은 유지.
+- 역상 역할 `surfaceInverse` / `inkInverse` / `inkInverse2` / `surfaceInverseCard` / `ruleInverse`.
+- 주 액션(`XkButton.primary`, ColorScheme.primary, elevated)은 검정 역상 + 흰 글자. 아쿠아 면 채움 제거.
+- 포커스 링은 `--aqua-deep`(라이트 5.61 / 다크 12.30). 스위치·체크 켜짐 채움은 `--aqua-mid` 유지.
+- `themed()` 는 역상 Color 값으로 정체성을 추론하지 않음. `--head-glass .82`, `--gloss-inverse`. 읽기 글래스 `.75` 유지. tertiary 는 cool.
+
 ## 4.2.0 — TACTILE v4.1.0 얇은 평면 유리
 
 시안 이름은 v8. 토큰 헤더 v4.1.0에 맞춘 패키지 마이너.

@@ -9,7 +9,7 @@ import 'dart:ui';
 class XkColor {
   XkColor._();
 
-  // --- Light (tokens.css :root, TACTILE v4.2.0) ---
+  // --- Light (tokens.css :root, TACTILE v4.3.0) ---
   static const Color canvas = Color(0xFFF7F7F7);
   static const Color groundHi = Color(0xFFFFFFFF);
   static const Color solid = Color(0xFFFFFFFF);
@@ -32,7 +32,7 @@ class XkColor {
 
   static const Color glass = Color(0xBFFFFFFF); // rgba(255,255,255,.75)
   static const Color glassStrong = Color(0xBFFFFFFF);
-  static const Color glassNavigation = Color(0x73FFFFFF); // .45
+  static const Color glassNavigation = Color(0xD1FFFFFF); // .82
   static const Color glassAction = Color(0x38FFFFFF); // .22
   static const Color glassAccent = Color(0x38B1DAE1);
   static const Color planeEdge = Color(0x1F000000); // rgba(0,0,0,.12)
@@ -43,10 +43,10 @@ class XkColor {
   static const Color spec = Color(0xD1FFFFFF);
   static const Color insetBg = Color(0x09000000); // rgba(0,0,0,.035)
   static const Color headGlass = Color(0xD1FFFFFF); // rgba(255,255,255,.82)
-  static const Color glossSheen = Color(0xA6FFFFFF);
-  static const Color glossRim = Color(0xF5FFFFFF);
-  static const Color glossLow = Color(0x1F000000);
-  static const Color glossContact = Color(0x1A000000);
+  static const Color glossSheen = Color(0x47FFFFFF); // rgba(255,255,255,.28)
+  static const Color glossRim = Color(0x47FFFFFF); // rgba(255,255,255,.28)
+  static const Color glossLow = Color(0x00FFFFFF); // rgba(255,255,255,0)
+  static const Color glossContact = Color(0x0F000000); // rgba(0,0,0,.06)
   /// Inverse-surface sheen. Theme-invariant (`:root` only).
   static const Color glossInverse = Color(0x1FFFFFFF); // rgba(255,255,255,.12)
 
@@ -69,8 +69,8 @@ class XkColor {
   /// Fully transparent — token-file home for overlays that need no fill.
   static const Color none = Color(0x00000000);
 
-  static const Color glassShadowNear = Color(0x1F000000);
-  static const Color glassShadowFar = Color(0x1F000000);
+  static const Color glassShadowNear = Color(0x14000000); // --glass-shadow .08
+  static const Color glassShadowFar = Color(0x14000000);
 
   // --- Dark (tokens.css :root[data-theme="dark"]) ---
   static const Color darkCanvas = Color(0xFF141414);
@@ -95,7 +95,7 @@ class XkColor {
 
   static const Color darkGlass = Color(0xBF202020); // rgba(32,32,32,.75)
   static const Color darkGlassStrong = Color(0xBF202020);
-  static const Color darkGlassNavigation = Color(0x73202020);
+  static const Color darkGlassNavigation = Color(0xD1202020); // .82
   static const Color darkGlassAction = Color(0x38202020);
   static const Color darkGlassAccent = Color(0x3889C0CD);
   static const Color darkPlaneEdge = Color(0x2EFFFFFF);
@@ -106,10 +106,10 @@ class XkColor {
   static const Color darkSpec = Color(0x61FFFFFF);
   static const Color darkInsetBg = Color(0x0DFFFFFF);
   static const Color darkHeadGlass = Color(0xD1202020); // rgba(32,32,32,.82)
-  static const Color darkGlossSheen = Color(0x38FFFFFF);
-  static const Color darkGlossRim = Color(0x9EFFFFFF);
-  static const Color darkGlossLow = Color(0x24FFFFFF);
-  static const Color darkGlossContact = Color(0x45000000);
+  static const Color darkGlossSheen = Color(0x24FFFFFF); // .14
+  static const Color darkGlossRim = Color(0x2EFFFFFF); // .18
+  static const Color darkGlossLow = Color(0x00FFFFFF); // rgba(255,255,255,0)
+  static const Color darkGlossContact = Color(0x33000000); // .2
 
   static const Color darkOk = Color(0xFF7FB59E);
   static const Color darkWarn = Color(0xFFEC9A50);
@@ -117,8 +117,8 @@ class XkColor {
   static const Color darkWarm = Color(0xFFDE9074);
   static const Color darkCool = Color(0xFF8AA8C2);
 
-  static const Color darkGlassShadowNear = Color(0x3D000000);
-  static const Color darkGlassShadowFar = Color(0x3D000000);
+  static const Color darkGlassShadowNear = Color(0x66000000); // --glass-shadow .4
+  static const Color darkGlassShadowFar = Color(0x66000000);
 
   // --- v3 aliases (compile compatibility) ---
   @Deprecated('Use XkColor.canvas')

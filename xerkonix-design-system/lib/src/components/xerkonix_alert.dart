@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../icons/xerkonix_icon.dart';
 import '../palette/color.dart';
 import '../shape/xerkonix_shape.dart';
 import '../typography/xerkonix_typography.dart';
+import 'xerkonix_glass.dart';
 
 enum XkAlertVariant { success, info, warning, danger }
 
@@ -53,11 +55,6 @@ class XkAlert extends StatelessWidget {
     final palette = _resolvePalette(isDark);
     final foreground = textColor ?? palette.foreground;
     final accent = accentColor ?? palette.accent;
-    final bg = backgroundColor ?? palette.background;
-    final resolvedRadius =
-        borderRadius ??
-        XkRadius.cardBorderRadius;
-
     final trailingWidget =
         trailing ??
         (showMetaPrefix
@@ -74,22 +71,26 @@ class XkAlert extends StatelessWidget {
               )
             : null);
 
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        borderRadius: resolvedRadius,
-        color: bg,
-        border: Border.all(color: borderColor ?? palette.border),
-      ),
-      child: Padding(
-        padding: padding,
-        child: Row(
+    return XkGlass(
+      borderRadius: borderRadius,
+      color: backgroundColor,
+      borderColor: borderColor,
+      padding: padding,
+      child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (leading != null) ...[
               leading!,
               const SizedBox(width: XkLayout.spacingSm),
             ] else ...[
-              Icon(Icons.info_outline, size: 18, color: accent),
+              XkIcon(
+                variant == XkAlertVariant.danger ||
+                        variant == XkAlertVariant.warning
+                    ? XkIconName.alert
+                    : XkIconName.info,
+                size: 18,
+                color: accent,
+              ),
               const SizedBox(width: XkLayout.spacingSm),
             ],
             Expanded(
@@ -120,7 +121,6 @@ class XkAlert extends StatelessWidget {
             ],
           ],
         ),
-      ),
     );
   }
 

@@ -71,13 +71,7 @@ class _XkNeumorphicState extends State<XkNeumorphic> {
   Widget build(BuildContext context) {
     final BorderRadius radius =
         widget.borderRadius ?? XkRadius.panelBorderRadius;
-    final XkNeumorphicStyle style =
-        (_pressed &&
-            widget.pressable &&
-            _interactive &&
-            widget.style == XkNeumorphicStyle.raised)
-        ? XkNeumorphicStyle.inset
-        : widget.style;
+    final XkNeumorphicStyle style = widget.style;
 
     final Widget surface = style == XkNeumorphicStyle.inset
         ? XkInset(

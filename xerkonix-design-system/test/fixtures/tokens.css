@@ -1,6 +1,6 @@
-/* XERKONIX TACTILE Design Tokens · v4.2.0 — 2026.09
+/* XERKONIX TACTILE Design Tokens · v4.3.0 — 2026.09
    무채색 베이스 · 얇고 평평한 유리 · 읽기/탐색/행동 역할 · 작은 아쿠아 포인트 · 검정 역상 면.
-   시안 이름은 v8. 이 파일 버전은 값 변경 마이너(v4.1.0 → v4.2.0).
+   시안 이름은 v8. 이 파일 버전은 값 변경 마이너(v4.2.0 → v4.3.0).
    값의 원천은 이 파일만. 시안 HTML의 임시 덮어쓰기 스택을 복제하지 않는다.
    변경 순서: TACTILE.md → 여기 → 미러 재복사 → Flutter 파리티.
    서체 로딩(Pretendard CDN <link> 또는 셀프호스팅 @font-face)은 각 표면의 HTML 이 한다.
@@ -14,20 +14,20 @@
   --aqua-mid:#59A1B0; --aqua-shade:#33778D; --aqua-deep:#2E6B79; --aqua-ink:#1B4650;
   --accent-rgb:177,218,225; --accent:#B1DAE1; --accent-ink:#1C4C58;
   --glass-rgb:255,255,255;
-  --glass-reading-alpha:.75; --glass-reading-blur:36px; --glass-reading-contrast:.85; --glass-reading-saturation:.95;
-  --glass-navigation-alpha:.45; --glass-navigation-blur:20px; --glass-navigation-contrast:.95; --glass-navigation-saturation:1;
+  --glass-reading-alpha:.75; --glass-reading-blur:36px; --glass-reading-contrast:1; --glass-reading-saturation:1;
+  --glass-navigation-alpha:.82; --glass-navigation-blur:20px; --glass-navigation-contrast:1; --glass-navigation-saturation:1;
   --glass-action-alpha:.22; --glass-action-blur:8px; --glass-action-contrast:1.05; --glass-action-saturation:1.05;
   --glass:rgba(255,255,255,.75); --glass-strong:rgba(255,255,255,.75);
-  --glass-navigation:rgba(255,255,255,.45); --glass-action:rgba(255,255,255,.22);
+  --glass-navigation:rgba(255,255,255,.82); --glass-action:rgba(255,255,255,.22);
   --glass-accent:rgba(177,218,225,.22);
   --plane-edge:rgba(0,0,0,.12); --plane-rim:rgba(255,255,255,.82); --plane-shadow:rgba(0,0,0,.12);
   --glass-edge:rgba(255,255,255,.82); --glass-edge-2:rgba(0,0,0,.12);
-  --glass-shadow:0 5px 15px -12px rgba(0,0,0,.12);
-  --ctl-shadow:0 2px 6px -5px rgba(0,0,0,.12);
-  --graphic-shadow:0 9px 20px -15px rgba(0,0,0,.12);
+  --glass-shadow:0 8px 24px rgba(0,0,0,.08);
+  --ctl-shadow:0 2px 8px rgba(0,0,0,.06);
+  --graphic-shadow:0 10px 28px rgba(0,0,0,.08);
   --spec:rgba(255,255,255,.82); --inset-bg:rgba(0,0,0,.035); --head-glass:rgba(255,255,255,.82);
-  --gloss-rim:rgba(255,255,255,.96); --gloss-low:rgba(0,0,0,.12);
-  --gloss-contact:rgba(0,0,0,.1); --gloss-sheen:rgba(255,255,255,.65);
+  --gloss-rim:rgba(255,255,255,.28); --gloss-low:rgba(255,255,255,0);
+  --gloss-contact:rgba(0,0,0,.06); --gloss-sheen:rgba(255,255,255,.28);
   --gloss-inverse:rgba(255,255,255,.12);
   --surface-inverse:#000000; --ink-inverse:#FFFFFF; --ink-inverse-2:#C4C4C4;
   --surface-inverse-card:#151515; --rule-inverse:#333333;
@@ -53,16 +53,16 @@
     --accent-rgb:137,192,205; --accent:#89C0CD; --accent-ink:#0B2B35;
     --glass-rgb:32,32,32;
     --glass:rgba(32,32,32,.75); --glass-strong:rgba(32,32,32,.75);
-    --glass-navigation:rgba(32,32,32,.45); --glass-action:rgba(32,32,32,.22);
+    --glass-navigation:rgba(32,32,32,.82); --glass-action:rgba(32,32,32,.22);
     --glass-accent:rgba(137,192,205,.22);
     --plane-edge:rgba(255,255,255,.18); --plane-rim:rgba(255,255,255,.38); --plane-shadow:rgba(0,0,0,.24);
     --glass-edge:rgba(255,255,255,.38); --glass-edge-2:rgba(255,255,255,.18);
-    --glass-shadow:0 5px 15px -12px rgba(0,0,0,.24);
-    --ctl-shadow:0 2px 6px -5px rgba(0,0,0,.24);
-    --graphic-shadow:0 9px 20px -15px rgba(0,0,0,.24);
+    --glass-shadow:0 8px 28px rgba(0,0,0,.4);
+    --ctl-shadow:0 2px 10px rgba(0,0,0,.35);
+    --graphic-shadow:0 10px 28px rgba(0,0,0,.4);
     --spec:rgba(255,255,255,.38); --inset-bg:rgba(255,255,255,.05); --head-glass:rgba(32,32,32,.82);
-    --gloss-rim:rgba(255,255,255,.62); --gloss-low:rgba(255,255,255,.14);
-    --gloss-contact:rgba(0,0,0,.27); --gloss-sheen:rgba(255,255,255,.22);
+    --gloss-rim:rgba(255,255,255,.18); --gloss-low:rgba(255,255,255,0);
+    --gloss-contact:rgba(0,0,0,.2); --gloss-sheen:rgba(255,255,255,.14);
     --ok:#7FB59E; --warn:#EC9A50; --bad:#E67274; --warm:#DE9074; --cool:#8AA8C2;
   }
 }
@@ -74,15 +74,15 @@
   --accent-rgb:137,192,205; --accent:#89C0CD; --accent-ink:#0B2B35;
   --glass-rgb:32,32,32;
   --glass:rgba(32,32,32,.75); --glass-strong:rgba(32,32,32,.75);
-  --glass-navigation:rgba(32,32,32,.45); --glass-action:rgba(32,32,32,.22);
+  --glass-navigation:rgba(32,32,32,.82); --glass-action:rgba(32,32,32,.22);
   --glass-accent:rgba(137,192,205,.22);
   --plane-edge:rgba(255,255,255,.18); --plane-rim:rgba(255,255,255,.38); --plane-shadow:rgba(0,0,0,.24);
   --glass-edge:rgba(255,255,255,.38); --glass-edge-2:rgba(255,255,255,.18);
-  --glass-shadow:0 5px 15px -12px rgba(0,0,0,.24);
-  --ctl-shadow:0 2px 6px -5px rgba(0,0,0,.24);
-  --graphic-shadow:0 9px 20px -15px rgba(0,0,0,.24);
+  --glass-shadow:0 8px 28px rgba(0,0,0,.4);
+  --ctl-shadow:0 2px 10px rgba(0,0,0,.35);
+  --graphic-shadow:0 10px 28px rgba(0,0,0,.4);
   --spec:rgba(255,255,255,.38); --inset-bg:rgba(255,255,255,.05); --head-glass:rgba(32,32,32,.82);
-  --gloss-rim:rgba(255,255,255,.62); --gloss-low:rgba(255,255,255,.14);
-  --gloss-contact:rgba(0,0,0,.27); --gloss-sheen:rgba(255,255,255,.22);
+  --gloss-rim:rgba(255,255,255,.18); --gloss-low:rgba(255,255,255,0);
+  --gloss-contact:rgba(0,0,0,.2); --gloss-sheen:rgba(255,255,255,.14);
   --ok:#7FB59E; --warn:#EC9A50; --bad:#E67274; --warm:#DE9074; --cool:#8AA8C2;
 }

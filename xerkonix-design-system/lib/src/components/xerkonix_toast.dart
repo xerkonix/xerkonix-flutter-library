@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../icons/xerkonix_icon.dart';
 import '../palette/color.dart';
 import '../shape/xerkonix_shape.dart';
 
@@ -155,7 +156,7 @@ class _XkToastState extends State<XkToast> with SingleTickerProviderStateMixin {
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           if (err) ...<Widget>[
-                            Icon(Icons.error_outline, size: 18, color: warn),
+                            XkIcon(XkIconName.alert, size: 18, color: warn),
                             const SizedBox(width: 8),
                           ],
                           Flexible(

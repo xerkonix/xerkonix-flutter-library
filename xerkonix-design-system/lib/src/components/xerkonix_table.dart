@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../palette/color.dart';
-import '../shape/xerkonix_shape.dart';
 import '../typography/xerkonix_typography.dart';
+import 'xerkonix_glass.dart';
 
 class XkTableCell {
   const XkTableCell({
@@ -50,21 +50,16 @@ class XkTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final headerBg =
-        headerBackgroundColor ??
-        (isDark ? XkColor.darkInsetBg : XkColor.insetBg);
-    final rowBg =
-        rowBackgroundColor ?? (isDark ? XkColor.darkGroundHi : XkColor.groundHi);
-    final borderColor = isDark ? XkColor.darkRule : XkColor.rule;
+    final headerBg = headerBackgroundColor ?? XkColor.insetBgOf(
+      isDark ? Brightness.dark : Brightness.light,
+    );
+    final rowBg = rowBackgroundColor ?? XkColor.none;
     final headerText = isDark ? XkColor.darkInk : XkColor.ink;
     final rowText = isDark ? XkColor.darkInk : XkColor.ink;
 
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: borderRadius ?? XkRadius.panelBorderRadius,
-        border: Border.all(color: borderColor),
-      ),
-      clipBehavior: Clip.antiAlias,
+    return XkGlass(
+      borderRadius: borderRadius,
+      padding: EdgeInsets.zero,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: DataTable(

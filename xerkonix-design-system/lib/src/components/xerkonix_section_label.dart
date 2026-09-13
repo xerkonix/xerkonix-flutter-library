@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../palette/color.dart';
+import '../typography/xerkonix_typography.dart';
 
 /// An uppercased, tracked-out section header with an optional [trailing] widget.
 /// Covers the product `SectionLabel`.
@@ -21,14 +22,11 @@ class XkSectionLabel extends StatelessWidget {
           Expanded(
             child: Text(
               title.toUpperCase(),
-              style:
-                  (Theme.of(context).textTheme.bodySmall ?? const TextStyle())
-                      .copyWith(
-                        letterSpacing: 0.12,
-                        fontSize: 11,
-                        color: color,
-                        fontWeight: FontWeight.w500,
-                      ),
+              style: XkTypo.hint.copyWith(
+                letterSpacing: 0.12,
+                color: color,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
           ?trailing,

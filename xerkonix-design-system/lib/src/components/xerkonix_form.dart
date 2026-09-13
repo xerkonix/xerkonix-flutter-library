@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../icons/xerkonix_icon.dart';
 import '../palette/color.dart';
 import '../shape/xerkonix_shape.dart';
 import '../typography/xerkonix_typography.dart';
+import 'xerkonix_glass.dart';
 
 
 class XkSelectOption<T> {
@@ -153,6 +155,13 @@ class XkSelectField<T> extends StatelessWidget {
         child: DropdownButtonFormField<T>(
           key: ValueKey<T?>(value),
           initialValue: value,
+          isExpanded: true,
+          icon: XkIcon(
+            XkIconName.chevDown,
+            size: 16,
+            color: XkColor.ink3Of(Theme.of(context).brightness),
+          ),
+          iconSize: 16,
           items: options
               .map(
                 (option) => DropdownMenuItem<T>(
@@ -178,8 +187,7 @@ class XkSelectField<T> extends StatelessWidget {
   }
 }
 
-/// A sunken (inset) field surround: a recessed fill with an inner shadow so the
-/// input reads as pressed into the canvas, matching the TACTILE elevation model.
+/// Action-role glass surround (`--glass-action`). Not an inset groove.
 class _InsetWell extends StatelessWidget {
   const _InsetWell({
     required this.child,
@@ -193,18 +201,13 @@ class _InsetWell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isDark = Theme.of(context).brightness == Brightness.dark;
-    final Color fill = isDark ? XkColor.darkGlass : XkColor.glass;
-    final Color hairline = isDark ? XkColor.darkRule : XkColor.rule;
     return Opacity(
       opacity: enabled ? 1.0 : 0.6,
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: fill,
-          borderRadius: radius,
-          border: Border.all(color: hairline),
-        ),
-        child: ClipRRect(borderRadius: radius, child: child),
+      child: XkGlass(
+        role: XkGlassRole.action,
+        borderRadius: radius,
+        padding: EdgeInsets.zero,
+        child: child,
       ),
     );
   }

@@ -1,7 +1,3 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:xerkonix_design_system/xerkonix_design_system.dart';
 
@@ -13,11 +9,19 @@ class TACTILEExampleApp extends StatefulWidget {
   const TACTILEExampleApp({super.key});
 
   @override
-  State<TACTILEExampleApp> createState() => _TACTILEExampleAppState();
+  State<TACTILEExampleApp> createState() => TACTILEExampleAppState();
 }
 
-class _TACTILEExampleAppState extends State<TACTILEExampleApp> {
-  bool _isDark = WidgetsBinding.instance.platformDispatcher.platformBrightness == Brightness.dark;
+class TACTILEExampleAppState extends State<TACTILEExampleApp> {
+  bool _isDark = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (Uri.base.fragment.contains('dark')) {
+      _isDark = true;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,16 +31,42 @@ class _TACTILEExampleAppState extends State<TACTILEExampleApp> {
       theme: XkLightTheme.themeData,
       darkTheme: XkDarkTheme.themeData,
       themeMode: _isDark ? ThemeMode.dark : ThemeMode.light,
-      home: TACTILEShowcasePage(
-        isDark: _isDark,
-        onThemeChanged: (value) => setState(() => _isDark = value),
-      ),
+      initialRoute: '/',
+      routes: <String, WidgetBuilder>{
+        '/': (BuildContext _) => ComponentMatrixPage(
+          isDark: _isDark,
+          onThemeChanged: (bool value) => setState(() => _isDark = value),
+        ),
+        '/dark': (BuildContext _) => ComponentMatrixPage(
+          isDark: true,
+          onThemeChanged: (bool value) => setState(() => _isDark = value),
+        ),
+        '/states': (BuildContext _) => StatesPage(
+          isDark: _isDark,
+          onThemeChanged: (bool value) => setState(() => _isDark = value),
+        ),
+        '/states-toast': (BuildContext _) => StatesPage(
+          isDark: _isDark,
+          onThemeChanged: (bool value) => setState(() => _isDark = value),
+          auto: StatesAuto.toast,
+        ),
+        '/states-dialog': (BuildContext _) => StatesPage(
+          isDark: _isDark,
+          onThemeChanged: (bool value) => setState(() => _isDark = value),
+          auto: StatesAuto.dialog,
+        ),
+        '/states-loading': (BuildContext _) => StatesPage(
+          isDark: _isDark,
+          onThemeChanged: (bool value) => setState(() => _isDark = value),
+          auto: StatesAuto.loading,
+        ),
+      },
     );
   }
 }
 
-class TACTILEShowcasePage extends StatefulWidget {
-  const TACTILEShowcasePage({
+class ComponentMatrixPage extends StatefulWidget {
+  const ComponentMatrixPage({
     super.key,
     required this.isDark,
     required this.onThemeChanged,
@@ -46,985 +76,626 @@ class TACTILEShowcasePage extends StatefulWidget {
   final ValueChanged<bool> onThemeChanged;
 
   @override
-  State<TACTILEShowcasePage> createState() => _TACTILEShowcasePageState();
+  State<ComponentMatrixPage> createState() => ComponentMatrixPageState();
 }
 
-class _TACTILEShowcasePageState extends State<TACTILEShowcasePage> {
-  final _companyController = TextEditingController();
-  final _briefController = TextEditingController();
-  String _selectedDomain = '수집 · Collect';
+class ComponentMatrixPageState extends State<ComponentMatrixPage> {
+  final TextEditingController _search = TextEditingController(text: '검색어를 입력하세요');
+  int _nav = 0;
+  int _tab = 0;
+  bool _on = true;
+  String _domain = '수집';
 
   @override
   void initState() {
     super.initState();
-    _companyController.text = '주식회사 제르코닉스';
-    _briefController.text = '핵심 의사결정 질문을 입력하세요.';
+    if (widget.isDark) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) {
+          return;
+        }
+        if (Theme.of(context).brightness != Brightness.dark) {
+          widget.onThemeChanged(true);
+        }
+      });
+    }
   }
 
   @override
   void dispose() {
-    _companyController.dispose();
-    _briefController.dispose();
+    _search.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
+    final Brightness b = Theme.of(context).brightness;
     return Scaffold(
-      appBar: AppBar(
-        title: Text('TACTILE', style: XkTypo.h3),
-        actions: [
-          Row(
-            children: [
-              Text('Light', style: XkTypo.label),
-              Semantics(label: "다크 모드", child: Switch(value: widget.isDark, onChanged: widget.onThemeChanged)),
-              Text('Dark', style: XkTypo.label),
-              const SizedBox(width: XkLayout.spacingMd),
+      backgroundColor: XkColor.canvasOf(b),
+      body: XkGround(
+        child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints c) {
+            final bool compact = c.maxWidth < 720;
+            return CustomScrollView(
+              slivers: <Widget>[
+                SliverPadding(
+                  padding: EdgeInsets.fromLTRB(
+                    compact ? 16 : 28,
+                    24,
+                    compact ? 16 : 28,
+                    40,
+                  ),
+                  sliver: SliverToBoxAdapter(
+                    child: Center(
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 1180),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            _Header(
+                              isDark: widget.isDark,
+                              onThemeChanged: widget.onThemeChanged,
+                            ),
+                            const SizedBox(height: 28),
+                            if (compact)
+                              _MobileColumn(
+                                nav: _nav,
+                                tab: _tab,
+                                on: _on,
+                                search: _search,
+                                domain: _domain,
+                                onNav: (int i) => setState(() => _nav = i),
+                                onTab: (int i) => setState(() => _tab = i),
+                                onToggle: (bool v) => setState(() => _on = v),
+                                onDomain: (String v) =>
+                                    setState(() => _domain = v),
+                                onDialog: () => XkDialog.show(
+                                  context,
+                                  title: '변화를 시작할 준비가 되셨나요?',
+                                  body: '지금, 더 명확한 가능성을 경험하세요.',
+                                  primaryLabel: '시작하기',
+                                  secondaryLabel: '취소',
+                                ),
+                              )
+                            else
+                              _DesktopGrid(
+                                nav: _nav,
+                                tab: _tab,
+                                on: _on,
+                                search: _search,
+                                domain: _domain,
+                                onNav: (int i) => setState(() => _nav = i),
+                                onTab: (int i) => setState(() => _tab = i),
+                                onToggle: (bool v) => setState(() => _on = v),
+                                onDomain: (String v) =>
+                                    setState(() => _domain = v),
+                                onDialog: () => XkDialog.show(
+                                  context,
+                                  title: '변화를 시작할 준비가 되셨나요?',
+                                  body: '지금, 더 명확한 가능성을 경험하세요.',
+                                  primaryLabel: '시작하기',
+                                  secondaryLabel: '취소',
+                                ),
+                              ),
+                            const SizedBox(height: 32),
+                            Center(
+                              child: Text(
+                                'XERKONIX Design System · TACTILE',
+                                style: XkTypo.metaMono.copyWith(fontSize: 12),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class _Header extends StatelessWidget {
+  const _Header({required this.isDark, required this.onThemeChanged});
+  final bool isDark;
+  final ValueChanged<bool> onThemeChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final Brightness b = Theme.of(context).brightness;
+    return Row(
+      children: <Widget>[
+        Text(
+          'XERKONIX',
+          style: XkTypo.h3.copyWith(letterSpacing: 1.4, color: XkColor.inkOf(b)),
+        ),
+        const Spacer(),
+        Flexible(
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerRight,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                TextButton(
+                  onPressed: () => Navigator.of(context).pushNamed('/states'),
+                  child: Text('다른 상태', style: XkTypo.label),
+                ),
+                const SizedBox(width: 8),
+                Text('라이트', style: XkTypo.label),
+                Switch(value: isDark, onChanged: onThemeChanged),
+                Text('다크', style: XkTypo.label),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+const List<XkNavDestination> _destinations = <XkNavDestination>[
+  XkNavDestination(label: 'Home', icon: XkIconName.home),
+  XkNavDestination(label: 'Projects', icon: XkIconName.briefcase),
+  XkNavDestination(label: 'Library', icon: XkIconName.chartBar),
+  XkNavDestination(label: 'Team', icon: XkIconName.users),
+  XkNavDestination(label: 'Settings', icon: XkIconName.settings),
+];
+
+class _DesktopGrid extends StatelessWidget {
+  const _DesktopGrid({
+    required this.nav,
+    required this.tab,
+    required this.on,
+    required this.search,
+    required this.domain,
+    required this.onNav,
+    required this.onTab,
+    required this.onToggle,
+    required this.onDomain,
+    required this.onDialog,
+  });
+
+  final int nav;
+  final int tab;
+  final bool on;
+  final TextEditingController search;
+  final String domain;
+  final ValueChanged<int> onNav;
+  final ValueChanged<int> onTab;
+  final ValueChanged<bool> onToggle;
+  final ValueChanged<String> onDomain;
+  final VoidCallback onDialog;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        XkNavRail(
+          destinations: _destinations,
+          selectedIndex: nav,
+          onSelect: onNav,
+        ),
+        const SizedBox(width: 20),
+        Expanded(
+          flex: 3,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              XkTextInputField(
+                label: '',
+                hintText: '검색어를 입력하세요',
+                controller: search,
+              ),
+              const SizedBox(height: 20),
+              Text('더 명확한 가능성을 만듭니다.', style: XkTypo.h2),
+              const SizedBox(height: 6),
+              Text(
+                '기술은 인간을 위해 존재합니다.',
+                style: XkTypo.body.copyWith(
+                  color: XkColor.ink2Of(Theme.of(context).brightness),
+                ),
+              ),
+              const SizedBox(height: 16),
+              const Row(
+                children: <Widget>[
+                  Expanded(
+                    child: XkInfoCard(
+                      metric: '입력',
+                      title: '다음 행동',
+                      description: '쓰임을 설명하는 제목과 읽기 쉬운 본문을 연결합니다.',
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: XkInfoCard(
+                      metric: '결과',
+                      title: '판단',
+                      description: '핵심 수치와 다음 행동을 같은 위계로 보여 줍니다.',
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: XkInfoCard(
+                      metric: '기록',
+                      title: '상태',
+                      description: '현재와 직전 상태의 차이를 한 줄로 읽게 합니다.',
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              XkListRow(
+                label: '문서 정리',
+                subtitle: '3시간 전 · 업데이트됨',
+                icon: XkIconName.mail,
+                onTap: () {},
+              ),
+              const SizedBox(height: 10),
+              XkListRow(
+                label: '일정 조율',
+                subtitle: '어제 · 5개의 메모',
+                icon: XkIconName.calendar,
+                onTap: () {},
+              ),
+              const SizedBox(height: 16),
+              const Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Expanded(
+                    child: XkTable(
+                      columns: <String>['항목', '현재', '기준'],
+                      rows: <XkTableRowData>[
+                        XkTableRowData(<XkTableCell>[
+                          XkTableCell(text: '점수'),
+                          XkTableCell(text: '94.2'),
+                          XkTableCell(text: '88.7'),
+                        ]),
+                        XkTableRowData(<XkTableCell>[
+                          XkTableCell(text: '커버리지'),
+                          XkTableCell(text: '78%'),
+                          XkTableCell(text: '72%'),
+                        ]),
+                      ],
+                    ),
+                  ),
+                  SizedBox(width: 16),
+                  XkHexagonRadar(size: 140),
+                ],
+              ),
             ],
           ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(XkLayout.spacingMd),
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 1180),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _Hero(isDark: isDark),
-                const SizedBox(height: XkLayout.spacingMd),
-                _Section(
-                  sectionId: '01 · Iconography',
-                  title: 'Icon Set',
-                  subtitle:
-                      'TACTILE의 최소 단위를 아이콘으로 정리해, 복잡한 화면에서도 의미를 빠르게 읽게 합니다.',
-                  child: _IconGrid(),
-                ),
-                const SizedBox(height: XkLayout.spacingMd),
-                _Section(
-                  sectionId: '02 · Components',
-                  title: 'Components',
-                  subtitle:
-                      '공통 UI 컴포넌트를 동일한 토큰 규칙으로 사용합니다.',
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Wrap(
-                        spacing: XkLayout.spacingSm,
-                        runSpacing: XkLayout.spacingSm,
-                        children: [
-                          XkButton.primary(
-                            onPressed: () {},
-                            child: const Text('Primary'),
-                          ),
-                          XkButton.action(
-                            onPressed: () {},
-                            child: const Text('Action'),
-                          ),
-                          XkButton.brand(
-                            onPressed: () {},
-                            child: const Text('Brand'),
-                          ),
-                          XkButton.support(
-                            onPressed: () {},
-                            child: const Text('Support'),
-                          ),
-                          XkButton.accent(
-                            onPressed: () {},
-                            child: const Text('Accent'),
-                          ),
-                          XkButton.tonal(
-                            onPressed: () {},
-                            child: const Text('Tonal'),
-                          ),
-                          XkButton.outline(
-                            onPressed: () {},
-                            child: const Text('Outline'),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: XkLayout.spacingMd),
-                      Wrap(
-                        spacing: XkLayout.spacingSm,
-                        runSpacing: XkLayout.spacingSm,
-                        children: const [
-                          XkChip(
-                            label: 'default',
-                            variant: XkChipVariant.neutral,
-                          ),
-                          XkChip(
-                            label: 'trusted',
-                            variant: XkChipVariant.brand,
-                          ),
-                          XkChip(
-                            label: 'recommended',
-                            variant: XkChipVariant.support,
-                          ),
-                          XkChip(
-                            label: 'attention',
-                            variant: XkChipVariant.accent,
-                          ),
-                          XkChip(
-                            label: 'urgent',
-                            variant: XkChipVariant.signal,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: XkLayout.spacingMd),
-                      LayoutBuilder(
-                        builder: (context, constraints) {
-                          final wide = constraints.maxWidth >= 880;
-                          return GridView.count(
-                            crossAxisCount: wide ? 3 : 1,
-                            crossAxisSpacing: XkLayout.spacingSm,
-                            mainAxisSpacing: XkLayout.spacingSm,
-                            childAspectRatio: wide ? 1.45 : 2.6,
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            children: const [
-                              XkInfoCard(
-                                metric: 'Metric Card',
-                                title: 'Primary Value',
-                                description:
-                                    '핵심 수치, 기준값, 변동값을 같은 위계로 보여주는 기본 카드.',
-                              ),
-                              XkInfoCard(
-                                metric: 'Status Card',
-                                title: 'State Delta',
-                                description:
-                                    '현재 상태와 직전 상태의 차이를 강조해 변화 방향을 알려주는 카드.',
-                              ),
-                              XkInfoCard(
-                                metric: 'Summary Card',
-                                title: 'Module Overview',
-                                description: '요약 지표와 다음 행동을 함께 배치하는 모듈형 카드.',
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                      const SizedBox(height: XkLayout.spacingMd),
-                      LayoutBuilder(
-                        builder: (context, constraints) {
-                          final fieldWidth = constraints.maxWidth >= 760
-                              ? (constraints.maxWidth - XkLayout.spacingSm) / 2
-                              : constraints.maxWidth;
-                          return Wrap(
-                            spacing: XkLayout.spacingSm,
-                            runSpacing: XkLayout.spacingSm,
-                            children: [
-                              SizedBox(
-                                width: fieldWidth,
-                                child: XkTextInputField(
-                                  label: 'Company',
-                                  hintText: '예: 주식회사 제르코닉스',
-                                  helperText: '법인명 기준 입력',
-                                  controller: _companyController,
-                                ),
-                              ),
-                              SizedBox(
-                                width: fieldWidth,
-                                child: XkSelectField<String>(
-                                  label: 'Domain',
-                                  value: _selectedDomain,
-                                  helperText: '도메인별 패턴 로드',
-                                  options: const [
-                                    XkSelectOption(
-                                      value: '수집 · Collect',
-                                      label: '수집 · Collect',
-                                    ),
-                                    XkSelectOption(
-                                      value: '분석 · Analyze',
-                                      label: '분석 · Analyze',
-                                    ),
-                                    XkSelectOption(
-                                      value: '상태 · Map',
-                                      label: '상태 · Map',
-                                    ),
-                                    XkSelectOption(
-                                      value: '실행 · Act',
-                                      label: '실행 · Act',
-                                    ),
-                                  ],
-                                  onChanged: (value) {
-                                    if (value != null) {
-                                      setState(() => _selectedDomain = value);
-                                    }
-                                  },
-                                ),
-                              ),
-                              SizedBox(
-                                width: constraints.maxWidth,
-                                child: XkTextAreaField(
-                                  label: 'Brief',
-                                  hintText: '핵심 의사결정 질문을 입력하세요.',
-                                  helperText: '질문 중심 입력 권장',
-                                  controller: _briefController,
-                                  maxLines: 4,
-                                ),
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                      const SizedBox(height: XkLayout.spacingMd),
-                      const Column(
-                        children: [
-                          XkAlert(
-                            title: '분석 완료',
-                            message: '핵심 지표와 권장 액션 2건이 생성되었습니다.',
-                            variant: XkAlertVariant.success,
-                          ),
-                          SizedBox(height: XkLayout.spacingXs),
-                          XkAlert(
-                            title: '모델 업데이트',
-                            message: 'v2.2 모델이 2026-03-01부터 순차 적용됩니다.',
-                            variant: XkAlertVariant.info,
-                          ),
-                          SizedBox(height: XkLayout.spacingXs),
-                          XkAlert(
-                            title: '호출량 주의',
-                            message: '월간 API 사용량이 82%에 도달했습니다.',
-                            variant: XkAlertVariant.warning,
-                          ),
-                          SizedBox(height: XkLayout.spacingXs),
-                          XkAlert(
-                            title: '연결 오류',
-                            message: '외부 데이터 소스 인증이 만료되었습니다.',
-                            variant: XkAlertVariant.danger,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: XkLayout.spacingMd),
-                      XkTable(
-                        columns: const [
-                          'Metric',
-                          'Current',
-                          'Baseline',
-                          'Delta',
-                          'Action',
-                        ],
-                        rows: [
-                          XkTableRowData(const [
-                            XkTableCell(text: 'Primary Score'),
-                            XkTableCell(text: '94.2'),
-                            XkTableCell(text: '88.7'),
-                            XkTableCell(
-                              text: '+5.5',
-                              textColor: XkColor.ok,
-                            ),
-                            XkTableCell(text: '우선순위 유지'),
-                          ]),
-                          XkTableRowData(const [
-                            XkTableCell(text: 'State Risk'),
-                            XkTableCell(text: '21%'),
-                            XkTableCell(text: '34%'),
-                            XkTableCell(
-                              text: '-13%',
-                              textColor: XkColor.ok,
-                            ),
-                            XkTableCell(text: '모니터링 간격 확장'),
-                          ]),
-                          XkTableRowData(const [
-                            XkTableCell(text: 'Signal Stability'),
-                            XkTableCell(text: '71'),
-                            XkTableCell(text: '76'),
-                            XkTableCell(text: '-5', textColor: XkColor.warn),
-                            XkTableCell(text: '보조 지표 확인'),
-                          ]),
-                          XkTableRowData(const [
-                            XkTableCell(text: 'Data Coverage'),
-                            XkTableCell(text: '78%'),
-                            XkTableCell(text: '72%'),
-                            XkTableCell(
-                              text: '+6%',
-                              textColor: XkColor.ok,
-                            ),
-                            XkTableCell(text: '입력 범위 유지'),
-                          ]),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: XkLayout.spacingMd),
-                _Section(
-                  sectionId: '03 · Pattern',
-                  title: 'Pattern',
-                  subtitle:
-                      '패턴 섹션은 핵심 신호를 일관된 시각 구조로 정리해, 화면 간 해석 기준을 통일합니다.',
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      LayoutBuilder(
-                        builder: (context, constraints) {
-                          final count = constraints.maxWidth >= 920
-                              ? 4
-                              : (constraints.maxWidth >= 680 ? 2 : 1);
-                          return GridView.count(
-                            crossAxisCount: count,
-                            crossAxisSpacing: XkLayout.spacingSm,
-                            mainAxisSpacing: XkLayout.spacingSm,
-                            childAspectRatio: 1.8,
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            children: const [
-                              XkKpiCard(
-                                label: '종합 점수',
-                                value: '8.6',
-                                suffix: '/10',
-                                delta: '전월 대비 +0.4',
-                              ),
-                              XkKpiCard(
-                                label: '신뢰도',
-                                value: '92',
-                                suffix: '%',
-                                delta: '평균 90% 이상 유지',
-                              ),
-                              XkKpiCard(
-                                label: '처리 시간',
-                                value: '2.3',
-                                suffix: 's',
-                                delta: 'SLA 목표 3초',
-                              ),
-                              XkKpiCard(
-                                label: '커버리지',
-                                value: '78',
-                                suffix: '%',
-                                delta: '추가 입력 필요',
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                      const SizedBox(height: XkLayout.spacingSm),
-                      LayoutBuilder(
-                        builder: (context, constraints) {
-                          final twoColumns = constraints.maxWidth >= 900;
-                          if (!twoColumns) {
-                            return const Column(
-                              children: [
-                                _ConfidenceCard(),
-                                SizedBox(height: XkLayout.spacingSm),
-                                _TimelineCard(),
-                              ],
-                            );
-                          }
-                          return const Row(
-                            children: [
-                              Expanded(child: _ConfidenceCard()),
-                              SizedBox(width: XkLayout.spacingSm),
-                              Expanded(child: _TimelineCard()),
-                            ],
-                          );
-                        },
-                      ),
-                      const SizedBox(height: XkLayout.spacingSm),
-                      const XkMetricTimeline(),
-                      const SizedBox(height: XkLayout.spacingSm),
-                      LayoutBuilder(
-                        builder: (context, constraints) {
-                          final count = constraints.maxWidth >= 920
-                              ? 3
-                              : (constraints.maxWidth >= 640 ? 2 : 1);
-                          const spacing = XkLayout.spacingSm;
-                          final tileWidth = count == 1
-                              ? constraints.maxWidth
-                              : (constraints.maxWidth -
-                                      (spacing * (count - 1))) /
-                                  count;
+        ),
+        const SizedBox(width: 20),
+        SizedBox(
+          width: 260,
+          child: _Controls(
+            tab: tab,
+            on: on,
+            domain: domain,
+            onTab: onTab,
+            onToggle: onToggle,
+            onDomain: onDomain,
+            onDialog: onDialog,
+          ),
+        ),
+      ],
+    );
+  }
+}
 
-                          return Wrap(
-                            spacing: spacing,
-                            runSpacing: spacing,
-                            children: const [
-                              _PatternTile(
-                                title: 'Hexagon Radar',
-                                child: Center(child: XkHexagonRadar()),
-                              ),
-                              _PatternTile(
-                                title: 'Distribution Heatmap',
-                                child: Center(child: XkDistributionHeatmap()),
-                              ),
-                              _PatternTile(
-                                title: 'Priority Funnel',
-                                child: XkPriorityFunnel(),
-                              ),
-                            ]
-                                .map((tile) =>
-                                    SizedBox(width: tileWidth, child: tile))
-                                .toList(),
-                          );
-                        },
+class _MobileColumn extends StatelessWidget {
+  const _MobileColumn({
+    required this.nav,
+    required this.tab,
+    required this.on,
+    required this.search,
+    required this.domain,
+    required this.onNav,
+    required this.onTab,
+    required this.onToggle,
+    required this.onDomain,
+    required this.onDialog,
+  });
+
+  final int nav;
+  final int tab;
+  final bool on;
+  final TextEditingController search;
+  final String domain;
+  final ValueChanged<int> onNav;
+  final ValueChanged<int> onTab;
+  final ValueChanged<bool> onToggle;
+  final ValueChanged<String> onDomain;
+  final VoidCallback onDialog;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text('더 명확한 가능성을 만듭니다.', style: XkTypo.h2),
+        const SizedBox(height: 12),
+        XkButton.primary(
+          onPressed: onDialog,
+          child: const Text('시작하기'),
+        ),
+        const SizedBox(height: 16),
+        XkNavRail(
+          destinations: _destinations,
+          selectedIndex: nav,
+          onSelect: onNav,
+          width: double.infinity,
+        ),
+        const SizedBox(height: 16),
+        _Controls(
+          tab: tab,
+          on: on,
+          domain: domain,
+          onTab: onTab,
+          onToggle: onToggle,
+          onDomain: onDomain,
+          onDialog: onDialog,
+        ),
+        const SizedBox(height: 16),
+        const XkKpiCard(label: '처리', value: '1,248', suffix: '', delta: '+12%'),
+        const SizedBox(height: 10),
+        XkListRow(
+          label: '문서 정리',
+          subtitle: '보조 텍스트가 들어갑니다.',
+          icon: XkIconName.mail,
+          onTap: () {},
+        ),
+        const SizedBox(height: 16),
+        const XkHexagonRadar(size: 120),
+      ],
+    );
+  }
+}
+
+class _Controls extends StatelessWidget {
+  const _Controls({
+    required this.tab,
+    required this.on,
+    required this.domain,
+    required this.onTab,
+    required this.onToggle,
+    required this.onDomain,
+    required this.onDialog,
+  });
+
+  final int tab;
+  final bool on;
+  final String domain;
+  final ValueChanged<int> onTab;
+  final ValueChanged<bool> onToggle;
+  final ValueChanged<String> onDomain;
+  final VoidCallback onDialog;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        XkButton.primary(onPressed: onDialog, child: const Text('Primary')),
+        const SizedBox(height: 8),
+        XkButton.support(onPressed: () {}, child: const Text('Secondary')),
+        const SizedBox(height: 8),
+        XkButton.support(onPressed: null, child: const Text('Disabled')),
+        const SizedBox(height: 12),
+        XkSelectField<String>(
+          label: '영역',
+          value: domain,
+          options: const <XkSelectOption<String>>[
+            XkSelectOption<String>(value: '수집', label: '수집'),
+            XkSelectOption<String>(value: '분석', label: '분석'),
+            XkSelectOption<String>(value: '실행', label: '실행'),
+          ],
+          onChanged: (String? v) {
+            if (v != null) {
+              onDomain(v);
+            }
+          },
+        ),
+        const SizedBox(height: 8),
+        Row(
+          children: <Widget>[
+            Switch(value: on, onChanged: onToggle),
+            const SizedBox(width: 8),
+            Checkbox(value: on, onChanged: (bool? v) => onToggle(v ?? false)),
+            const Text('선택'),
+          ],
+        ),
+        const SizedBox(height: 8),
+        XkTabs(
+          labels: const <String>['Tab 1', 'Tab 2', 'Tab 3'],
+          index: tab,
+          onSelect: onTab,
+        ),
+        const SizedBox(height: 12),
+        XkDialog(
+          title: '변화를 시작할 준비가 되셨나요?',
+          body: '지금, 더 명확한 가능성을 경험하세요.',
+          onPrimary: () {},
+          onSecondary: () {},
+        ),
+        const SizedBox(height: 12),
+        const XkAlert(
+          title: '연결 오류',
+          message: '외부 데이터 소스 인증이 만료되었습니다.',
+          variant: XkAlertVariant.danger,
+        ),
+        const SizedBox(height: 12),
+        XkTag(label: '태그', onTap: () {}),
+        const SizedBox(height: 12),
+        const XkKpiCard(
+          label: '처리',
+          value: '1,248',
+          delta: '+12%',
+        ),
+      ],
+    );
+  }
+}
+
+enum StatesAuto { none, toast, dialog, loading }
+
+/// Existing widgets that do not fit the 1440 matrix viewport.
+class StatesPage extends StatefulWidget {
+  const StatesPage({
+    super.key,
+    required this.isDark,
+    required this.onThemeChanged,
+    this.auto = StatesAuto.none,
+  });
+
+  final bool isDark;
+  final ValueChanged<bool> onThemeChanged;
+  final StatesAuto auto;
+
+  @override
+  State<StatesPage> createState() => StatesPageState();
+}
+
+class StatesPageState extends State<StatesPage> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) {
+        return;
+      }
+      if (widget.auto == StatesAuto.toast) {
+        showXkToast(context, '저장했습니다.');
+      } else if (widget.auto == StatesAuto.dialog) {
+        XkDialog.show(
+          context,
+          title: '변화를 시작할 준비가 되셨나요?',
+          body:
+              '지금, 더 명확한 가능성을 경험하세요. 이 확인은 현재 화면의 선택을 적용합니다. 나중에 하기를 누르면 아무 것도 바뀌지 않습니다.',
+          primaryLabel: '시작하기',
+          secondaryLabel: '나중에 하기',
+        );
+      }
+    });
+  }
+
+  void _goMatrix() {
+    if (Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
+    } else {
+      Navigator.of(context).pushReplacementNamed('/');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final Brightness b = Theme.of(context).brightness;
+    return Scaffold(
+      backgroundColor: XkColor.canvasOf(b),
+      body: Stack(
+        children: <Widget>[
+          XkGround(
+            child: CustomScrollView(
+              slivers: <Widget>[
+                SliverPadding(
+                  padding: const EdgeInsets.fromLTRB(28, 24, 28, 48),
+                  sliver: SliverToBoxAdapter(
+                    child: Center(
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 1180),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Row(
+                              children: <Widget>[
+                                XkBackButton(
+                                  label: '목록으로',
+                                  onPressed: _goMatrix,
+                                ),
+                                const Spacer(),
+                                Text('라이트', style: XkTypo.label),
+                                Switch(
+                                  value: widget.isDark,
+                                  onChanged: widget.onThemeChanged,
+                                ),
+                                Text('다크', style: XkTypo.label),
+                              ],
+                            ),
+                            const SizedBox(height: 20),
+                            Text('다른 상태', style: XkTypo.h3),
+                            const SizedBox(height: 16),
+                            const XkSkeletonCard(),
+                            const SizedBox(height: 12),
+                            const SizedBox(
+                              height: 200,
+                              child: XkSkeletonList(count: 2),
+                            ),
+                            const SizedBox(height: 16),
+                            const SizedBox(
+                              height: 88,
+                              child: XkEmptyPane(message: '표시할 항목이 없습니다.'),
+                            ),
+                            const SizedBox(height: 8),
+                            XkErrorPane(
+                              message: '요청을 완료하지 못했습니다.',
+                              onRetry: () {},
+                            ),
+                            const SizedBox(height: 16),
+                            const XkConfidenceMeter(
+                              label: '확신',
+                              value: 0.72,
+                            ),
+                            const SizedBox(height: 16),
+                            const XkDistributionHeatmap(cellSize: 18),
+                            const SizedBox(height: 16),
+                            const XkPriorityFunnel(),
+                            const SizedBox(height: 16),
+                            const SizedBox(
+                              height: 72,
+                              child: XkLoadingPane(),
+                            ),
+                            const SizedBox(height: 16),
+                            Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                              children: <Widget>[
+                                XkButton.support(
+                                  onPressed: () =>
+                                      showXkToast(context, '저장했습니다.'),
+                                  child: const Text('알림'),
+                                ),
+                                XkButton.primary(
+                                  onPressed: () => XkDialog.show(
+                                    context,
+                                    title: '변화를 시작할 준비가 되셨나요?',
+                                    body: '지금, 더 명확한 가능성을 경험하세요.',
+                                    primaryLabel: '시작하기',
+                                    secondaryLabel: '취소',
+                                  ),
+                                  child: const Text('대화상자'),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                      const SizedBox(height: XkLayout.spacingSm),
-                      const XkDomainPatternTabs(),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: XkLayout.spacingMd),
-                ExpansionTile(
-                  title: const Text('선택적 모션 예제'),
-                  subtitle: const Text('상태 변화를 설명할 때만 사용합니다.'),
-                  children: [
-                _Section(
-                  sectionId: '07 · Motion',
-                  title: 'Motion',
-                  subtitle:
-                      'TACTILE의 두 축을 기준으로 패턴과 상태의 변화를 모션으로 표현합니다.',
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const _MotionInterpretationNote(),
-                      const SizedBox(height: XkLayout.spacingMd),
-                      LayoutBuilder(
-                        builder: (context, constraints) {
-                          final count = constraints.maxWidth >= 1000
-                              ? 3
-                              : (constraints.maxWidth >= 680 ? 2 : 1);
-                          return GridView.count(
-                            crossAxisCount: count,
-                            crossAxisSpacing: XkLayout.spacingSm,
-                            mainAxisSpacing: XkLayout.spacingSm,
-                            childAspectRatio: 1.06,
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            children: const [
-                              _MotionTile(
-                                title: 'Status Pulse',
-                                code: '2.5s · ease-in-out',
-                                child: XkStatusPulse(),
-                              ),
-                              _MotionTile(
-                                title: 'Signal Sweep',
-                                code: '2.5s · linear',
-                                child: XkSignalSweep(),
-                              ),
-                              _MotionTile(
-                                title: 'Rhythm Line',
-                                code: '3.5s · linear',
-                                child: XkRhythmLine(),
-                              ),
-                              _MotionTile(
-                                title: 'Focus Ripple',
-                                code: '2.2s · ease-out',
-                                child: XkFocusRipple(),
-                              ),
-                              _MotionTile(
-                                title: 'Card Settle',
-                                code: '2.8s · ease',
-                                child: XkCardSettle(),
-                              ),
-                              _MotionTile(
-                                title: 'Alert Pulse',
-                                code: '1.9s · ease-in-out',
-                                child: XkAlertPulse(),
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                  ],
-                ),
-                const SizedBox(height: XkLayout.spacingMd),
-                Center(
-                  child: Text(
-                    '© 2026 XERKONIX Inc. · Design System 4.1 · TACTILE 3.1',
-                    style: XkTypo.metaMono.copyWith(fontSize: 13),
+                    ),
                   ),
                 ),
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _Hero extends StatelessWidget {
-  const _Hero({required this.isDark});
-  final bool isDark;
-  @override
-  Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 28),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text('무엇을 할지, 분명한 화면.', style: Theme.of(context).textTheme.headlineLarge),
-        const SizedBox(height: 16),
-        Text('쓰임을 설명하는 제목, 읽기 쉬운 본문, 다음 행동을 연결합니다. 아래는 가상 대화로 만든 사용 예시입니다.', style: Theme.of(context).textTheme.bodyLarge),
-        const SizedBox(height: 24),
-        XkCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text('입력', style: XkTypo.label.copyWith(color: colors.onSurfaceVariant)),
-          const SizedBox(height: 8),
-          Text('“다음 주 초에 회신드려도 될까요?”', style: Theme.of(context).textTheme.titleLarge),
-          const SizedBox(height: 16),
-          Text('내 상황 · 화요일까지 기다릴 수 있어요.', style: Theme.of(context).textTheme.bodyMedium),
-          const Divider(height: 40),
-          Text('다음에 전할 표현', style: XkTypo.label.copyWith(color: colors.onSurfaceVariant)),
-          const SizedBox(height: 8),
-          Text('“화요일까지는 괜찮습니다. 일정이 더 필요하시면 알려주세요.”', style: Theme.of(context).textTheme.bodyLarge),
-        ])),
-      ]),
-    );
-  }
-}
-
-class _KnotAxisMotion extends StatefulWidget {
-  const _KnotAxisMotion();
-
-  @override
-  State<_KnotAxisMotion> createState() => _KnotAxisMotionState();
-}
-
-class _KnotAxisMotionState extends State<_KnotAxisMotion>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 2800),
-    )..repeat();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return AnimatedBuilder(
-      animation: _controller,
-      builder: (context, _) {
-        return CustomPaint(
-          painter: _KnotAxisPainter(
-            progress: _controller.value,
-            isDark: isDark,
-          ),
-          child: const SizedBox.expand(),
-        );
-      },
-    );
-  }
-}
-
-class _KnotAxisPainter extends CustomPainter {
-  const _KnotAxisPainter({required this.progress, required this.isDark});
-
-  final double progress;
-  final bool isDark;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final center = Offset(size.width / 2, size.height / 2);
-    final guidePaint = Paint()
-      ..color = isDark
-          ? XkColor.darkInk2.withValues(alpha: 0.22)
-          : XkColor.ink2.withValues(alpha: 0.22)
-      ..strokeWidth = 1.5
-      ..strokeCap = StrokeCap.round;
-
-    final starts = <Offset>[
-      Offset(size.width * 0.18, size.height * 0.22),
-      Offset(size.width * 0.18, size.height * 0.78),
-      Offset(size.width * 0.82, size.height * 0.22),
-      Offset(size.width * 0.82, size.height * 0.78),
-    ];
-
-    for (final start in starts) {
-      canvas.drawLine(start, center, guidePaint);
-    }
-
-    final accent = isDark ? XkColor.darkAquaMid : XkColor.aquaMid;
-    final identity = isDark ? XkColor.darkAquaMid : XkColor.aquaMid;
-    final ringProgress = 0.5 - math.cos(progress * math.pi * 2) / 2;
-
-    canvas.drawCircle(
-      center,
-      14 + (20 * ringProgress),
-      Paint()
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 1.2
-        ..color = accent.withValues(alpha: 0.24 * (1 - ringProgress)),
-    );
-    canvas.drawCircle(center, 8.5, Paint()..color = accent);
-
-    for (var i = 0; i < starts.length; i++) {
-      final t = (progress + (i * 0.25)) % 1.0;
-      final dx = starts[i].dx + ((center.dx - starts[i].dx) * t);
-      final dy = starts[i].dy + ((center.dy - starts[i].dy) * t);
-      canvas.drawCircle(Offset(dx, dy), 3.4, Paint()..color = identity);
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant _KnotAxisPainter oldDelegate) {
-    return oldDelegate.progress != progress || oldDelegate.isDark != isDark;
-  }
-}
-
-class _MotionInterpretationNote extends StatelessWidget {
-  const _MotionInterpretationNote();
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final border = isDark ? XkColor.darkRule : XkColor.rule;
-
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(XkLayout.spacingMd),
-      decoration: BoxDecoration(
-        borderRadius: XkShape.mdBorderRadius,
-        border: Border.all(color: border),
-        color: isDark ? XkColor.darkRule : XkColor.rule,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('해석 단계 (Interpretation Stages)', style: XkTypo.h3),
-          const SizedBox(height: XkLayout.spacingXs),
-          Text(
-            '모션은 데이터 흐름과 상태 변화를 자연스럽게 연결해, '
-            '정보 해석 과정을 끊기지 않게 전달합니다.',
-            style: XkTypo.body.copyWith(fontSize: 13),
-          ),
-          const SizedBox(height: XkLayout.spacingSm),
-          Text('Observe · 데이터 흐름을 읽는다 · ~180ms', style: XkTypo.body),
-          Text('Interpret · 상태 변화를 확인한다 · ~250ms', style: XkTypo.body),
-          Text('Connect · 맥락을 완성한다 · ~300ms', style: XkTypo.body),
-        ],
-      ),
-    );
-  }
-}
-
-class _Section extends StatelessWidget {
-  const _Section({
-    this.sectionId,
-    required this.title,
-    required this.subtitle,
-    required this.child,
-  });
-
-  final String? sectionId;
-  final String title;
-  final String subtitle;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final metaColor = isDark ? XkColor.darkInk2 : XkColor.ink2;
-
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(XkLayout.spacingMd),
-      decoration: BoxDecoration(
-        color: isDark ? XkColor.darkGroundHi : XkColor.groundHi,
-        borderRadius: XkShape.xlBorderRadius,
-        border: Border.all(
-          color: isDark ? XkColor.darkRule : XkColor.rule,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (sectionId != null) ...[
-            Text(
-              sectionId!,
-              style: XkTypo.metaMono.copyWith(
-                fontSize: 13,
-                letterSpacing: 0.06,
-                color: metaColor,
-              ),
+          if (widget.auto == StatesAuto.loading)
+            const XkLoadingOverlay(
+              message: '불러오는 중',
+              visible: true,
             ),
-            const SizedBox(height: XkLayout.spacingXxs),
-          ],
-          Text(title, style: XkTypo.h3),
-          const SizedBox(height: XkLayout.spacingXxs),
-          Text(subtitle, style: XkTypo.body.copyWith(fontSize: 13)),
-          const SizedBox(height: XkLayout.spacingSm),
-          child,
-        ],
-      ),
-    );
-  }
-}
-
-class _IconGrid extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final count = constraints.maxWidth >= 980
-            ? 8
-            : (constraints.maxWidth >= 760
-                ? 6
-                : (constraints.maxWidth >= 520 ? 4 : 3));
-
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const _IconSizePreview(),
-            const SizedBox(height: XkLayout.spacingSm),
-            GridView.builder(
-              itemCount: XkIconName.values.length,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: count,
-                mainAxisSpacing: XkLayout.spacingSm,
-                crossAxisSpacing: XkLayout.spacingSm,
-                childAspectRatio: 1.2,
-              ),
-              itemBuilder: (context, index) {
-                final name = XkIconName.values[index];
-                return Container(
-                  decoration: BoxDecoration(
-                    borderRadius: XkShape.smBorderRadius,
-                    border: Border.all(
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? XkColor.darkRule
-                          : XkColor.rule,
-                    ),
-                  ),
-                  padding: const EdgeInsets.all(XkLayout.spacingXs),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      XkIcon(name),
-                      const SizedBox(height: XkLayout.spacingXs),
-                      Text(
-                        name.token,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: XkTypo.metaMono.copyWith(fontSize: 13),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-}
-
-class _IconSizePreview extends StatelessWidget {
-  const _IconSizePreview();
-
-  @override
-  Widget build(BuildContext context) {
-    return Wrap(
-      spacing: XkLayout.spacingMd,
-      runSpacing: XkLayout.spacingSm,
-      children: const [
-        _IconSizeItem(size: XkIconSize.inline, label: '12 · Inline'),
-        _IconSizeItem(size: XkIconSize.small, label: '16 · Small'),
-        _IconSizeItem(size: XkIconSize.regular, label: '20 · Default'),
-        _IconSizeItem(size: XkIconSize.large, label: '24 · Large'),
-        _IconSizeItem(size: XkIconSize.display, label: '32 · Display'),
-        _IconSizeItem(size: XkIconSize.hero, label: '48 · Hero'),
-      ],
-    );
-  }
-}
-
-class _IconSizeItem extends StatelessWidget {
-  const _IconSizeItem({required this.size, required this.label});
-
-  final double size;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        XkIcon(XkIconName.chevRight, size: size),
-        const SizedBox(width: XkLayout.spacingXs),
-        Text(label, style: XkTypo.metaMono.copyWith(fontSize: 13)),
-      ],
-    );
-  }
-}
-
-class _PatternTile extends StatelessWidget {
-  const _PatternTile({required this.title, required this.child});
-
-  final String title;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(XkLayout.spacingMd),
-      decoration: BoxDecoration(
-        borderRadius: XkShape.mdBorderRadius,
-        border: Border.all(
-          color: Theme.of(context).brightness == Brightness.dark
-              ? XkColor.darkRule
-              : XkColor.rule,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(title, style: XkTypo.label),
-          const SizedBox(height: XkLayout.spacingSm),
-          child,
-        ],
-      ),
-    );
-  }
-}
-
-class _ConfidenceCard extends StatelessWidget {
-  const _ConfidenceCard();
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    return Container(
-      padding: const EdgeInsets.all(XkLayout.spacingMd),
-      decoration: BoxDecoration(
-        color: isDark ? XkColor.darkGroundHi : XkColor.groundHi,
-        borderRadius: XkShape.mdBorderRadius,
-        border: Border.all(
-          color: isDark ? XkColor.darkRule : XkColor.rule,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Confidence Meter', style: XkTypo.h3.copyWith(fontSize: 18)),
-          const SizedBox(height: XkLayout.spacingSm),
-          const XkConfidenceMeter(
-            label: '역할 적합도 신뢰도',
-            value: 0.94,
-            valueText: '94%',
-            startColor: XkColor.ink,
-            endColor: XkColor.aqua100,
-          ),
-          const SizedBox(height: XkLayout.spacingSm),
-          const XkConfidenceMeter(
-            label: '행동 전환 명확도',
-            value: 0.91,
-            valueText: '91%',
-            startColor: XkColor.ink,
-            endColor: XkColor.aqua100,
-          ),
-          const SizedBox(height: XkLayout.spacingSm),
-          const XkConfidenceMeter(
-            label: '추천 보조 안정성',
-            value: 0.88,
-            valueText: '88%',
-            startColor: XkColor.ok,
-            endColor: XkColor.ok,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _TimelineCard extends StatelessWidget {
-  const _TimelineCard();
-
-  @override
-  Widget build(BuildContext context) {
-    return XkSignalTimeline(
-      items: const [
-        XkTimelineItem(
-          time: '2026-01-14 09:23',
-          title: '이탈 위험 급상승',
-          description: '참여율 42% 하락, 3주 내 이탈 확률 78%',
-          color: XkColor.bad,
-        ),
-        XkTimelineItem(
-          time: '2026-01-10 14:07',
-          title: '협업 패턴 이상',
-          description: '응답 지연 +140%, 피드백 빈도 감소',
-          color: XkColor.warn,
-        ),
-        XkTimelineItem(
-          time: '2026-01-05 11:30',
-          title: '역량 업데이트',
-          description: '경력 점수 +8.2',
-          color: XkColor.ink2,
-        ),
-        XkTimelineItem(
-          time: '2025-12-20 09:00',
-          title: '초기 기준선 설정',
-          description: 'Baseline 8.6 / 신뢰도 92%',
-          color: XkColor.ok,
-        ),
-      ],
-    );
-  }
-}
-
-class _MotionTile extends StatelessWidget {
-  const _MotionTile({
-    required this.title,
-    required this.code,
-    required this.child,
-  });
-
-  final String title;
-  final String code;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    return Container(
-      padding: const EdgeInsets.all(XkLayout.spacingMd),
-      decoration: BoxDecoration(
-        color: isDark ? XkColor.darkGroundHi : XkColor.groundHi,
-        borderRadius: XkShape.mdBorderRadius,
-        border: Border.all(
-          color: isDark ? XkColor.darkRule : XkColor.rule,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: isDark
-                    ? XkColor.darkRule.withValues(alpha: 0.55)
-                    : XkColor.rule,
-                borderRadius: XkShape.smBorderRadius,
-              ),
-              child: Center(child: child),
-            ),
-          ),
-          const SizedBox(height: XkLayout.spacingSm),
-          Text(title, style: XkTypo.label),
-          const SizedBox(height: XkLayout.spacingXxs),
-          Text(code, style: XkTypo.metaMono.copyWith(fontSize: 13)),
         ],
       ),
     );

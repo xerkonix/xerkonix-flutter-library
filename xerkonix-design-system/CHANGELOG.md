@@ -1,3 +1,13 @@
+## 4.4.0 — TACTILE v4.3.0 유리 역할 · 선택 틴트
+
+패키지 마이너. 계약은 TACTILE v4.3.0. 두 번호는 별개다.
+
+- 공개 API: `XkGlassRole` (reading / navigation / action). 기존 `XkGlass.ctl`은 action 별칭.
+- 공개 API: `XkListRow.surface` — 단독 행은 읽기 유리, 내비 안은 false.
+- 공개 API: `XkOuterShadow` — CSS outer box-shadow처럼 내부를 펀치. 반투명 fill 자기그림자(self-bleed) 방지. 토큰 hex/blur/offset 불변.
+- 선택 면은 `--aqua-tint` 30% + 1px `--aqua-mid` 마커. 솔리드 aqua-mid 섀도 없음.
+- 위젯 테스트 캡처(`debugDisableShadows=false`)와 Chromium 실렌더를 구분한다.
+
 ## 4.3.0 — TACTILE v4.2.0 무채색 베이스 · 검정 primary CTA
 
 패키지 마이너. 계약 헤더 v4.2.0.

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../icons/xerkonix_icon.dart';
 import '../motion/xerkonix_motion.dart';
 import '../palette/color.dart';
 import 'xerkonix_button.dart';
@@ -68,7 +69,7 @@ class XkErrorPane extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Icon(Icons.error_outline, color: error),
+              XkIcon(XkIconName.alert, color: error),
               const SizedBox(height: 12),
               Text(message, textAlign: TextAlign.center),
               if (onRetry != null) ...<Widget>[

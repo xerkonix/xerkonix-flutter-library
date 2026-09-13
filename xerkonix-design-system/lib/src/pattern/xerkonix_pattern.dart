@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../palette/color.dart';
 import '../shape/xerkonix_shape.dart';
 import '../typography/xerkonix_typography.dart';
+import '../components/xerkonix_glass.dart';
 
 class XkKpiCard extends StatelessWidget {
   const XkKpiCard({
@@ -32,23 +33,16 @@ class XkKpiCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
     final isDark = brightness == Brightness.dark;
-    final bg =
-        backgroundColor ?? (isDark ? XkColor.darkGroundHi : XkColor.groundHi);
-    final bd =
-        borderColor ?? (isDark ? XkColor.darkRule : XkColor.rule);
     final labelColor = isDark ? XkColor.darkInk2 : XkColor.ink2;
     final valueColor = isDark ? XkColor.darkInk : XkColor.ink;
     final deltaColor = isDark ? XkColor.darkInk : XkColor.ink;
     final suffixColor = isDark ? XkColor.darkAquaMid : XkColor.aquaMid;
 
-    return Container(
+    return XkGlass(
+      borderRadius: borderRadius,
+      color: backgroundColor,
+      borderColor: borderColor,
       padding: padding,
-      decoration: BoxDecoration(
-        color: bg,
-        borderRadius: borderRadius ?? XkShape.mdBorderRadius,
-        border: Border.all(color: bd),
-        boxShadow: XkShadow.resolve(brightness),
-      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -118,6 +112,8 @@ class XkConfidenceMeter extends StatelessWidget {
         startColor ?? (isDark ? XkColor.darkAquaMid : XkColor.aquaMid);
     final end = endColor ?? _resolveGradientEnd(base, isDark);
     final valueLabel = valueText ?? '${(ratio * 100).round()}%';
+    final BorderRadius radius = (borderRadius ?? XkRadius.tagBorderRadius)
+        .resolve(Directionality.of(context));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -135,7 +131,7 @@ class XkConfidenceMeter extends StatelessWidget {
         ),
         const SizedBox(height: XkLayout.spacingXs),
         ClipRRect(
-          borderRadius: borderRadius ?? XkRadius.tagBorderRadius,
+          borderRadius: radius,
           child: SizedBox(
             height: height,
             child: Stack(

@@ -7,7 +7,7 @@
 // 초안 hex 를 여기나 color.dart 에 미리 넣지 않는다. 계약 헤더가 바뀌면
 // fixture 복사 → color.dart → 이 테스트 순이다.
 //
-// 어느 tokens.css 를 읽는가 (둘 중 하나, skip 은 없다):
+// 어느 tokens.css 를 읽는가 (skip 은 없다):
 //   1. 워크스페이스 형제 리포의 tokens.css
 //   2. test/fixtures/tokens.css — CI 스냅샷
 // 형제 리포가 있으면 스냅샷이 그것과 바이트 단위로 같은지도 확인한다.
@@ -90,6 +90,22 @@ Color _cssShadowColor(String value, Map<String, String> vars) {
     return _cssColor(hex.group(0)!, vars);
   }
   fail('그림자 색을 해석할 수 없다: $v');
+}
+
+({Offset offset, double blur, double spread}) _cssShadowBox(String value) {
+  final String nums = value
+      .replaceAll(RegExp(r'rgba?\([^)]+\)'), '')
+      .replaceAll(RegExp(r'#[0-9A-Fa-f]{3,8}'), '');
+  final List<double> parts = RegExp(r'-?[\d.]+')
+      .allMatches(nums)
+      .map((RegExpMatch m) => double.parse(m.group(0)!))
+      .toList();
+  expect(parts.length, greaterThanOrEqualTo(3), reason: 'shadow $value');
+  return (
+    offset: Offset(parts[0], parts[1]),
+    blur: parts[2],
+    spread: parts.length > 3 ? parts[3] : 0,
+  );
 }
 
 double _cssPx(String value) => double.parse(value.trim().replaceAll('px', ''));
@@ -294,16 +310,28 @@ void main() {
     });
     test('glass-shadow 레이어가 계약과 같다', () {
       expect(XkShadow.glassLight.length, 1);
-      expect(XkShadow.glassLight.first.offset, const Offset(0, 5));
-      expect(XkShadow.glassLight.first.blurRadius, 15);
-      expect(XkShadow.glassLight.first.spreadRadius, -12);
+      final ({Offset offset, double blur, double spread}) glassBox =
+          _cssShadowBox(light['--glass-shadow']!);
+      expect(XkShadow.glassLight.first.offset, glassBox.offset);
+      expect(XkShadow.glassLight.first.blurRadius, glassBox.blur);
+      expect(XkShadow.glassLight.first.spreadRadius, glassBox.spread);
       expect(XkShadow.glassLight.first.offset.dx >= 0, isTrue);
       expect(XkShadow.glassLight.first.offset.dy >= 0, isTrue);
+      expect(
+        XkShadow.glassLight.first.spreadRadius >= 0,
+        isTrue,
+        reason: 'negative spread paints an inset groove',
+      );
       final Color glassShadowColor = _cssShadowColor(
         light['--glass-shadow']!,
         light,
       );
       expect(XkShadow.glassLight.first.color, glassShadowColor);
+      final ({Offset offset, double blur, double spread}) ctlBox =
+          _cssShadowBox(light['--ctl-shadow']!);
+      expect(XkShadow.ctl(Brightness.light).first.offset, ctlBox.offset);
+      expect(XkShadow.ctl(Brightness.light).first.blurRadius, ctlBox.blur);
+      expect(XkShadow.ctl(Brightness.light).first.spreadRadius, ctlBox.spread);
       expect(
         XkShadow.ctl(Brightness.light).first.color,
         _cssShadowColor(light['--ctl-shadow']!, light),

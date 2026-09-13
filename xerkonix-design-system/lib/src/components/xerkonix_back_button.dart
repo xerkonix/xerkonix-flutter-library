@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../icons/xerkonix_icon.dart';
 import '../palette/color.dart';
 
 /// A chevron-left text button used to navigate back. Covers the product
@@ -20,7 +21,7 @@ class XkBackButton extends StatelessWidget {
     final Color color = isDark ? XkColor.darkInk : XkColor.ink;
     return TextButton.icon(
       onPressed: onPressed,
-      icon: Icon(Icons.arrow_back_ios_new_rounded, size: 16, color: color),
+      icon: XkIcon(XkIconName.chevLeft, size: 16, color: color),
       label: Text(label, style: TextStyle(color: color)),
       style: TextButton.styleFrom(padding: const EdgeInsets.only(bottom: 8)),
     );

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../palette/color.dart';
 
-/// Radius tokens from TACTILE v4.1.0 (`--r-panel/card/inset/ctl/tag/graphic`).
+/// Radius tokens from TACTILE (`--r-panel/card/inset/ctl/tag/graphic`).
 ///
 /// 11 / 11 / 8 / 7 / 6. Graphic 10, mobile 8. No pill (980/999).
 class XkRadius {
@@ -142,23 +142,23 @@ class XkShadow {
   static const Color darkLowlight = XkColor.darkGlassShadowNear;
   static const Color darkHighlight = XkColor.none;
 
-  /// `--glass-shadow` light: 0 5 15 -12.
+  /// `--glass-shadow` light: `0 8px 24px rgba(0,0,0,.08)`.
   static const List<BoxShadow> glassLight = <BoxShadow>[
     BoxShadow(
-      color: XkColor.planeShadow,
-      offset: Offset(0, 5),
-      blurRadius: 15,
-      spreadRadius: -12,
+      color: XkColor.glassShadowNear,
+      offset: Offset(0, 8),
+      blurRadius: 24,
+      spreadRadius: 0,
     ),
   ];
 
-  /// `--glass-shadow` dark.
+  /// `--glass-shadow` dark: `0 8px 28px rgba(0,0,0,.4)`.
   static const List<BoxShadow> glassDark = <BoxShadow>[
     BoxShadow(
-      color: XkColor.darkPlaneShadow,
-      offset: Offset(0, 5),
-      blurRadius: 15,
-      spreadRadius: -12,
+      color: XkColor.darkGlassShadowNear,
+      offset: Offset(0, 8),
+      blurRadius: 28,
+      spreadRadius: 0,
     ),
   ];
 
@@ -168,32 +168,28 @@ class XkShadow {
   /// Primary control uses the same faint ctl shadow as `--ctl-shadow`.
   static List<BoxShadow> gem(Brightness brightness) => ctl(brightness);
 
-  /// `--ctl-shadow`: `0 2px 6px -5px`.
+  /// `--ctl-shadow`: `0 2px 8px rgba(0,0,0,.06)` / dark `0 2px 10px .35`.
   static List<BoxShadow> ctl(Brightness brightness) {
-    final Color color = brightness == Brightness.dark
-        ? XkColor.darkPlaneShadow
-        : XkColor.planeShadow;
+    final bool dark = brightness == Brightness.dark;
     return <BoxShadow>[
       BoxShadow(
-        color: color,
+        color: dark ? const Color(0x59000000) : const Color(0x0F000000),
         offset: const Offset(0, 2),
-        blurRadius: 6,
-        spreadRadius: -5,
+        blurRadius: dark ? 10 : 8,
+        spreadRadius: 0,
       ),
     ];
   }
 
-  /// `--graphic-shadow`: `0 9px 20px -15px`.
+  /// `--graphic-shadow`: `0 10px 28px` at the glass-shadow color.
   static List<BoxShadow> graphic(Brightness brightness) {
-    final Color color = brightness == Brightness.dark
-        ? XkColor.darkPlaneShadow
-        : XkColor.planeShadow;
+    final bool dark = brightness == Brightness.dark;
     return <BoxShadow>[
       BoxShadow(
-        color: color,
-        offset: const Offset(0, 9),
-        blurRadius: 20,
-        spreadRadius: -15,
+        color: dark ? XkColor.darkGlassShadowNear : XkColor.glassShadowNear,
+        offset: const Offset(0, 10),
+        blurRadius: 28,
+        spreadRadius: 0,
       ),
     ];
   }
@@ -209,16 +205,16 @@ class XkShadow {
     BoxShadow(
       color: XkColor.glassShadowFar,
       offset: Offset(0, 10),
-      blurRadius: 30,
-      spreadRadius: -18,
+      blurRadius: 28,
+      spreadRadius: 0,
     ),
   ];
   static const List<BoxShadow> raisedSoftDark = <BoxShadow>[
     BoxShadow(
       color: XkColor.darkGlassShadowFar,
       offset: Offset(0, 10),
-      blurRadius: 30,
-      spreadRadius: -18,
+      blurRadius: 28,
+      spreadRadius: 0,
     ),
   ];
 

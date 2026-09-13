@@ -40,6 +40,7 @@ export 'src/components/xerkonix_section_label.dart';
 export 'src/components/xerkonix_back_button.dart';
 export 'src/components/xerkonix_progress_bar.dart';
 export 'src/components/xerkonix_state_panes.dart';
+export 'src/components/xerkonix_shell.dart';
 
 // Icons
 export 'src/icons/xerkonix_icon.dart';

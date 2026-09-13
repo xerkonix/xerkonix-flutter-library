@@ -13,7 +13,7 @@ tactile_gate.json. 소비 리포에는 이 파일을 그대로 복사하고, 달
 검사는 TACTILE.md 를 정적 범위에서 집행한다. 썸네일·워드마크 가리기·axe 는
 이 스크립트가 돌리지 않는다(단계 보고에서 해당 없음으로 적는다).
 
-v4.2.0 어휘: 무채색 캔버스/잉크, 작은 아쿠아 포인트, 검정 역상 면, 얇은 유리 역할.
+v4.3.0 어휘: 무채색 캔버스/잉크, 작은 아쿠아 포인트, 검정 역상 면, 얇은 유리 역할.
 v3 의 --x-* 토큰은 선언도 사용도 실패다. 라이트 --glass/.75 읽기 면.
 구 v4.0.1 .32/.52 볼록 글래스는 실패.
 """
@@ -27,10 +27,10 @@ import os
 import re
 import sys
 
-EXPECT_VERSION = "v4.2.0"
+EXPECT_VERSION = "v4.3.0"
 
 # ─────────────────────────────────────────────────────────────────────────────
-# v4.2.0 기대 테이블 (tokens.css)
+# v4.3.0 기대 테이블 (tokens.css)
 # ─────────────────────────────────────────────────────────────────────────────
 LIGHT: dict[str, str] = {
     "--canvas": "#F7F7F7", "--ground-hi": "#FFFFFF", "--solid": "#FFFFFF",
@@ -42,24 +42,24 @@ LIGHT: dict[str, str] = {
     "--accent-rgb": "177,218,225", "--accent": "#B1DAE1", "--accent-ink": "#1C4C58",
     "--glass-rgb": "255,255,255",
     "--glass-reading-alpha": ".75", "--glass-reading-blur": "36px",
-    "--glass-reading-contrast": ".85", "--glass-reading-saturation": ".95",
-    "--glass-navigation-alpha": ".45", "--glass-navigation-blur": "20px",
-    "--glass-navigation-contrast": ".95", "--glass-navigation-saturation": "1",
+    "--glass-reading-contrast": "1", "--glass-reading-saturation": "1",
+    "--glass-navigation-alpha": ".82", "--glass-navigation-blur": "20px",
+    "--glass-navigation-contrast": "1", "--glass-navigation-saturation": "1",
     "--glass-action-alpha": ".22", "--glass-action-blur": "8px",
     "--glass-action-contrast": "1.05", "--glass-action-saturation": "1.05",
     "--glass": "rgba(255,255,255,.75)", "--glass-strong": "rgba(255,255,255,.75)",
-    "--glass-navigation": "rgba(255,255,255,.45)", "--glass-action": "rgba(255,255,255,.22)",
+    "--glass-navigation": "rgba(255,255,255,.82)", "--glass-action": "rgba(255,255,255,.22)",
     "--glass-accent": "rgba(177,218,225,.22)",
     "--plane-edge": "rgba(0,0,0,.12)", "--plane-rim": "rgba(255,255,255,.82)",
     "--plane-shadow": "rgba(0,0,0,.12)",
     "--glass-edge": "rgba(255,255,255,.82)", "--glass-edge-2": "rgba(0,0,0,.12)",
-    "--glass-shadow": "0 5px 15px -12px rgba(0,0,0,.12)",
-    "--ctl-shadow": "0 2px 6px -5px rgba(0,0,0,.12)",
-    "--graphic-shadow": "0 9px 20px -15px rgba(0,0,0,.12)",
+    "--glass-shadow": "0 8px 24px rgba(0,0,0,.08)",
+    "--ctl-shadow": "0 2px 8px rgba(0,0,0,.06)",
+    "--graphic-shadow": "0 10px 28px rgba(0,0,0,.08)",
     "--spec": "rgba(255,255,255,.82)", "--inset-bg": "rgba(0,0,0,.035)",
     "--head-glass": "rgba(255,255,255,.82)",
-    "--gloss-rim": "rgba(255,255,255,.96)", "--gloss-low": "rgba(0,0,0,.12)",
-    "--gloss-contact": "rgba(0,0,0,.1)", "--gloss-sheen": "rgba(255,255,255,.65)",
+    "--gloss-rim": "rgba(255,255,255,.28)", "--gloss-low": "rgba(255,255,255,0)",
+    "--gloss-contact": "rgba(0,0,0,.06)", "--gloss-sheen": "rgba(255,255,255,.28)",
     "--gloss-inverse": "rgba(255,255,255,.12)",
     "--surface-inverse": "#000000", "--ink-inverse": "#FFFFFF",
     "--ink-inverse-2": "#C4C4C4", "--surface-inverse-card": "#151515",
@@ -94,18 +94,18 @@ DARK_OVERRIDE: dict[str, str] = {
     "--accent-rgb": "137,192,205", "--accent": "#89C0CD", "--accent-ink": "#0B2B35",
     "--glass-rgb": "32,32,32",
     "--glass": "rgba(32,32,32,.75)", "--glass-strong": "rgba(32,32,32,.75)",
-    "--glass-navigation": "rgba(32,32,32,.45)", "--glass-action": "rgba(32,32,32,.22)",
+    "--glass-navigation": "rgba(32,32,32,.82)", "--glass-action": "rgba(32,32,32,.22)",
     "--glass-accent": "rgba(137,192,205,.22)",
     "--plane-edge": "rgba(255,255,255,.18)", "--plane-rim": "rgba(255,255,255,.38)",
     "--plane-shadow": "rgba(0,0,0,.24)",
     "--glass-edge": "rgba(255,255,255,.38)", "--glass-edge-2": "rgba(255,255,255,.18)",
-    "--glass-shadow": "0 5px 15px -12px rgba(0,0,0,.24)",
-    "--ctl-shadow": "0 2px 6px -5px rgba(0,0,0,.24)",
-    "--graphic-shadow": "0 9px 20px -15px rgba(0,0,0,.24)",
+    "--glass-shadow": "0 8px 28px rgba(0,0,0,.4)",
+    "--ctl-shadow": "0 2px 10px rgba(0,0,0,.35)",
+    "--graphic-shadow": "0 10px 28px rgba(0,0,0,.4)",
     "--spec": "rgba(255,255,255,.38)", "--inset-bg": "rgba(255,255,255,.05)",
     "--head-glass": "rgba(32,32,32,.82)",
-    "--gloss-rim": "rgba(255,255,255,.62)", "--gloss-low": "rgba(255,255,255,.14)",
-    "--gloss-contact": "rgba(0,0,0,.27)", "--gloss-sheen": "rgba(255,255,255,.22)",
+    "--gloss-rim": "rgba(255,255,255,.18)", "--gloss-low": "rgba(255,255,255,0)",
+    "--gloss-contact": "rgba(0,0,0,.2)", "--gloss-sheen": "rgba(255,255,255,.14)",
     "--ok": "#7FB59E", "--warn": "#EC9A50", "--bad": "#E67274",
     "--warm": "#DE9074", "--cool": "#8AA8C2",
 }

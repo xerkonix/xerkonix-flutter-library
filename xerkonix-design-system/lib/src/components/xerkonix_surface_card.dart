@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../shape/xerkonix_shape.dart';
-import 'xerkonix_neumorphic.dart';
+import 'xerkonix_glass.dart';
 
 /// A flat rounded group. [onTap] adds keyboard and pointer interaction.
 ///
@@ -22,9 +22,8 @@ class XkCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return XkNeumorphic(
-      style: XkNeumorphicStyle.flat,
-      borderRadius: XkRadius.panelBorderRadius,
+    return XkGlass(
+      borderRadius: XkRadius.cardBorderRadius,
       padding: padding ?? const EdgeInsets.all(16),
       onTap: onTap,
       width: double.infinity,

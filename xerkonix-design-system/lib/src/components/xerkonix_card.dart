@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import '../palette/color.dart';
 import '../shape/xerkonix_shape.dart';
 import '../typography/xerkonix_typography.dart';
+import 'xerkonix_glass.dart';
 
-/// TACTILE card style used for Metric/Status/Summary blocks — a raised
-/// neumorphic surface (paired highlight + lowlight). Pass [borderColor] to add
-/// an explicit hairline instead.
+/// Metric/Status/Summary card on reading-role [XkGlass] (`--glass-reading`).
+/// Pass [borderColor] to override `--plane-edge`.
 class XkInfoCard extends StatelessWidget {
   const XkInfoCard({
     super.key,
@@ -35,20 +35,15 @@ class XkInfoCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
     final isDark = brightness == Brightness.dark;
-    final cardBg =
-        backgroundColor ?? (isDark ? XkColor.darkGroundHi : XkColor.groundHi);
     final metricColor = isDark ? XkColor.darkInk2 : XkColor.ink2;
     final titleColor = isDark ? XkColor.darkInk : XkColor.ink;
     final bodyColor = isDark ? XkColor.darkInk : XkColor.ink;
 
-    return Container(
+    return XkGlass(
+      borderRadius: borderRadius,
+      color: backgroundColor,
+      borderColor: borderColor,
       padding: padding,
-      decoration: BoxDecoration(
-        color: cardBg,
-        borderRadius: borderRadius ?? XkRadius.cardBorderRadius,
-        border: borderColor != null ? Border.all(color: borderColor!) : null,
-
-      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

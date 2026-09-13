@@ -6,8 +6,9 @@ import '../shape/xerkonix_shape.dart';
 import '../typography/xerkonix_typography.dart';
 import 'xerkonix_glass.dart';
 
-/// TACTILE v4.2 buttons: black inverse primary, or glass-ctl secondary.
-/// Aqua is not the main action fill.
+/// TACTILE v4.3.0 buttons. Primary = `--surface-inverse` / `light.css`
+/// `.btn-primary` (`background-image: none`). Support = action glass
+/// (`.glass-ctl`). Aqua is not the main action fill.
 class XkButton extends StatelessWidget {
   const XkButton._({
     super.key,
@@ -345,7 +346,10 @@ class _GemButtonState extends State<_GemButton> {
   Widget build(BuildContext context) {
     final Brightness b = Theme.of(context).brightness;
     final bool enabled = widget.onPressed != null;
-    return MouseRegion(
+    return Semantics(
+      button: true,
+      enabled: enabled,
+      child: MouseRegion(
       onEnter: enabled ? (_) => setState(() => _hover = true) : null,
       onExit: enabled ? (_) => setState(() => _hover = false) : null,
       cursor: enabled ? SystemMouseCursors.click : SystemMouseCursors.basic,
@@ -357,6 +361,12 @@ class _GemButtonState extends State<_GemButton> {
           actions: <Type, Action<Intent>>{
             ActivateIntent: CallbackAction<ActivateIntent>(
               onInvoke: (ActivateIntent intent) {
+                widget.onPressed?.call();
+                return null;
+              },
+            ),
+            ButtonActivateIntent: CallbackAction<ButtonActivateIntent>(
+              onInvoke: (ButtonActivateIntent intent) {
                 widget.onPressed?.call();
                 return null;
               },
@@ -396,24 +406,6 @@ class _GemButtonState extends State<_GemButton> {
                               ),
                             ),
                           ),
-                          const Positioned.fill(
-                            child: IgnorePointer(
-                              child: DecoratedBox(
-                                decoration: BoxDecoration(
-                                  borderRadius: XkRadius.ctlBorderRadius,
-                                  gradient: RadialGradient(
-                                    center: Alignment(-0.1, -4.1),
-                                    radius: 1.6,
-                                    colors: <Color>[
-                                      Color(0x29FFFFFF),
-                                      Color(0x00FFFFFF),
-                                    ],
-                                    stops: <double>[0, 0.70],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
                           DefaultTextStyle(
                             style: XkTypo.buttonLabel.copyWith(
                               color: XkColor.inkInverse,
@@ -442,6 +434,7 @@ class _GemButtonState extends State<_GemButton> {
             ),
           ),
         ),
+      ),
       ),
     );
   }
@@ -474,7 +467,10 @@ class _GlassCtlButtonState extends State<_GlassCtlButton> {
       widget.ink ?? XkColor.inkOf(b),
       b,
     );
-    return MouseRegion(
+    return Semantics(
+      button: true,
+      enabled: enabled,
+      child: MouseRegion(
       onEnter: enabled ? (_) => setState(() => _hover = true) : null,
       onExit: enabled ? (_) => setState(() => _hover = false) : null,
       cursor: enabled ? SystemMouseCursors.click : SystemMouseCursors.basic,
@@ -486,6 +482,12 @@ class _GlassCtlButtonState extends State<_GlassCtlButton> {
           actions: <Type, Action<Intent>>{
             ActivateIntent: CallbackAction<ActivateIntent>(
               onInvoke: (ActivateIntent intent) {
+                widget.onPressed?.call();
+                return null;
+              },
+            ),
+            ButtonActivateIntent: CallbackAction<ButtonActivateIntent>(
+              onInvoke: (ButtonActivateIntent intent) {
                 widget.onPressed?.call();
                 return null;
               },
@@ -508,7 +510,7 @@ class _GlassCtlButtonState extends State<_GlassCtlButton> {
                 child: Padding(
                   padding: const EdgeInsets.all(3),
                   child: XkGlass(
-                    ctl: true,
+                    role: XkGlassRole.action,
                     borderRadius: XkRadius.ctlBorderRadius,
                     padding: const EdgeInsets.symmetric(
                       horizontal: 24,
@@ -527,6 +529,7 @@ class _GlassCtlButtonState extends State<_GlassCtlButton> {
             ),
           ),
         ),
+      ),
       ),
     );
   }

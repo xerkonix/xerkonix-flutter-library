@@ -4,10 +4,10 @@ import 'dart:ui';
 class XkFontSize {
   XkFontSize._();
 
-  static const double display = 58;
-  static const double displayMobile = 34;
-  static const double section = 44;
-  static const double sectionMobile = 30;
+  static const double display = 48;
+  static const double displayMobile = 30;
+  static const double section = 36;
+  static const double sectionMobile = 26;
   static const double page = 32;
   static const double pageMobile = 28;
   static const double title = 22;

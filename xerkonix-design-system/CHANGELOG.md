@@ -17,7 +17,7 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
-값·API 변경 없음.
+- `XkFontSize.display` 58→48, `displayMobile` 34→30, `section` 44→36, `sectionMobile` 30→26. TACTILE v4.5.0 마케팅 제목 한 단계 내림.
 
 - `XkButton.point` 독스트링 — 포인트 면 채움은 주 CTA 가 아닌 **보조 변형**임을
   명시(화면당 근흑 액션 1개 규칙 안에서 보조 행동에만). TACTILE v2.6 의 "CTA 면을

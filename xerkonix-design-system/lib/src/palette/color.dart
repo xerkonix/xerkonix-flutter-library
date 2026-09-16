@@ -9,8 +9,8 @@ import 'dart:ui';
 class XkColor {
   XkColor._();
 
-  // --- Light (tokens.css :root, TACTILE v4.3.0) ---
-  static const Color canvas = Color(0xFFF7F7F7);
+  // --- Light (tokens.css :root, TACTILE v4.5.0) ---
+  static const Color canvas = Color(0xFFF5F5F7);
   static const Color groundHi = Color(0xFFFFFFFF);
   static const Color solid = Color(0xFFFFFFFF);
   static const Color ink = Color(0xFF111111);
@@ -30,21 +30,21 @@ class XkColor {
   static const Color accent = Color(0xFFB1DAE1);
   static const Color accentInk = Color(0xFF1C4C58);
 
-  static const Color glass = Color(0xBFFFFFFF); // rgba(255,255,255,.75)
-  static const Color glassStrong = Color(0xBFFFFFFF);
-  static const Color glassNavigation = Color(0xD1FFFFFF); // .82
-  static const Color glassAction = Color(0x38FFFFFF); // .22
-  static const Color glassAccent = Color(0x38B1DAE1);
-  static const Color planeEdge = Color(0x1F000000); // rgba(0,0,0,.12)
+  static const Color glass = Color(0x85FFFFFF); // rgba(255,255,255,.52)
+  static const Color glassStrong = Color(0x85FFFFFF);
+  static const Color glassNavigation = Color(0xADFFFFFF); // .68
+  static const Color glassAction = Color(0x2EFFFFFF); // .18
+  static const Color glassAccent = Color(0x29B1DAE1); // rgba(177,218,225,.16)
+  static const Color planeEdge = Color(0x8CFFFFFF); // rgba(255,255,255,.55)
   static const Color planeRim = Color(0xD1FFFFFF); // rgba(255,255,255,.82)
-  static const Color planeShadow = Color(0x1F000000);
+  static const Color planeShadow = Color(0x0F000000); // rgba(0,0,0,.06)
   static const Color glassEdge = Color(0xD1FFFFFF);
-  static const Color glassEdge2 = Color(0x1F000000);
+  static const Color glassEdge2 = Color(0x0F000000);
   static const Color spec = Color(0xD1FFFFFF);
-  static const Color insetBg = Color(0x09000000); // rgba(0,0,0,.035)
-  static const Color headGlass = Color(0xD1FFFFFF); // rgba(255,255,255,.82)
-  static const Color glossSheen = Color(0x47FFFFFF); // rgba(255,255,255,.28)
-  static const Color glossRim = Color(0x47FFFFFF); // rgba(255,255,255,.28)
+  static const Color insetBg = Color(0x24767680); // rgba(118,118,128,.14)
+  static const Color headGlass = Color(0xADFFFFFF); // rgba(255,255,255,.68)
+  static const Color glossSheen = Color(0x8CFFFFFF); // rgba(255,255,255,.55)
+  static const Color glossRim = Color(0x8CFFFFFF); // rgba(255,255,255,.55)
   static const Color glossLow = Color(0x00FFFFFF); // rgba(255,255,255,0)
   static const Color glossContact = Color(0x0F000000); // rgba(0,0,0,.06)
   /// Inverse-surface sheen. Theme-invariant (`:root` only).
@@ -69,8 +69,8 @@ class XkColor {
   /// Fully transparent — token-file home for overlays that need no fill.
   static const Color none = Color(0x00000000);
 
-  static const Color glassShadowNear = Color(0x14000000); // --glass-shadow .08
-  static const Color glassShadowFar = Color(0x14000000);
+  static const Color glassShadowNear = Color(0x0D000000); // --glass-shadow .05
+  static const Color glassShadowFar = Color(0x0D000000);
 
   // --- Dark (tokens.css :root[data-theme="dark"]) ---
   static const Color darkCanvas = Color(0xFF141414);
@@ -93,20 +93,20 @@ class XkColor {
   static const Color darkAccent = Color(0xFF89C0CD);
   static const Color darkAccentInk = Color(0xFF0B2B35);
 
-  static const Color darkGlass = Color(0xBF202020); // rgba(32,32,32,.75)
-  static const Color darkGlassStrong = Color(0xBF202020);
-  static const Color darkGlassNavigation = Color(0xD1202020); // .82
-  static const Color darkGlassAction = Color(0x38202020);
-  static const Color darkGlassAccent = Color(0x3889C0CD);
-  static const Color darkPlaneEdge = Color(0x2EFFFFFF);
-  static const Color darkPlaneRim = Color(0x61FFFFFF);
+  static const Color darkGlass = Color(0x85202020); // rgba(32,32,32,.52)
+  static const Color darkGlassStrong = Color(0x85202020);
+  static const Color darkGlassNavigation = Color(0xAD202020); // .68
+  static const Color darkGlassAction = Color(0x2E202020);
+  static const Color darkGlassAccent = Color(0x2989C0CD);
+  static const Color darkPlaneEdge = Color(0x38FFFFFF);
+  static const Color darkPlaneRim = Color(0x6BFFFFFF);
   static const Color darkPlaneShadow = Color(0x3D000000);
-  static const Color darkGlassEdge = Color(0x61FFFFFF);
+  static const Color darkGlassEdge = Color(0x6BFFFFFF);
   static const Color darkGlassEdge2 = Color(0x2EFFFFFF);
   static const Color darkSpec = Color(0x61FFFFFF);
-  static const Color darkInsetBg = Color(0x0DFFFFFF);
-  static const Color darkHeadGlass = Color(0xD1202020); // rgba(32,32,32,.82)
-  static const Color darkGlossSheen = Color(0x24FFFFFF); // .14
+  static const Color darkInsetBg = Color(0x47767680); // rgba(118,118,128,.28)
+  static const Color darkHeadGlass = Color(0xAD202020); // rgba(32,32,32,.68)
+  static const Color darkGlossSheen = Color(0x29FFFFFF); // .16
   static const Color darkGlossRim = Color(0x2EFFFFFF); // .18
   static const Color darkGlossLow = Color(0x00FFFFFF); // rgba(255,255,255,0)
   static const Color darkGlossContact = Color(0x33000000); // .2

@@ -71,9 +71,9 @@ Future<({int r, int g, int b})> _centerOf(
 }
 
 void main() {
-  const Color actionFill = XkColor.glassAction; // 22% white
+  const Color actionFill = XkColor.glassAction; // 18% white
 
-  testWidgets('DecoratedBox token shadow self-bleeds through 22% fill', (
+  testWidgets('DecoratedBox token shadow self-bleeds through 18% fill', (
     WidgetTester tester,
   ) async {
     final ({int r, int g, int b}) withShadow = await _centerOf(
@@ -87,8 +87,8 @@ void main() {
       fill: actionFill,
     );
     // If the shadow is painted under the interior, the center drops toward
-    // 8% black over canvas (~227) composited with 22% white (~233).
-    // No-shadow center is 22% white over #F7F7F7 (~249).
+    // 8% black over canvas (~227) composited with 18% white.
+    // No-shadow center is 18% white over #F5F5F7.
     expect(
       noShadow.r - withShadow.r,
       greaterThan(8),

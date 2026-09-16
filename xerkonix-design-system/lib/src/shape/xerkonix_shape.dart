@@ -142,22 +142,22 @@ class XkShadow {
   static const Color darkLowlight = XkColor.darkGlassShadowNear;
   static const Color darkHighlight = XkColor.none;
 
-  /// `--glass-shadow` light: `0 8px 24px rgba(0,0,0,.08)`.
+  /// `--glass-shadow` light: `0 8px 32px rgba(0,0,0,.05)`.
   static const List<BoxShadow> glassLight = <BoxShadow>[
     BoxShadow(
       color: XkColor.glassShadowNear,
       offset: Offset(0, 8),
-      blurRadius: 24,
+      blurRadius: 32,
       spreadRadius: 0,
     ),
   ];
 
-  /// `--glass-shadow` dark: `0 8px 28px rgba(0,0,0,.4)`.
+  /// `--glass-shadow` dark: `0 8px 32px rgba(0,0,0,.4)`.
   static const List<BoxShadow> glassDark = <BoxShadow>[
     BoxShadow(
       color: XkColor.darkGlassShadowNear,
       offset: Offset(0, 8),
-      blurRadius: 28,
+      blurRadius: 32,
       spreadRadius: 0,
     ),
   ];
@@ -181,12 +181,12 @@ class XkShadow {
     ];
   }
 
-  /// `--graphic-shadow`: `0 10px 28px` at the glass-shadow color.
+  /// `--graphic-shadow`: `0 10px 28px rgba(0,0,0,.08)` / dark `.4`.
   static List<BoxShadow> graphic(Brightness brightness) {
     final bool dark = brightness == Brightness.dark;
     return <BoxShadow>[
       BoxShadow(
-        color: dark ? XkColor.darkGlassShadowNear : XkColor.glassShadowNear,
+        color: dark ? XkColor.darkGlassShadowNear : const Color(0x14000000),
         offset: const Offset(0, 10),
         blurRadius: 28,
         spreadRadius: 0,

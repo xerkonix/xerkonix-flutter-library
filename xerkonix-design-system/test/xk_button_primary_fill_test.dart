@@ -148,7 +148,7 @@ void main() {
           counts.nearBlack / counts.opaque,
           greaterThan(0.35),
           reason:
-              'light CTA raster must be mostly #000 fill, not canvas #F7F7F7 '
+              'light CTA raster must be mostly #000 fill, not canvas #F5F5F7 '
               '(got ${counts.nearBlack}/${counts.opaque})',
         );
         await _maybeWriteArtifact(tester, image, 'primary_cta_light.png');

@@ -45,11 +45,10 @@ void main() {
       expect(XkColor.bad, isA<Color>());
     });
 
-    test('XkColor should expose the TACTILE v4 key values', () {
+    test('XkColor should expose the current aqua mid values', () {
       // Canvas/ink hex live in token_canon_parity_test (reads tokens.css).
-      // Aqua point values are the stable v4 scale; do not freeze draft canvas.
-      expect(XkColor.aquaMid.toARGB32(), 0xFF59A1B0);
-      expect(XkColor.darkAquaMid.toARGB32(), 0xFF4F97A8);
+      expect(XkColor.aquaMid.toARGB32(), 0xFF1590CC);
+      expect(XkColor.darkAquaMid.toARGB32(), 0xFF1590CC);
     });
 
     test('XkColor.themed remaps light canon hex in dark, identity in light', () {
@@ -475,7 +474,7 @@ void main() {
       await focusPrimary(tester, theme: XkLightTheme.themeData);
       expect(hasFocusRing(tester, XkColor.aquaDeep), isTrue);
       expect(hasFocusRing(tester, XkColor.aqua), isFalse);
-      expect(XkColor.aquaDeep, const Color(0xFF2E6B79));
+      expect(XkColor.aquaDeep, const Color(0xFF0A75A3));
     });
 
     testWidgets('dark focus ring is dark aqua-deep, not dark aqua', (
@@ -484,7 +483,7 @@ void main() {
       await focusPrimary(tester, theme: XkDarkTheme.themeData);
       expect(hasFocusRing(tester, XkColor.darkAquaDeep), isTrue);
       expect(hasFocusRing(tester, XkColor.darkAqua), isFalse);
-      expect(XkColor.darkAquaDeep, const Color(0xFFA7DCE6));
+      expect(XkColor.darkAquaDeep, const Color(0xFF58C1EC));
     });
 
     testWidgets('XkChip selected two-state builds', (

@@ -9,7 +9,7 @@ import 'dart:ui';
 class XkColor {
   XkColor._();
 
-  // --- Light (tokens.css :root, TACTILE v4.5.0) ---
+  // --- Light (tokens.css :root, v3.0.0) ---
   static const Color canvas = Color(0xFFF5F5F7);
   static const Color groundHi = Color(0xFFFFFFFF);
   static const Color solid = Color(0xFFFFFFFF);
@@ -18,23 +18,23 @@ class XkColor {
   static const Color ink3 = Color(0xFF888888);
   static const Color rule = Color(0x1F000000); // rgba(0,0,0,.12)
 
-  static const Color aqua100 = Color(0xFFE3F3F7);
-  static const Color aquaTint = Color(0xFFC0E3EC);
-  static const Color aquaHi = Color(0xFF92CCDC);
-  static const Color aqua = Color(0xFF6EB4C4);
-  static const Color aquaMid = Color(0xFF59A1B0);
-  static const Color aquaShade = Color(0xFF33778D);
-  static const Color aquaDeep = Color(0xFF2E6B79);
-  static const Color aquaInk = Color(0xFF1B4650);
+  static const Color aqua100 = Color(0xFFE4F4FB);
+  static const Color aquaTint = Color(0xFFBFE4F5);
+  static const Color aquaHi = Color(0xFF8FD3F0);
+  static const Color aqua = Color(0xFF0E79B4);
+  static const Color aquaMid = Color(0xFF1590CC);
+  static const Color aquaShade = Color(0xFF0E79B4);
+  static const Color aquaDeep = Color(0xFF0A75A3);
+  static const Color aquaInk = Color(0xFF06283F);
 
-  static const Color accent = Color(0xFFB1DAE1);
-  static const Color accentInk = Color(0xFF1C4C58);
+  static const Color accent = Color(0xFF3FB2E4);
+  static const Color accentInk = Color(0xFF06283F);
 
   static const Color glass = Color(0x85FFFFFF); // rgba(255,255,255,.52)
   static const Color glassStrong = Color(0x85FFFFFF);
   static const Color glassNavigation = Color(0xADFFFFFF); // .68
   static const Color glassAction = Color(0x2EFFFFFF); // .18
-  static const Color glassAccent = Color(0x29B1DAE1); // rgba(177,218,225,.16)
+  static const Color glassAccent = Color(0x293FB2E4); // rgba(63,178,228,.16)
   static const Color planeEdge = Color(0x8CFFFFFF); // rgba(255,255,255,.55)
   static const Color planeRim = Color(0xD1FFFFFF); // rgba(255,255,255,.82)
   static const Color planeShadow = Color(0x0F000000); // rgba(0,0,0,.06)
@@ -81,23 +81,23 @@ class XkColor {
   static const Color darkInk3 = Color(0xFF777777);
   static const Color darkRule = Color(0x1FFFFFFF); // rgba(255,255,255,.12)
 
-  static const Color darkAqua100 = Color(0xFF12333C);
-  static const Color darkAquaTint = Color(0xFF1F4C58);
-  static const Color darkAquaHi = Color(0xFFA6D8E5);
-  static const Color darkAqua = Color(0xFF6EB4C4);
-  static const Color darkAquaMid = Color(0xFF4F97A8);
-  static const Color darkAquaShade = Color(0xFF2E6774);
-  static const Color darkAquaDeep = Color(0xFFA7DCE6);
-  static const Color darkAquaInk = Color(0xFF10303A);
+  static const Color darkAqua100 = Color(0xFF0C2A3C);
+  static const Color darkAquaTint = Color(0xFF10394F);
+  static const Color darkAquaHi = Color(0xFF8FD3F0);
+  static const Color darkAqua = Color(0xFF0E79B4);
+  static const Color darkAquaMid = Color(0xFF1590CC);
+  static const Color darkAquaShade = Color(0xFF0E79B4);
+  static const Color darkAquaDeep = Color(0xFF58C1EC);
+  static const Color darkAquaInk = Color(0xFF06283F);
 
-  static const Color darkAccent = Color(0xFF89C0CD);
-  static const Color darkAccentInk = Color(0xFF0B2B35);
+  static const Color darkAccent = Color(0xFF58C1EC);
+  static const Color darkAccentInk = Color(0xFF06283F);
 
   static const Color darkGlass = Color(0x85202020); // rgba(32,32,32,.52)
   static const Color darkGlassStrong = Color(0x85202020);
   static const Color darkGlassNavigation = Color(0xAD202020); // .68
   static const Color darkGlassAction = Color(0x2E202020);
-  static const Color darkGlassAccent = Color(0x2989C0CD);
+  static const Color darkGlassAccent = Color(0x2958C1EC); // rgba(88,193,236,.16)
   static const Color darkPlaneEdge = Color(0x38FFFFFF);
   static const Color darkPlaneRim = Color(0x6BFFFFFF);
   static const Color darkPlaneShadow = Color(0x3D000000);

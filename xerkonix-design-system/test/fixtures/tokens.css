@@ -1,24 +1,27 @@
-/* XERKONIX Design System tokens · v4.5.0 — 2026.09
-   무채색 베이스 · 서리 유리 사다리 · 작은 아쿠아 포인트 · 검정 역상 면.
+/* XERKONIX Design System tokens · v3.0.0 — 2026.09
+   무채색 베이스 · 서리 유리 사다리 · 아쿠아마린 산타마리아 톤(행동·강조·글자 세 역할) · 검정 역상 면.
    값의 원천은 이 파일만. 시안 HTML의 임시 덮어쓰기 스택을 복제하지 않는다.
    변경 순서: DESIGN-SYSTEM.md → 여기 → 미러 재복사 → Flutter 파리티.
    서체 로딩(Pretendard CDN <link> 또는 셀프호스팅 @font-face)은 각 표면의 HTML 이 한다.
    본문·라벨은 v3.1.0 크기. 마케팅 디스플레이·섹션은 v4.5.0에서 한 단계 내림.
-   포인트색(아쿠아)은 선택/토글/포커스에만. 주 액션 채움과 큰 배경·푸터는 검정 역상 역할. */
+   포인트색(아쿠아)은 애플이 파란색을 쓰는 두 자리 — 주 액션 채움(--aqua-fill)과 텍스트 링크(--aqua-text) — 와
+   선택/토글/포커스 같은 작은 강조에 쓴다. 큰 배경·푸터는 검정 역상 역할. v4 아쿠아 8단계 이름은 별칭으로 남긴다(v6 제거). */
 :root{
   --font:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo",system-ui,sans-serif;
   --canvas:#F5F5F7; --ground-hi:#FFFFFF; --solid:#FFFFFF;
   --ink:#111111; --ink-2:#555555; --ink-3:#888888; --rule:rgba(0,0,0,.12);
-  --aqua-100:#E3F3F7; --aqua-tint:#C0E3EC; --aqua-hi:#92CCDC; --aqua:#6EB4C4;
-  --aqua-mid:#59A1B0; --aqua-shade:#33778D; --aqua-deep:#2E6B79; --aqua-ink:#1B4650;
-  --accent-rgb:177,218,225; --accent:#B1DAE1; --accent-ink:#1C4C58;
+  --aqua:#0E79B4; --aqua-bright:#3FB2E4; --aqua-text:#0A75A3; --aqua-on:#FFFFFF; --aqua-text-inverse:#58C1EC;
+  --aqua-tint:#BFE4F5; --aqua-rgb:14,121,180; --aqua-glow:rgba(42,166,220,.42);
+  --aqua-fill:linear-gradient(180deg,#3FB2E4 0%,#0E79B4 28%,#0E79B4 72%,#3FB2E4 100%);
+  --aqua-100:#E4F4FB; --aqua-hi:#8FD3F0; --aqua-mid:#1590CC; --aqua-shade:#0E79B4; --aqua-deep:#0A75A3; --aqua-ink:#06283F;
+  --accent-rgb:63,178,228; --accent:#3FB2E4; --accent-ink:#06283F;
   --glass-rgb:255,255,255;
   --glass-reading-alpha:.52; --glass-reading-blur:32px; --glass-reading-contrast:1.03; --glass-reading-saturation:1.06;
   --glass-navigation-alpha:.68; --glass-navigation-blur:20px; --glass-navigation-contrast:1.02; --glass-navigation-saturation:1.04;
   --glass-action-alpha:.18; --glass-action-blur:12px; --glass-action-contrast:1.03; --glass-action-saturation:1.05;
   --glass:rgba(255,255,255,.52); --glass-strong:rgba(255,255,255,.52);
   --glass-navigation:rgba(255,255,255,.68); --glass-action:rgba(255,255,255,.18);
-  --glass-accent:rgba(177,218,225,.16);
+  --glass-accent:rgba(63,178,228,.16);
   --plane-edge:rgba(255,255,255,.55); --plane-rim:rgba(255,255,255,.82); --plane-shadow:rgba(0,0,0,.06);
   --glass-edge:rgba(255,255,255,.82); --glass-edge-2:rgba(0,0,0,.06);
   --glass-shadow:0 8px 32px rgba(0,0,0,.05);
@@ -47,13 +50,15 @@
   :root:not([data-theme="light"]){
     --canvas:#141414; --ground-hi:#202020; --solid:#202020;
     --ink:#F5F5F5; --ink-2:#BBBBBB; --ink-3:#777777; --rule:rgba(255,255,255,.12);
-    --aqua-100:#12333C; --aqua-tint:#1F4C58; --aqua-hi:#A6D8E5; --aqua:#6EB4C4; --aqua-mid:#4F97A8;
-    --aqua-shade:#2E6774; --aqua-deep:#A7DCE6; --aqua-ink:#10303A;
-    --accent-rgb:137,192,205; --accent:#89C0CD; --accent-ink:#0B2B35;
+    --aqua:#0E79B4; --aqua-bright:#3FB2E4; --aqua-text:#58C1EC; --aqua-on:#FFFFFF; --aqua-text-inverse:#58C1EC;
+    --aqua-tint:#10394F; --aqua-rgb:14,121,180; --aqua-glow:rgba(42,166,220,.5);
+    --aqua-fill:linear-gradient(180deg,#3FB2E4 0%,#0E79B4 28%,#0E79B4 72%,#3FB2E4 100%);
+    --aqua-100:#0C2A3C; --aqua-hi:#8FD3F0; --aqua-mid:#1590CC; --aqua-shade:#0E79B4; --aqua-deep:#58C1EC; --aqua-ink:#06283F;
+    --accent-rgb:88,193,236; --accent:#58C1EC; --accent-ink:#06283F;
     --glass-rgb:32,32,32;
     --glass:rgba(32,32,32,.52); --glass-strong:rgba(32,32,32,.52);
     --glass-navigation:rgba(32,32,32,.68); --glass-action:rgba(32,32,32,.18);
-    --glass-accent:rgba(137,192,205,.16);
+    --glass-accent:rgba(88,193,236,.16);
     --plane-edge:rgba(255,255,255,.22); --plane-rim:rgba(255,255,255,.42); --plane-shadow:rgba(0,0,0,.24);
     --glass-edge:rgba(255,255,255,.42); --glass-edge-2:rgba(255,255,255,.18);
     --glass-shadow:0 8px 32px rgba(0,0,0,.4);
@@ -68,13 +73,15 @@
 :root[data-theme="dark"]{
   --canvas:#141414; --ground-hi:#202020; --solid:#202020;
   --ink:#F5F5F5; --ink-2:#BBBBBB; --ink-3:#777777; --rule:rgba(255,255,255,.12);
-  --aqua-100:#12333C; --aqua-tint:#1F4C58; --aqua-hi:#A6D8E5; --aqua:#6EB4C4; --aqua-mid:#4F97A8;
-  --aqua-shade:#2E6774; --aqua-deep:#A7DCE6; --aqua-ink:#10303A;
-  --accent-rgb:137,192,205; --accent:#89C0CD; --accent-ink:#0B2B35;
+  --aqua:#0E79B4; --aqua-bright:#3FB2E4; --aqua-text:#58C1EC; --aqua-on:#FFFFFF; --aqua-text-inverse:#58C1EC;
+  --aqua-tint:#10394F; --aqua-rgb:14,121,180; --aqua-glow:rgba(42,166,220,.5);
+  --aqua-fill:linear-gradient(180deg,#3FB2E4 0%,#0E79B4 28%,#0E79B4 72%,#3FB2E4 100%);
+  --aqua-100:#0C2A3C; --aqua-hi:#8FD3F0; --aqua-mid:#1590CC; --aqua-shade:#0E79B4; --aqua-deep:#58C1EC; --aqua-ink:#06283F;
+  --accent-rgb:88,193,236; --accent:#58C1EC; --accent-ink:#06283F;
   --glass-rgb:32,32,32;
   --glass:rgba(32,32,32,.52); --glass-strong:rgba(32,32,32,.52);
   --glass-navigation:rgba(32,32,32,.68); --glass-action:rgba(32,32,32,.18);
-  --glass-accent:rgba(137,192,205,.16);
+  --glass-accent:rgba(88,193,236,.16);
   --plane-edge:rgba(255,255,255,.22); --plane-rim:rgba(255,255,255,.42); --plane-shadow:rgba(0,0,0,.24);
   --glass-edge:rgba(255,255,255,.42); --glass-edge-2:rgba(255,255,255,.18);
   --glass-shadow:0 8px 32px rgba(0,0,0,.4);

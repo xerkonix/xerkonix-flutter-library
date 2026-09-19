@@ -1,22 +1,23 @@
-## 4.4.0 — TACTILE v4.3.0 유리 역할 · 선택 틴트
+## 4.4.0 — 아쿠아 색유리 주 액션 · 라이트 캔버스 #F5F5F5
 
-패키지 마이너. 계약은 TACTILE v4.3.0. 두 번호는 별개다.
+패키지 마이너 4.4.0. 토큰 헤더 v3.0.0. 두 번호는 별개다.
 
+- 라이트 `--canvas` `#F5F5F5`.
+- 주 액션(`XkButton.primary`, ColorScheme.primary, elevated/filled)은 `--aqua-fill` 색유리 + `--aqua-on`. 검정 역상 채움은 주 액션에서 뺀다. `--surface-inverse` 는 섹션·푸터 역할.
 - 공개 API: `XkGlassRole` (reading / navigation / action). 기존 `XkGlass.ctl`은 action 별칭.
 - 공개 API: `XkListRow.surface` — 단독 행은 읽기 유리, 내비 안은 false.
 - 공개 API: `XkOuterShadow` — CSS outer box-shadow처럼 내부를 펀치. 반투명 fill 자기그림자(self-bleed) 방지. 토큰 hex/blur/offset 불변.
 - 선택 면은 `--aqua-tint` 30% + 1px `--aqua-mid` 마커. 솔리드 aqua-mid 섀도 없음.
 - 위젯 테스트 캡처(`debugDisableShadows=false`)와 Chromium 실렌더를 구분한다.
 
-## 4.3.0 — TACTILE v4.2.0 무채색 베이스 · 검정 primary CTA
+## 4.3.0 — 무채색 베이스 · 유리 역할
 
-패키지 마이너. 계약 헤더 v4.2.0.
+패키지 마이너. 토큰 헤더와 패키지 번호는 별개다.
 
 - 캔버스/잉크/글래스 비강조 층을 무채색 hex에 맞춤. 아쿠아 스케일은 유지.
 - 역상 역할 `surfaceInverse` / `inkInverse` / `inkInverse2` / `surfaceInverseCard` / `ruleInverse`.
-- 주 액션(`XkButton.primary`, ColorScheme.primary, elevated)은 검정 역상 + 흰 글자. 아쿠아 면 채움 제거.
-- 포커스 링은 `--aqua-deep`(라이트 5.61 / 다크 12.30). 스위치·체크 켜짐 채움은 `--aqua-mid` 유지.
-- `themed()` 는 역상 Color 값으로 정체성을 추론하지 않음. `--head-glass .82`, `--gloss-inverse`. 읽기 글래스 `.75` 유지. tertiary 는 cool.
+- 포커스 링은 `--aqua-deep`. 스위치·체크 켜짐 채움은 `--aqua-mid` 유지.
+- `themed()` 는 역상 Color 값으로 정체성을 추론하지 않음. tertiary 는 cool.
 
 ## 4.2.0 — TACTILE v4.1.0 얇은 평면 유리
 

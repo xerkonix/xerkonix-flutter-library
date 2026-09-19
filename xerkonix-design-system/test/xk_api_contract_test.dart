@@ -222,7 +222,9 @@ void main() {
     expect(painted.topRight, const Radius.circular(1));
   });
 
-  testWidgets('primary has no sheen RadialGradient', (WidgetTester tester) async {
+  testWidgets('primary paints aqua-fill LinearGradient, not sheen RadialGradient', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
@@ -233,15 +235,29 @@ void main() {
         ),
       ),
     );
+    bool foundAquaFill = false;
     final Iterable<DecoratedBox> boxes = tester.widgetList<DecoratedBox>(
       find.byType(DecoratedBox),
     );
     for (final DecoratedBox box in boxes) {
       final Decoration d = box.decoration;
-      if (d is BoxDecoration && d.gradient != null) {
-        fail('primary must not paint a sheen gradient: $d');
+      if (d is! BoxDecoration || d.gradient == null) {
+        continue;
       }
+      expect(
+        d.gradient,
+        isA<LinearGradient>(),
+        reason: 'primary must not paint a sheen RadialGradient: $d',
+      );
+      expect(d.gradient, isNot(isA<RadialGradient>()));
+      final LinearGradient g = d.gradient! as LinearGradient;
+      expect(g.colors.contains(XkColor.aqua), isTrue);
+      expect(g.colors.contains(XkColor.aquaBright), isTrue);
+      expect(g.begin, Alignment.topCenter);
+      expect(g.end, Alignment.bottomCenter);
+      foundAquaFill = true;
     }
+    expect(foundAquaFill, isTrue, reason: '--aqua-fill LinearGradient missing');
     expect(find.byKey(const ValueKey<String>('xk-gem-fill')), findsOneWidget);
   });
 

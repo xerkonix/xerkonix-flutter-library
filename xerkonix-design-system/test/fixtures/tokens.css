@@ -8,7 +8,7 @@
    선택/토글/포커스 같은 작은 강조에 쓴다. 큰 배경·푸터는 검정 역상 역할. v4 아쿠아 8단계 이름은 별칭으로 남긴다(v6 제거). */
 :root{
   --font:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo",system-ui,sans-serif;
-  --canvas:#F5F5F7; --ground-hi:#FFFFFF; --solid:#FFFFFF;
+  --canvas:#F5F5F5; --ground-hi:#FFFFFF; --solid:#FFFFFF;
   --ink:#111111; --ink-2:#555555; --ink-3:#888888; --rule:rgba(0,0,0,.12);
   --aqua:#0E79B4; --aqua-bright:#3FB2E4; --aqua-text:#0A75A3; --aqua-on:#FFFFFF; --aqua-text-inverse:#58C1EC;
   --aqua-tint:#BFE4F5; --aqua-rgb:14,121,180; --aqua-glow:rgba(42,166,220,.42);

@@ -165,8 +165,18 @@ class XkShadow {
   static List<BoxShadow> glass(Brightness brightness) =>
       brightness == Brightness.dark ? glassDark : glassLight;
 
-  /// Primary control uses the same faint ctl shadow as `--ctl-shadow`.
-  static List<BoxShadow> gem(Brightness brightness) => ctl(brightness);
+  /// `.gem-ctl` outer glow: `0 8px 24px var(--aqua-glow)` /
+  /// hover `0 12px 28px`. Inset rim is painted on the fill, not here.
+  static List<BoxShadow> gem(Brightness brightness, {bool hover = false}) {
+    return <BoxShadow>[
+      BoxShadow(
+        color: XkColor.aquaGlowOf(brightness),
+        offset: Offset(0, hover ? 12 : 8),
+        blurRadius: hover ? 28 : 24,
+        spreadRadius: 0,
+      ),
+    ];
+  }
 
   /// `--ctl-shadow`: `0 2px 8px rgba(0,0,0,.06)` / dark `0 2px 10px .35`.
   static List<BoxShadow> ctl(Brightness brightness) {

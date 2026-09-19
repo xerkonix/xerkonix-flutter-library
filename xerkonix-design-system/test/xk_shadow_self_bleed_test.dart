@@ -88,7 +88,7 @@ void main() {
     );
     // If the shadow is painted under the interior, the center drops toward
     // 8% black over canvas (~227) composited with 18% white.
-    // No-shadow center is 18% white over #F5F5F7.
+    // No-shadow center is 18% white over #F5F5F5.
     expect(
       noShadow.r - withShadow.r,
       greaterThan(8),

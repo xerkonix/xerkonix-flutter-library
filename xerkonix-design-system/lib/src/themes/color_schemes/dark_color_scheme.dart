@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 import '../../palette/color.dart';
 
-/// Dark color scheme based on TACTILE v4.2 tokens.
-/// Primary CTA stays inverse (black + white ink). Aqua is a small point only.
+/// Dark color scheme. Primary CTA is the same aqua glass as light
+/// (`--aqua-fill` / `--aqua-on`). Inverse surface stays a section/footer role.
 const darkColorScheme = ColorScheme(
   brightness: Brightness.dark,
-  primary: XkColor.surfaceInverse,
-  onPrimary: XkColor.inkInverse,
-  primaryContainer: XkColor.surfaceInverseCard,
-  onPrimaryContainer: XkColor.inkInverse,
+  primary: XkColor.aqua,
+  onPrimary: XkColor.aquaOn,
+  primaryContainer: XkColor.aqua,
+  onPrimaryContainer: XkColor.aquaOn,
   secondary: XkColor.darkInk,
   onSecondary: XkColor.darkGroundHi,
   secondaryContainer: XkColor.darkInsetBg,

@@ -50,7 +50,17 @@ Future<ui.Image> _capture(WidgetTester tester, Key key) async {
   return image!;
 }
 
-({int nearBlack, int opaque}) _countNearBlack(ByteData rgba, int w, int h) {
+bool _nearAquaFill(int r, int g, int b) {
+  // --aqua #0E79B4 (14,121,180) mid band, --aqua-bright #3FB2E4 (63,178,228) rims.
+  final bool nearAqua =
+      (r - 14).abs() <= 36 && (g - 121).abs() <= 44 && (b - 180).abs() <= 44;
+  final bool nearBright =
+      (r - 63).abs() <= 36 && (g - 178).abs() <= 44 && (b - 228).abs() <= 44;
+  return nearAqua || nearBright;
+}
+
+({int aqua, int nearBlack, int opaque}) _countFill(ByteData rgba, int w, int h) {
+  int aqua = 0;
   int nearBlack = 0;
   int opaque = 0;
   final Uint8List bytes = rgba.buffer.asUint8List();
@@ -65,20 +75,23 @@ Future<ui.Image> _capture(WidgetTester tester, Key key) async {
       final int r = bytes[i];
       final int g = bytes[i + 1];
       final int b = bytes[i + 2];
+      if (_nearAquaFill(r, g, b)) {
+        aqua++;
+      }
       if (r < 12 && g < 12 && b < 12) {
         nearBlack++;
       }
     }
   }
-  return (nearBlack: nearBlack, opaque: opaque);
+  return (aqua: aqua, nearBlack: nearBlack, opaque: opaque);
 }
 
 void _expectFillCoversFace(WidgetTester tester) {
   final RenderBox fill = tester.renderObject(_fillFinder());
   final RenderBox button = tester.renderObject(find.byType(XkButton));
   expect(fill.hasSize, isTrue);
-  expect(fill.size.width, greaterThan(8), reason: 'inverse fill width');
-  expect(fill.size.height, greaterThan(8), reason: 'inverse fill height');
+  expect(fill.size.width, greaterThan(8), reason: 'aqua-fill width');
+  expect(fill.size.height, greaterThan(8), reason: 'aqua-fill height');
   expect(
     fill.size.width,
     closeTo(button.size.width - 6, 2),
@@ -118,7 +131,7 @@ Future<void> _maybeWriteArtifact(
 
 void main() {
   testWidgets(
-    'light primary fill RenderBox is nonzero and raster is black',
+    'light primary fill RenderBox is nonzero and raster is aqua-fill',
     (WidgetTester tester) async {
       const Key captureKey = ValueKey<String>('xk-gem-capture-light');
       await tester.pumpWidget(
@@ -138,18 +151,25 @@ void main() {
           () async => image.toByteData(format: ui.ImageByteFormat.rawRgba),
         );
         expect(rgba, isNotNull);
-        final ({int nearBlack, int opaque}) counts = _countNearBlack(
+        final ({int aqua, int nearBlack, int opaque}) counts = _countFill(
           rgba!,
           image.width,
           image.height,
         );
         expect(counts.opaque, greaterThan(0));
         expect(
-          counts.nearBlack / counts.opaque,
+          counts.aqua / counts.opaque,
           greaterThan(0.35),
           reason:
-              'light CTA raster must be mostly #000 fill, not canvas #F5F5F7 '
-              '(got ${counts.nearBlack}/${counts.opaque})',
+              'light CTA raster must be --aqua-fill, not canvas #F5F5F5 '
+              '(got aqua ${counts.aqua} black ${counts.nearBlack}/${counts.opaque})',
+        );
+        expect(
+          counts.nearBlack / counts.opaque,
+          lessThan(0.08),
+          reason:
+              'light CTA raster must not be inverse #000 '
+              '(got aqua ${counts.aqua} black ${counts.nearBlack}/${counts.opaque})',
         );
         await _maybeWriteArtifact(tester, image, 'primary_cta_light.png');
       } finally {
@@ -159,7 +179,7 @@ void main() {
   );
 
   testWidgets(
-    'dark primary fill RenderBox is nonzero and raster is black',
+    'dark primary fill RenderBox is nonzero and raster is aqua-fill',
     (WidgetTester tester) async {
       const Key captureKey = ValueKey<String>('xk-gem-capture-dark');
       await tester.pumpWidget(
@@ -179,18 +199,25 @@ void main() {
           () async => image.toByteData(format: ui.ImageByteFormat.rawRgba),
         );
         expect(rgba, isNotNull);
-        final ({int nearBlack, int opaque}) counts = _countNearBlack(
+        final ({int aqua, int nearBlack, int opaque}) counts = _countFill(
           rgba!,
           image.width,
           image.height,
         );
         expect(counts.opaque, greaterThan(0));
         expect(
-          counts.nearBlack / counts.opaque,
+          counts.aqua / counts.opaque,
           greaterThan(0.35),
           reason:
-              'dark CTA raster must be #000 fill, not canvas #141414 '
-              '(got ${counts.nearBlack}/${counts.opaque})',
+              'dark CTA raster must be --aqua-fill, not canvas #141414 '
+              '(got aqua ${counts.aqua} black ${counts.nearBlack}/${counts.opaque})',
+        );
+        expect(
+          counts.nearBlack / counts.opaque,
+          lessThan(0.08),
+          reason:
+              'dark CTA raster must not be inverse #000 '
+              '(got aqua ${counts.aqua} black ${counts.nearBlack}/${counts.opaque})',
         );
         await _maybeWriteArtifact(tester, image, 'primary_cta_dark.png');
       } finally {

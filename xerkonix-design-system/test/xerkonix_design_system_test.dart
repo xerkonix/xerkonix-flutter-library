@@ -55,9 +55,10 @@ void main() {
       expect(XkColor.themed(XkColor.ink, Brightness.light), XkColor.ink);
       expect(XkColor.themed(XkColor.ink, Brightness.dark), XkColor.darkInk);
       expect(XkColor.themed(XkColor.ok, Brightness.dark), XkColor.darkOk);
-      expect(XkColor.themed(XkColor.canvas, Brightness.dark), XkColor.darkCanvas);
+      expect(XkColor.canvas, XkColor.darkInk);
+      expect(XkColor.canvasOf(Brightness.dark), XkColor.darkCanvas);
       expect(XkColor.themed(XkColor.darkInk, Brightness.dark), XkColor.darkInk);
-      // Hex collisions (ink2/ink3, aqua-deep/aqua-shade) use *Of, not themed.
+      // Hex collisions (ink2/ink3, aqua-deep/aqua-shade, canvas/darkInk) use *Of.
       expect(XkColor.ink2Of(Brightness.dark), XkColor.darkInk2);
       expect(XkColor.aquaDeepOf(Brightness.dark), XkColor.darkAquaDeep);
     });
@@ -82,7 +83,7 @@ void main() {
     });
 
     test('themed keeps existing dark remaps for ink/canvas/ok', () {
-      expect(XkColor.themed(XkColor.canvas, Brightness.dark), XkColor.darkCanvas);
+      expect(XkColor.canvasOf(Brightness.dark), XkColor.darkCanvas);
       expect(XkColor.themed(XkColor.ink, Brightness.dark), XkColor.darkInk);
       expect(XkColor.themed(XkColor.ok, Brightness.dark), XkColor.darkOk);
       expect(XkColor.themed(XkColor.rule, Brightness.dark), XkColor.darkRule);
@@ -167,24 +168,24 @@ void main() {
       expect(dark.color, XkColor.darkAquaDeep);
     });
 
-    test('primary CTA is inverse black, aqua is not the action fill', () {
+    test('primary CTA is aqua-fill, not inverse black', () {
       expect(
         XkLightTheme.themeData.colorScheme.primary,
-        XkColor.surfaceInverse,
+        XkColor.aqua,
       );
       expect(
         XkLightTheme.themeData.colorScheme.onPrimary,
-        XkColor.inkInverse,
+        XkColor.aquaOn,
       );
       expect(
         XkDarkTheme.themeData.colorScheme.primary,
-        XkColor.surfaceInverse,
+        XkColor.aqua,
       );
       expect(XkColor.surfaceInverse, const Color(0xFF000000));
-      expect(XkColor.inkInverse, const Color(0xFFFFFFFF));
+      expect(XkColor.aquaOn, const Color(0xFFFFFFFF));
       expect(
         XkLightTheme.themeData.colorScheme.primary,
-        isNot(XkColor.aquaMid),
+        isNot(XkColor.surfaceInverse),
       );
     });
 
@@ -387,7 +388,7 @@ void main() {
       expect(find.text('시작하기'), findsWidgets);
     });
 
-    testWidgets('XkButton.primary uses inverse fill, not aqua', (
+    testWidgets('XkButton.primary uses aqua-fill, not inverse', (
       WidgetTester tester,
     ) async {
       await tester.pumpWidget(
@@ -408,15 +409,21 @@ void main() {
             final Decoration d = box.decoration;
             return d is BoxDecoration && d.color == XkColor.surfaceInverse;
           });
-      expect(hasInverseFill, isTrue);
+      expect(hasInverseFill, isFalse);
       final bool hasAquaFill = tester
           .widgetList<DecoratedBox>(find.byType(DecoratedBox))
           .any((DecoratedBox box) {
             final Decoration d = box.decoration;
-            return d is BoxDecoration &&
-                (d.color == XkColor.aquaMid || d.color == XkColor.glassAccent);
+            if (d is! BoxDecoration) {
+              return false;
+            }
+            if (d.color == XkColor.aqua) {
+              return true;
+            }
+            final Gradient? g = d.gradient;
+            return g is LinearGradient && g.colors.contains(XkColor.aqua);
           });
-      expect(hasAquaFill, isFalse);
+      expect(hasAquaFill, isTrue);
     });
 
     bool hasFocusRing(WidgetTester tester, Color color) {

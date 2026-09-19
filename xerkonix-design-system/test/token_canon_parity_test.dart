@@ -22,7 +22,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:xerkonix_design_system/xerkonix_design_system.dart';
 import 'package:xerkonix_design_system/src/typography/typo_constants.dart';
 
-const String _siblingPath = '../../xerkonix-tactile-design/tokens.css';
+const String _siblingPath = '../../xerkonix-design-system/tokens.css';
 const String _fixturePath = 'test/fixtures/tokens.css';
 
 String _stripComments(String css) =>
@@ -533,6 +533,13 @@ void main() {
       '--glass-shadow': 'XkShadow.glass List<BoxShadow> 로 미러 (색·offset 별도 대조)',
       '--ctl-shadow': 'XkShadow.ctl List<BoxShadow>',
       '--graphic-shadow': 'XkShadow.graphic List<BoxShadow>',
+      '--aqua-bright': '강조 hex. XkColor.accent 와 같다',
+      '--aqua-text': '글자 역할. 별칭 --aqua-deep 라이트 값',
+      '--aqua-on': '주 액션 위 흰 글자. XkColor.inkInverse',
+      '--aqua-text-inverse': '다크 글자 역할. XkColor.darkAquaDeep',
+      '--aqua-rgb': 'XkColor.aqua hex 미러. RGB 튜플은 Color 가 아님',
+      '--aqua-glow': '주 액션 글로우. 알파 색이라 Color 상수로 두지 않음',
+      '--aqua-fill': '주 액션 색유리 그라디언트. Color 가 아님',
       '--accent-rgb': 'XkColor.accent hex 미러. RGB 튜플은 Color 가 아님',
       '--glass-rgb': 'XkColor.glass 알파 합성에 사용. RGB 튜플은 Color 가 아님',
       '--glass-reading-alpha': '역할 알파. Color 가 아님',

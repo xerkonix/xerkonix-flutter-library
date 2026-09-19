@@ -273,6 +273,9 @@ void main() {
         '--aqua-shade': XkColor.aquaShade,
         '--aqua-deep': XkColor.aquaDeep,
         '--aqua-ink': XkColor.aquaInk,
+        '--aqua-bright': XkColor.aquaBright,
+        '--aqua-on': XkColor.aquaOn,
+        '--aqua-glow': XkColor.aquaGlow,
       }, 'XkColor 아쿠아를 tokens.css 라이트 값으로 맞춰라.');
     });
     test('다크 아쿠아가 출처(tokens.css)와 같다', () {
@@ -285,6 +288,9 @@ void main() {
         '--aqua-shade': XkColor.darkAquaShade,
         '--aqua-deep': XkColor.darkAquaDeep,
         '--aqua-ink': XkColor.darkAquaInk,
+        '--aqua-bright': XkColor.aquaBright,
+        '--aqua-on': XkColor.aquaOn,
+        '--aqua-glow': XkColor.darkAquaGlow,
       }, 'XkColor 아쿠아를 tokens.css 다크 값으로 맞춰라.');
     });
   });
@@ -466,6 +472,9 @@ void main() {
       '--aqua-shade',
       '--aqua-deep',
       '--aqua-ink',
+      '--aqua-bright',
+      '--aqua-on',
+      '--aqua-glow',
       '--glass',
       '--glass-strong',
       '--glass-edge',
@@ -533,12 +542,9 @@ void main() {
       '--glass-shadow': 'XkShadow.glass List<BoxShadow> 로 미러 (색·offset 별도 대조)',
       '--ctl-shadow': 'XkShadow.ctl List<BoxShadow>',
       '--graphic-shadow': 'XkShadow.graphic List<BoxShadow>',
-      '--aqua-bright': '강조 hex. XkColor.accent 와 같다',
       '--aqua-text': '글자 역할. 별칭 --aqua-deep 라이트 값',
-      '--aqua-on': '주 액션 위 흰 글자. XkColor.inkInverse',
       '--aqua-text-inverse': '다크 글자 역할. XkColor.darkAquaDeep',
       '--aqua-rgb': 'XkColor.aqua hex 미러. RGB 튜플은 Color 가 아님',
-      '--aqua-glow': '주 액션 글로우. 알파 색이라 Color 상수로 두지 않음',
       '--aqua-fill': '주 액션 색유리 그라디언트. Color 가 아님',
       '--accent-rgb': 'XkColor.accent hex 미러. RGB 튜플은 Color 가 아님',
       '--glass-rgb': 'XkColor.glass 알파 합성에 사용. RGB 튜플은 Color 가 아님',

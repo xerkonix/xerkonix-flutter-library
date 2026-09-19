@@ -144,7 +144,7 @@ void main() {
     await tester.pump();
   }
 
-  testWidgets('matrix light 1440 has black primary fill and no aqua wash', (
+  testWidgets('matrix light 1440 has aqua primary fill and no canvas aqua wash', (
     WidgetTester tester,
   ) async {
     final bool previous = _enableRealShadows();
@@ -173,6 +173,28 @@ void main() {
         reason: 'canvas must not be an aqua wash',
       );
       final double scale = image.width / 1440;
+      final Offset fillCenter = tester.getCenter(
+        find.byKey(const ValueKey<String>('xk-gem-fill')).first,
+      );
+      final List<int> primary = _pxAt(
+        rgba,
+        image.width,
+        image.height,
+        fillCenter,
+        scale,
+      );
+      expect(
+        primary[2],
+        greaterThan(primary[0] + 40),
+        reason: 'primary center must be --aqua, not inverse #000, got $primary',
+      );
+      expect(primary[0], lessThan(80), reason: 'primary R too high for --aqua: $primary');
+      expect(primary[1], greaterThan(80), reason: 'primary G too low for --aqua: $primary');
+      expect(
+        primary[0] + primary[1] + primary[2],
+        greaterThan(120),
+        reason: 'primary must not be near-black, got $primary',
+      );
       final Finder homeRow = find.ancestor(
         of: find.text('Home'),
         matching: find.byType(XkListRow),
@@ -246,7 +268,7 @@ void main() {
     }
   });
 
-  testWidgets('matrix dark 1440 keeps inverse primary', (WidgetTester tester) async {
+  testWidgets('matrix dark 1440 keeps aqua primary fill', (WidgetTester tester) async {
     final bool previous = _enableRealShadows();
     try {
     await pumpMatrix(tester, size: const Size(1440, 900), dark: true);

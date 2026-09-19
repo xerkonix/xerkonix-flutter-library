@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 import '../../palette/color.dart';
 
-/// Light color scheme based on TACTILE v4.2 tokens.
-/// Primary CTA is inverse (black) + white ink. Aqua is not the main action.
+/// Light color scheme. Primary CTA is `--aqua-fill` opaque fallback `--aqua`
+/// + `--aqua-on`. Inverse surface stays a section/footer role.
 const lightColorScheme = ColorScheme(
   brightness: Brightness.light,
-  primary: XkColor.surfaceInverse,
-  onPrimary: XkColor.inkInverse,
-  primaryContainer: XkColor.surfaceInverseCard,
-  onPrimaryContainer: XkColor.inkInverse,
+  primary: XkColor.aqua,
+  onPrimary: XkColor.aquaOn,
+  primaryContainer: XkColor.aqua,
+  onPrimaryContainer: XkColor.aquaOn,
   secondary: XkColor.ink,
   onSecondary: XkColor.groundHi,
   secondaryContainer: XkColor.insetBg,

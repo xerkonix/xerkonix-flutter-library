@@ -6,9 +6,9 @@ import '../shape/xerkonix_shape.dart';
 import '../typography/xerkonix_typography.dart';
 import 'xerkonix_glass.dart';
 
-/// TACTILE v4.3.0 buttons. Primary = `--surface-inverse` / `light.css`
-/// `.btn-primary` (`background-image: none`). Support = action glass
-/// (`.glass-ctl`). Aqua is not the main action fill.
+/// XERKONIX buttons. Primary = `light.css` `.gem-ctl` / `.btn-primary`
+/// (`--aqua-fill` + `--aqua-on`). Support = action glass (`.glass-ctl`).
+/// Inverse surface is a section/footer role, not the main action fill.
 class XkButton extends StatelessWidget {
   const XkButton._({
     super.key,
@@ -391,29 +391,57 @@ class _GemButtonState extends State<_GemButton> {
                   child: DecoratedBox(
                     decoration: BoxDecoration(
                       borderRadius: XkRadius.ctlBorderRadius,
-                      boxShadow: XkShadow.ctl(b),
+                      boxShadow: XkShadow.gem(b, hover: _hover && enabled),
                     ),
                     child: ClipRRect(
                       borderRadius: XkRadius.ctlBorderRadius,
                       child: Stack(
                         children: <Widget>[
-                          const Positioned.fill(
+                          Positioned.fill(
                             child: DecoratedBox(
-                              key: ValueKey<String>('xk-gem-fill'),
+                              key: const ValueKey<String>('xk-gem-fill'),
                               decoration: BoxDecoration(
-                                color: XkColor.surfaceInverse,
+                                color: XkColor.aqua,
+                                gradient: const LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: <Color>[
+                                    XkColor.aquaBright,
+                                    XkColor.aqua,
+                                    XkColor.aqua,
+                                    XkColor.aquaBright,
+                                  ],
+                                  stops: <double>[0.0, 0.28, 0.72, 1.0],
+                                ),
                                 borderRadius: XkRadius.ctlBorderRadius,
+                                border: const Border.fromBorderSide(
+                                  BorderSide(color: XkColor.aqua),
+                                ),
+                                boxShadow: <BoxShadow>[
+                                  const BoxShadow(
+                                    color: XkColor.glossSheen,
+                                    offset: Offset(0, 1),
+                                    blurStyle: BlurStyle.inner,
+                                  ),
+                                  BoxShadow(
+                                    color: XkColor.mixWhite.withValues(
+                                      alpha: 0.28,
+                                    ),
+                                    spreadRadius: 1,
+                                    blurStyle: BlurStyle.inner,
+                                  ),
+                                ],
                               ),
                             ),
                           ),
                           DefaultTextStyle(
                             style: XkTypo.buttonLabel.copyWith(
-                              color: XkColor.inkInverse,
+                              color: XkColor.aquaOn,
                               fontWeight: FontWeight.w600,
                             ),
                             child: IconTheme(
                               data: const IconThemeData(
-                                color: XkColor.inkInverse,
+                                color: XkColor.aquaOn,
                                 size: 18,
                               ),
                               child: Padding(

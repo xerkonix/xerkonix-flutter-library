@@ -65,8 +65,14 @@ class XkDarkTheme extends XkTheme {
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: _ctlStyle(
-        foreground: XkColor.inkInverse,
-        background: XkColor.surfaceInverse,
+        foreground: XkColor.aquaOn,
+        background: XkColor.aqua,
+      ),
+    ),
+    filledButtonTheme: FilledButtonThemeData(
+      style: _ctlStyle(
+        foreground: XkColor.aquaOn,
+        background: XkColor.aqua,
       ),
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(

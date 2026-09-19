@@ -10,7 +10,7 @@ class XkColor {
   XkColor._();
 
   // --- Light (tokens.css :root, v3.0.0) ---
-  static const Color canvas = Color(0xFFF5F5F7);
+  static const Color canvas = Color(0xFFF5F5F5);
   static const Color groundHi = Color(0xFFFFFFFF);
   static const Color solid = Color(0xFFFFFFFF);
   static const Color ink = Color(0xFF111111);
@@ -29,6 +29,12 @@ class XkColor {
 
   static const Color accent = Color(0xFF3FB2E4);
   static const Color accentInk = Color(0xFF06283F);
+  /// `--aqua-bright`. Same hex as [accent]; fill-edge / glow role.
+  static const Color aquaBright = accent;
+  /// `--aqua-on`. White on the primary aqua-fill. Same hex as [inkInverse].
+  static const Color aquaOn = Color(0xFFFFFFFF);
+  /// `--aqua-glow` `rgba(42,166,220,.42)`.
+  static const Color aquaGlow = Color(0x6B2AA6DC);
 
   static const Color glass = Color(0x85FFFFFF); // rgba(255,255,255,.52)
   static const Color glassStrong = Color(0x85FFFFFF);
@@ -50,7 +56,7 @@ class XkColor {
   /// Inverse-surface sheen. Theme-invariant (`:root` only).
   static const Color glossInverse = Color(0x1FFFFFFF); // rgba(255,255,255,.12)
 
-  /// Inverse surface — theme-invariant. Primary CTA fill.
+  /// Inverse surface — theme-invariant. Wide sections and footer, not CTA fill.
   static const Color surfaceInverse = Color(0xFF000000);
   static const Color inkInverse = Color(0xFFFFFFFF);
   static const Color inkInverse2 = Color(0xFFC4C4C4);
@@ -92,6 +98,8 @@ class XkColor {
 
   static const Color darkAccent = Color(0xFF58C1EC);
   static const Color darkAccentInk = Color(0xFF06283F);
+  /// `--aqua-glow` dark `rgba(42,166,220,.5)`.
+  static const Color darkAquaGlow = Color(0x802AA6DC);
 
   static const Color darkGlass = Color(0x85202020); // rgba(32,32,32,.52)
   static const Color darkGlassStrong = Color(0x85202020);
@@ -236,10 +244,12 @@ class XkColor {
   /// Light-canon color → dark remap. Identity in light.
   ///
   /// Neutralization made several roles share a Color value (`groundHi` /
-  /// `inkInverse` are both #FFF). This method must not infer inverse identity
-  /// from that value — inverse UI uses [inkInverseOf] / [surfaceInverseOf].
-  /// Overlapping gloss/edge neutrals also share values; callers that need a
-  /// specific role in dark should use the `*Of` getter, not [themed].
+  /// `inkInverse` are both #FFF; light [canvas] and [darkInk] are both
+  /// #F5F5F5). This method must not infer inverse identity from that value —
+  /// inverse UI uses [inkInverseOf] / [surfaceInverseOf]. Canvas in dark uses
+  /// [canvasOf], not [themed]. Overlapping gloss/edge neutrals also share
+  /// values; callers that need a specific role in dark should use the `*Of`
+  /// getter, not [themed].
   static Color themed(Color color, Brightness brightness) {
     if (brightness != Brightness.dark) return color;
     // Already-dark tokens first (aqua-hi light == aqua-deep dark, etc.).
@@ -268,7 +278,8 @@ class XkColor {
         color == darkWarn ||
         color == darkBad ||
         color == darkWarm ||
-        color == darkCool) {
+        color == darkCool ||
+        color == darkAquaGlow) {
       return color;
     }
     if (color == canvas) return darkCanvas;
@@ -299,6 +310,7 @@ class XkColor {
     if (color == cool) return darkCool;
     if (color == glassShadowNear) return darkGlassShadowNear;
     if (color == glassShadowFar) return darkGlassShadowFar;
+    if (color == aquaGlow) return darkAquaGlow;
     return color;
   }
 
@@ -329,6 +341,11 @@ class XkColor {
       b == Brightness.dark ? darkAccent : accent;
   static Color accentInkOf(Brightness b) =>
       b == Brightness.dark ? darkAccentInk : accentInk;
+  /// `--aqua-bright` / `--aqua-on` / `--aqua-fill` 가운데 띠는 테마와 무관.
+  static Color aquaBrightOf(Brightness b) => aquaBright;
+  static Color aquaOnOf(Brightness b) => aquaOn;
+  static Color aquaGlowOf(Brightness b) =>
+      b == Brightness.dark ? darkAquaGlow : aquaGlow;
   static Color glassOf(Brightness b) =>
       b == Brightness.dark ? darkGlass : glass;
   static Color glassStrongOf(Brightness b) =>

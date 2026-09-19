@@ -81,7 +81,7 @@ void main() {
       final int w = image!.width;
       final int h = image.height;
       final ({int r, int g, int b}) c = _px(rgba!, w, w ~/ 2, h ~/ 2);
-      // 30% #C0E3EC over #F5F5F7 ≈ (229, 240, 244)
+      // 30% #BFE4F5 over #F5F5F5 ≈ (229, 240, 245)
       expect(c.r, closeTo(231, 14));
       expect(c.g, closeTo(241, 14));
       expect(c.b, closeTo(244, 14));
@@ -228,7 +228,7 @@ void main() {
     expect(
       band.r,
       lessThan(236),
-      reason: 'hard shadow band should sit well below canvas #F5F5F7, got $band',
+      reason: 'hard shadow band should sit well below canvas #F5F5F5, got $band',
     );
   });
 

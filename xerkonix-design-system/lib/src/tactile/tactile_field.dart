@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'tactile_tokens.dart';
 import 'tactile_type.dart';
@@ -24,6 +25,29 @@ class XkTactileField extends StatelessWidget {
 
   /// Override for the input chrome. Null uses [XkTactileTokens.fieldRadius].
   final BorderRadius? borderRadius;
+
+  /// Tab 은 글자 삽입이 아니라 다음/이전 Flutter focus 로 간다.
+  ///
+  /// 웹 `TextField` 가 브라우저 input 순환에만 남으면 회사 워드마크에
+  /// 순방향 Tab 이 닿지 않는다. `requestFocus` 주입이 아니다.
+  static KeyEventResult tabMovesToNeighbor(FocusNode node, KeyEvent event) {
+    if (event is! KeyDownEvent) {
+      return KeyEventResult.ignored;
+    }
+    if (event.logicalKey != LogicalKeyboardKey.tab) {
+      return KeyEventResult.ignored;
+    }
+    final Set<LogicalKeyboardKey> down =
+        HardwareKeyboard.instance.logicalKeysPressed;
+    final bool back = down.contains(LogicalKeyboardKey.shiftLeft) ||
+        down.contains(LogicalKeyboardKey.shiftRight);
+    if (back) {
+      node.previousFocus();
+    } else {
+      node.nextFocus();
+    }
+    return KeyEventResult.handled;
+  }
 
   static InputDecorationTheme inputThemeOf(Brightness brightness) {
     final XkTactileTokens t = XkTactileTokens.of(brightness);

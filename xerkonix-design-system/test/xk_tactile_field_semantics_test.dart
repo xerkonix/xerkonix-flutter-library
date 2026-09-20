@@ -10,8 +10,8 @@ SemanticsNode? _editableNamed(
 }) {
   SemanticsNode? found;
   void walk(SemanticsNode node) {
-    final bool textField = node.hasFlag(SemanticsFlag.isTextField);
-    final bool isObscured = node.hasFlag(SemanticsFlag.isObscured);
+    final bool textField = node.flagsCollection.isTextField;
+    final bool isObscured = node.flagsCollection.isObscured;
     if (textField && node.label == name && isObscured == obscured) {
       found = node;
     }
@@ -82,17 +82,17 @@ void main() {
       expect(password, isNotNull, reason: 'no obscured isTextField labeled 비밀번호');
       expect(email!.label, '이메일');
       expect(password!.label, '비밀번호');
-      expect(email.hasFlag(SemanticsFlag.isTextField), isTrue);
-      expect(email.hasFlag(SemanticsFlag.isObscured), isFalse);
-      expect(password.hasFlag(SemanticsFlag.isTextField), isTrue);
-      expect(password.hasFlag(SemanticsFlag.isObscured), isTrue);
+      expect(email.flagsCollection.isTextField, isTrue);
+      expect(email.flagsCollection.isObscured, isFalse);
+      expect(password.flagsCollection.isTextField, isTrue);
+      expect(password.flagsCollection.isObscured, isTrue);
       expect(_labelHits(root, '이메일'), 1);
       expect(_labelHits(root, '비밀번호'), 1);
 
       final SemanticsNode fromFinder = tester.getSemantics(
         find.byType(TextField).at(0),
       );
-      expect(fromFinder.hasFlag(SemanticsFlag.isTextField), isTrue);
+      expect(fromFinder.flagsCollection.isTextField, isTrue);
       expect(fromFinder.label, '이메일');
       handle.dispose();
     },
@@ -122,9 +122,10 @@ void main() {
     );
     expect(email, isNotNull);
     expect(email!.label, '이메일');
-    expect(tester.getSemantics(find.byType(TextField)).hasFlag(
-          SemanticsFlag.isTextField,
-        ), isTrue);
+    expect(
+      tester.getSemantics(find.byType(TextField)).flagsCollection.isTextField,
+      isTrue,
+    );
     handle.dispose();
   });
 

@@ -32,7 +32,7 @@ SemanticsNode _editable(WidgetTester tester, Finder field) {
   final SemanticsNode start = tester.getSemantics(field);
   SemanticsNode? found;
   void walk(SemanticsNode node) {
-    if (node.hasFlag(SemanticsFlag.isTextField)) {
+    if (node.flagsCollection.isTextField) {
       found = node;
     }
     node.visitChildren((SemanticsNode child) {
@@ -174,9 +174,9 @@ void main() {
     final SemanticsNode email = _editable(tester, inputs.at(0));
     final SemanticsNode password = _editable(tester, inputs.at(1));
     final SemanticsNode code = _editable(tester, inputs.at(2));
-    expect(email.hasFlag(SemanticsFlag.isTextField), isTrue);
-    expect(password.hasFlag(SemanticsFlag.isTextField), isTrue);
-    expect(code.hasFlag(SemanticsFlag.isTextField), isTrue);
+    expect(email.flagsCollection.isTextField, isTrue);
+    expect(password.flagsCollection.isTextField, isTrue);
+    expect(code.flagsCollection.isTextField, isTrue);
     expect(email.label.split('\n').first, '이메일');
     expect(password.label.split('\n').first, '비밀번호');
     expect(code.label.split('\n').first, '인증번호');
@@ -197,7 +197,7 @@ void main() {
     expect(focused.border?.top.color, XkTactileTokens.light.accent);
     expect(focused.boxShadow, isNotNull);
     expect(_editable(tester, inputs.at(0)).label.split('\n').first, '이메일');
-    expect(_editable(tester, inputs.at(0)).hasFlag(SemanticsFlag.isTextField), isTrue);
+    expect(_editable(tester, inputs.at(0)).flagsCollection.isTextField, isTrue);
     handle.dispose();
   });
 }

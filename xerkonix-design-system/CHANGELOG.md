@@ -1,3 +1,7 @@
+## Unreleased
+
+- `XkCompanyWordmark`: 승인 ink/paper 워드마크 하나, 홈은 `https://xerkonix.com/`. 제품 워드마크가 아니다.
+
 ## 4.4.0 — 아쿠아 색유리 주 액션 · 라이트 캔버스 #F5F5F5
 
 패키지 마이너 4.4.0. 토큰 헤더 v3.0.0. 두 번호는 별개다.

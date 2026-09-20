@@ -41,22 +41,27 @@ class XkCompanyWordmark extends StatelessWidget {
           dark ? assetPaper : assetInk,
           height: height,
           filterQuality: FilterQuality.medium,
-          errorBuilder: (_, __, ___) => Image.asset(
-            dark ? assetPaper : assetInk,
-            package: 'xerkonix_design_system',
-            height: height,
-            filterQuality: FilterQuality.medium,
-            errorBuilder: (_, __, ___) => Text(
-              'XERKONIX',
-              style: TextStyle(
-                fontSize: height,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 0.35,
-                height: 1,
-                color: Theme.of(context).colorScheme.onSurface,
-              ),
-            ),
-          ),
+          errorBuilder: (BuildContext context, Object error, StackTrace? st) {
+            return Image.asset(
+              dark ? assetPaper : assetInk,
+              package: 'xerkonix_design_system',
+              height: height,
+              filterQuality: FilterQuality.medium,
+              errorBuilder:
+                  (BuildContext context, Object error, StackTrace? st) {
+                return Text(
+                  'XERKONIX',
+                  style: TextStyle(
+                    fontSize: height,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.35,
+                    height: 1,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                );
+              },
+            );
+          },
         ),
       ),
     );

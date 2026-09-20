@@ -57,7 +57,7 @@ class _XkTactileButtonState extends State<XkTactileButton> {
     final Color? semantic = widget.semanticFill;
     if (semantic != null) {
       fill = hover
-          ? Color.lerp(semantic, const Color(0xFFFFFFFF), 0.10)!
+          ? Color.lerp(semantic, t.controlMark, 0.10)!
           : semantic;
       border = semantic;
       shadows = enabled ? t.secondaryShadow : const <BoxShadow>[];
@@ -70,13 +70,13 @@ class _XkTactileButtonState extends State<XkTactileButton> {
           shadows = enabled ? t.secondaryShadow : const <BoxShadow>[];
           label = t.ink;
         case XkTactileButtonKind.quiet:
-          fill = hover ? t.controlHover : const Color(0x00000000);
+          fill = hover ? t.controlHover : XkTactileTokens.clear;
           border = t.line;
           shadows = const <BoxShadow>[];
           label = t.ink;
         case XkTactileButtonKind.text:
-          fill = const Color(0x00000000);
-          border = const Color(0x00000000);
+          fill = XkTactileTokens.clear;
+          border = XkTactileTokens.clear;
           shadows = const <BoxShadow>[];
           label = hover ? t.accent : t.ink;
       }
@@ -112,7 +112,11 @@ class _XkTactileButtonState extends State<XkTactileButton> {
             ),
             child: IconTheme(
               data: IconThemeData(color: label, size: 16),
-              child: Center(child: widget.child),
+              child: Center(
+                widthFactor: widget.expanded ? null : 1,
+                heightFactor: 1,
+                child: widget.child,
+              ),
             ),
           ),
         ),

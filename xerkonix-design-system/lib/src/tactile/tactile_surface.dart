@@ -80,10 +80,16 @@ class XkTactileSurface extends StatelessWidget {
           XkTactileSurfaceRole.information => XkTactileTokens.panelRadius,
           XkTactileSurfaceRole.glass => XkTactileTokens.surfaceRadius,
           XkTactileSurfaceRole.overlay => XkTactileTokens.overlayRadius,
-        });
+        },);
     final BorderRadius resolved = radiusGeom.resolve(
       Directionality.maybeOf(context) ?? TextDirection.ltr,
     );
+
+    Widget content =
+        padding == null ? child : Padding(padding: padding!, child: child);
+    // ListTile / InkWell ink must hit a Material between this fill and the
+    // control. Without it, a panel DecoratedBox hides splashes and asserts.
+    content = Material(type: MaterialType.transparency, child: content);
 
     Widget body = DecoratedBox(
       decoration: BoxDecoration(
@@ -92,7 +98,7 @@ class XkTactileSurface extends StatelessWidget {
         border: Border.all(color: paintedBorder),
         boxShadow: shadows,
       ),
-      child: padding == null ? child : Padding(padding: padding!, child: child),
+      child: content,
     );
 
     body = ClipRRect(

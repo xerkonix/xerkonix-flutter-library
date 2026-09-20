@@ -483,6 +483,12 @@ class _Controls extends StatelessWidget {
       children: <Widget>[
         XkButton.primary(onPressed: onDialog, child: const Text('Primary')),
         const SizedBox(height: 8),
+        XkButton.primary(
+          expanded: true,
+          onPressed: onDialog,
+          child: const Text('Primary expanded'),
+        ),
+        const SizedBox(height: 8),
         XkButton.support(onPressed: () {}, child: const Text('Secondary')),
         const SizedBox(height: 8),
         XkButton.support(onPressed: null, child: const Text('Disabled')),
@@ -643,11 +649,35 @@ class StatesPageState extends State<StatesPage> {
                             const SizedBox(height: 12),
                             const XkTextInputField(
                               label: '비밀번호',
+                              enabled: false,
+                            ),
+                            const SizedBox(height: 12),
+                            const XkTextInputField(
+                              label: '인증번호',
+                              errorText: '코드가 올바르지 않습니다',
                             ),
                             const SizedBox(height: 12),
                             const XkTextAreaField(
                               label: '메모',
                               hintText: '내용을 입력하세요',
+                            ),
+                            const SizedBox(height: 16),
+                            XkButton.primary(
+                              onPressed: () {},
+                              child: const Text('시작하기'),
+                            ),
+                            const SizedBox(height: 8),
+                            XkButton.primary(
+                              expanded: true,
+                              onPressed: () {},
+                              child: const Text('전체 너비'),
+                            ),
+                            const SizedBox(height: 8),
+                            XkButton.support(
+                              onPressed: () {},
+                              child: const Text(
+                                '아주 긴 단추 문구가 한 줄에 안 들어가면 줄바꿈한다',
+                              ),
                             ),
                             const SizedBox(height: 16),
                             Wrap(

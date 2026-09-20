@@ -12,16 +12,20 @@ class XkTactileField extends StatelessWidget {
     super.key,
     required this.child,
     this.label,
+    this.enabled = true,
+    this.error = false,
   });
 
   final Widget child;
   final String? label;
+  final bool enabled;
+  final bool error;
 
   static InputDecorationTheme inputThemeOf(Brightness brightness) {
     final XkTactileTokens t = XkTactileTokens.of(brightness);
     return InputDecorationTheme(
       filled: false,
-      fillColor: const Color(0x00000000),
+      fillColor: XkTactileTokens.clear,
       isDense: true,
       floatingLabelBehavior: FloatingLabelBehavior.never,
       contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
@@ -74,7 +78,12 @@ class XkTactileField extends StatelessWidget {
       ),
       child: child,
     );
-    final Widget input = _TactileInputChrome(tokens: t, child: stripped);
+    final Widget input = _TactileInputChrome(
+      tokens: t,
+      enabled: enabled,
+      error: error,
+      child: stripped,
+    );
     final String? name = label?.trim();
     if (name == null || name.isEmpty) {
       return input;
@@ -100,10 +109,17 @@ class XkTactileField extends StatelessWidget {
 }
 
 class _TactileInputChrome extends StatefulWidget {
-  const _TactileInputChrome({required this.tokens, required this.child});
+  const _TactileInputChrome({
+    required this.tokens,
+    required this.child,
+    required this.enabled,
+    required this.error,
+  });
 
   final XkTactileTokens tokens;
   final Widget child;
+  final bool enabled;
+  final bool error;
 
   @override
   State<_TactileInputChrome> createState() => _TactileInputChromeState();
@@ -115,34 +131,47 @@ class _TactileInputChromeState extends State<_TactileInputChrome> {
   @override
   Widget build(BuildContext context) {
     final XkTactileTokens t = widget.tokens;
+    final bool focused = _focused && widget.enabled;
+    final Color border = !widget.enabled
+        ? t.inputBorder
+        : widget.error
+            ? t.accentDeep
+            : focused
+                ? t.accent
+                : t.inputBorder;
     return Focus(
       canRequestFocus: false,
       skipTraversal: true,
       includeSemantics: false,
-      onFocusChange: (bool focused) {
-        if (focused != _focused) {
-          setState(() => _focused = focused);
+      onFocusChange: (bool next) {
+        if (next != _focused) {
+          setState(() => _focused = next);
         }
       },
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(minHeight: XkTactileTokens.controlHeight),
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            color: t.inputFill,
-            borderRadius: BorderRadius.circular(XkTactileTokens.fieldRadius),
-            border: Border.all(color: _focused ? t.accent : t.inputBorder),
-            boxShadow: _focused
-                ? <BoxShadow>[
-                    BoxShadow(
-                      color: t.selectedBorder.withValues(alpha: 0.22),
-                      spreadRadius: 3,
-                    ),
-                  ]
-                : null,
+      child: Opacity(
+        opacity: widget.enabled ? 1 : XkTactileTokens.disabledOpacity,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(
+            minHeight: XkTactileTokens.controlHeight,
           ),
-          child: DefaultTextStyle.merge(
-            style: XkTactileType.field(color: t.ink),
-            child: widget.child,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: t.inputFill,
+              borderRadius: BorderRadius.circular(XkTactileTokens.fieldRadius),
+              border: Border.all(color: border),
+              boxShadow: focused
+                  ? <BoxShadow>[
+                      BoxShadow(
+                        color: t.selectedBorder.withValues(alpha: 0.22),
+                        spreadRadius: 3,
+                      ),
+                    ]
+                  : null,
+            ),
+            child: DefaultTextStyle.merge(
+              style: XkTactileType.field(color: t.ink),
+              child: widget.child,
+            ),
           ),
         ),
       ),

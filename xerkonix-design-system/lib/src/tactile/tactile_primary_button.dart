@@ -103,7 +103,11 @@ class _XkTactilePrimaryButtonState extends State<XkTactilePrimaryButton> {
                 style: XkTactileType.button(color: t.primaryText),
                 child: IconTheme(
                   data: IconThemeData(color: t.primaryText, size: 16),
-                  child: Center(child: widget.child),
+                  child: Center(
+                    widthFactor: widget.expanded ? null : 1,
+                    heightFactor: 1,
+                    child: widget.child,
+                  ),
                 ),
               ),
             ),

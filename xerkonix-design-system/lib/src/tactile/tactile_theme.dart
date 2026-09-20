@@ -66,7 +66,7 @@ class XkTactileTheme {
   }) {
     final XkTactileChrome c = XkTactileChrome.of(brightness);
     final XkTactileTokens t = c.tokens;
-    const Color clear = Color(0x00000000);
+    const Color clear = XkTactileTokens.clear;
     final Color err = error ?? t.accentDeep;
     final Color onErr = onError ?? t.surfaceRaised;
 
@@ -269,7 +269,7 @@ class XkTactileTheme {
     return ButtonStyle(
       backgroundColor: WidgetStateProperty.resolveWith((Set<WidgetState> s) {
         if (!filled) {
-          return const Color(0x00000000);
+          return XkTactileTokens.clear;
         }
         if (s.contains(WidgetState.disabled)) {
           return t.primaryBase.withValues(alpha: XkTactileTokens.disabledOpacity);
@@ -278,7 +278,7 @@ class XkTactileTheme {
       }),
       foregroundColor: WidgetStatePropertyAll<Color>(t.primaryText),
       elevation: const WidgetStatePropertyAll<double>(0),
-      shadowColor: const WidgetStatePropertyAll<Color>(Color(0x00000000)),
+      shadowColor: const WidgetStatePropertyAll<Color>(XkTactileTokens.clear),
       minimumSize: const WidgetStatePropertyAll<Size>(
         Size(48, XkTactileTokens.controlHeight),
       ),

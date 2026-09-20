@@ -99,6 +99,9 @@ class XkTactileTokens {
   final Color controlMark;
   final Color selectedFill;
 
+  /// Unpainted. Widgets use this instead of `Color(0x00000000)`.
+  static const Color clear = Color(0x00000000);
+
   static const XkTactileTokens light = XkTactileTokens._(
     canvas: Color(0xFFF5F5F5),
     surface: Color(0xFFFBFBFC),

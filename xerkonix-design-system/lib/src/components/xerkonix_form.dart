@@ -26,6 +26,7 @@ class XkTextInputField extends StatelessWidget {
     this.contentPadding,
     this.keyboardType,
     this.enabled = true,
+    this.errorText,
   });
 
   final String label;
@@ -37,12 +38,15 @@ class XkTextInputField extends StatelessWidget {
   final EdgeInsetsGeometry? contentPadding;
   final TextInputType? keyboardType;
   final bool enabled;
+  final String? errorText;
 
   @override
   Widget build(BuildContext context) {
     return _DelegatedField(
       label: label,
       helperText: helperText,
+      errorText: errorText,
+      enabled: enabled,
       child: TextField(
         controller: controller,
         enabled: enabled,
@@ -69,6 +73,7 @@ class XkTextAreaField extends StatelessWidget {
     this.contentPadding,
     this.maxLines = 4,
     this.enabled = true,
+    this.errorText,
   });
 
   final String label;
@@ -80,12 +85,15 @@ class XkTextAreaField extends StatelessWidget {
   final EdgeInsetsGeometry? contentPadding;
   final int maxLines;
   final bool enabled;
+  final String? errorText;
 
   @override
   Widget build(BuildContext context) {
     return _DelegatedField(
       label: label,
       helperText: helperText,
+      errorText: errorText,
+      enabled: enabled,
       child: TextField(
         controller: controller,
         enabled: enabled,
@@ -111,6 +119,7 @@ class XkSelectField<T> extends StatelessWidget {
     this.borderRadius,
     this.contentPadding,
     this.enabled = true,
+    this.errorText,
   });
 
   final String label;
@@ -121,6 +130,7 @@ class XkSelectField<T> extends StatelessWidget {
   final BorderRadius? borderRadius;
   final EdgeInsetsGeometry? contentPadding;
   final bool enabled;
+  final String? errorText;
 
   @override
   Widget build(BuildContext context) {
@@ -128,6 +138,8 @@ class XkSelectField<T> extends StatelessWidget {
     return _DelegatedField(
       label: label,
       helperText: helperText,
+      errorText: errorText,
+      enabled: enabled,
       child: DropdownButtonFormField<T>(
         key: ValueKey<T?>(value),
         initialValue: value,
@@ -160,20 +172,30 @@ class _DelegatedField extends StatelessWidget {
     required this.label,
     required this.child,
     this.helperText,
+    this.errorText,
+    this.enabled = true,
   });
 
   final String label;
   final Widget child;
   final String? helperText;
+  final String? errorText;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
     final XkTactileTokens t = XkTactileTokens.of(Theme.of(context).brightness);
+    final String? error = errorText?.trim();
+    final bool invalid = error != null && error.isNotEmpty;
+    final String? helper = helperText?.trim();
     final Widget field = XkTactileField(
       label: label.trim().isEmpty ? null : label,
+      enabled: enabled,
+      error: invalid,
       child: child,
     );
-    if (helperText == null || helperText!.trim().isEmpty) {
+    final String? below = invalid ? error : (helper == null || helper.isEmpty ? null : helper);
+    if (below == null) {
       return field;
     }
     return Column(
@@ -181,7 +203,10 @@ class _DelegatedField extends StatelessWidget {
       children: <Widget>[
         field,
         const SizedBox(height: 8),
-        Text(helperText!, style: XkTactileType.label(color: t.muted)),
+        Text(
+          below,
+          style: XkTactileType.label(color: invalid ? t.accentDeep : t.muted),
+        ),
       ],
     );
   }

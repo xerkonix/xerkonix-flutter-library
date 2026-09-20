@@ -20,7 +20,7 @@ Widget _harness({
 }) {
   return MaterialApp(
     theme: theme.copyWith(
-      textTheme: theme.textTheme.apply(fontFamily: 'PretendardLoaded'),
+      textTheme: theme.textTheme.apply(fontFamily: XkTactileFonts.family),
     ),
     builder: textScaler == null
         ? null
@@ -145,15 +145,12 @@ Future<void> _write(WidgetTester tester, ui.Image image, String name) async {
 
 void main() {
   setUpAll(() async {
-    final File fontFile = File('lib/fonts/pretendard/Pretendard-Regular.otf');
+    final File fontFile = File('lib/fonts/noto_sans_cjk_kr/NotoSansKR-VF.ttf');
     expect(fontFile.existsSync(), isTrue, reason: fontFile.path);
-    final FontLoader loader = FontLoader('PretendardLoaded');
-    loader.addFont(
-      Future<ByteData>.value(
-        ByteData.sublistView(fontFile.readAsBytesSync()),
-      ),
+    final bool ok = await XkTactileFonts.loadFromBytes(
+      ByteData.sublistView(fontFile.readAsBytesSync()),
     );
-    await loader.load();
+    expect(ok, isTrue);
   });
 
   testWidgets('light primary is ice gradient, not aqua or flat blue', (

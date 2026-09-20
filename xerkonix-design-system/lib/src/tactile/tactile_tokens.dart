@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Values from DS `tactile/tokens.css` (SHA `22ee17579b3c06e6a9cbfb3747d49dbff44a0851`).
+/// Values from DS `tactile/tokens.css` (SHA `00f39c4b05ec0b2f422b26e0da760cbabc99b2ab`, DS#43).
 /// Do not invent hex here. Light `:root` and dark `[data-theme=dark]`.
 class XkTactileTokens {
   const XkTactileTokens._({

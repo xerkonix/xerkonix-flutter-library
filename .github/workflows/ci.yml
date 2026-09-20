@@ -16,6 +16,14 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  tactile-dart:
+    # Owner 복사기 자가검사. CSS tactile_gate.json 이 Dart 위젯 미러를 대신하지 않는다.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: sync_tactile_dart selftest
+        run: python3 tools/sync_tactile_dart.py --selftest
+
   flutter:
     runs-on: ubuntu-latest
     strategy:

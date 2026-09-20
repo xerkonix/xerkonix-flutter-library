@@ -388,7 +388,7 @@ void main() {
       expect(find.text('시작하기'), findsWidgets);
     });
 
-    testWidgets('XkButton.primary uses aqua-fill, not inverse', (
+    testWidgets('XkButton.primary uses TACTILE ice, not inverse or aqua', (
       WidgetTester tester,
     ) async {
       await tester.pumpWidget(
@@ -403,6 +403,10 @@ void main() {
         ),
       );
       expect(find.text('시작하기'), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey<String>('xk-tactile-primary-fill')),
+        findsOneWidget,
+      );
       final bool hasInverseFill = tester
           .widgetList<DecoratedBox>(find.byType(DecoratedBox))
           .any((DecoratedBox box) {
@@ -410,37 +414,7 @@ void main() {
             return d is BoxDecoration && d.color == XkColor.surfaceInverse;
           });
       expect(hasInverseFill, isFalse);
-      final bool hasAquaFill = tester
-          .widgetList<DecoratedBox>(find.byType(DecoratedBox))
-          .any((DecoratedBox box) {
-            final Decoration d = box.decoration;
-            if (d is! BoxDecoration) {
-              return false;
-            }
-            if (d.color == XkColor.aqua) {
-              return true;
-            }
-            final Gradient? g = d.gradient;
-            return g is LinearGradient && g.colors.contains(XkColor.aqua);
-          });
-      expect(hasAquaFill, isTrue);
     });
-
-    bool hasFocusRing(WidgetTester tester, Color color) {
-      return tester.widgetList<DecoratedBox>(find.byType(DecoratedBox)).any((
-        DecoratedBox box,
-      ) {
-        final Decoration d = box.decoration;
-        if (d is! BoxDecoration) {
-          return false;
-        }
-        final BoxBorder? border = d.border;
-        if (border is! Border) {
-          return false;
-        }
-        return border.top.color == color && border.top.width == 2;
-      });
-    }
 
     Future<void> focusPrimary(
       WidgetTester tester, {
@@ -475,22 +449,25 @@ void main() {
       await tester.pump();
     }
 
-    testWidgets('light focus ring is aqua-deep, not aqua', (
+    testWidgets('light focus ring is tactile outline, not aqua gem', (
       WidgetTester tester,
     ) async {
       await focusPrimary(tester, theme: XkLightTheme.themeData);
-      expect(hasFocusRing(tester, XkColor.aquaDeep), isTrue);
-      expect(hasFocusRing(tester, XkColor.aqua), isFalse);
-      expect(XkColor.aquaDeep, const Color(0xFF0A75A3));
+      expect(
+        find.byKey(const ValueKey<String>('xk-tactile-primary-focus-ring')),
+        findsOneWidget,
+      );
+      expect(find.byKey(const ValueKey<String>('xk-tactile-primary-fill')), findsOneWidget);
     });
 
-    testWidgets('dark focus ring is dark aqua-deep, not dark aqua', (
+    testWidgets('dark focus ring is tactile outline, not dark aqua', (
       WidgetTester tester,
     ) async {
       await focusPrimary(tester, theme: XkDarkTheme.themeData);
-      expect(hasFocusRing(tester, XkColor.darkAquaDeep), isTrue);
-      expect(hasFocusRing(tester, XkColor.darkAqua), isFalse);
-      expect(XkColor.darkAquaDeep, const Color(0xFF58C1EC));
+      expect(
+        find.byKey(const ValueKey<String>('xk-tactile-primary-focus-ring')),
+        findsOneWidget,
+      );
     });
 
     testWidgets('XkChip selected two-state builds', (

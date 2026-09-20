@@ -1,0 +1,18 @@
+{
+  "$comment": "Official Flutter TACTILE Dart widget copies. Owner is this repo. Not tools/tactile_gate.json (CSS fixtures only).",
+  "source": "xerkonix-design-system/lib/src/tactile",
+  "files": [
+    "tactile.dart",
+    "tactile_button.dart",
+    "tactile_field.dart",
+    "tactile_primary_button.dart",
+    "tactile_surface.dart",
+    "tactile_tokens.dart",
+    "tactile_type.dart"
+  ],
+  "consumers": {
+    "cotact": ["cosentio_app/lib/src/tactile"],
+    "concierge": ["concierge_app/lib/src/tactile"],
+    "xerkonix-frontend-boilerplate": ["lib/src/tactile"]
+  }
+}

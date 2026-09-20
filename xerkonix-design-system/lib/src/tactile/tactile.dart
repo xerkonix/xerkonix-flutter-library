@@ -1,4 +1,5 @@
 export 'tactile_button.dart';
+export 'tactile_company_wordmark.dart';
 export 'tactile_field.dart';
 export 'tactile_fonts.dart';
 export 'tactile_primary_button.dart';

@@ -24,3 +24,5 @@ flutter:
   # paint. Pretendard is not in tokens.css --font.
   assets:
     - lib/fonts/noto_sans_cjk_kr/NotoSansKR-VF.ttf
+    - assets/brand/wordmark-ink.png
+    - assets/brand/wordmark-paper.png

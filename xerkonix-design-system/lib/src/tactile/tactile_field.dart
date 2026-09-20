@@ -14,12 +14,16 @@ class XkTactileField extends StatelessWidget {
     this.label,
     this.enabled = true,
     this.error = false,
+    this.borderRadius,
   });
 
   final Widget child;
   final String? label;
   final bool enabled;
   final bool error;
+
+  /// Override for the input chrome. Null uses [XkTactileTokens.fieldRadius].
+  final BorderRadius? borderRadius;
 
   static InputDecorationTheme inputThemeOf(Brightness brightness) {
     final XkTactileTokens t = XkTactileTokens.of(brightness);
@@ -82,28 +86,32 @@ class XkTactileField extends StatelessWidget {
       tokens: t,
       enabled: enabled,
       error: error,
+      borderRadius: borderRadius,
       child: stripped,
     );
     final String? name = label?.trim();
     if (name == null || name.isEmpty) {
       return input;
     }
-    // Visible label stays outside the chrome. Merge it onto the child text
-    // field so VoiceOver / semantics tree keep the accessible name when
-    // InputDecoration.labelText / hintText are stripped (login email/password).
-    return MergeSemantics(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Text(name, style: XkTactileType.label(color: t.ink)),
-          const SizedBox(height: 8),
-          Semantics(
-            label: name,
-            container: true,
-            child: input,
-          ),
-        ],
-      ),
+    // Measured 2026-09-20 (field-semantics-dump.json): MergeSemantics +
+    // visible Text + Semantics(label, container:true) made
+    // getSemantics(TextField) a 74px parent with the name but
+    // isTextField=false / isObscured=false. The editable child kept the
+    // flags and a second copy of the name (labelHits=2).
+    // Visual Text is excluded; the name is attached on the input so the
+    // text-field node itself has the exact label and flags.
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        ExcludeSemantics(
+          child: Text(name, style: XkTactileType.label(color: t.ink)),
+        ),
+        const SizedBox(height: 8),
+        Semantics(
+          label: name,
+          child: input,
+        ),
+      ],
     );
   }
 }
@@ -114,12 +122,14 @@ class _TactileInputChrome extends StatefulWidget {
     required this.child,
     required this.enabled,
     required this.error,
+    this.borderRadius,
   });
 
   final XkTactileTokens tokens;
   final Widget child;
   final bool enabled;
   final bool error;
+  final BorderRadius? borderRadius;
 
   @override
   State<_TactileInputChrome> createState() => _TactileInputChromeState();
@@ -157,7 +167,8 @@ class _TactileInputChromeState extends State<_TactileInputChrome> {
           child: DecoratedBox(
             decoration: BoxDecoration(
               color: t.inputFill,
-              borderRadius: BorderRadius.circular(XkTactileTokens.fieldRadius),
+              borderRadius: widget.borderRadius ??
+                  BorderRadius.circular(XkTactileTokens.fieldRadius),
               border: Border.all(color: border),
               boxShadow: focused
                   ? <BoxShadow>[

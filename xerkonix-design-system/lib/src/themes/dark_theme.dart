@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../palette/color.dart';
+import '../tactile/tactile_fonts.dart';
 import '../tactile/tactile_theme.dart';
-import '../typography/xerkonix_typography.dart';
 import 'xerkonix_theme.dart';
 
 /// Public dark [ThemeData]. Delegates to [XkTactileTheme] so existing
@@ -13,7 +13,7 @@ class XkDarkTheme extends XkTheme {
 
   static ThemeData get themeData => XkTactileTheme.themeData(
         Brightness.dark,
-        fontFamily: Pretendard.fontFamily,
+        fontFamily: XkTactileFonts.family,
         error: XkColor.darkBad,
         onError: XkColor.darkInk,
         tertiary: XkColor.darkCool,

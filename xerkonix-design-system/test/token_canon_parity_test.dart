@@ -429,10 +429,10 @@ void main() {
   });
 
   group('서체', () {
-    test('XkFont sans/serif/mono 는 전부 Pretendard', () {
-      expect(XkFont.sans, 'Pretendard');
-      expect(XkFont.serif, 'Pretendard');
-      expect(XkFont.mono, 'Pretendard');
+    test('XkFont sans/serif/mono 는 스택 로드 가능 폴백 Noto Sans CJK KR', () {
+      expect(XkFont.sans, 'Noto Sans CJK KR');
+      expect(XkFont.serif, 'Noto Sans CJK KR');
+      expect(XkFont.mono, 'Noto Sans CJK KR');
     });
     test('헤드라인 굵기는 500, 소제목 600, 본문 400 — 700 없음', () {
       expect(XkTypo.display.fontWeight, FontWeight.w500);
@@ -524,7 +524,7 @@ void main() {
       '--t-hover',
     };
     const Map<String, String> notMirrored = <String, String>{
-      '--font': 'XkFont.sans = Pretendard',
+      '--font': 'XkFont.sans = Noto Sans CJK KR',
       '--fs-section-mobile': 'Flutter 앱의 반응형 테마와 레이아웃에서 대응',
       '--fs-page-mobile': 'Flutter 앱의 반응형 테마와 레이아웃에서 대응',
       '--fs-title-mobile': 'Flutter 앱의 반응형 테마와 레이아웃에서 대응',

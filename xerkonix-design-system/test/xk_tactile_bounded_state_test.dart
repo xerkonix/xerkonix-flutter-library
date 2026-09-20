@@ -28,19 +28,21 @@ BoxDecoration _fieldChrome(WidgetTester tester, Finder field) {
   return box.decoration as BoxDecoration;
 }
 
-String? _nameNear(WidgetTester tester, Finder field) {
-  SemanticsNode node = tester.getSemantics(field);
-  for (int i = 0; i < 10; i++) {
-    if (node.label.isNotEmpty) {
-      return node.label;
+SemanticsNode _editable(WidgetTester tester, Finder field) {
+  final SemanticsNode start = tester.getSemantics(field);
+  SemanticsNode? found;
+  void walk(SemanticsNode node) {
+    if (node.hasFlag(SemanticsFlag.isTextField)) {
+      found = node;
     }
-    final SemanticsNode? parent = node.parent;
-    if (parent == null) {
-      return null;
-    }
-    node = parent;
+    node.visitChildren((SemanticsNode child) {
+      walk(child);
+      return true;
+    });
   }
-  return null;
+
+  walk(start);
+  return found ?? start;
 }
 
 void main() {
@@ -169,9 +171,15 @@ void main() {
     expect(fields, findsNWidgets(3));
 
     final Finder inputs = find.byType(TextField);
-    expect(_nameNear(tester, inputs.at(0)), contains('이메일'));
-    expect(_nameNear(tester, inputs.at(1)), contains('비밀번호'));
-    expect(_nameNear(tester, inputs.at(2)), contains('인증번호'));
+    final SemanticsNode email = _editable(tester, inputs.at(0));
+    final SemanticsNode password = _editable(tester, inputs.at(1));
+    final SemanticsNode code = _editable(tester, inputs.at(2));
+    expect(email.hasFlag(SemanticsFlag.isTextField), isTrue);
+    expect(password.hasFlag(SemanticsFlag.isTextField), isTrue);
+    expect(code.hasFlag(SemanticsFlag.isTextField), isTrue);
+    expect(email.label.split('\n').first, '이메일');
+    expect(password.label.split('\n').first, '비밀번호');
+    expect(code.label.split('\n').first, '인증번호');
 
     final BoxDecoration rest = _fieldChrome(tester, fields.at(0));
     final BoxDecoration disabled = _fieldChrome(tester, fields.at(1));
@@ -188,7 +196,8 @@ void main() {
     final BoxDecoration focused = _fieldChrome(tester, fields.at(0));
     expect(focused.border?.top.color, XkTactileTokens.light.accent);
     expect(focused.boxShadow, isNotNull);
-    expect(_nameNear(tester, inputs.at(0)), contains('이메일'));
+    expect(_editable(tester, inputs.at(0)).label.split('\n').first, '이메일');
+    expect(_editable(tester, inputs.at(0)).hasFlag(SemanticsFlag.isTextField), isTrue);
     handle.dispose();
   });
 }

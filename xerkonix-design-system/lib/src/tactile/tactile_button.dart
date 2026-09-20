@@ -105,11 +105,7 @@ class _XkTactileButtonState extends State<XkTactileButton> {
               ? const EdgeInsets.symmetric(horizontal: 2, vertical: 11)
               : const EdgeInsets.symmetric(horizontal: 20, vertical: 11),
           child: DefaultTextStyle.merge(
-            style: XkTactileType.button(color: label).copyWith(
-              fontWeight: widget.kind == XkTactileButtonKind.text
-                  ? FontWeight.w500
-                  : FontWeight.w500,
-            ),
+            style: XkTactileType.button(color: label),
             child: IconTheme(
               data: IconThemeData(color: label, size: 16),
               child: Center(

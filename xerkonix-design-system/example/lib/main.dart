@@ -1,8 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:xerkonix_design_system/xerkonix_design_system.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const TACTILEExampleApp());
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    unawaited(XkTactileFonts.ensureLoaded());
+  });
 }
 
 class TACTILEExampleApp extends StatefulWidget {

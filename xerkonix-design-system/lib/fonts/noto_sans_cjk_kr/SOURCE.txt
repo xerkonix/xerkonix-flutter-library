@@ -1,0 +1,18 @@
+Official Noto Sans CJK — region-specific Subset Variable Korean.
+
+URL: https://raw.githubusercontent.com/notofonts/noto-cjk/main/Sans/Variable/TTF/Subset/NotoSansKR-VF.ttf
+Guide: https://github.com/notofonts/noto-cjk/blob/main/Sans/README.md
+Release: Sans2.004
+License: SIL OFL 1.1 (OFL.txt = Sans/LICENSE from the same repo)
+
+bytes: 10415420
+sha256: 9e1d729e7e2b36f9ef439da102f8c134c10aabe46f1c843bf0aca5c043b86f76
+
+tokens.css --font lists "Noto Sans CJK KR" as the first legally loadable
+fallback after Inter / system names. Flutter CanvasKit cannot paint those
+system names (measured). This file is the official Korean subset VF of
+that Noto CJK project — not an Inter CDN, not an extracted Apple face.
+
+Flutter registers it as family "Noto Sans CJK KR" via FontLoader.
+wght 400 / 450 / 550 use dart:ui FontVariation.weight (variable axis).
+Static Regular/Medium cannot paint 450 or 550.

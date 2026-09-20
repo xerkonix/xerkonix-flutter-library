@@ -72,17 +72,7 @@ List<int> _pxAt(
 }
 
 Future<void> _loadFonts() async {
-  final FontLoader pretendard = FontLoader(
-    'packages/xerkonix_design_system/Pretendard',
-  );
-  for (final String w in <String>['Regular', 'Medium', 'SemiBold']) {
-    pretendard.addFont(
-      rootBundle.load(
-        'packages/xerkonix_design_system/lib/fonts/pretendard/Pretendard-$w.otf',
-      ),
-    );
-  }
-  await pretendard.load();
+  await XkTactileFonts.ensureLoaded();
 
   final List<String> roots = <String>[
     Platform.environment['FLUTTER_ROOT'] ?? '',

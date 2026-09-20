@@ -5,6 +5,7 @@
     "tactile.dart",
     "tactile_button.dart",
     "tactile_field.dart",
+    "tactile_fonts.dart",
     "tactile_primary_button.dart",
     "tactile_surface.dart",
     "tactile_theme.dart",

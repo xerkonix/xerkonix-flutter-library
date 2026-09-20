@@ -47,6 +47,7 @@ class XkTextInputField extends StatelessWidget {
       helperText: helperText,
       errorText: errorText,
       enabled: enabled,
+      borderRadius: borderRadius,
       child: TextField(
         controller: controller,
         enabled: enabled,
@@ -94,6 +95,7 @@ class XkTextAreaField extends StatelessWidget {
       helperText: helperText,
       errorText: errorText,
       enabled: enabled,
+      borderRadius: borderRadius,
       child: TextField(
         controller: controller,
         enabled: enabled,
@@ -140,6 +142,7 @@ class XkSelectField<T> extends StatelessWidget {
       helperText: helperText,
       errorText: errorText,
       enabled: enabled,
+      borderRadius: borderRadius,
       child: DropdownButtonFormField<T>(
         key: ValueKey<T?>(value),
         initialValue: value,
@@ -174,6 +177,7 @@ class _DelegatedField extends StatelessWidget {
     this.helperText,
     this.errorText,
     this.enabled = true,
+    this.borderRadius,
   });
 
   final String label;
@@ -181,6 +185,7 @@ class _DelegatedField extends StatelessWidget {
   final String? helperText;
   final String? errorText;
   final bool enabled;
+  final BorderRadius? borderRadius;
 
   @override
   Widget build(BuildContext context) {
@@ -192,6 +197,7 @@ class _DelegatedField extends StatelessWidget {
       label: label.trim().isEmpty ? null : label,
       enabled: enabled,
       error: invalid,
+      borderRadius: borderRadius,
       child: child,
     );
     final String? below = invalid ? error : (helper == null || helper.isEmpty ? null : helper);

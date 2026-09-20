@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'tactile_field.dart';
+import 'tactile_fonts.dart';
 import 'tactile_tokens.dart';
 
 /// Material slot → TACTILE CSS role. Owner of app ThemeData chrome.
@@ -100,7 +101,7 @@ class XkTactileTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: brightness,
-      fontFamily: fontFamily,
+      fontFamily: fontFamily ?? XkTactileFonts.family,
       textTheme: textTheme,
       colorScheme: scheme,
       scaffoldBackgroundColor: c.canvas,

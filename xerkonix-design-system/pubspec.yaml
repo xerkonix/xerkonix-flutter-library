@@ -19,14 +19,8 @@ dev_dependencies:
   flutter_lints: ^6.0.0
 
 flutter:
-  fonts:
-    - family: Pretendard
-      fonts:
-        - asset: lib/fonts/pretendard/Pretendard-Regular.otf
-          weight: 400
-        - asset: lib/fonts/pretendard/Pretendard-Medium.otf
-          weight: 500
-        - asset: lib/fonts/pretendard/Pretendard-SemiBold.otf
-          weight: 600
-        - asset: lib/fonts/pretendard/Pretendard-Bold.otf
-          weight: 700
+  # Official stack fallback is Noto CJK KR VF via FontLoader
+  # (tactile_fonts.dart). Not FontManifest — 10MB would block first
+  # paint. Pretendard is not in tokens.css --font.
+  assets:
+    - lib/fonts/noto_sans_cjk_kr/NotoSansKR-VF.ttf

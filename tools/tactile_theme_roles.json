@@ -1,0 +1,124 @@
+{
+  "kind": "xerkonix-tactile-theme-roles",
+  "owner": "xerkonix-flutter-library",
+  "source": "tactile/tokens.css",
+  "generator": "tools/build_tactile_theme_roles.py",
+  "not": "product _tokens.dart / tokens.css v4 ledger",
+  "roles": {
+    "scaffoldBackgroundColor": {
+      "css": "--canvas",
+      "light": "0xFFF5F5F5",
+      "dark": "0xFF111111"
+    },
+    "canvasColor": {
+      "css": "--canvas",
+      "light": "0xFFF5F5F5",
+      "dark": "0xFF111111"
+    },
+    "colorScheme.primary": {
+      "css": "--primary-base",
+      "light": "0xFFCFE3F5",
+      "dark": "0xFF1A3045"
+    },
+    "colorScheme.onPrimary": {
+      "css": "--primary-text",
+      "light": "0xFF175C99",
+      "dark": "0xFFCFE3F5"
+    },
+    "colorScheme.secondary": {
+      "css": "--accent",
+      "light": "0xFF1E70B8",
+      "dark": "0xFF93BFE5"
+    },
+    "colorScheme.surface": {
+      "css": "--surface",
+      "light": "0xFFFBFBFC",
+      "dark": "0xFF191B1F"
+    },
+    "colorScheme.onSurface": {
+      "css": "--ink",
+      "light": "0xFF111111",
+      "dark": "0xFFF5F5F5"
+    },
+    "colorScheme.outline": {
+      "css": "--line",
+      "light": "0x1A111111",
+      "dark": "0x21CFD3DA"
+    },
+    "colorScheme.inverseSurface": {
+      "css": "--overlay-fill",
+      "light": "0xF5FBFBFC",
+      "dark": "0xF51D2025"
+    },
+    "appBarTheme.backgroundColor": {
+      "css": "--header-fill",
+      "light": "0xDEF5F5F5",
+      "dark": "0xE0111111"
+    },
+    "cardTheme.color": {
+      "css": "--panel-fill",
+      "light": "0x3DFFFFFF",
+      "dark": "0x06CFD3DA"
+    },
+    "dialogTheme.backgroundColor": {
+      "css": "--overlay-fill",
+      "light": "0xF5FBFBFC",
+      "dark": "0xF51D2025"
+    },
+    "popupMenuTheme.color": {
+      "css": "--overlay-fill",
+      "light": "0xF5FBFBFC",
+      "dark": "0xF51D2025"
+    },
+    "bottomSheetTheme.backgroundColor": {
+      "css": "--overlay-fill",
+      "light": "0xF5FBFBFC",
+      "dark": "0xF51D2025"
+    },
+    "drawerTheme.backgroundColor": {
+      "css": "--overlay-fill",
+      "light": "0xF5FBFBFC",
+      "dark": "0xF51D2025"
+    },
+    "snackBarTheme.backgroundColor": {
+      "css": "--overlay-fill",
+      "light": "0xF5FBFBFC",
+      "dark": "0xF51D2025"
+    },
+    "tabBarTheme.indicatorColor": {
+      "css": "--ice",
+      "light": "0xFFCFE3F5",
+      "dark": "0xFF1A3045"
+    },
+    "switchTheme.trackSelected": {
+      "css": "--control-on",
+      "light": "0xFF1E70B8",
+      "dark": "0xFF1E70B8"
+    },
+    "switchTheme.trackUnselected": {
+      "css": "--control-track",
+      "light": "0xFFCFD3DA",
+      "dark": "0xFF383D45"
+    },
+    "checkboxTheme.fillSelected": {
+      "css": "--control-on",
+      "light": "0xFF1E70B8",
+      "dark": "0xFF1E70B8"
+    },
+    "inputFill": {
+      "css": "--input-fill",
+      "light": "0xADFFFFFF",
+      "dark": "0xFF191B1F"
+    },
+    "chrome.faint": {
+      "css": "--faint",
+      "light": "0xFF767678",
+      "dark": "0xFF9199A5"
+    },
+    "chrome.muted": {
+      "css": "--muted",
+      "light": "0xFF636365",
+      "dark": "0xFFAEB4BD"
+    }
+  }
+}

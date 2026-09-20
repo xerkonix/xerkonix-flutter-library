@@ -44,6 +44,12 @@ class XkTactileTokens {
     required this.secondaryBorder,
     required this.secondaryShadow,
     required this.controlHover,
+    required this.faint,
+    required this.headerFill,
+    required this.controlOn,
+    required this.controlTrack,
+    required this.controlMark,
+    required this.selectedFill,
   });
 
   final Color canvas;
@@ -86,6 +92,12 @@ class XkTactileTokens {
   final Color secondaryBorder;
   final List<BoxShadow> secondaryShadow;
   final Color controlHover;
+  final Color faint;
+  final Color headerFill;
+  final Color controlOn;
+  final Color controlTrack;
+  final Color controlMark;
+  final Color selectedFill;
 
   static const XkTactileTokens light = XkTactileTokens._(
     canvas: Color(0xFFF5F5F5),
@@ -150,6 +162,12 @@ class XkTactileTokens {
       ),
     ],
     controlHover: Color(0xBFFFFFFF),
+    faint: Color(0xFF767678),
+    headerFill: Color(0xDEF5F5F5),
+    controlOn: Color(0xFF1E70B8),
+    controlTrack: Color(0xFFCFD3DA),
+    controlMark: Color(0xFFFFFFFF),
+    selectedFill: Color(0x73CFE3F5),
   );
 
   static const XkTactileTokens dark = XkTactileTokens._(
@@ -215,6 +233,12 @@ class XkTactileTokens {
       ),
     ],
     controlHover: Color(0x14CFD3DA),
+    faint: Color(0xFF9199A5),
+    headerFill: Color(0xE0111111),
+    controlOn: Color(0xFF1E70B8),
+    controlTrack: Color(0xFF383D45),
+    controlMark: Color(0xFFFFFFFF),
+    selectedFill: Color(0x2E1E70B8),
   );
 
   static XkTactileTokens of(Brightness brightness) {

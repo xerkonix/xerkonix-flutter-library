@@ -7,6 +7,7 @@
     "tactile_field.dart",
     "tactile_primary_button.dart",
     "tactile_surface.dart",
+    "tactile_theme.dart",
     "tactile_tokens.dart",
     "tactile_type.dart"
   ],

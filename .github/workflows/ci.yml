@@ -23,6 +23,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: sync_tactile_dart selftest
         run: python3 tools/sync_tactile_dart.py --selftest
+      - name: tactile theme roles
+        run: python3 tools/build_tactile_theme_roles.py --check
 
   flutter:
     runs-on: ubuntu-latest

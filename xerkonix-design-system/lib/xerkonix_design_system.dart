@@ -20,6 +20,9 @@ export 'src/components/xerkonix_neumorphic.dart';
 // Motion - Animation components
 export 'src/motion/xerkonix_motion.dart';
 
+// TACTILE consume primitives (CSS `.btn-primary` / surface roles / type)
+export 'src/tactile/tactile.dart';
+
 // Components - Reusable UI Components
 export 'src/components/xerkonix_button.dart';
 export 'src/components/xerkonix_chip.dart';

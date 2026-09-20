@@ -1,24 +1,23 @@
 import 'package:flutter/painting.dart';
 
+import '../tactile/tactile_fonts.dart';
 import 'typo_constants.dart';
 
-/// XERKONIX TACTILE v4 typography — Pretendard only, weights ≤ 600.
-///
-/// Headlines 500 (−.03em) · subheads 600 · body 400 · labels 11px .12em.
+/// UI face is the stack loadable fallback [XkTactileFonts.family].
+/// Pretendard remains a named public API (Office / legacy aliases).
 class XkFont {
   XkFont._();
 
-  static const String sans = Pretendard.fontFamily;
-  static const String serif = Pretendard.fontFamily;
-  static const String mono = Pretendard.fontFamily;
+  static const String sans = XkTactileFonts.family;
+  static const String serif = XkTactileFonts.family;
+  static const String mono = XkTactileFonts.family;
 }
 
 class XkTypo {
   XkTypo._();
 
   static const List<String> _sansFallback = [
-    'Pretendard',
-    'Apple SD Gothic Neo',
+    XkTactileFonts.family,
   ];
 
   static TextStyle _sans({
@@ -28,11 +27,11 @@ class XkTypo {
     double letterSpacing = 0,
   }) {
     return TextStyle(
-      fontFamily: Pretendard.fontFamily,
-      package: Pretendard.package,
+      fontFamily: XkTactileFonts.family,
       fontFamilyFallback: _sansFallback,
       fontSize: size,
       fontWeight: weight,
+      fontVariations: XkTactileFonts.variations(weight.value.toDouble()),
       height: height,
       letterSpacing: letterSpacing,
     );
@@ -53,11 +52,11 @@ class XkTypo {
     double letterSpacing = 0,
   }) {
     return TextStyle(
-      fontFamily: Pretendard.fontFamily,
-      package: Pretendard.package,
+      fontFamily: XkTactileFonts.family,
       fontFamilyFallback: _sansFallback,
       fontSize: size,
       fontWeight: weight,
+      fontVariations: XkTactileFonts.variations(weight.value.toDouble()),
       height: height,
       letterSpacing: letterSpacing,
       fontFeatures: const <FontFeature>[FontFeature.tabularFigures()],
@@ -234,11 +233,9 @@ class M3Typo {
 
   static TextStyle _m3(double size, FontWeight weight) {
     return TextStyle(
-      fontFamily: Pretendard.fontFamily,
-      package: Pretendard.package,
+      fontFamily: XkTactileFonts.family,
       fontFamilyFallback: const [
-        'Apple SD Gothic Neo',
-        Pretendard.fontFamily,
+        XkTactileFonts.family,
       ],
       fontSize: size,
       fontWeight: weight,
@@ -286,9 +283,10 @@ TextStyle _familyStyle({
 }) {
   return TextStyle(
     fontFamily: fontFamily,
-    package: package,
+    package: package.isEmpty ? null : package,
     fontSize: fontSize,
     fontWeight: weight,
+    fontVariations: XkTactileFonts.variations(weight.value.toDouble()),
   );
 }
 
@@ -507,8 +505,10 @@ class NotoSansKR {
 class Pretendard {
   Pretendard._();
 
-  static const String fontFamily = 'Pretendard';
-  static const String package = 'xerkonix_design_system';
+  /// Named public API. Face is the stack's loadable fallback, not a
+  /// Pretendard file (that name is absent from current `--font`).
+  static const String fontFamily = XkTactileFonts.family;
+  static const String package = '';
 
   static TextStyle thin({required double fontSize}) => _familyStyle(
     fontFamily: fontFamily,

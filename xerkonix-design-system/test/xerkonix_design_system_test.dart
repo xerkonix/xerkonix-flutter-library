@@ -135,57 +135,78 @@ void main() {
       expect(XkLightTheme.themeData.useMaterial3, true);
     });
 
-    test('selected switch and checkbox fill stay aqua-mid', () {
+    test('selected switch and checkbox fill use tactile control-on', () {
       const Set<WidgetState> on = <WidgetState>{WidgetState.selected};
       expect(
         XkLightTheme.themeData.switchTheme.trackColor!.resolve(on),
-        XkColor.aquaMid,
+        XkTactileTokens.light.controlOn,
       );
       expect(
         XkDarkTheme.themeData.switchTheme.trackColor!.resolve(on),
-        XkColor.darkAquaMid,
+        XkTactileTokens.dark.controlOn,
       );
       expect(
         XkLightTheme.themeData.checkboxTheme.fillColor!.resolve(on),
-        XkColor.aquaMid,
+        XkTactileTokens.light.controlOn,
       );
       expect(
         XkDarkTheme.themeData.checkboxTheme.fillColor!.resolve(on),
-        XkColor.darkAquaMid,
+        XkTactileTokens.dark.controlOn,
       );
     });
 
-    test('input focused border uses aqua-deep', () {
-      final BorderSide light = (XkLightTheme
-              .themeData.inputDecorationTheme.focusedBorder!
-          as OutlineInputBorder)
-          .borderSide;
-      final BorderSide dark = (XkDarkTheme
-              .themeData.inputDecorationTheme.focusedBorder!
-          as OutlineInputBorder)
-          .borderSide;
-      expect(light.color, XkColor.aquaDeep);
-      expect(dark.color, XkColor.darkAquaDeep);
+    test('public theme input chrome is tactile (no aqua outline)', () {
+      expect(
+        XkLightTheme.themeData.inputDecorationTheme.focusedBorder,
+        InputBorder.none,
+      );
+      expect(
+        XkDarkTheme.themeData.inputDecorationTheme.focusedBorder,
+        InputBorder.none,
+      );
+      expect(
+        XkLightTheme.themeData.inputDecorationTheme.floatingLabelBehavior,
+        FloatingLabelBehavior.never,
+      );
     });
 
-    test('primary CTA is aqua-fill, not inverse black', () {
+    test('public theme primary is ice, not aqua or inverse', () {
       expect(
         XkLightTheme.themeData.colorScheme.primary,
-        XkColor.aqua,
+        XkTactileTokens.light.primaryBase,
       );
       expect(
         XkLightTheme.themeData.colorScheme.onPrimary,
-        XkColor.aquaOn,
+        XkTactileTokens.light.primaryText,
       );
       expect(
         XkDarkTheme.themeData.colorScheme.primary,
-        XkColor.aqua,
+        XkTactileTokens.dark.primaryBase,
       );
       expect(XkColor.surfaceInverse, const Color(0xFF000000));
-      expect(XkColor.aquaOn, const Color(0xFFFFFFFF));
       expect(
         XkLightTheme.themeData.colorScheme.primary,
         isNot(XkColor.surfaceInverse),
+      );
+      expect(
+        XkLightTheme.themeData.colorScheme.primary,
+        isNot(XkColor.aqua),
+      );
+      expect(
+        XkLightTheme.themeData.scaffoldBackgroundColor,
+        XkTactileTokens.light.canvas,
+      );
+      expect(
+        XkDarkTheme.themeData.scaffoldBackgroundColor,
+        const Color(0xFF111111),
+      );
+      expect(
+        XkDarkTheme.themeData.scaffoldBackgroundColor,
+        isNot(const Color(0xFF141414)),
+      );
+      expect(
+        XkLightTheme.themeData.cardTheme.color,
+        XkTactileTokens.light.panelFill,
       );
     });
 
@@ -388,7 +409,7 @@ void main() {
       expect(find.text('시작하기'), findsWidgets);
     });
 
-    testWidgets('XkButton.primary uses aqua-fill, not inverse', (
+    testWidgets('XkButton.primary uses TACTILE ice, not inverse or aqua', (
       WidgetTester tester,
     ) async {
       await tester.pumpWidget(
@@ -403,6 +424,10 @@ void main() {
         ),
       );
       expect(find.text('시작하기'), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey<String>('xk-tactile-primary-fill')),
+        findsOneWidget,
+      );
       final bool hasInverseFill = tester
           .widgetList<DecoratedBox>(find.byType(DecoratedBox))
           .any((DecoratedBox box) {
@@ -410,37 +435,7 @@ void main() {
             return d is BoxDecoration && d.color == XkColor.surfaceInverse;
           });
       expect(hasInverseFill, isFalse);
-      final bool hasAquaFill = tester
-          .widgetList<DecoratedBox>(find.byType(DecoratedBox))
-          .any((DecoratedBox box) {
-            final Decoration d = box.decoration;
-            if (d is! BoxDecoration) {
-              return false;
-            }
-            if (d.color == XkColor.aqua) {
-              return true;
-            }
-            final Gradient? g = d.gradient;
-            return g is LinearGradient && g.colors.contains(XkColor.aqua);
-          });
-      expect(hasAquaFill, isTrue);
     });
-
-    bool hasFocusRing(WidgetTester tester, Color color) {
-      return tester.widgetList<DecoratedBox>(find.byType(DecoratedBox)).any((
-        DecoratedBox box,
-      ) {
-        final Decoration d = box.decoration;
-        if (d is! BoxDecoration) {
-          return false;
-        }
-        final BoxBorder? border = d.border;
-        if (border is! Border) {
-          return false;
-        }
-        return border.top.color == color && border.top.width == 2;
-      });
-    }
 
     Future<void> focusPrimary(
       WidgetTester tester, {
@@ -475,22 +470,25 @@ void main() {
       await tester.pump();
     }
 
-    testWidgets('light focus ring is aqua-deep, not aqua', (
+    testWidgets('light focus ring is tactile outline, not aqua gem', (
       WidgetTester tester,
     ) async {
       await focusPrimary(tester, theme: XkLightTheme.themeData);
-      expect(hasFocusRing(tester, XkColor.aquaDeep), isTrue);
-      expect(hasFocusRing(tester, XkColor.aqua), isFalse);
-      expect(XkColor.aquaDeep, const Color(0xFF0A75A3));
+      expect(
+        find.byKey(const ValueKey<String>('xk-tactile-primary-focus-ring')),
+        findsOneWidget,
+      );
+      expect(find.byKey(const ValueKey<String>('xk-tactile-primary-fill')), findsOneWidget);
     });
 
-    testWidgets('dark focus ring is dark aqua-deep, not dark aqua', (
+    testWidgets('dark focus ring is tactile outline, not dark aqua', (
       WidgetTester tester,
     ) async {
       await focusPrimary(tester, theme: XkDarkTheme.themeData);
-      expect(hasFocusRing(tester, XkColor.darkAquaDeep), isTrue);
-      expect(hasFocusRing(tester, XkColor.darkAqua), isFalse);
-      expect(XkColor.darkAquaDeep, const Color(0xFF58C1EC));
+      expect(
+        find.byKey(const ValueKey<String>('xk-tactile-primary-focus-ring')),
+        findsOneWidget,
+      );
     });
 
     testWidgets('XkChip selected two-state builds', (

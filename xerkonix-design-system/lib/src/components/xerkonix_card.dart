@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 
 import '../palette/color.dart';
 import '../shape/xerkonix_shape.dart';
+import '../tactile/tactile_surface.dart';
 import '../typography/xerkonix_typography.dart';
-import 'xerkonix_glass.dart';
 
-/// Metric/Status/Summary card on reading-role [XkGlass] (`--glass-reading`).
-/// Pass [borderColor] to override `--plane-edge`.
+/// Metric/Status/Summary card on the information surface, not `.glass`.
+/// [borderRadius] / [backgroundColor] / [borderColor] still paint; they do
+/// not switch the role to glass.
 class XkInfoCard extends StatelessWidget {
   const XkInfoCard({
     super.key,
@@ -39,11 +40,12 @@ class XkInfoCard extends StatelessWidget {
     final titleColor = isDark ? XkColor.darkInk : XkColor.ink;
     final bodyColor = isDark ? XkColor.darkInk : XkColor.ink;
 
-    return XkGlass(
-      borderRadius: borderRadius,
-      color: backgroundColor,
-      borderColor: borderColor,
+    return XkTactileSurface(
+      role: XkTactileSurfaceRole.information,
       padding: padding,
+      fill: backgroundColor,
+      borderColor: borderColor,
+      radius: borderRadius,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

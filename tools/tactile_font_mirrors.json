@@ -1,0 +1,14 @@
+{
+  "$comment": "Official Noto CJK KR VF consume copies. Owner is this repo. Independent app-deploy copies are expected. Not a merge block.",
+  "source": "xerkonix-design-system/lib/fonts/noto_sans_cjk_kr",
+  "files": [
+    "NotoSansKR-VF.ttf",
+    "OFL.txt",
+    "SOURCE.txt"
+  ],
+  "consumers": {
+    "cotact": ["cosentio_app/assets/fonts/noto_sans_cjk_kr"],
+    "concierge": ["concierge_app/fonts/noto_sans_cjk_kr"],
+    "xerkonix-frontend-boilerplate": ["fonts/noto_sans_cjk_kr"]
+  }
+}

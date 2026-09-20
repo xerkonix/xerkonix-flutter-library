@@ -142,10 +142,7 @@ flutter run -d web-server --web-port=18080
 
 | 폰트 | 저작권 | 라이선스 | 전문 |
 |---|---|---|---|
-| Pretendard | Kil Hyung-jin (2021) · Adobe(Source, 2014–2021) | SIL OFL 1.1 | `lib/fonts/pretendard/OFL.txt` |
-| IBM Plex Sans KR | IBM Corp. (2017) | SIL OFL 1.1 | `lib/fonts/ibm_plex_sans_kr/OFL.txt` |
-| IBM Plex Mono | IBM Corp. (2017) | SIL OFL 1.1 | `lib/fonts/ibm_plex_mono/OFL.txt` |
-| MaruBuri (마루 부리) | 네이버 · 네이버 문화재단 | 네이버 글꼴 라이선스(OFL 아님) | `lib/fonts/maruburi/LICENSE.txt` |
+| Noto Sans CJK KR VF | Noto CJK / Adobe Source | SIL OFL 1.1 | `lib/fonts/noto_sans_cjk_kr/OFL.txt` |
 
 예약 이름(Reserved Font Name)은 `Pretendard` · `Plex` 다 — 이 폰트를 수정해
 재배포할 때 폰트 선택 이름 필드에 예약 이름을 쓰면 안 된다.

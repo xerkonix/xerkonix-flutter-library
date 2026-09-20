@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import '../motion/xerkonix_motion.dart';
 import '../palette/color.dart';
 import '../shape/xerkonix_shape.dart';
+import '../tactile/tactile_tokens.dart';
 import '../typography/xerkonix_typography.dart';
 
-/// Canvas ground — one top-left radial (`--ground-hi` → `--canvas`).
+/// Page ground. Delegates to current TACTILE canvas (dark #111111), not
+/// product `#141414` glass radial.
 class XkGround extends StatelessWidget {
   const XkGround({super.key, this.child});
 
@@ -15,17 +17,9 @@ class XkGround extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Brightness b = Theme.of(context).brightness;
+    final XkTactileTokens t = XkTactileTokens.of(Theme.of(context).brightness);
     return DecoratedBox(
-      decoration: BoxDecoration(
-        color: XkColor.canvasOf(b),
-        gradient: RadialGradient(
-          center: const Alignment(-1, -1),
-          radius: 1.1,
-          colors: <Color>[XkColor.groundHiOf(b), XkColor.canvasOf(b)],
-          stops: const <double>[0, 0.62],
-        ),
-      ),
+      decoration: BoxDecoration(color: t.canvas),
       child: child,
     );
   }

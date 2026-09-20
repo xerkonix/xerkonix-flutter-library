@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../icons/xerkonix_icon.dart';
-import '../palette/color.dart';
-import '../shape/xerkonix_shape.dart';
-import '../typography/xerkonix_typography.dart';
-import 'xerkonix_glass.dart';
-
+import '../tactile/tactile_field.dart';
+import '../tactile/tactile_tokens.dart';
+import '../tactile/tactile_type.dart';
 
 class XkSelectOption<T> {
   const XkSelectOption({required this.value, required this.label});
@@ -14,6 +12,8 @@ class XkSelectOption<T> {
   final String label;
 }
 
+/// Public text field. Delegates to [XkTactileField] (external label, input
+/// fill, r10) — not `_InsetWell` / [XkGlass] action.
 class XkTextInputField extends StatelessWidget {
   const XkTextInputField({
     super.key,
@@ -26,6 +26,7 @@ class XkTextInputField extends StatelessWidget {
     this.contentPadding,
     this.keyboardType,
     this.enabled = true,
+    this.errorText,
   });
 
   final String label;
@@ -37,37 +38,30 @@ class XkTextInputField extends StatelessWidget {
   final EdgeInsetsGeometry? contentPadding;
   final TextInputType? keyboardType;
   final bool enabled;
+  final String? errorText;
 
   @override
   Widget build(BuildContext context) {
-    return _LabeledField(
+    return _DelegatedField(
       label: label,
       helperText: helperText,
-      child: _InsetWell(
-        radius: borderRadius ?? XkRadius.ctlBorderRadius,
+      errorText: errorText,
+      enabled: enabled,
+      borderRadius: borderRadius,
+      child: TextField(
+        controller: controller,
         enabled: enabled,
-        child: TextField(
-          controller: controller,
-          enabled: enabled,
-          keyboardType: keyboardType,
-          onChanged: onChanged,
-          decoration: InputDecoration(
-            hintText: hintText,
-            filled: false,
-            border: InputBorder.none,
-            enabledBorder: InputBorder.none,
-            focusedBorder: InputBorder.none,
-            disabledBorder: InputBorder.none,
-            contentPadding:
-                contentPadding ??
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          ),
+        keyboardType: keyboardType,
+        onChanged: onChanged,
+        decoration: XkTactileField.inputDecoration(hintText: hintText).copyWith(
+          contentPadding: contentPadding,
         ),
       ),
     );
   }
 }
 
+/// Public textarea. Same current field chrome as [XkTextInputField].
 class XkTextAreaField extends StatelessWidget {
   const XkTextAreaField({
     super.key,
@@ -80,6 +74,7 @@ class XkTextAreaField extends StatelessWidget {
     this.contentPadding,
     this.maxLines = 4,
     this.enabled = true,
+    this.errorText,
   });
 
   final String label;
@@ -91,37 +86,30 @@ class XkTextAreaField extends StatelessWidget {
   final EdgeInsetsGeometry? contentPadding;
   final int maxLines;
   final bool enabled;
+  final String? errorText;
 
   @override
   Widget build(BuildContext context) {
-    return _LabeledField(
+    return _DelegatedField(
       label: label,
       helperText: helperText,
-      child: _InsetWell(
-        radius: borderRadius ?? XkRadius.ctlBorderRadius,
+      errorText: errorText,
+      enabled: enabled,
+      borderRadius: borderRadius,
+      child: TextField(
+        controller: controller,
         enabled: enabled,
-        child: TextField(
-          controller: controller,
-          enabled: enabled,
-          onChanged: onChanged,
-          maxLines: maxLines,
-          decoration: InputDecoration(
-            hintText: hintText,
-            filled: false,
-            border: InputBorder.none,
-            enabledBorder: InputBorder.none,
-            focusedBorder: InputBorder.none,
-            disabledBorder: InputBorder.none,
-            contentPadding:
-                contentPadding ??
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          ),
+        onChanged: onChanged,
+        maxLines: maxLines,
+        decoration: XkTactileField.inputDecoration(hintText: hintText).copyWith(
+          contentPadding: contentPadding,
         ),
       ),
     );
   }
 }
 
+/// Public select. Same current field chrome as [XkTextInputField].
 class XkSelectField<T> extends StatelessWidget {
   const XkSelectField({
     super.key,
@@ -133,6 +121,7 @@ class XkSelectField<T> extends StatelessWidget {
     this.borderRadius,
     this.contentPadding,
     this.enabled = true,
+    this.errorText,
   });
 
   final String label;
@@ -143,99 +132,87 @@ class XkSelectField<T> extends StatelessWidget {
   final BorderRadius? borderRadius;
   final EdgeInsetsGeometry? contentPadding;
   final bool enabled;
+  final String? errorText;
 
   @override
   Widget build(BuildContext context) {
-    return _LabeledField(
+    final XkTactileTokens t = XkTactileTokens.of(Theme.of(context).brightness);
+    return _DelegatedField(
       label: label,
       helperText: helperText,
-      child: _InsetWell(
-        radius: borderRadius ?? XkRadius.ctlBorderRadius,
-        enabled: enabled,
-        child: DropdownButtonFormField<T>(
-          key: ValueKey<T?>(value),
-          initialValue: value,
-          isExpanded: true,
-          icon: XkIcon(
-            XkIconName.chevDown,
-            size: 16,
-            color: XkColor.ink3Of(Theme.of(context).brightness),
-          ),
-          iconSize: 16,
-          items: options
-              .map(
-                (option) => DropdownMenuItem<T>(
-                  value: option.value,
-                  child: Text(option.label),
-                ),
-              )
-              .toList(),
-          onChanged: enabled ? onChanged : null,
-          decoration: InputDecoration(
-            filled: false,
-            border: InputBorder.none,
-            enabledBorder: InputBorder.none,
-            focusedBorder: InputBorder.none,
-            disabledBorder: InputBorder.none,
-            contentPadding:
-                contentPadding ??
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          ),
+      errorText: errorText,
+      enabled: enabled,
+      borderRadius: borderRadius,
+      child: DropdownButtonFormField<T>(
+        key: ValueKey<T?>(value),
+        initialValue: value,
+        isExpanded: true,
+        icon: XkIcon(
+          XkIconName.chevDown,
+          size: 16,
+          color: t.muted,
+        ),
+        iconSize: 16,
+        items: options
+            .map(
+              (XkSelectOption<T> option) => DropdownMenuItem<T>(
+                value: option.value,
+                child: Text(option.label),
+              ),
+            )
+            .toList(),
+        onChanged: enabled ? onChanged : null,
+        decoration: XkTactileField.inputDecoration().copyWith(
+          contentPadding: contentPadding,
         ),
       ),
     );
   }
 }
 
-/// Action-role glass surround (`--glass-action`). Not an inset groove.
-class _InsetWell extends StatelessWidget {
-  const _InsetWell({
-    required this.child,
-    required this.radius,
-    this.enabled = true,
-  });
-
-  final Widget child;
-  final BorderRadius radius;
-  final bool enabled;
-
-  @override
-  Widget build(BuildContext context) {
-    return Opacity(
-      opacity: enabled ? 1.0 : 0.6,
-      child: XkGlass(
-        role: XkGlassRole.action,
-        borderRadius: radius,
-        padding: EdgeInsets.zero,
-        child: child,
-      ),
-    );
-  }
-}
-
-class _LabeledField extends StatelessWidget {
-  const _LabeledField({
+class _DelegatedField extends StatelessWidget {
+  const _DelegatedField({
     required this.label,
     required this.child,
     this.helperText,
+    this.errorText,
+    this.enabled = true,
+    this.borderRadius,
   });
 
   final String label;
   final Widget child;
   final String? helperText;
+  final String? errorText;
+  final bool enabled;
+  final BorderRadius? borderRadius;
 
   @override
   Widget build(BuildContext context) {
+    final XkTactileTokens t = XkTactileTokens.of(Theme.of(context).brightness);
+    final String? error = errorText?.trim();
+    final bool invalid = error != null && error.isNotEmpty;
+    final String? helper = helperText?.trim();
+    final Widget field = XkTactileField(
+      label: label.trim().isEmpty ? null : label,
+      enabled: enabled,
+      error: invalid,
+      borderRadius: borderRadius,
+      child: child,
+    );
+    final String? below = invalid ? error : (helper == null || helper.isEmpty ? null : helper);
+    if (below == null) {
+      return field;
+    }
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label, style: XkTypo.label),
-        const SizedBox(height: XkLayout.spacingXs),
-        child,
-        if (helperText != null && helperText!.trim().isNotEmpty) ...[
-          const SizedBox(height: XkLayout.spacingXs),
-          Text(helperText!, style: XkTypo.metaMono.copyWith(fontSize: 13)),
-        ],
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        field,
+        const SizedBox(height: 8),
+        Text(
+          below,
+          style: XkTactileType.label(color: invalid ? t.accentDeep : t.muted),
+        ),
       ],
     );
   }

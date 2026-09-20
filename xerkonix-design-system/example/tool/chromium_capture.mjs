@@ -26,6 +26,8 @@ const shots = [
   { path: '/#/states-dialog', file: 'dialog-show-320-light.png', w: 320, h: 568, wait: 2800 },
   { path: '/#/states-loading', file: 'loading-1440-light.png', w: 1440, h: 900, wait: 2800 },
   { path: '/#/dark', file: 'matrix-1440-dark.png', w: 1440, h: 900, wait: 5000 },
+  { path: '/#/dark', file: 'matrix-390-dark.png', w: 390, h: 844, wait: 4000 },
+  { path: '/#/states#dark', file: 'states-1440-dark.png', w: 1440, h: 1400, wait: 4000, full: true },
 ];
 
 function sleep(ms) {

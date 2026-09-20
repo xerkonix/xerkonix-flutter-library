@@ -50,9 +50,12 @@ void main() {
         ),
       ),
     );
-    final XkGlass glass = tester.widget<XkGlass>(find.byType(XkGlass));
-    expect(glass.color, bg);
-    expect(glass.borderColor, bd);
+    final XkTactileSurface surface = tester.widget<XkTactileSurface>(
+      find.byType(XkTactileSurface),
+    );
+    expect(surface.role, XkTactileSurfaceRole.information);
+    expect(surface.fill, bg);
+    expect(surface.borderColor, bd);
   });
 
   testWidgets('XkKpiCard and XkAlert keep explicit colors', (
@@ -153,9 +156,17 @@ void main() {
     );
     await tester.pump();
     expect(tester.takeException(), isNull);
-    final XkGlass glass = tester.widget<XkGlass>(find.byType(XkGlass));
-    expect(glass.borderRadius, isA<BorderRadiusDirectional>());
-    final ClipRRect clip = tester.widget<ClipRRect>(find.byType(ClipRRect));
+    final XkTactileSurface surface = tester.widget<XkTactileSurface>(
+      find.byType(XkTactileSurface),
+    );
+    expect(surface.role, XkTactileSurfaceRole.information);
+    expect(surface.radius, isA<BorderRadiusDirectional>());
+    final ClipRRect clip = tester.widget<ClipRRect>(
+      find.descendant(
+        of: find.byType(XkInfoCard),
+        matching: find.byType(ClipRRect),
+      ),
+    );
     expect(clip.borderRadius, isA<BorderRadius>());
     final BorderRadius painted = clip.borderRadius.resolve(TextDirection.rtl);
     expect(painted.topLeft, const Radius.circular(20));
@@ -222,7 +233,7 @@ void main() {
     expect(painted.topRight, const Radius.circular(1));
   });
 
-  testWidgets('primary paints aqua-fill LinearGradient, not sheen RadialGradient', (
+  testWidgets('primary paints TACTILE ice LinearGradient, not aqua gem', (
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(
@@ -235,30 +246,17 @@ void main() {
         ),
       ),
     );
-    bool foundAquaFill = false;
-    final Iterable<DecoratedBox> boxes = tester.widgetList<DecoratedBox>(
-      find.byType(DecoratedBox),
-    );
-    for (final DecoratedBox box in boxes) {
-      final Decoration d = box.decoration;
-      if (d is! BoxDecoration || d.gradient == null) {
-        continue;
-      }
-      expect(
-        d.gradient,
-        isA<LinearGradient>(),
-        reason: 'primary must not paint a sheen RadialGradient: $d',
-      );
-      expect(d.gradient, isNot(isA<RadialGradient>()));
-      final LinearGradient g = d.gradient! as LinearGradient;
-      expect(g.colors.contains(XkColor.aqua), isTrue);
-      expect(g.colors.contains(XkColor.aquaBright), isTrue);
-      expect(g.begin, Alignment.topCenter);
-      expect(g.end, Alignment.bottomCenter);
-      foundAquaFill = true;
-    }
-    expect(foundAquaFill, isTrue, reason: '--aqua-fill LinearGradient missing');
-    expect(find.byKey(const ValueKey<String>('xk-gem-fill')), findsOneWidget);
+    final DecoratedBox fill = tester.widget(find.byKey(
+      const ValueKey<String>('xk-tactile-primary-fill'),
+    ));
+    final BoxDecoration d = fill.decoration as BoxDecoration;
+    expect(d.gradient, isA<LinearGradient>());
+    expect(d.gradient, isNot(isA<RadialGradient>()));
+    final LinearGradient g = d.gradient! as LinearGradient;
+    expect(g.colors.contains(XkColor.aqua), isFalse);
+    expect(g.begin, Alignment.topCenter);
+    expect(g.end, Alignment.bottomCenter);
+    expect(find.byKey(const ValueKey<String>('xk-gem-fill')), findsNothing);
   });
 
   testWidgets('primary and support expose button semantics and activate', (

@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 
 import '../motion/xerkonix_motion.dart';
 import '../palette/color.dart';
-import '../shape/xerkonix_shape.dart';
-import '../typography/xerkonix_typography.dart';
-import 'xerkonix_glass.dart';
+import '../tactile/tactile_button.dart';
+import '../tactile/tactile_primary_button.dart';
 
-/// XERKONIX buttons. Primary = `light.css` `.gem-ctl` / `.btn-primary`
-/// (`--aqua-fill` + `--aqua-on`). Support = action glass (`.glass-ctl`).
-/// Inverse surface is a section/footer role, not the main action fill.
+/// XERKONIX buttons. Primary / former gem factories = TACTILE
+/// `.btn.btn-primary`. Support / tonal / outline / text = `.btn-secondary`
+/// / `.btn-quiet` / `.btn-text`. No aqua gem path.
 class XkButton extends StatelessWidget {
   const XkButton._({
     super.key,
@@ -300,265 +299,30 @@ class XkButton extends StatelessWidget {
     );
   }
 
-  bool get _isGem {
-    switch (buttonType) {
-      case ButtonType.primary:
-      case ButtonType.action:
-      case ButtonType.accent:
-      case ButtonType.point:
-        return true;
-      default:
-        return false;
+  @override
+  Widget build(BuildContext context) {
+    if (buttonType == ButtonType.primary ||
+        buttonType == ButtonType.action ||
+        buttonType == ButtonType.accent ||
+        buttonType == ButtonType.point ||
+        buttonType == ButtonType.pointElevated ||
+        buttonType == ButtonType.brand) {
+      return XkTactilePrimaryButton(
+        onPressed: onPressed,
+        expanded: expanded,
+        child: child,
+      );
     }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    Widget button = _isGem
-        ? _GemButton(onPressed: onPressed, child: child)
-        : _GlassCtlButton(
-            onPressed: onPressed,
-            ink: semanticColor,
-            child: child,
-          );
-    if (expanded) {
-      button = SizedBox(width: double.infinity, child: button);
-    }
-    return button;
-  }
-}
-
-class _GemButton extends StatefulWidget {
-  const _GemButton({required this.onPressed, required this.child});
-
-  final VoidCallback? onPressed;
-  final Widget child;
-
-  @override
-  State<_GemButton> createState() => _GemButtonState();
-}
-
-class _GemButtonState extends State<_GemButton> {
-  bool _hover = false;
-  bool _focus = false;
-
-  @override
-  Widget build(BuildContext context) {
-    final Brightness b = Theme.of(context).brightness;
-    final bool enabled = widget.onPressed != null;
-    return Semantics(
-      button: true,
-      enabled: enabled,
-      child: MouseRegion(
-      onEnter: enabled ? (_) => setState(() => _hover = true) : null,
-      onExit: enabled ? (_) => setState(() => _hover = false) : null,
-      cursor: enabled ? SystemMouseCursors.click : SystemMouseCursors.basic,
-      child: AnimatedTranslate(
-        offset: _hover && enabled ? const Offset(0, -1) : Offset.zero,
-        child: FocusableActionDetector(
-          enabled: enabled,
-          onFocusChange: (bool has) => setState(() => _focus = has),
-          actions: <Type, Action<Intent>>{
-            ActivateIntent: CallbackAction<ActivateIntent>(
-              onInvoke: (ActivateIntent intent) {
-                widget.onPressed?.call();
-                return null;
-              },
-            ),
-            ButtonActivateIntent: CallbackAction<ButtonActivateIntent>(
-              onInvoke: (ButtonActivateIntent intent) {
-                widget.onPressed?.call();
-                return null;
-              },
-            ),
-          },
-          child: GestureDetector(
-            onTap: widget.onPressed,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                minHeight: XkLayout.controlHeight,
-              ),
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(XkRadius.ctl + 3),
-                  border: Border.all(
-                    color: _focus ? XkColor.aquaDeepOf(b) : XkColor.none,
-                    width: 2,
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(3),
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      borderRadius: XkRadius.ctlBorderRadius,
-                      boxShadow: XkShadow.gem(b, hover: _hover && enabled),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: XkRadius.ctlBorderRadius,
-                      child: Stack(
-                        children: <Widget>[
-                          Positioned.fill(
-                            child: DecoratedBox(
-                              key: const ValueKey<String>('xk-gem-fill'),
-                              decoration: BoxDecoration(
-                                color: XkColor.aqua,
-                                gradient: const LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: <Color>[
-                                    XkColor.aquaBright,
-                                    XkColor.aqua,
-                                    XkColor.aqua,
-                                    XkColor.aquaBright,
-                                  ],
-                                  stops: <double>[0.0, 0.28, 0.72, 1.0],
-                                ),
-                                borderRadius: XkRadius.ctlBorderRadius,
-                                border: const Border.fromBorderSide(
-                                  BorderSide(color: XkColor.aqua),
-                                ),
-                                boxShadow: <BoxShadow>[
-                                  const BoxShadow(
-                                    color: XkColor.glossSheen,
-                                    offset: Offset(0, 1),
-                                    blurStyle: BlurStyle.inner,
-                                  ),
-                                  BoxShadow(
-                                    color: XkColor.mixWhite.withValues(
-                                      alpha: 0.28,
-                                    ),
-                                    spreadRadius: 1,
-                                    blurStyle: BlurStyle.inner,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          DefaultTextStyle(
-                            style: XkTypo.buttonLabel.copyWith(
-                              color: XkColor.aquaOn,
-                              fontWeight: FontWeight.w600,
-                            ),
-                            child: IconTheme(
-                              data: const IconThemeData(
-                                color: XkColor.aquaOn,
-                                size: 18,
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 24,
-                                  vertical: 12,
-                                ),
-                                child: Center(child: widget.child),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-      ),
-    );
-  }
-}
-
-class _GlassCtlButton extends StatefulWidget {
-  const _GlassCtlButton({
-    required this.onPressed,
-    required this.child,
-    this.ink,
-  });
-
-  final VoidCallback? onPressed;
-  final Widget child;
-  final Color? ink;
-
-  @override
-  State<_GlassCtlButton> createState() => _GlassCtlButtonState();
-}
-
-class _GlassCtlButtonState extends State<_GlassCtlButton> {
-  bool _hover = false;
-  bool _focus = false;
-
-  @override
-  Widget build(BuildContext context) {
-    final Brightness b = Theme.of(context).brightness;
-    final bool enabled = widget.onPressed != null;
-    final Color fg = XkColor.themed(
-      widget.ink ?? XkColor.inkOf(b),
-      b,
-    );
-    return Semantics(
-      button: true,
-      enabled: enabled,
-      child: MouseRegion(
-      onEnter: enabled ? (_) => setState(() => _hover = true) : null,
-      onExit: enabled ? (_) => setState(() => _hover = false) : null,
-      cursor: enabled ? SystemMouseCursors.click : SystemMouseCursors.basic,
-      child: AnimatedTranslate(
-        offset: _hover && enabled ? const Offset(0, -1) : Offset.zero,
-        child: FocusableActionDetector(
-          enabled: enabled,
-          onFocusChange: (bool has) => setState(() => _focus = has),
-          actions: <Type, Action<Intent>>{
-            ActivateIntent: CallbackAction<ActivateIntent>(
-              onInvoke: (ActivateIntent intent) {
-                widget.onPressed?.call();
-                return null;
-              },
-            ),
-            ButtonActivateIntent: CallbackAction<ButtonActivateIntent>(
-              onInvoke: (ButtonActivateIntent intent) {
-                widget.onPressed?.call();
-                return null;
-              },
-            ),
-          },
-          child: GestureDetector(
-            onTap: widget.onPressed,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                minHeight: XkLayout.controlHeight,
-              ),
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(XkRadius.ctl + 3),
-                  border: Border.all(
-                    color: _focus ? XkColor.aquaDeepOf(b) : XkColor.none,
-                    width: 2,
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(3),
-                  child: XkGlass(
-                    role: XkGlassRole.action,
-                    borderRadius: XkRadius.ctlBorderRadius,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 12,
-                    ),
-                    child: DefaultTextStyle(
-                      style: XkTypo.buttonLabel.copyWith(
-                        color: enabled ? fg : XkColor.ink3Of(b),
-                        fontWeight: FontWeight.w600,
-                      ),
-                      child: Center(child: widget.child),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-      ),
+    final XkTactileButtonKind kind = switch (buttonType) {
+      ButtonType.outline || ButtonType.pointOutline => XkTactileButtonKind.quiet,
+      ButtonType.pointText => XkTactileButtonKind.text,
+      _ => XkTactileButtonKind.secondary,
+    };
+    return XkTactileButton(
+      onPressed: onPressed,
+      expanded: expanded,
+      kind: kind,
+      child: child,
     );
   }
 }

@@ -7,7 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:xerkonix_design_system/xerkonix_design_system.dart';
 
-const Key _fillKey = ValueKey<String>('xk-gem-fill');
+const Key _fillKey = ValueKey<String>('xk-tactile-primary-fill');
 
 Finder _fillFinder() => find.byKey(_fillKey);
 
@@ -27,7 +27,7 @@ Widget _harness({
           children: <Widget>[
             RepaintBoundary(
               key: captureKey,
-              child: XkButton.primary(
+              child: XkButton.action(
                 onPressed: () {},
                 child: const Text('시작하기'),
               ),
@@ -50,13 +50,15 @@ Future<ui.Image> _capture(WidgetTester tester, Key key) async {
   return image!;
 }
 
-bool _nearAquaFill(int r, int g, int b) {
-  // --aqua #0E79B4 (14,121,180) mid band, --aqua-bright #3FB2E4 (63,178,228) rims.
-  final bool nearAqua =
-      (r - 14).abs() <= 36 && (g - 121).abs() <= 44 && (b - 180).abs() <= 44;
-  final bool nearBright =
-      (r - 63).abs() <= 36 && (g - 178).abs() <= 44 && (b - 228).abs() <= 44;
-  return nearAqua || nearBright;
+bool _nearIceFill(int r, int g, int b) {
+  // Light --ice #CFE3F5. Dark --primary-base #1A3045. Not aqua gem.
+  final bool lightIce = (r - 207).abs() <= 40 &&
+      (g - 227).abs() <= 40 &&
+      (b - 245).abs() <= 40;
+  final bool darkIce = (r - 26).abs() <= 28 &&
+      (g - 48).abs() <= 28 &&
+      (b - 69).abs() <= 28;
+  return lightIce || darkIce;
 }
 
 ({int aqua, int nearBlack, int opaque}) _countFill(ByteData rgba, int w, int h) {
@@ -75,7 +77,7 @@ bool _nearAquaFill(int r, int g, int b) {
       final int r = bytes[i];
       final int g = bytes[i + 1];
       final int b = bytes[i + 2];
-      if (_nearAquaFill(r, g, b)) {
+      if (_nearIceFill(r, g, b)) {
         aqua++;
       }
       if (r < 12 && g < 12 && b < 12) {
@@ -90,19 +92,10 @@ void _expectFillCoversFace(WidgetTester tester) {
   final RenderBox fill = tester.renderObject(_fillFinder());
   final RenderBox button = tester.renderObject(find.byType(XkButton));
   expect(fill.hasSize, isTrue);
-  expect(fill.size.width, greaterThan(8), reason: 'aqua-fill width');
-  expect(fill.size.height, greaterThan(8), reason: 'aqua-fill height');
-  expect(
-    fill.size.width,
-    closeTo(button.size.width - 6, 2),
-    reason: 'fill should cover the inner face (3px pad each side)',
-  );
-  expect(
-    fill.size.height,
-    closeTo(button.size.height - 6, 2),
-    reason: 'fill should cover the inner face vertically',
-  );
-  expect(button.size.width, greaterThan(fill.size.width));
+  expect(fill.size.width, greaterThan(8), reason: 'ice-fill width');
+  expect(fill.size.height, greaterThan(8), reason: 'ice-fill height');
+  expect(fill.size.width, greaterThanOrEqualTo(button.size.width - 2));
+  expect(fill.size.height, greaterThanOrEqualTo(button.size.height - 2));
 }
 
 Future<void> _maybeWriteArtifact(
@@ -161,7 +154,7 @@ void main() {
           counts.aqua / counts.opaque,
           greaterThan(0.35),
           reason:
-              'light CTA raster must be --aqua-fill, not canvas #F5F5F5 '
+              'light CTA raster must be TACTILE ice #CFE3F5, not canvas #F5F5F5 '
               '(got aqua ${counts.aqua} black ${counts.nearBlack}/${counts.opaque})',
         );
         expect(
@@ -209,7 +202,7 @@ void main() {
           counts.aqua / counts.opaque,
           greaterThan(0.35),
           reason:
-              'dark CTA raster must be --aqua-fill, not canvas #141414 '
+              'dark CTA raster must be TACTILE ice / #1A3045, not canvas #141414 '
               '(got aqua ${counts.aqua} black ${counts.nearBlack}/${counts.opaque})',
         );
         expect(

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../shape/xerkonix_shape.dart';
-import 'xerkonix_glass.dart';
+import '../tactile/tactile_surface.dart';
 
 /// A flat rounded group. [onTap] adds keyboard and pointer interaction.
 ///
@@ -22,11 +21,11 @@ class XkCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return XkGlass(
-      borderRadius: XkRadius.cardBorderRadius,
+    return XkTactileSurface(
+      role: XkTactileSurfaceRole.information,
       padding: padding ?? const EdgeInsets.all(16),
-      onTap: onTap,
       width: double.infinity,
+      onTap: onTap,
       child: child,
     );
   }

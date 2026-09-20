@@ -17,12 +17,22 @@ class XkTactileButton extends StatefulWidget {
     required this.child,
     this.kind = XkTactileButtonKind.secondary,
     this.expanded = false,
+    this.semanticFill,
+    this.semanticRole,
   });
 
   final VoidCallback? onPressed;
   final Widget child;
   final XkTactileButtonKind kind;
   final bool expanded;
+
+  /// Allowed brand state / danger fill (`ok` / `warn` / `bad` / info ink).
+  /// When set, chrome (height, radius, hover lift, focus) stays tactile
+  /// but the face is not secondary.
+  final Color? semanticFill;
+
+  /// `success` / `warning` / `error` / `info` — explicit state marker.
+  final String? semanticRole;
 
   @override
   State<XkTactileButton> createState() => _XkTactileButtonState();
@@ -44,22 +54,32 @@ class _XkTactileButtonState extends State<XkTactileButton> {
     final Color border;
     final List<BoxShadow> shadows;
     final Color label;
-    switch (widget.kind) {
-      case XkTactileButtonKind.secondary:
-        fill = hover ? t.secondaryHover : t.secondaryFill;
-        border = t.secondaryBorder;
-        shadows = enabled ? t.secondaryShadow : const <BoxShadow>[];
-        label = t.ink;
-      case XkTactileButtonKind.quiet:
-        fill = hover ? t.controlHover : const Color(0x00000000);
-        border = t.line;
-        shadows = const <BoxShadow>[];
-        label = t.ink;
-      case XkTactileButtonKind.text:
-        fill = const Color(0x00000000);
-        border = const Color(0x00000000);
-        shadows = const <BoxShadow>[];
-        label = hover ? t.accent : t.ink;
+    final Color? semantic = widget.semanticFill;
+    if (semantic != null) {
+      fill = hover
+          ? Color.lerp(semantic, const Color(0xFFFFFFFF), 0.10)!
+          : semantic;
+      border = semantic;
+      shadows = enabled ? t.secondaryShadow : const <BoxShadow>[];
+      label = semantic.computeLuminance() > 0.45 ? t.ink : t.surfaceRaised;
+    } else {
+      switch (widget.kind) {
+        case XkTactileButtonKind.secondary:
+          fill = hover ? t.secondaryHover : t.secondaryFill;
+          border = t.secondaryBorder;
+          shadows = enabled ? t.secondaryShadow : const <BoxShadow>[];
+          label = t.ink;
+        case XkTactileButtonKind.quiet:
+          fill = hover ? t.controlHover : const Color(0x00000000);
+          border = t.line;
+          shadows = const <BoxShadow>[];
+          label = t.ink;
+        case XkTactileButtonKind.text:
+          fill = const Color(0x00000000);
+          border = const Color(0x00000000);
+          shadows = const <BoxShadow>[];
+          label = hover ? t.accent : t.ink;
+      }
     }
 
     Widget face = ConstrainedBox(
@@ -67,7 +87,11 @@ class _XkTactileButtonState extends State<XkTactileButton> {
         minHeight: XkTactileTokens.controlHeight,
       ),
       child: DecoratedBox(
-        key: ValueKey<String>('xk-tactile-${widget.kind.name}-fill'),
+        key: ValueKey<String>(
+          widget.semanticRole != null
+              ? 'xk-tactile-semantic-${widget.semanticRole}-fill'
+              : 'xk-tactile-${widget.kind.name}-fill',
+        ),
         decoration: BoxDecoration(
           color: fill,
           borderRadius: BorderRadius.circular(
@@ -132,6 +156,9 @@ class _XkTactileButtonState extends State<XkTactileButton> {
     Widget button = Semantics(
       button: true,
       enabled: enabled,
+      identifier: widget.semanticRole == null
+          ? null
+          : 'xk-button-${widget.semanticRole}',
       child: MouseRegion(
         onEnter: enabled ? (_) => setState(() => _hover = true) : null,
         onExit: enabled

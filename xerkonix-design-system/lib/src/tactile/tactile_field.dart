@@ -75,16 +75,26 @@ class XkTactileField extends StatelessWidget {
       child: child,
     );
     final Widget input = _TactileInputChrome(tokens: t, child: stripped);
-    if (label == null) {
+    final String? name = label?.trim();
+    if (name == null || name.isEmpty) {
       return input;
     }
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: <Widget>[
-        Text(label!, style: XkTactileType.label(color: t.ink)),
-        const SizedBox(height: 8),
-        input,
-      ],
+    // Visible label stays outside the chrome. Merge it onto the child text
+    // field so VoiceOver / semantics tree keep the accessible name when
+    // InputDecoration.labelText / hintText are stripped (login email/password).
+    return MergeSemantics(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          Text(name, style: XkTactileType.label(color: t.ink)),
+          const SizedBox(height: 8),
+          Semantics(
+            label: name,
+            container: true,
+            child: input,
+          ),
+        ],
+      ),
     );
   }
 }

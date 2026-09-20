@@ -61,6 +61,8 @@ class XkTactileTheme {
     TextTheme? textTheme,
     Color? error,
     Color? onError,
+    Color? tertiary,
+    Color? onTertiary,
   }) {
     final XkTactileChrome c = XkTactileChrome.of(brightness);
     final XkTactileTokens t = c.tokens;
@@ -82,6 +84,8 @@ class XkTactileTheme {
       surfaceTint: clear,
       inverseSurface: c.overlay,
       onInverseSurface: c.ink,
+      tertiary: tertiary ?? c.accent,
+      onTertiary: onTertiary ?? c.surfaceRaised,
     );
 
     final BorderRadius panelR = BorderRadius.circular(

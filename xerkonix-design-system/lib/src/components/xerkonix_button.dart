@@ -313,6 +313,16 @@ class XkButton extends StatelessWidget {
         child: child,
       );
     }
+    if (buttonType == ButtonType.semantic || semanticColor != null) {
+      return XkTactileButton(
+        onPressed: onPressed,
+        expanded: expanded,
+        kind: XkTactileButtonKind.secondary,
+        semanticFill: _resolvedSemanticFill(context),
+        semanticRole: _semanticRoleName,
+        child: child,
+      );
+    }
     final XkTactileButtonKind kind = switch (buttonType) {
       ButtonType.outline || ButtonType.pointOutline => XkTactileButtonKind.quiet,
       ButtonType.pointText => XkTactileButtonKind.text,
@@ -324,6 +334,43 @@ class XkButton extends StatelessWidget {
       kind: kind,
       child: child,
     );
+  }
+
+  String? get _semanticRoleName {
+    if (semanticColor == XkColor.ok) {
+      return 'success';
+    }
+    if (semanticColor == XkColor.warn) {
+      return 'warning';
+    }
+    if (semanticColor == XkColor.bad) {
+      return 'error';
+    }
+    if (semanticColor == XkColor.ink2) {
+      return 'info';
+    }
+    return 'custom';
+  }
+
+  Color? _resolvedSemanticFill(BuildContext context) {
+    final Color? raw = semanticColor;
+    if (raw == null) {
+      return null;
+    }
+    final bool dark = Theme.of(context).brightness == Brightness.dark;
+    if (raw == XkColor.ok) {
+      return dark ? XkColor.darkOk : XkColor.ok;
+    }
+    if (raw == XkColor.warn) {
+      return dark ? XkColor.darkWarn : XkColor.warn;
+    }
+    if (raw == XkColor.bad) {
+      return dark ? XkColor.darkBad : XkColor.bad;
+    }
+    if (raw == XkColor.ink2) {
+      return dark ? XkColor.darkInk2 : XkColor.ink2;
+    }
+    return raw;
   }
 }
 

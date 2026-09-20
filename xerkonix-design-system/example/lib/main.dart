@@ -109,9 +109,8 @@ class ComponentMatrixPageState extends State<ComponentMatrixPage> {
 
   @override
   Widget build(BuildContext context) {
-    final Brightness b = Theme.of(context).brightness;
     return Scaffold(
-      backgroundColor: XkColor.canvasOf(b),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: XkGround(
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints c) {
@@ -288,7 +287,7 @@ class _DesktopGrid extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               XkTextInputField(
-                label: '',
+                label: '검색',
                 hintText: '검색어를 입력하세요',
                 controller: search,
               ),
@@ -487,6 +486,14 @@ class _Controls extends StatelessWidget {
         XkButton.support(onPressed: () {}, child: const Text('Secondary')),
         const SizedBox(height: 8),
         XkButton.support(onPressed: null, child: const Text('Disabled')),
+        const SizedBox(height: 8),
+        XkButton.success(onPressed: () {}, child: const Text('Success')),
+        const SizedBox(height: 8),
+        XkButton.warning(onPressed: () {}, child: const Text('Warning')),
+        const SizedBox(height: 8),
+        XkButton.error(onPressed: () {}, child: const Text('Error')),
+        const SizedBox(height: 8),
+        XkButton.info(onPressed: () {}, child: const Text('Info')),
         const SizedBox(height: 12),
         XkSelectField<String>(
           label: '영역',
@@ -595,9 +602,8 @@ class StatesPageState extends State<StatesPage> {
 
   @override
   Widget build(BuildContext context) {
-    final Brightness b = Theme.of(context).brightness;
     return Scaffold(
-      backgroundColor: XkColor.canvasOf(b),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
         children: <Widget>[
           XkGround(
@@ -629,6 +635,43 @@ class StatesPageState extends State<StatesPage> {
                             ),
                             const SizedBox(height: 20),
                             Text('다른 상태', style: XkTypo.h3),
+                            const SizedBox(height: 16),
+                            const XkTextInputField(
+                              label: '이메일',
+                              hintText: 'name@example.com',
+                            ),
+                            const SizedBox(height: 12),
+                            const XkTextInputField(
+                              label: '비밀번호',
+                            ),
+                            const SizedBox(height: 12),
+                            const XkTextAreaField(
+                              label: '메모',
+                              hintText: '내용을 입력하세요',
+                            ),
+                            const SizedBox(height: 16),
+                            Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                              children: <Widget>[
+                                XkButton.success(
+                                  onPressed: () {},
+                                  child: const Text('Success'),
+                                ),
+                                XkButton.warning(
+                                  onPressed: () {},
+                                  child: const Text('Warning'),
+                                ),
+                                XkButton.error(
+                                  onPressed: () {},
+                                  child: const Text('Error'),
+                                ),
+                                XkButton.info(
+                                  onPressed: () {},
+                                  child: const Text('Info'),
+                                ),
+                              ],
+                            ),
                             const SizedBox(height: 16),
                             const XkSkeletonCard(),
                             const SizedBox(height: 12),

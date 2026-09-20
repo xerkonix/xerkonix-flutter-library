@@ -154,9 +154,27 @@ void main() {
     expect(find.text('더 명확한 가능성을 만듭니다.'), findsOneWidget);
     expect(find.text('Primary'), findsOneWidget);
     expect(find.text('Secondary'), findsOneWidget);
+    expect(find.text('Success'), findsOneWidget);
+    expect(find.text('Warning'), findsOneWidget);
+    expect(find.text('Error'), findsOneWidget);
+    expect(find.text('Info'), findsOneWidget);
+    expect(find.byType(XkTactileField), findsWidgets);
+    expect(
+      find.descendant(
+        of: find.byType(XkTextInputField),
+        matching: find.byType(XkGlass),
+      ),
+      findsNothing,
+    );
+    expect(
+      tester.widget<DecoratedBox>(
+        find.byKey(const ValueKey<String>('xk-tactile-semantic-success-fill')),
+      ).decoration,
+      isA<BoxDecoration>().having((BoxDecoration d) => d.color, 'color', XkColor.ok),
+    );
 
     final RenderBox fill = tester.renderObject(
-      find.byKey(const ValueKey<String>('xk-gem-fill')).first,
+      find.byKey(const ValueKey<String>('xk-tactile-primary-fill')).first,
     );
     expect(fill.size.width, greaterThan(40));
     expect(fill.size.height, greaterThan(24));
@@ -173,28 +191,26 @@ void main() {
         reason: 'canvas must not be an aqua wash',
       );
       final double scale = image.width / 1440;
-      final Offset fillCenter = tester.getCenter(
-        find.byKey(const ValueKey<String>('xk-gem-fill')).first,
-      );
+      final Finder primaryFill = find
+          .byKey(const ValueKey<String>('xk-tactile-primary-fill'))
+          .first;
+      final Offset fillSample =
+          tester.getTopLeft(primaryFill) + const Offset(10, 8);
       final List<int> primary = _pxAt(
         rgba,
         image.width,
         image.height,
-        fillCenter,
+        fillSample,
         scale,
       );
       expect(
-        primary[2],
-        greaterThan(primary[0] + 40),
-        reason: 'primary center must be --aqua, not inverse #000, got $primary',
-      );
-      expect(primary[0], lessThan(80), reason: 'primary R too high for --aqua: $primary');
-      expect(primary[1], greaterThan(80), reason: 'primary G too low for --aqua: $primary');
-      expect(
         primary[0] + primary[1] + primary[2],
-        greaterThan(120),
-        reason: 'primary must not be near-black, got $primary',
+        greaterThan(500),
+        reason: 'primary center must be TACTILE ice #CFE3F5, not aqua gem or #000, got $primary',
       );
+      expect(primary[0], greaterThan(150), reason: 'ice R too low: $primary');
+      expect(primary[1], greaterThan(170), reason: 'ice G too low: $primary');
+      expect(primary[2], greaterThan(primary[0] - 8), reason: 'ice B not cool: $primary');
       final Finder homeRow = find.ancestor(
         of: find.text('Home'),
         matching: find.byType(XkListRow),
@@ -273,7 +289,7 @@ void main() {
     try {
     await pumpMatrix(tester, size: const Size(1440, 900), dark: true);
     final RenderBox fill = tester.renderObject(
-      find.byKey(const ValueKey<String>('xk-gem-fill')).first,
+      find.byKey(const ValueKey<String>('xk-tactile-primary-fill')).first,
     );
     expect(fill.size.width, greaterThan(40));
     final ui.Image image = await _shot(tester, find.byKey(const ValueKey<String>('matrix')));

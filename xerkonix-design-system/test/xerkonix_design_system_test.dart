@@ -135,57 +135,78 @@ void main() {
       expect(XkLightTheme.themeData.useMaterial3, true);
     });
 
-    test('selected switch and checkbox fill stay aqua-mid', () {
+    test('selected switch and checkbox fill use tactile control-on', () {
       const Set<WidgetState> on = <WidgetState>{WidgetState.selected};
       expect(
         XkLightTheme.themeData.switchTheme.trackColor!.resolve(on),
-        XkColor.aquaMid,
+        XkTactileTokens.light.controlOn,
       );
       expect(
         XkDarkTheme.themeData.switchTheme.trackColor!.resolve(on),
-        XkColor.darkAquaMid,
+        XkTactileTokens.dark.controlOn,
       );
       expect(
         XkLightTheme.themeData.checkboxTheme.fillColor!.resolve(on),
-        XkColor.aquaMid,
+        XkTactileTokens.light.controlOn,
       );
       expect(
         XkDarkTheme.themeData.checkboxTheme.fillColor!.resolve(on),
-        XkColor.darkAquaMid,
+        XkTactileTokens.dark.controlOn,
       );
     });
 
-    test('input focused border uses aqua-deep', () {
-      final BorderSide light = (XkLightTheme
-              .themeData.inputDecorationTheme.focusedBorder!
-          as OutlineInputBorder)
-          .borderSide;
-      final BorderSide dark = (XkDarkTheme
-              .themeData.inputDecorationTheme.focusedBorder!
-          as OutlineInputBorder)
-          .borderSide;
-      expect(light.color, XkColor.aquaDeep);
-      expect(dark.color, XkColor.darkAquaDeep);
+    test('public theme input chrome is tactile (no aqua outline)', () {
+      expect(
+        XkLightTheme.themeData.inputDecorationTheme.focusedBorder,
+        InputBorder.none,
+      );
+      expect(
+        XkDarkTheme.themeData.inputDecorationTheme.focusedBorder,
+        InputBorder.none,
+      );
+      expect(
+        XkLightTheme.themeData.inputDecorationTheme.floatingLabelBehavior,
+        FloatingLabelBehavior.never,
+      );
     });
 
-    test('primary CTA is aqua-fill, not inverse black', () {
+    test('public theme primary is ice, not aqua or inverse', () {
       expect(
         XkLightTheme.themeData.colorScheme.primary,
-        XkColor.aqua,
+        XkTactileTokens.light.primaryBase,
       );
       expect(
         XkLightTheme.themeData.colorScheme.onPrimary,
-        XkColor.aquaOn,
+        XkTactileTokens.light.primaryText,
       );
       expect(
         XkDarkTheme.themeData.colorScheme.primary,
-        XkColor.aqua,
+        XkTactileTokens.dark.primaryBase,
       );
       expect(XkColor.surfaceInverse, const Color(0xFF000000));
-      expect(XkColor.aquaOn, const Color(0xFFFFFFFF));
       expect(
         XkLightTheme.themeData.colorScheme.primary,
         isNot(XkColor.surfaceInverse),
+      );
+      expect(
+        XkLightTheme.themeData.colorScheme.primary,
+        isNot(XkColor.aqua),
+      );
+      expect(
+        XkLightTheme.themeData.scaffoldBackgroundColor,
+        XkTactileTokens.light.canvas,
+      );
+      expect(
+        XkDarkTheme.themeData.scaffoldBackgroundColor,
+        const Color(0xFF111111),
+      );
+      expect(
+        XkDarkTheme.themeData.scaffoldBackgroundColor,
+        isNot(const Color(0xFF141414)),
+      );
+      expect(
+        XkLightTheme.themeData.cardTheme.color,
+        XkTactileTokens.light.panelFill,
       );
     });
 

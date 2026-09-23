@@ -25,9 +25,10 @@ class XkTactileFonts {
 
   static const String fileName = 'NotoSansKR-VF.ttf';
 
-  /// Flutter asset key from pubspec.yaml. On web it is requested as
-  /// `assets/fonts/...`; probing package/lib paths caused avoidable 404s.
-  /// Keep this 10MB face out of FontManifest so it loads after first frame.
+  /// Default Flutter asset key from pubspec.yaml. Apps with a different
+  /// pubspec path pass that key to [ensureLoaded]. On web this default is
+  /// requested as `assets/fonts/...`. Keep the 10MB face out of FontManifest
+  /// so it loads after first frame.
   static const String assetPath = 'fonts/noto_sans_cjk_kr/NotoSansKR-VF.ttf';
 
   static const String packageFilePath =
@@ -41,12 +42,12 @@ class XkTactileFonts {
     return <FontVariation>[FontVariation.weight(wght)];
   }
 
-  static Future<bool> ensureLoaded() async {
+  static Future<bool> ensureLoaded({String? assetPathOverride}) async {
     if (_loaded) {
       return true;
     }
     try {
-      final ByteData data = await rootBundle.load(assetPath);
+      final ByteData data = await rootBundle.load(assetPathOverride ?? assetPath);
       if (data.lengthInBytes < 100 * 1024) {
         return false;
       }

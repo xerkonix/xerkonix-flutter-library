@@ -2,6 +2,10 @@
 
 - `XkCompanyWordmark`: 승인 ink/paper 워드마크 하나, 홈은 `https://xerkonix.com/`. 제품 워드마크가 아니다.
 
+## 4.5.1 — 앱별 폰트 번들 경로
+
+- `XkTactileFonts.ensureLoaded`가 앱의 pubspec 에셋 경로를 인자로 받을 수 있다. coTact의 폰트 404를 수정한다.
+
 ## 4.5.0 — TACTILE 테마별 Aquamarine과 모노크롬 주 행동
 
 - 웹 TACTILE v3.1.0과 같은 배경 `#F5F5F5` / `#111111`, Aquamarine `#269DB0` / `#65C9D9`.

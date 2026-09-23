@@ -68,15 +68,15 @@ class XkTactileTheme {
     final XkTactileChrome c = XkTactileChrome.of(brightness);
     final XkTactileTokens t = c.tokens;
     const Color clear = XkTactileTokens.clear;
-    final Color err = error ?? t.accentDeep;
-    final Color onErr = onError ?? t.surfaceRaised;
+    final Color err = error ?? t.ink;
+    final Color onErr = onError ?? t.canvas;
 
     final ColorScheme scheme = ColorScheme(
       brightness: brightness,
       primary: c.primary,
       onPrimary: c.onPrimary,
-      secondary: c.accent,
-      onSecondary: c.surfaceRaised,
+      secondary: c.ink,
+      onSecondary: c.canvas,
       surface: c.surface,
       onSurface: c.ink,
       error: err,
@@ -85,8 +85,8 @@ class XkTactileTheme {
       surfaceTint: clear,
       inverseSurface: c.overlay,
       onInverseSurface: c.ink,
-      tertiary: tertiary ?? c.accent,
-      onTertiary: onTertiary ?? c.surfaceRaised,
+      tertiary: tertiary ?? c.ink,
+      onTertiary: onTertiary ?? c.canvas,
     );
 
     final BorderRadius panelR = BorderRadius.circular(
@@ -123,10 +123,7 @@ class XkTactileTheme {
         elevation: 0,
         shadowColor: clear,
         surfaceTintColor: clear,
-        shape: RoundedRectangleBorder(
-          borderRadius: panelR,
-          side: lineSide,
-        ),
+        shape: RoundedRectangleBorder(borderRadius: panelR, side: lineSide),
         margin: EdgeInsets.zero,
       ),
       dialogTheme: DialogThemeData(
@@ -148,10 +145,7 @@ class XkTactileTheme {
         shadowColor: clear,
         surfaceTintColor: clear,
         textStyle: textTheme?.bodyMedium,
-        shape: RoundedRectangleBorder(
-          borderRadius: panelR,
-          side: overlaySide,
-        ),
+        shape: RoundedRectangleBorder(borderRadius: panelR, side: overlaySide),
       ),
       bottomSheetTheme: BottomSheetThemeData(
         backgroundColor: c.overlay,
@@ -179,10 +173,7 @@ class XkTactileTheme {
         contentTextStyle: textTheme?.bodyMedium?.copyWith(color: c.ink),
         behavior: SnackBarBehavior.floating,
         elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: panelR,
-          side: overlaySide,
-        ),
+        shape: RoundedRectangleBorder(borderRadius: panelR, side: overlaySide),
       ),
       tooltipTheme: TooltipThemeData(
         decoration: BoxDecoration(
@@ -253,9 +244,8 @@ class XkTactileTheme {
               : c.surfaceRaised,
         ),
         trackColor: WidgetStateProperty.resolveWith(
-          (Set<WidgetState> s) => s.contains(WidgetState.selected)
-              ? c.controlOn
-              : c.controlTrack,
+          (Set<WidgetState> s) =>
+              s.contains(WidgetState.selected) ? c.controlOn : c.controlTrack,
         ),
       ),
       progressIndicatorTheme: ProgressIndicatorThemeData(
@@ -273,7 +263,9 @@ class XkTactileTheme {
           return XkTactileTokens.clear;
         }
         if (s.contains(WidgetState.disabled)) {
-          return t.primaryBase.withValues(alpha: XkTactileTokens.disabledOpacity);
+          return t.primaryBase.withValues(
+            alpha: XkTactileTokens.disabledOpacity,
+          );
         }
         return t.primaryBase;
       }),

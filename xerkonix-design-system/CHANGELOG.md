@@ -2,6 +2,13 @@
 
 - `XkCompanyWordmark`: 승인 ink/paper 워드마크 하나, 홈은 `https://xerkonix.com/`. 제품 워드마크가 아니다.
 
+## 4.5.0 — TACTILE 테마별 Aquamarine과 모노크롬 주 행동
+
+- 웹 TACTILE v3.1.0과 같은 배경 `#F5F5F5` / `#111111`, Aquamarine `#269DB0` / `#65C9D9`.
+- `XkTactilePrimaryButton`은 라이트 근흑, 다크 오프화이트의 평면 버튼. 그라디언트·블러·그림자는 제거한다.
+- 포커스·선택 상태와 Material 기본 행동은 중립색으로 두고 Aquamarine은 브랜드 포인트에 남긴다.
+- 앱 소비 사본은 `sync_tactile_dart.py`로 재생성한다. 패키지 게시와 운영 배포는 별도다.
+
 ## 4.4.0 — 아쿠아 색유리 주 액션 · 라이트 캔버스 #F5F5F5
 
 패키지 마이너 4.4.0. 토큰 헤더 v3.0.0. 두 번호는 별개다.

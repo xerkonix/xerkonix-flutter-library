@@ -25,16 +25,10 @@ class XkTactileFonts {
 
   static const String fileName = 'NotoSansKR-VF.ttf';
 
-  /// First existing bundle path wins. Package path is for the library
-  /// example; the others are app copies. Not listed in FontManifest —
-  /// a 10MB VF in the manifest delays the first frame (same class of
-  /// miss as the old 16MB Pretendard set).
-  static const List<String> assetCandidates = <String>[
-    'packages/xerkonix_design_system/lib/fonts/noto_sans_cjk_kr/NotoSansKR-VF.ttf',
-    'lib/fonts/noto_sans_cjk_kr/NotoSansKR-VF.ttf',
-    'fonts/noto_sans_cjk_kr/NotoSansKR-VF.ttf',
-    'assets/fonts/noto_sans_cjk_kr/NotoSansKR-VF.ttf',
-  ];
+  /// Flutter asset key from pubspec.yaml. On web it is requested as
+  /// `assets/fonts/...`; probing package/lib paths caused avoidable 404s.
+  /// Keep this 10MB face out of FontManifest so it loads after first frame.
+  static const String assetPath = 'fonts/noto_sans_cjk_kr/NotoSansKR-VF.ttf';
 
   static const String packageFilePath =
       'lib/fonts/noto_sans_cjk_kr/NotoSansKR-VF.ttf';
@@ -51,22 +45,19 @@ class XkTactileFonts {
     if (_loaded) {
       return true;
     }
-    for (final String asset in assetCandidates) {
-      try {
-        final ByteData data = await rootBundle.load(asset);
-        if (data.lengthInBytes < 100 * 1024) {
-          continue;
-        }
-        final FontLoader loader = FontLoader(family);
-        loader.addFont(Future<ByteData>.value(data));
-        await loader.load();
-        _loaded = true;
-        return true;
-      } catch (_) {
-        continue;
+    try {
+      final ByteData data = await rootBundle.load(assetPath);
+      if (data.lengthInBytes < 100 * 1024) {
+        return false;
       }
+      final FontLoader loader = FontLoader(family);
+      loader.addFont(Future<ByteData>.value(data));
+      await loader.load();
+      _loaded = true;
+      return true;
+    } catch (_) {
+      return false;
     }
-    return false;
   }
 
   /// Test / tool path: load official bytes without the asset bundle.

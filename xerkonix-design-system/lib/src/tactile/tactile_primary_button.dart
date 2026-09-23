@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 import 'tactile_tokens.dart';
@@ -10,7 +8,7 @@ import 'tactile_type.dart';
 /// Light/dark values come from `tactile/tokens.css` `--primary-*`.
 /// Hover `translateY(-2px)`, `:active` `translateY(0)` (hover chrome stays),
 /// focus-visible outline 3 / offset 4 (no layout growth), disabled 40%,
-/// white rim, inset, drop, gradient-over-base. `min-height` 46, not a fixed
+/// flat monochrome fill. `min-height` 46, not a fixed
 /// height — text scale / wrap can grow. Not CosentioRaise.sm.
 class XkTactilePrimaryButton extends StatefulWidget {
   const XkTactilePrimaryButton({
@@ -40,31 +38,7 @@ class _XkTactilePrimaryButtonState extends State<XkTactilePrimaryButton> {
     final bool hover = _hover && enabled;
     final bool pressed = _pressed && enabled;
     final bool lifted = hover && !pressed;
-    final Color overlayTop =
-        hover ? t.primaryHoverTop : t.primaryOverlayTop;
-    final Color overlayBottom =
-        hover ? t.primaryHoverBottom : t.primaryOverlayBottom;
-    final List<BoxShadow> shadows = enabled
-        ? <BoxShadow>[
-            if ((t.primaryRing.toARGB32() >> 24) > 0)
-              BoxShadow(
-                color: t.primaryRing,
-                spreadRadius: 1,
-              ),
-            BoxShadow(
-              color: t.primaryDrop,
-              offset: hover
-                  ? Offset(t.primaryDropOffset.dx, t.primaryDropOffset.dy + 3)
-                  : t.primaryDropOffset,
-              blurRadius: hover ? t.primaryDropBlur + 6 : t.primaryDropBlur,
-            ),
-            BoxShadow(
-              color: t.primaryInset,
-              offset: const Offset(0, 1),
-              blurStyle: BlurStyle.inner,
-            ),
-          ]
-        : const <BoxShadow>[];
+    final Color fill = hover ? t.primaryHoverTop : t.primaryBase;
 
     Widget face = ConstrainedBox(
       constraints: const BoxConstraints(
@@ -73,41 +47,21 @@ class _XkTactilePrimaryButtonState extends State<XkTactilePrimaryButton> {
       child: DecoratedBox(
         key: const ValueKey<String>('xk-tactile-primary-fill'),
         decoration: BoxDecoration(
-          borderRadius:
-              BorderRadius.circular(XkTactileTokens.controlRadius),
-          border: Border.all(
-            color: hover && enabled ? t.selectedBorder : t.primaryBorder,
-          ),
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: <Color>[
-              Color.alphaBlend(overlayTop, t.primaryBase),
-              Color.alphaBlend(overlayBottom, t.primaryBase),
-            ],
-          ),
-          boxShadow: shadows,
+          borderRadius: BorderRadius.circular(XkTactileTokens.controlRadius),
+          border: Border.all(color: fill),
+          color: fill,
+          boxShadow: const <BoxShadow>[],
         ),
-        child: ClipRRect(
-          borderRadius:
-              BorderRadius.circular(XkTactileTokens.controlRadius - 1),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(
-              sigmaX: XkTactileTokens.controlBlur,
-              sigmaY: XkTactileTokens.controlBlur,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 11),
-              child: DefaultTextStyle.merge(
-                style: XkTactileType.button(color: t.primaryText),
-                child: IconTheme(
-                  data: IconThemeData(color: t.primaryText, size: 16),
-                  child: Center(
-                    widthFactor: widget.expanded ? null : 1,
-                    heightFactor: 1,
-                    child: widget.child,
-                  ),
-                ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 11),
+          child: DefaultTextStyle.merge(
+            style: XkTactileType.button(color: t.primaryText),
+            child: IconTheme(
+              data: IconThemeData(color: t.primaryText, size: 16),
+              child: Center(
+                widthFactor: widget.expanded ? null : 1,
+                heightFactor: 1,
+                child: widget.child,
               ),
             ),
           ),
@@ -121,7 +75,8 @@ class _XkTactilePrimaryButtonState extends State<XkTactilePrimaryButton> {
 
     // CSS outline: 3px / offset 4px. Paints outside; does not grow layout.
     if (_focus && enabled) {
-      const double outset = XkTactileTokens.focusOutlineOffset +
+      const double outset =
+          XkTactileTokens.focusOutlineOffset +
           XkTactileTokens.focusOutlineWidth;
       face = Stack(
         clipBehavior: Clip.none,
@@ -181,11 +136,11 @@ class _XkTactilePrimaryButtonState extends State<XkTactilePrimaryButton> {
             ),
           },
           child: GestureDetector(
-            onTapDown:
-                enabled ? (_) => setState(() => _pressed = true) : null,
+            onTapDown: enabled ? (_) => setState(() => _pressed = true) : null,
             onTapUp: enabled ? (_) => setState(() => _pressed = false) : null,
-            onTapCancel:
-                enabled ? () => setState(() => _pressed = false) : null,
+            onTapCancel: enabled
+                ? () => setState(() => _pressed = false)
+                : null,
             onTap: widget.onPressed,
             child: AnimatedSlide(
               key: ValueKey<String>(

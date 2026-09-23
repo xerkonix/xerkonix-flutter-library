@@ -8,13 +8,13 @@ XERKONIX Flutter 공개 패키지 5종의 모노레포. 모두 pub.dev 에 게�
 
 | 패키지 (pub 이름) | 버전 | 요약 |
 |---|---|---|
-| [`xerkonix_design_system`](xerkonix-design-system/) | 4.4.0 (패키지, 로컬) | 제품 토큰 헤더 v3.0.0 · 테마·타이포·아이콘·컴포넌트·패턴·모션 위젯 |
+| [`xerkonix_design_system`](xerkonix-design-system/) | 4.5.0 (패키지, 로컬) | 웹 TACTILE v3.1.0 · 테마·타이포·아이콘·컴포넌트·패턴·모션 위젯 |
 | [`xerkonix_error_handler`](xerkonix-error-handler/) | 1.1.0 | 구조화된 에러 타입·예외·메시지 핸들러·다이얼로그/토스트 UI |
 | [`xerkonix_http`](xerkonix-http/) | 1.1.0 | 전 HTTP 메서드 클라이언트 + 자동 에러 파싱·로깅 통합 |
 | [`xerkonix_logger`](xerkonix-logger/) | 1.1.0 | 레벨별 로깅 + HTTP 요청/응답 로깅 |
 | [`xerkonix_sizer`](xerkonix-sizer/) | 1.1.0 | 논리 픽셀(lp) 기반 반응형 사이징 유틸리티 |
 
-`xerkonix_design_system` 의 패키지 버전(4.4.0)과 토큰 헤더(v3.0.0)는 별개다. 패키지 번호는 `xerkonix-design-system/pubspec.yaml` 을, 계약 번호는 `xerkonix-design-system/test/fixtures/tokens.css` 헤더를 따른다. 주 액션은 `--aqua-fill` 색유리 + 흰 글자. 검정 역상 면은 큰 배경·푸터.
+`xerkonix_design_system` 의 패키지 버전(4.5.0)과 웹 TACTILE 토큰 버전(v3.1.0)은 별개다. 패키지 번호는 `xerkonix-design-system/pubspec.yaml`, 웹 값은 형제 디자인 시스템의 `tactile/tokens.json`을 따른다. 제품 루트 `tokens.css` 미러는 구형 v3.0.0이다. 주 액션은 모노크롬 평면 버튼이다.
 
 각 패키지는 독립적으로 게시된다. `xerkonix_http` 는 `xerkonix_error_handler` / `xerkonix_logger` 에, `xerkonix_error_handler` 는 `xerkonix_logger` 에 의존한다.
 

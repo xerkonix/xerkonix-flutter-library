@@ -59,81 +59,15 @@ Future<ui.Image> _capture(WidgetTester tester, Key key) async {
   return image!;
 }
 
-({int ice, int aqua, int flatBlue, int opaque}) _count(
-  ByteData rgba,
-  int w,
-  int h,
-) {
-  int ice = 0;
-  int aqua = 0;
-  int flatBlue = 0;
-  int opaque = 0;
-  final Uint8List bytes = rgba.buffer.asUint8List();
-  for (int y = 0; y < h; y++) {
-    for (int x = 0; x < w; x++) {
-      final int i = (y * w + x) * 4;
-      if (bytes[i + 3] < 128) {
-        continue;
-      }
-      opaque++;
-      final int r = bytes[i];
-      final int g = bytes[i + 1];
-      final int b = bytes[i + 2];
-      // --primary-base light #CFE3F5 (207,227,245) after white gradient blend.
-      if ((r - 207).abs() <= 28 &&
-          (g - 227).abs() <= 28 &&
-          (b - 245).abs() <= 20) {
-        ice++;
-      }
-      // leftover aqua-fill #0E79B4
-      if ((r - 14).abs() <= 28 &&
-          (g - 121).abs() <= 36 &&
-          (b - 180).abs() <= 36) {
-        aqua++;
-      }
-      // arbitrary flat accent #1E70B8 without ice blend
-      if ((r - 30).abs() <= 12 &&
-          (g - 112).abs() <= 12 &&
-          (b - 184).abs() <= 12) {
-        flatBlue++;
-      }
-    }
-  }
-  return (ice: ice, aqua: aqua, flatBlue: flatBlue, opaque: opaque);
-}
-
-({int darkIce, int opaque}) _countDark(ByteData rgba, int w, int h) {
-  int darkIce = 0;
-  int opaque = 0;
-  final Uint8List bytes = rgba.buffer.asUint8List();
-  for (int y = 0; y < h; y++) {
-    for (int x = 0; x < w; x++) {
-      final int i = (y * w + x) * 4;
-      if (bytes[i + 3] < 128) {
-        continue;
-      }
-      opaque++;
-      final int r = bytes[i];
-      final int g = bytes[i + 1];
-      final int b = bytes[i + 2];
-      // --primary-base dark #1A3045 (26,48,69)
-      if ((r - 26).abs() <= 22 &&
-          (g - 48).abs() <= 22 &&
-          (b - 69).abs() <= 22) {
-        darkIce++;
-      }
-    }
-  }
-  return (darkIce: darkIce, opaque: opaque);
-}
-
 Future<void> _write(WidgetTester tester, ui.Image image, String name) async {
   final String? dir = Platform.environment['ARTIFACT_DIR'];
   if (dir == null || dir.isEmpty) {
     return;
   }
   await tester.runAsync(() async {
-    final ByteData? png = await image.toByteData(format: ui.ImageByteFormat.png);
+    final ByteData? png = await image.toByteData(
+      format: ui.ImageByteFormat.png,
+    );
     if (png == null) {
       return;
     }
@@ -152,67 +86,48 @@ void main() {
     expect(ok, isTrue);
   });
 
-  testWidgets('light primary is ice gradient, not aqua or flat blue', (
+  testWidgets('light primary is a flat ink button', (
     WidgetTester tester,
   ) async {
-    const Key captureKey = ValueKey<String>('tactile-primary-light');
     await tester.pumpWidget(
       _harness(
         theme: ThemeData.light(),
         scaffoldColor: XkTactileTokens.light.canvas,
-        captureKey: captureKey,
+        captureKey: const ValueKey<String>('tactile-primary-light'),
         onPressed: () {},
       ),
     );
     await tester.pumpAndSettle();
-
     final Size fill = tester.getSize(find.byKey(_fillKey));
+    final DecoratedBox box = tester.widget(find.byKey(_fillKey));
+    final BoxDecoration decoration = box.decoration as BoxDecoration;
     expect(fill.height, greaterThanOrEqualTo(46));
-
-    final ui.Image image = await _capture(tester, captureKey);
-    try {
-      final ByteData? rgba = await tester.runAsync<ByteData?>(
-        () => image.toByteData(format: ui.ImageByteFormat.rawRgba),
-      );
-      final counts = _count(rgba!, image.width, image.height);
-      expect(counts.opaque, greaterThan(0));
-      expect(
-        counts.ice / counts.opaque,
-        greaterThan(0.20),
-        reason: 'ice ${counts.ice}/${counts.opaque}',
-      );
-      expect(counts.aqua / counts.opaque, lessThan(0.08));
-      expect(counts.flatBlue / counts.opaque, lessThan(0.08));
-      await _write(tester, image, 'tactile_primary_light.png');
-    } finally {
-      image.dispose();
-    }
+    expect(decoration.color, const Color(0xFF111111));
+    expect(decoration.gradient, isNull);
+    expect(decoration.boxShadow, isEmpty);
+    expect(XkTactileTokens.light.primaryText, const Color(0xFFF5F5F5));
+    expect(XkTactileTokens.light.accent, const Color(0xFF269DB0));
   });
 
-  testWidgets('dark primary uses --primary-base #1A3045', (
+  testWidgets('dark primary reverses the monochrome pair', (
     WidgetTester tester,
   ) async {
-    const Key captureKey = ValueKey<String>('tactile-primary-dark');
     await tester.pumpWidget(
       _harness(
         theme: ThemeData.dark(),
         scaffoldColor: XkTactileTokens.dark.canvas,
-        captureKey: captureKey,
+        captureKey: const ValueKey<String>('tactile-primary-dark'),
         onPressed: () {},
       ),
     );
     await tester.pumpAndSettle();
-    final ui.Image image = await _capture(tester, captureKey);
-    try {
-      final ByteData? rgba = await tester.runAsync<ByteData?>(
-        () => image.toByteData(format: ui.ImageByteFormat.rawRgba),
-      );
-      final counts = _countDark(rgba!, image.width, image.height);
-      expect(counts.darkIce / counts.opaque, greaterThan(0.15));
-      await _write(tester, image, 'tactile_primary_dark.png');
-    } finally {
-      image.dispose();
-    }
+    final DecoratedBox box = tester.widget(find.byKey(_fillKey));
+    final BoxDecoration decoration = box.decoration as BoxDecoration;
+    expect(decoration.color, const Color(0xFFF5F5F5));
+    expect(decoration.gradient, isNull);
+    expect(decoration.boxShadow, isEmpty);
+    expect(XkTactileTokens.dark.primaryText, const Color(0xFF111111));
+    expect(XkTactileTokens.dark.accent, const Color(0xFF65C9D9));
   });
 
   testWidgets('disabled primary is 40% opacity and has no drop shadow', (
@@ -243,7 +158,7 @@ void main() {
     }
   });
 
-  testWidgets('hover primary uses selected border and lift', (
+  testWidgets('hover primary uses neutral hover fill and lift', (
     WidgetTester tester,
   ) async {
     const Key captureKey = ValueKey<String>('tactile-primary-hover');
@@ -268,7 +183,7 @@ void main() {
     expect(deco.border, isNotNull);
     expect(
       (deco.border! as Border).top.color,
-      XkTactileTokens.light.selectedBorder,
+      XkTactileTokens.light.primaryHoverTop,
     );
     final ui.Image image = await _capture(tester, captureKey);
     try {
@@ -278,50 +193,51 @@ void main() {
     }
   });
 
-  testWidgets('hover-held click matches :active translateY(0), then hover lift', (
-    WidgetTester tester,
-  ) async {
-    await tester.pumpWidget(
-      _harness(
-        theme: ThemeData.light(),
-        scaffoldColor: XkTactileTokens.light.canvas,
-        captureKey: const ValueKey<String>('tactile-primary-active'),
-        onPressed: () {},
-      ),
-    );
-    await tester.pumpAndSettle();
-    final TestGesture mouse = await tester.createGesture(
-      kind: PointerDeviceKind.mouse,
-    );
-    await mouse.addPointer();
-    addTearDown(mouse.removePointer);
-    await mouse.moveTo(tester.getCenter(find.byKey(_fillKey)));
-    await tester.pumpAndSettle();
-    AnimatedSlide slide = tester.widget(find.byType(AnimatedSlide));
-    expect(slide.offset.dy, isNot(0), reason: 'hover must lift');
-    expect(
-      find.byKey(const ValueKey<String>('xk-tactile-primary-lift-hover')),
-      findsOneWidget,
-    );
-    await mouse.down(tester.getCenter(find.byKey(_fillKey)));
-    await tester.pump();
-    slide = tester.widget(find.byType(AnimatedSlide));
-    expect(slide.offset, Offset.zero, reason: ':active is translateY(0)');
-    expect(
-      find.byKey(const ValueKey<String>('xk-tactile-primary-lift-active')),
-      findsOneWidget,
-    );
-    final DecoratedBox fill = tester.widget(find.byKey(_fillKey));
-    expect(
-      ((fill.decoration as BoxDecoration).border! as Border).top.color,
-      XkTactileTokens.light.selectedBorder,
-      reason: 'hover chrome stays while pressed',
-    );
-    await mouse.up();
-    await tester.pumpAndSettle();
-    slide = tester.widget(find.byType(AnimatedSlide));
-    expect(slide.offset.dy, isNot(0), reason: 'hover lift returns after up');
-  });
+  testWidgets(
+    'hover-held click matches :active translateY(0), then hover lift',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        _harness(
+          theme: ThemeData.light(),
+          scaffoldColor: XkTactileTokens.light.canvas,
+          captureKey: const ValueKey<String>('tactile-primary-active'),
+          onPressed: () {},
+        ),
+      );
+      await tester.pumpAndSettle();
+      final TestGesture mouse = await tester.createGesture(
+        kind: PointerDeviceKind.mouse,
+      );
+      await mouse.addPointer();
+      addTearDown(mouse.removePointer);
+      await mouse.moveTo(tester.getCenter(find.byKey(_fillKey)));
+      await tester.pumpAndSettle();
+      AnimatedSlide slide = tester.widget(find.byType(AnimatedSlide));
+      expect(slide.offset.dy, isNot(0), reason: 'hover must lift');
+      expect(
+        find.byKey(const ValueKey<String>('xk-tactile-primary-lift-hover')),
+        findsOneWidget,
+      );
+      await mouse.down(tester.getCenter(find.byKey(_fillKey)));
+      await tester.pump();
+      slide = tester.widget(find.byType(AnimatedSlide));
+      expect(slide.offset, Offset.zero, reason: ':active is translateY(0)');
+      expect(
+        find.byKey(const ValueKey<String>('xk-tactile-primary-lift-active')),
+        findsOneWidget,
+      );
+      final DecoratedBox fill = tester.widget(find.byKey(_fillKey));
+      expect(
+        ((fill.decoration as BoxDecoration).border! as Border).top.color,
+        XkTactileTokens.light.primaryHoverTop,
+        reason: 'hover chrome stays while pressed',
+      );
+      await mouse.up();
+      await tester.pumpAndSettle();
+      slide = tester.widget(find.byType(AnimatedSlide));
+      expect(slide.offset.dy, isNot(0), reason: 'hover lift returns after up');
+    },
+  );
 
   testWidgets('Tab focus ring does not grow the button rect', (
     WidgetTester tester,
@@ -331,14 +247,8 @@ void main() {
         home: Scaffold(
           body: Column(
             children: <Widget>[
-              const SizedBox(
-                width: 200,
-                child: TextField(),
-              ),
-              XkButton.primary(
-                onPressed: () {},
-                child: const Text('시작하기'),
-              ),
+              const SizedBox(width: 200, child: TextField()),
+              XkButton.primary(onPressed: () {}, child: const Text('시작하기')),
             ],
           ),
         ),
@@ -351,7 +261,10 @@ void main() {
     final Size fillBefore = tester.getSize(find.byKey(_fillKey));
     await tester.sendKeyEvent(LogicalKeyboardKey.tab);
     await tester.pumpAndSettle();
-    expect(find.byKey(const ValueKey<String>('xk-tactile-primary-focus-ring')), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey<String>('xk-tactile-primary-focus-ring')),
+      findsOneWidget,
+    );
     final Rect after = tester.getRect(find.byType(XkTactilePrimaryButton));
     expect(after, before);
     expect(tester.getSize(find.byKey(_fillKey)), fillBefore);

@@ -1,3 +1,7 @@
+## 4.5.0 — 테마별 Aquamarine · 모노크롬 주 행동
+
+패키지 버전 4.5.0. 웹 TACTILE 토큰은 v3.1.0이다. 배경은 `#F5F5F5` / `#111111`, Aquamarine은 `#269DB0` / `#65C9D9`. `XkTactilePrimaryButton`은 모노크롬 평면 버튼이다. 제품별 소비 사본은 공식 복사 도구로 갱신한다. 패키지 게시는 별도다.
+
 ## 4.4.0 — 아쿠아 색유리 주 액션 · 라이트 캔버스 #F5F5F5
 
 패키지 버전 4.4.0. 디자인 계약 토큰 헤더는 v3.0.0. 두 번호는 별개다. 신규 공개 API는 `XkGlassRole`과 `XkListRow.surface`. 주 액션은 `--aqua-fill` + `--aqua-on`. 검정 역상 면(`--surface-inverse`)은 섹션·푸터 역할이다.
@@ -16,15 +20,15 @@
 
 # xerkonix_design_system
 
-XERKONIX Design System 의 Flutter 구현 패키지. 색·타이포·형태·모션 토큰과 라이트/다크 테마, 아이콘, 컴포넌트, 패턴/모션 위젯을 제공한다. 패키지 버전은 **4.4.0**, 따르는 제품 토큰 헤더는 **v3.0.0**이다. 두 번호는 별개다. tokens.css 와의 정합은 `test/token_canon_parity_test.dart` 가 매 실행마다 확인하며(형제 리포가 없으면 `test/fixtures/tokens.css` 스냅샷과 대조 — skip 하지 않는다), 그중 **커버리지 그물**은 tokens.css 에 토큰이 새로 생기면 "미러링하거나 이유를 적어라"로 실패한다 — 값 어긋남뿐 아니라 **빠짐**까지 잡는다.
+XERKONIX Design System 의 Flutter 구현 패키지. 색·타이포·형태·모션 토큰과 라이트/다크 테마, 아이콘, 컴포넌트, 패턴/모션 위젯을 제공한다. 패키지 버전은 **4.5.0**, 웹 TACTILE 토큰은 **v3.1.0**이다. 구형 제품 루트 `tokens.css` 헤더는 v3.0.0이며, `test/token_canon_parity_test.dart`가 그 미러를 별도로 검사한다.
 
-`XkButton.primary` 는 `--aqua-fill` 색유리 + `--aqua-on` 흰 글자다. `XkButton.point` 는 주 CTA 가 아닌 **보조 변형**이다.
+`XkButton.primary` 는 테마에 맞는 모노크롬 평면 버튼이다. `XkButton.point` 는 주 CTA 가 아닌 **보조 변형**이다.
 
 ## 설치
 
 ```yaml
 dependencies:
-  xerkonix_design_system: ^4.4.0
+  xerkonix_design_system: ^4.5.0
 ```
 
 - Dart SDK: `>=3.9.0 <4.0.0`

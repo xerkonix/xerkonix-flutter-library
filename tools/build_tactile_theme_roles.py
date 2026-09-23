@@ -26,7 +26,7 @@ ROLES: dict[str, str] = {
     "canvasColor": "--canvas",
     "colorScheme.primary": "--primary-base",
     "colorScheme.onPrimary": "--primary-text",
-    "colorScheme.secondary": "--accent",
+    "colorScheme.secondary": "--ink",
     "colorScheme.surface": "--surface",
     "colorScheme.onSurface": "--ink",
     "colorScheme.outline": "--line",

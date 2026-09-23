@@ -15,21 +15,30 @@ void main() {
     );
   });
 
-  test('Material primary is ice, not surface-inverse', () {
+  test('Material primary uses the theme monochrome pair', () {
     final ThemeData light = XkTactileTheme.themeData(Brightness.light);
     final ThemeData dark = XkTactileTheme.themeData(Brightness.dark);
     expect(light.colorScheme.primary, XkTactileTokens.light.primaryBase);
     expect(light.colorScheme.onPrimary, XkTactileTokens.light.primaryText);
     expect(dark.colorScheme.primary, XkTactileTokens.dark.primaryBase);
-    expect(light.colorScheme.primary, isNot(const Color(0xFF000000)));
+    expect(light.colorScheme.primary, const Color(0xFF111111));
+    expect(dark.colorScheme.primary, const Color(0xFFF5F5F5));
+    expect(light.colorScheme.secondary, XkTactileTokens.light.ink);
+    expect(dark.colorScheme.secondary, XkTactileTokens.dark.ink);
     expect(light.cardTheme.color, XkTactileTokens.light.panelFill);
-    expect(light.dialogTheme.backgroundColor, XkTactileTokens.light.overlayFill);
+    expect(
+      light.dialogTheme.backgroundColor,
+      XkTactileTokens.light.overlayFill,
+    );
     expect(light.popupMenuTheme.color, XkTactileTokens.light.overlayFill);
     expect(
       light.bottomSheetTheme.backgroundColor,
       XkTactileTokens.light.overlayFill,
     );
-    expect(light.drawerTheme.backgroundColor, XkTactileTokens.light.overlayFill);
+    expect(
+      light.drawerTheme.backgroundColor,
+      XkTactileTokens.light.overlayFill,
+    );
     expect(
       light.snackBarTheme.backgroundColor,
       XkTactileTokens.light.overlayFill,

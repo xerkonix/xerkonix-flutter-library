@@ -39,7 +39,8 @@ class XkTactileField extends StatelessWidget {
     }
     final Set<LogicalKeyboardKey> down =
         HardwareKeyboard.instance.logicalKeysPressed;
-    final bool back = down.contains(LogicalKeyboardKey.shiftLeft) ||
+    final bool back =
+        down.contains(LogicalKeyboardKey.shiftLeft) ||
         down.contains(LogicalKeyboardKey.shiftRight);
     if (back) {
       node.previousFocus();
@@ -101,9 +102,9 @@ class XkTactileField extends StatelessWidget {
     final Brightness brightness = Theme.of(context).brightness;
     final XkTactileTokens t = XkTactileTokens.of(brightness);
     final Widget stripped = Theme(
-      data: Theme.of(context).copyWith(
-        inputDecorationTheme: inputThemeOf(brightness),
-      ),
+      data: Theme.of(
+        context,
+      ).copyWith(inputDecorationTheme: inputThemeOf(brightness)),
       child: child,
     );
     final Widget input = _TactileInputChrome(
@@ -131,10 +132,7 @@ class XkTactileField extends StatelessWidget {
           child: Text(name, style: XkTactileType.label(color: t.ink)),
         ),
         const SizedBox(height: 8),
-        Semantics(
-          label: name,
-          child: input,
-        ),
+        Semantics(label: name, child: input),
       ],
     );
   }
@@ -169,10 +167,10 @@ class _TactileInputChromeState extends State<_TactileInputChrome> {
     final Color border = !widget.enabled
         ? t.inputBorder
         : widget.error
-            ? t.accentDeep
-            : focused
-                ? t.accent
-                : t.inputBorder;
+        ? t.accentDeep
+        : focused
+        ? t.focusRing
+        : t.inputBorder;
     return Focus(
       canRequestFocus: false,
       skipTraversal: true,
@@ -191,7 +189,8 @@ class _TactileInputChromeState extends State<_TactileInputChrome> {
           child: DecoratedBox(
             decoration: BoxDecoration(
               color: t.inputFill,
-              borderRadius: widget.borderRadius ??
+              borderRadius:
+                  widget.borderRadius ??
                   BorderRadius.circular(XkTactileTokens.fieldRadius),
               border: Border.all(color: border),
               boxShadow: focused

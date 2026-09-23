@@ -49,16 +49,15 @@ class _XkTactileButtonState extends State<XkTactileButton> {
     final bool enabled = widget.onPressed != null;
     final bool hover = _hover && enabled;
     final bool pressed = _pressed && enabled;
-    final bool lift = widget.kind != XkTactileButtonKind.text && hover && !pressed;
+    final bool lift =
+        widget.kind != XkTactileButtonKind.text && hover && !pressed;
     final Color fill;
     final Color border;
     final List<BoxShadow> shadows;
     final Color label;
     final Color? semantic = widget.semanticFill;
     if (semantic != null) {
-      fill = hover
-          ? Color.lerp(semantic, t.controlMark, 0.10)!
-          : semantic;
+      fill = hover ? Color.lerp(semantic, t.controlMark, 0.10)! : semantic;
       border = semantic;
       shadows = enabled ? t.secondaryShadow : const <BoxShadow>[];
       label = semantic.computeLuminance() > 0.45 ? t.ink : t.surfaceRaised;
@@ -78,7 +77,7 @@ class _XkTactileButtonState extends State<XkTactileButton> {
           fill = XkTactileTokens.clear;
           border = XkTactileTokens.clear;
           shadows = const <BoxShadow>[];
-          label = hover ? t.accent : t.ink;
+          label = t.ink;
       }
     }
 
@@ -95,7 +94,9 @@ class _XkTactileButtonState extends State<XkTactileButton> {
         decoration: BoxDecoration(
           color: fill,
           borderRadius: BorderRadius.circular(
-            widget.kind == XkTactileButtonKind.text ? 5 : XkTactileTokens.controlRadius,
+            widget.kind == XkTactileButtonKind.text
+                ? 5
+                : XkTactileTokens.controlRadius,
           ),
           border: Border.all(color: border),
           boxShadow: shadows,
@@ -124,7 +125,8 @@ class _XkTactileButtonState extends State<XkTactileButton> {
     }
 
     if (_focus && enabled) {
-      const double outset = XkTactileTokens.focusOutlineOffset +
+      const double outset =
+          XkTactileTokens.focusOutlineOffset +
           XkTactileTokens.focusOutlineWidth;
       face = Stack(
         clipBehavior: Clip.none,
@@ -188,7 +190,9 @@ class _XkTactileButtonState extends State<XkTactileButton> {
           child: GestureDetector(
             onTapDown: enabled ? (_) => setState(() => _pressed = true) : null,
             onTapUp: enabled ? (_) => setState(() => _pressed = false) : null,
-            onTapCancel: enabled ? () => setState(() => _pressed = false) : null,
+            onTapCancel: enabled
+                ? () => setState(() => _pressed = false)
+                : null,
             onTap: widget.onPressed,
             child: AnimatedSlide(
               duration: XkTactileTokens.motion,

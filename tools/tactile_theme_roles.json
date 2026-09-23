@@ -17,18 +17,18 @@
     },
     "colorScheme.primary": {
       "css": "--primary-base",
-      "light": "0xFFCFE3F5",
-      "dark": "0xFF1A3045"
+      "light": "0xFF111111",
+      "dark": "0xFFF5F5F5"
     },
     "colorScheme.onPrimary": {
       "css": "--primary-text",
-      "light": "0xFF175C99",
-      "dark": "0xFFCFE3F5"
+      "light": "0xFFF5F5F5",
+      "dark": "0xFF111111"
     },
     "colorScheme.secondary": {
-      "css": "--accent",
-      "light": "0xFF1E70B8",
-      "dark": "0xFF93BFE5"
+      "css": "--ink",
+      "light": "0xFF111111",
+      "dark": "0xFFF5F5F5"
     },
     "colorScheme.surface": {
       "css": "--surface",
@@ -87,13 +87,13 @@
     },
     "tabBarTheme.indicatorColor": {
       "css": "--ice",
-      "light": "0xFFCFE3F5",
-      "dark": "0xFF1A3045"
+      "light": "0xFFE9E9E9",
+      "dark": "0xFF303030"
     },
     "switchTheme.trackSelected": {
       "css": "--control-on",
-      "light": "0xFF1E70B8",
-      "dark": "0xFF1E70B8"
+      "light": "0xFF111111",
+      "dark": "0xFFF5F5F5"
     },
     "switchTheme.trackUnselected": {
       "css": "--control-track",
@@ -102,8 +102,8 @@
     },
     "checkboxTheme.fillSelected": {
       "css": "--control-on",
-      "light": "0xFF1E70B8",
-      "dark": "0xFF1E70B8"
+      "light": "0xFF111111",
+      "dark": "0xFFF5F5F5"
     },
     "inputFill": {
       "css": "--input-fill",

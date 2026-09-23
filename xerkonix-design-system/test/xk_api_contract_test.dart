@@ -8,7 +8,11 @@ import 'package:xerkonix_design_system/xerkonix_design_system.dart';
 
 ({int r, int g, int b}) _px(ByteData rgba, int w, int x, int y) {
   final int i = (y * w + x) * 4;
-  return (r: rgba.getUint8(i), g: rgba.getUint8(i + 1), b: rgba.getUint8(i + 2));
+  return (
+    r: rgba.getUint8(i),
+    g: rgba.getUint8(i + 1),
+    b: rgba.getUint8(i + 2),
+  );
 }
 
 Future<({int r, int g, int b})> _centerOf(
@@ -123,55 +127,53 @@ void main() {
       ),
     );
     await tester.pump();
-    final ({int r, int g, int b}) c = await _centerOf(
-      tester,
-      find.byKey(key),
-    );
+    final ({int r, int g, int b}) c = await _centerOf(tester, find.byKey(key));
     expect(c.r, closeTo(0xCC, 28));
     expect(c.g, closeTo(0x33, 28));
     expect(c.b, closeTo(0x66, 28));
   });
 
-  testWidgets('XkInfoCard BorderRadiusDirectional resolves with Directionality', (
-    WidgetTester tester,
-  ) async {
-    const BorderRadiusDirectional directional = BorderRadiusDirectional.only(
-      topStart: Radius.circular(2),
-      topEnd: Radius.circular(20),
-    );
-    await tester.pumpWidget(
-      const MaterialApp(
-        home: Directionality(
-          textDirection: TextDirection.rtl,
-          child: Scaffold(
-            body: XkInfoCard(
-              metric: 'M',
-              title: 'T',
-              description: 'D',
-              borderRadius: directional,
+  testWidgets(
+    'XkInfoCard BorderRadiusDirectional resolves with Directionality',
+    (WidgetTester tester) async {
+      const BorderRadiusDirectional directional = BorderRadiusDirectional.only(
+        topStart: Radius.circular(2),
+        topEnd: Radius.circular(20),
+      );
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Directionality(
+            textDirection: TextDirection.rtl,
+            child: Scaffold(
+              body: XkInfoCard(
+                metric: 'M',
+                title: 'T',
+                description: 'D',
+                borderRadius: directional,
+              ),
             ),
           ),
         ),
-      ),
-    );
-    await tester.pump();
-    expect(tester.takeException(), isNull);
-    final XkTactileSurface surface = tester.widget<XkTactileSurface>(
-      find.byType(XkTactileSurface),
-    );
-    expect(surface.role, XkTactileSurfaceRole.information);
-    expect(surface.radius, isA<BorderRadiusDirectional>());
-    final ClipRRect clip = tester.widget<ClipRRect>(
-      find.descendant(
-        of: find.byType(XkInfoCard),
-        matching: find.byType(ClipRRect),
-      ),
-    );
-    expect(clip.borderRadius, isA<BorderRadius>());
-    final BorderRadius painted = clip.borderRadius.resolve(TextDirection.rtl);
-    expect(painted.topLeft, const Radius.circular(20));
-    expect(painted.topRight, const Radius.circular(2));
-  });
+      );
+      await tester.pump();
+      expect(tester.takeException(), isNull);
+      final XkTactileSurface surface = tester.widget<XkTactileSurface>(
+        find.byType(XkTactileSurface),
+      );
+      expect(surface.role, XkTactileSurfaceRole.information);
+      expect(surface.radius, isA<BorderRadiusDirectional>());
+      final ClipRRect clip = tester.widget<ClipRRect>(
+        find.descendant(
+          of: find.byType(XkInfoCard),
+          matching: find.byType(ClipRRect),
+        ),
+      );
+      expect(clip.borderRadius, isA<BorderRadius>());
+      final BorderRadius painted = clip.borderRadius.resolve(TextDirection.rtl);
+      expect(painted.topLeft, const Radius.circular(20));
+      expect(painted.topRight, const Radius.circular(2));
+    },
+  );
 
   testWidgets('XkTable BorderRadiusDirectional does not throw', (
     WidgetTester tester,
@@ -233,29 +235,23 @@ void main() {
     expect(painted.topRight, const Radius.circular(1));
   });
 
-  testWidgets('primary paints TACTILE ice LinearGradient, not aqua gem', (
+  testWidgets('primary paints a flat monochrome face', (
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
-          body: XkButton.primary(
-            onPressed: () {},
-            child: const Text('시작하기'),
-          ),
+          body: XkButton.primary(onPressed: () {}, child: const Text('시작하기')),
         ),
       ),
     );
-    final DecoratedBox fill = tester.widget(find.byKey(
-      const ValueKey<String>('xk-tactile-primary-fill'),
-    ));
+    final DecoratedBox fill = tester.widget(
+      find.byKey(const ValueKey<String>('xk-tactile-primary-fill')),
+    );
     final BoxDecoration d = fill.decoration as BoxDecoration;
-    expect(d.gradient, isA<LinearGradient>());
-    expect(d.gradient, isNot(isA<RadialGradient>()));
-    final LinearGradient g = d.gradient! as LinearGradient;
-    expect(g.colors.contains(XkColor.aqua), isFalse);
-    expect(g.begin, Alignment.topCenter);
-    expect(g.end, Alignment.bottomCenter);
+    expect(d.color, XkTactileTokens.light.primaryBase);
+    expect(d.gradient, isNull);
+    expect(d.boxShadow, isEmpty);
     expect(find.byKey(const ValueKey<String>('xk-gem-fill')), findsNothing);
   });
 
@@ -336,11 +332,7 @@ void main() {
     );
     expect(
       tester.getSemantics(find.text('시작하기')),
-      matchesSemantics(
-        label: '시작하기',
-        isButton: true,
-        hasEnabledState: true,
-      ),
+      matchesSemantics(label: '시작하기', isButton: true, hasEnabledState: true),
     );
     await tester.sendKeyEvent(LogicalKeyboardKey.tab);
     await tester.pump();
@@ -396,7 +388,9 @@ void main() {
     expect(n, 2);
   });
 
-  testWidgets('XkCard Tab then Enter invokes onTap', (WidgetTester tester) async {
+  testWidgets('XkCard Tab then Enter invokes onTap', (
+    WidgetTester tester,
+  ) async {
     int n = 0;
     await tester.pumpWidget(
       MaterialApp(

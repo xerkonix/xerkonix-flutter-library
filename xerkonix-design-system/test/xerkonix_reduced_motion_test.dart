@@ -174,6 +174,31 @@ void main() {
       expect(tester.hasRunningAnimations, isFalse);
     });
 
+    testWidgets('turning completion on keeps the child state', (
+      WidgetTester tester,
+    ) async {
+      Widget intro(bool done) => host(
+        reduce: false,
+        child: XkTactileAppIntro(completion: done, child: const _StateProbe()),
+      );
+      await tester.pumpWidget(intro(false));
+      final State<_StateProbe> before = tester.state(find.byType(_StateProbe));
+      await tester.pumpWidget(intro(true));
+      expect(tester.state(find.byType(_StateProbe)), same(before));
+      expect(
+        find.byKey(const ValueKey<String>('xk-tactile-completion-sheen')),
+        findsNothing,
+        reason: 'first frame is v=0 — nothing painted yet',
+      );
+      await tester.pump(const Duration(milliseconds: 700));
+      expect(
+        find.byKey(const ValueKey<String>('xk-tactile-completion-sheen')),
+        findsOneWidget,
+      );
+      await tester.pumpAndSettle();
+      expect(tester.state(find.byType(_StateProbe)), same(before));
+    });
+
     testWidgets('completion light: reduced motion paints nothing', (
       WidgetTester tester,
     ) async {
@@ -191,4 +216,16 @@ void main() {
       );
     });
   });
+}
+
+class _StateProbe extends StatefulWidget {
+  const _StateProbe();
+
+  @override
+  State<_StateProbe> createState() => _StateProbeState();
+}
+
+class _StateProbeState extends State<_StateProbe> {
+  @override
+  Widget build(BuildContext context) => const Text('완료');
 }

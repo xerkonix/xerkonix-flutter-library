@@ -33,8 +33,10 @@ class _XkAppIntroScope extends InheritedWidget {
 ///
 /// Inside the plane, text and icons read [XkTactileAppSurface.onAppIntro],
 /// [XkTactilePrimaryButton] and Material filled/elevated buttons invert to
-/// `appIntroPrimary*`, text buttons use `appIntroLink`, and keyboard focus
-/// uses `appIntroFocusRing`. Use `appIntroBody` for secondary copy and
+/// `appIntroPrimary*`, Material text buttons and [XkTactileButton] `text`
+/// use `appIntroLink`, [XkTactileButton] `quiet` uses `onAppIntro` with the
+/// [borderOf] edge, [XkTactileButton] `secondary` keeps its light face, and
+/// keyboard focus on all of them uses `appIntroFocusRing`. Use `appIntroBody` for secondary copy and
 /// `onAppIntroAccent` for a short label. [XkTactileBrandWord] may add one
 /// brand word.
 ///
@@ -186,18 +188,21 @@ class XkTactileAppIntro extends StatelessWidget {
         ),
       ),
     );
-    if (completion) {
-      body = Stack(
-        children: <Widget>[
-          body,
+    // Always a Stack, so flipping [completion] only adds or removes the
+    // light layer and never remounts [child] (its state survives).
+    // passthrough keeps the parent constraints on [child].
+    body = Stack(
+      fit: StackFit.passthrough,
+      children: <Widget>[
+        body,
+        if (completion)
           Positioned.fill(
             child: IgnorePointer(
               child: _CompletionSheen(tint: s.completionSheen),
             ),
           ),
-        ],
-      );
-    }
+      ],
+    );
 
     return _XkAppIntroScope(
       roles: s,

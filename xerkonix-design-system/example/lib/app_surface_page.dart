@@ -180,6 +180,11 @@ class _AppSurfacePageState extends State<AppSurfacePage> {
                       onPressed: () {},
                       child: const Text('계속'),
                     ),
+                    XkTactileButton(
+                      kind: XkTactileButtonKind.quiet,
+                      onPressed: () {},
+                      child: const Text('다른 방법'),
+                    ),
                     TextButton(onPressed: () {}, child: const Text('도움말')),
                   ],
                 ),

@@ -547,6 +547,146 @@ void main() {
       );
     });
 
+    double contrastOf(Color fg, Color bg) {
+      final Color top = Color.alphaBlend(fg, bg);
+      final double l1 = top.computeLuminance();
+      final double l2 = bg.computeLuminance();
+      final double hi = l1 > l2 ? l1 : l2;
+      final double lo = l1 > l2 ? l2 : l1;
+      return (hi + 0.05) / (lo + 0.05);
+    }
+
+    for (final Brightness b in Brightness.values) {
+      for (final XkTactileButtonKind kind in XkTactileButtonKind.values) {
+        testWidgets('XkTactileButton ${kind.name} stays readable inside the '
+            'ink plane ($b)', (WidgetTester tester) async {
+          final XkTactileTokens t = XkTactileTokens.of(b);
+          final Color plane = t.appIntroSurface;
+          await tester.pumpWidget(
+            app(
+              b,
+              XkTactileAppIntro(
+                child: XkTactileButton(
+                  kind: kind,
+                  onPressed: () {},
+                  child: const Text('도움말'),
+                ),
+              ),
+            ),
+          );
+          final Finder fillFinder = find.byKey(
+            ValueKey<String>('xk-tactile-${kind.name}-fill'),
+          );
+          Color labelNow() => DefaultTextStyle.of(
+            tester.element(find.text('도움말')),
+          ).style.color!;
+          Color faceNow() => Color.alphaBlend(
+            (tester.widget<DecoratedBox>(fillFinder).decoration
+                    as BoxDecoration)
+                .color!,
+            plane,
+          );
+
+          // Rest.
+          expect(
+            contrastOf(labelNow(), faceNow()),
+            greaterThanOrEqualTo(4.5),
+            reason: 'rest',
+          );
+          switch (kind) {
+            case XkTactileButtonKind.text:
+              expect(labelNow(), t.appIntroLink);
+              expect(
+                DefaultTextStyle.of(
+                  tester.element(find.text('도움말')),
+                ).style.decoration,
+                TextDecoration.underline,
+              );
+            case XkTactileButtonKind.quiet:
+              expect(labelNow(), t.onAppIntro);
+              final BoxDecoration d =
+                  tester.widget<DecoratedBox>(fillFinder).decoration
+                      as BoxDecoration;
+              expect(
+                (d.border! as Border).top.color,
+                XkTactileAppIntro.borderOf(
+                  XkTactileAppSurface.of(tester.element(fillFinder)),
+                ),
+              );
+            case XkTactileButtonKind.secondary:
+              expect(labelNow(), t.ink);
+          }
+
+          // Hover.
+          final TestGesture mouse = await tester.createGesture(
+            kind: ui.PointerDeviceKind.mouse,
+          );
+          await mouse.addPointer(location: Offset.zero);
+          addTearDown(mouse.removePointer);
+          await mouse.moveTo(tester.getCenter(fillFinder));
+          await tester.pumpAndSettle();
+          expect(
+            contrastOf(labelNow(), faceNow()),
+            greaterThanOrEqualTo(4.5),
+            reason: 'hover',
+          );
+          await mouse.moveTo(Offset.zero);
+          await tester.pumpAndSettle();
+
+          // Keyboard focus.
+          await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+          await tester.pump();
+          final DecoratedBox ring = tester.widget<DecoratedBox>(
+            find.byKey(const ValueKey<String>('xk-tactile-button-focus-ring')),
+          );
+          final Color ringColor =
+              ((ring.decoration as BoxDecoration).border! as Border).top.color;
+          expect(ringColor, t.appIntroFocusRing);
+          expect(contrastOf(ringColor, plane), greaterThanOrEqualTo(3));
+        });
+      }
+    }
+
+    testWidgets('XkTactileButton outside the ink plane keeps its faces', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        app(
+          Brightness.light,
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              XkTactileButton(
+                kind: XkTactileButtonKind.text,
+                onPressed: () {},
+                child: const Text('text'),
+              ),
+              XkTactileButton(
+                kind: XkTactileButtonKind.quiet,
+                onPressed: () {},
+                child: const Text('quiet'),
+              ),
+            ],
+          ),
+        ),
+      );
+      for (final String label in <String>['text', 'quiet']) {
+        final TextStyle style = DefaultTextStyle.of(
+          tester.element(find.text(label)),
+        ).style;
+        expect(style.color, XkTactileTokens.light.ink, reason: label);
+        expect(style.decoration, isNot(TextDecoration.underline));
+      }
+      final BoxDecoration quiet =
+          tester
+                  .widget<DecoratedBox>(
+                    find.byKey(const ValueKey<String>('xk-tactile-quiet-fill')),
+                  )
+                  .decoration
+              as BoxDecoration;
+      expect((quiet.border! as Border).top.color, XkTactileTokens.light.line);
+    });
+
     testWidgets('Material buttons invert inside the ink plane', (
       WidgetTester tester,
     ) async {

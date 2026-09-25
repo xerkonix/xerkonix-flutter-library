@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:xerkonix_design_system/xerkonix_design_system.dart';
 
+import 'app_surface_page.dart';
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const TACTILEExampleApp());
@@ -38,6 +40,16 @@ class TACTILEExampleAppState extends State<TACTILEExampleApp> {
       darkTheme: XkDarkTheme.themeData,
       themeMode: _isDark ? ThemeMode.dark : ThemeMode.light,
       initialRoute: '/',
+      onGenerateRoute: (RouteSettings settings) {
+        // Product screen 6-B review spots: #/app-surface?spot=…&theme=…
+        if ((settings.name ?? '').startsWith('/app-surface')) {
+          return MaterialPageRoute<void>(
+            settings: settings,
+            builder: (BuildContext _) => AppSurfacePage.fromUri(Uri.base),
+          );
+        }
+        return null;
+      },
       routes: <String, WidgetBuilder>{
         '/': (BuildContext _) => ComponentMatrixPage(
           isDark: _isDark,

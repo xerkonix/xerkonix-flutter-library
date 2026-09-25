@@ -1,6 +1,17 @@
-## Unreleased
+## 4.6.0 — 제품 화면 버전 6-B 역할
 
+웹 TACTILE 토큰은 v3.1.0 그대로다. DS `tactile/app-surface.css`와 `flutter/APP_SURFACE_MAPPING.md`의 역할을 Flutter에 옮겼다. 새 토큰·새 hex는 없다.
+
+- `XkTactileAppSurface`(ThemeExtension): `appIntroSurface`·`onAppIntro`·`appIntroBody`·`appIntroPrimaryFill/Text/Hover`·`appIntroFocusRing`·`onAppIntroAccent`·`appIntroLink`·`appIntroBrandWord`·`completionSheen`·`currentLabel`·`keyMetric`·`humanReviewLabel`·`selectedCue`·`humanReviewSurface`·`humanReviewBorder`. `XkTactileTheme.themeData`가 설치하고 `XkTactileAppSurface.of(context)`로 읽는다. 값은 `XkTactileTokens`의 같은 이름 필드다.
+- `color-mix(in srgb, …)` 파생값은 `tools/build_tactile_theme_roles.py`가 CSS에서 계산해 `tools/tactile_theme_roles.json`의 `app` 절에 넣고 Dart 상수와 대조한다(모션 180ms·1400ms 포함). 브라우저 computed 값과 반올림 안에서 같다.
+- 새 위젯(`tactile_app_surface.dart`): `XkTactileAppIntro`(잉크 면 — 로그인·빈 상태·대시보드 머리·결제 완료에만, `completion`으로 완료 빛 1회), `XkTactileBrandWord`(잉크 면 안 단색조 브랜드 단어, 화면당 한 곳), `XkTactileHumanReview`(사람 확인 칸), `XkTactileRouteFade`(불투명도 180ms 한 번). 감속 모드(`MediaQuery.disableAnimations`)에서는 완료 빛을 그리지 않고 전환은 0ms다. 스크롤 연동·반복 모션은 없다.
+- `XkTactilePrimaryButton`은 `XkTactileAppIntro` 안에서 잉크 면 버튼(밝은 채움)으로 바뀐다. 밖에서는 그대로다.
+- `XkTactileButton`도 `XkTactileAppIntro` 안에서 잉크 면 역할을 읽는다. `text`는 `appIntroLink`(밑줄), `quiet`는 글자 `onAppIntro`와 테두리 `XkTactileAppIntro.borderOf`(같은 값이 호버 채움), `secondary`는 밝은 면 그대로다. 세 종류 모두 키보드 포커스는 `appIntroFocusRing`이다. 밖에서는 그대로다.
+- `XkTactileAppIntro`의 `completion`을 켜고 꺼도 `child`는 다시 만들어지지 않는다(상태 유지).
+- 탭 바·내비게이션 바·내비게이션 레일의 선택 표시는 중립 선택 면(`--selected-fill` + `--selected-border`, 글자 `--selected-text`)이다. 이전: 탭은 `--ice` 밑줄, 내비게이션 바는 잉크 채움 알약. ColorScheme primary/secondary/tertiary는 모노크롬 그대로다.
+- `build_tactile_theme_roles.py` 검사에 `--accent`(progressIndicator)·`--selected-*` 슬롯을 추가했다.
 - `XkCompanyWordmark`: 승인 ink/paper 워드마크 하나, 홈은 `https://xerkonix.com/`. 제품 워드마크가 아니다.
+- 앱 소비 사본은 `sync_tactile_dart.py`로 받는다. 이번에 `tactile_app_surface.dart`가 목록에 추가됐다. 패키지 게시는 별도다.
 
 ## 4.5.1 — 앱별 폰트 번들 경로
 

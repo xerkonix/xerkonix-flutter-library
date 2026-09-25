@@ -1,3 +1,7 @@
+## 4.6.0 — 제품 화면 버전 6-B 역할
+
+패키지 버전 4.6.0. 웹 TACTILE 토큰은 v3.1.0 그대로다. 앱 첫인상 자리의 잉크 면·브랜드 단어·사람 확인 칸·화면 전환과 Aquamarine 읽기 역할을 `XkTactileAppSurface`로 공급한다. 아래 「제품 화면 버전 6-B」 절 참고.
+
 ## 4.5.1 — 테마별 Aquamarine · 모노크롬 주 행동
 
 패키지 버전 4.5.1. 웹 TACTILE 토큰은 v3.1.0이다. 배경은 `#F5F5F5` / `#111111`, Aquamarine은 `#269DB0` / `#65C9D9`. `XkTactilePrimaryButton`은 모노크롬 평면 버튼이다. 제품별 소비 사본은 공식 복사 도구로 갱신한다. 패키지 게시는 별도다.
@@ -20,7 +24,7 @@
 
 # xerkonix_design_system
 
-XERKONIX Design System 의 Flutter 구현 패키지. 색·타이포·형태·모션 토큰과 라이트/다크 테마, 아이콘, 컴포넌트, 패턴/모션 위젯을 제공한다. 패키지 버전은 **4.5.1**, 웹 TACTILE 토큰은 **v3.1.0**이다. 구형 제품 루트 `tokens.css` 헤더는 v3.0.0이며, `test/token_canon_parity_test.dart`가 그 미러를 별도로 검사한다.
+XERKONIX Design System 의 Flutter 구현 패키지. 색·타이포·형태·모션 토큰과 라이트/다크 테마, 아이콘, 컴포넌트, 패턴/모션 위젯을 제공한다. 패키지 버전은 **4.6.0**, 웹 TACTILE 토큰은 **v3.1.0**이다. 구형 제품 루트 `tokens.css` 헤더는 v3.0.0이며, `test/token_canon_parity_test.dart`가 그 미러를 별도로 검사한다.
 
 `XkButton.primary` 는 테마에 맞는 모노크롬 평면 버튼이다. `XkButton.point` 는 주 CTA 가 아닌 **보조 변형**이다.
 
@@ -28,7 +32,7 @@ XERKONIX Design System 의 Flutter 구현 패키지. 색·타이포·형태·모
 
 ```yaml
 dependencies:
-  xerkonix_design_system: ^4.5.1
+  xerkonix_design_system: ^4.6.0
 ```
 
 - Dart SDK: `>=3.9.0 <4.0.0`
@@ -52,6 +56,40 @@ MaterialApp(
   ),
 );
 ```
+
+## 제품 화면 버전 6-B — 앱 역할
+
+DS `DESIGN-SYSTEM.md` §11과 `flutter/APP_SURFACE_MAPPING.md`를 따른다. 이름은 그 표에 있는 것만 쓴다. 값은 `XkTactileTokens`의 같은 이름 필드이고, `tools/build_tactile_theme_roles.py --check`가 DS `tactile/app-surface.css`와 대조한다.
+
+```dart
+MaterialApp(
+  theme: XkTactileTheme.themeData(Brightness.light),
+  darkTheme: XkTactileTheme.themeData(Brightness.dark),
+  home: Builder(builder: (BuildContext context) {
+    final XkTactileAppSurface s = XkTactileAppSurface.of(context);
+    return XkTactileRouteFade(
+      child: Column(children: <Widget>[
+        XkTactileAppIntro( // 로그인·빈 상태·대시보드 머리·결제 완료에만
+          child: Column(children: <Widget>[
+            const XkTactileBrandWord('골든셋'), // 화면당 한 곳
+            XkTactilePrimaryButton(onPressed: () {}, child: const Text('시작')),
+          ]),
+        ),
+        Text('128', style: TextStyle(color: s.keyMetric)),
+        XkTactileHumanReview(
+          child: Text('확인 필요 · 금액 차이',
+              style: TextStyle(color: s.humanReviewLabel)),
+        ),
+      ]),
+    );
+  }),
+);
+```
+
+- 잉크 면(`XkTactileAppIntro`)은 첫인상 네 자리에만 쓴다. 폼·표·카드·결제 중간 단계는 `XkTactileSurface`(정보 면)다. 결제 완료에는 `completion: true`로 완료 빛을 한 번 둔다.
+- `currentLabel`·`keyMetric`·`humanReviewLabel`·`selectedCue`는 AA 대비의 읽기 글자다. 상태는 글자로도 쓴다. 라이트 원색 `accent`를 읽는 글자·필수 경계에 쓰지 않는다.
+- 선택 컨트롤은 중립(`selectedFill`·`selectedBorder`·`ink`)이다. 탭 바·내비게이션 바·레일은 테마가 그렇게 칠한다. `selectedCue`는 선택된 이름 옆의 작은 보조 글자다.
+- 모션은 `XkTactileRouteFade`(180ms)와 완료 빛(1400ms, 1회)뿐이다. 감속 모드에서는 둘 다 멈춘다. 스크롤 연동·반복 모션을 넣지 않는다.
 
 ## 토큰
 

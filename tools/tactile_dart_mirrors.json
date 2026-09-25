@@ -3,6 +3,7 @@
   "source": "xerkonix-design-system/lib/src/tactile",
   "files": [
     "tactile.dart",
+    "tactile_app_surface.dart",
     "tactile_button.dart",
     "tactile_company_wordmark.dart",
     "tactile_field.dart",

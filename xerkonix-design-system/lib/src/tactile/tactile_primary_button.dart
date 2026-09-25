@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'tactile_app_surface.dart';
+import 'tactile_theme.dart';
 import 'tactile_tokens.dart';
 import 'tactile_type.dart';
 
@@ -10,6 +12,10 @@ import 'tactile_type.dart';
 /// focus-visible outline 3 / offset 4 (no layout growth), disabled 40%,
 /// flat monochrome fill. `min-height` 46, not a fixed
 /// height — text scale / wrap can grow. Not CosentioRaise.sm.
+///
+/// Inside [XkTactileAppIntro] the face inverts to the ink-plane roles
+/// (`appIntroPrimaryFill` / `appIntroPrimaryText` / `appIntroPrimaryHover`,
+/// focus `appIntroFocusRing`) — web `.app-intro .btn-primary`.
 class XkTactilePrimaryButton extends StatefulWidget {
   const XkTactilePrimaryButton({
     super.key,
@@ -34,11 +40,16 @@ class _XkTactilePrimaryButtonState extends State<XkTactilePrimaryButton> {
   @override
   Widget build(BuildContext context) {
     final XkTactileTokens t = XkTactileTokens.of(Theme.of(context).brightness);
+    final XkTactileAppSurface? ink = XkTactileAppIntro.maybeOf(context);
     final bool enabled = widget.onPressed != null;
     final bool hover = _hover && enabled;
     final bool pressed = _pressed && enabled;
     final bool lifted = hover && !pressed;
-    final Color fill = hover ? t.primaryHoverTop : t.primaryBase;
+    final Color base = ink?.appIntroPrimaryFill ?? t.primaryBase;
+    final Color hoverFill = ink?.appIntroPrimaryHover ?? t.primaryHoverTop;
+    final Color label = ink?.appIntroPrimaryText ?? t.primaryText;
+    final Color ring = ink?.appIntroFocusRing ?? t.focusRing;
+    final Color fill = hover ? hoverFill : base;
 
     Widget face = ConstrainedBox(
       constraints: const BoxConstraints(
@@ -55,9 +66,9 @@ class _XkTactilePrimaryButtonState extends State<XkTactilePrimaryButton> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 11),
           child: DefaultTextStyle.merge(
-            style: XkTactileType.button(color: t.primaryText),
+            style: XkTactileType.button(color: label),
             child: IconTheme(
-              data: IconThemeData(color: t.primaryText, size: 16),
+              data: IconThemeData(color: label, size: 16),
               child: Center(
                 widthFactor: widget.expanded ? null : 1,
                 heightFactor: 1,
@@ -95,7 +106,7 @@ class _XkTactilePrimaryButtonState extends State<XkTactilePrimaryButton> {
                     XkTactileTokens.controlRadius + outset,
                   ),
                   border: Border.all(
-                    color: t.focusRing,
+                    color: ring,
                     width: XkTactileTokens.focusOutlineWidth,
                   ),
                 ),

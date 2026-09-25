@@ -85,10 +85,40 @@
       "light": "0xF5FBFBFC",
       "dark": "0xF51D2025"
     },
-    "tabBarTheme.indicatorColor": {
-      "css": "--ice",
-      "light": "0xFFE9E9E9",
-      "dark": "0xFF303030"
+    "tabBarTheme.indicator.fill": {
+      "css": "--selected-fill",
+      "light": "0x14111111",
+      "dark": "0x1AF5F5F5"
+    },
+    "tabBarTheme.indicator.border": {
+      "css": "--selected-border",
+      "light": "0x59111111",
+      "dark": "0x66F5F5F5"
+    },
+    "navigationBarTheme.indicatorColor": {
+      "css": "--selected-fill",
+      "light": "0x14111111",
+      "dark": "0x1AF5F5F5"
+    },
+    "navigationRailTheme.indicatorColor": {
+      "css": "--selected-fill",
+      "light": "0x14111111",
+      "dark": "0x1AF5F5F5"
+    },
+    "navigation.indicatorBorder": {
+      "css": "--selected-border",
+      "light": "0x59111111",
+      "dark": "0x66F5F5F5"
+    },
+    "navigation.selectedLabel": {
+      "css": "--selected-text",
+      "light": "0xFF111111",
+      "dark": "0xFFF5F5F5"
+    },
+    "progressIndicatorTheme.color": {
+      "css": "--accent",
+      "light": "0xFF269DB0",
+      "dark": "0xFF65C9D9"
     },
     "switchTheme.trackSelected": {
       "css": "--control-on",
@@ -119,6 +149,147 @@
       "css": "--muted",
       "light": "0xFF636365",
       "dark": "0xFFAEB4BD"
+    }
+  },
+  "app": {
+    "source": "tactile/app-surface.css",
+    "roles": {
+      "appIntroSurface": {
+        "css": ".app-surface .app-intro { background }",
+        "expr": "var(--app-ink)",
+        "light": "0xFF111111",
+        "dark": "0xFF242C31"
+      },
+      "onAppIntro": {
+        "css": ".app-surface .app-intro { color }",
+        "expr": "var(--app-ink-text)",
+        "light": "0xFFF5F5F5",
+        "dark": "0xFFF5F5F5"
+      },
+      "appIntroBody": {
+        "css": ".app-surface .app-intro .app-intro-copy { color }",
+        "expr": "#CED4D6",
+        "light": "0xFFCED4D6",
+        "dark": "0xFFCED4D6"
+      },
+      "appIntroPrimaryFill": {
+        "css": ".app-surface .app-intro .btn-primary { background }",
+        "expr": "var(--app-ink-text)",
+        "light": "0xFFF5F5F5",
+        "dark": "0xFFF5F5F5"
+      },
+      "appIntroPrimaryText": {
+        "css": ".app-surface .app-intro .btn-primary { color }",
+        "expr": "var(--app-ink)",
+        "light": "0xFF111111",
+        "dark": "0xFF242C31"
+      },
+      "appIntroPrimaryHover": {
+        "css": ".app-surface .app-intro .btn-primary:hover:not(:disabled) { background }",
+        "expr": "#DEDEDE",
+        "light": "0xFFDEDEDE",
+        "dark": "0xFFDEDEDE"
+      },
+      "appIntroFocusRing": {
+        "css": ".app-surface .app-intro .btn-primary:focus-visible { outline }",
+        "expr": "3px solid var(--app-ink-text)",
+        "light": "0xFFF5F5F5",
+        "dark": "0xFFF5F5F5"
+      },
+      "onAppIntroAccent": {
+        "css": ".app-surface .app-intro .app-intro-label { color }",
+        "expr": "var(--app-ink-accent)",
+        "light": "0xFF65C9D9",
+        "dark": "0xFF65C9D9"
+      },
+      "appIntroLink": {
+        "css": ".app-surface .app-intro .app-ink-link { color }",
+        "expr": "var(--app-ink-accent)",
+        "light": "0xFF65C9D9",
+        "dark": "0xFF65C9D9"
+      },
+      "appIntroBrandWord": {
+        "css": ".app-surface .app-intro .app-brand-gradient { background }",
+        "expr": "linear-gradient(100deg, var(--app-ink-accent), var(--app-ink-accent-deep))",
+        "light": [
+          "0xFF65C9D9",
+          "0xFF53A1AD"
+        ],
+        "dark": [
+          "0xFF65C9D9",
+          "0xFF53A1AD"
+        ]
+      },
+      "completionSheen": {
+        "css": ".app-surface .app-completion::after { background }",
+        "expr": "linear-gradient(100deg, transparent 28%, color-mix(in srgb, var(--app-ink-accent) 25%, transparent) 50%, transparent 72%)",
+        "light": "0x4065C9D9",
+        "dark": "0x4065C9D9"
+      },
+      "currentLabel": {
+        "css": ".app-surface .app-current { color }",
+        "expr": "var(--app-accent-text)",
+        "light": "0xFF1C5D67",
+        "dark": "0xFF65C9D9"
+      },
+      "keyMetric": {
+        "css": ".app-surface .app-metric-value { color }",
+        "expr": "var(--app-accent-text)",
+        "light": "0xFF1C5D67",
+        "dark": "0xFF65C9D9"
+      },
+      "humanReviewLabel": {
+        "css": ".app-surface .app-review-label { color }",
+        "expr": "var(--app-accent-text)",
+        "light": "0xFF1C5D67",
+        "dark": "0xFF65C9D9"
+      },
+      "selectedCue": {
+        "css": ".app-surface .app-selected-cue { color }",
+        "expr": "var(--app-accent-text)",
+        "light": "0xFF1C5D67",
+        "dark": "0xFF65C9D9"
+      },
+      "humanReviewSurface": {
+        "css": ".app-surface .app-review { background }",
+        "expr": "var(--app-accent-wash)",
+        "light": "0xFFE4F1F4",
+        "dark": "0xFF233237"
+      },
+      "humanReviewBorder": {
+        "css": ".app-surface .app-review { border }",
+        "expr": "1px solid var(--app-accent-edge)",
+        "light": "0x7D217D8C",
+        "dark": "0x8D7FCBD9"
+      }
+    },
+    "derived": {
+      "appIntroSurface.border": {
+        "css": ".app-surface .app-intro { border }",
+        "expr": "1px solid color-mix(in srgb, var(--app-ink-text) 14%, var(--app-ink))",
+        "light": "0xFF313131",
+        "dark": "0xFF41484C"
+      }
+    },
+    "motion": {
+      "routeFade": {
+        "css": "--app-view-duration / --app-view-ease",
+        "durationMs": 180,
+        "cubic": [
+          0.2,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "reducedMotionMs": 0
+      },
+      "completionSheen": {
+        "css": ".app-completion::after animation",
+        "durationMs": 1400,
+        "curve": "ease-in-out",
+        "iterations": 1,
+        "reducedMotion": "none"
+      }
     }
   }
 }

@@ -34,7 +34,7 @@ class XkHttpConfig {
   final bool? enableLogging;
 
   /// A single base-URL string (scheme + host + port + path-prefix), e.g.
-  /// `https://api.cosentio.com/api/v1`. When set, it takes precedence over the
+  /// `https://api.xerkonix.com/api/v1`. When set, it takes precedence over the
   /// discrete [scheme]/[host]/[port] for URL construction (see
   /// [XkInterceptedClient]).
   final String? baseUrl;

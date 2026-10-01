@@ -15,8 +15,9 @@ wght axis: 400–600 (covers 400 · 500 · 600; CSS 450 / 550 via FontVariation)
 Layout features: kern liga calt ccmp locl mark mkmk rlig rvrn; hinting dropped
 
 XKSansKR-ksx1001-w400-600.ttf
-bytes: 794212
-sha256: 3ba2cfc34aedfe2777df2d0a4e82502be6e523b666f8558dcad394d15913e914
+bytes: 794244
+sha256: c4bd716a5c6320365e067acf6dca4fe4749e29ad0229599188b88f98934b0e41
 
+Manufacturer (name ID 8 / OS/2 vendor XKNX): XERKONIX; designer (ID 9) unchanged.
 Flutter registers it as family "XK Sans KR" via FontLoader
 (tactile_fonts.dart). Consume copies: tools/sync_tactile_fonts.py.

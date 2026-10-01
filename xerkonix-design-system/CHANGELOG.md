@@ -1,3 +1,9 @@
+## 4.8.0 — XK Sans KR 제작사 표기 · `Pretendard` 클래스 이름 정리
+
+- 글꼴 name 테이블 ID 8(Manufacturer) `XERKONIX`, ID 11(Vendor URL) `https://xerkonix.com/`, OS/2 `achVendID` `XKNX` — 수정판의 제작사를 우리로 적는다. 디자이너(ID 9)·디자이너 URL(ID 12)·저작권·라이선스 고지는 그대로. 생성기 `tools/build_pretendard_subset.py`, 파일 794,244 B.
+- 공개 API `Pretendard` 클래스 → `XkSansKr`. `Pretendard` 는 `@Deprecated` typedef 별칭으로 남겨 소비 코드가 그대로 컴파일된다. 다음 메이저에서 뺀다.
+- 이관 기록의 옛 소비처 이름(frontend-boilerplate)을 project-boilerplate(client-boilerplate/flutter)로.
+
 ## 4.7.0 — 제품 화면 버전 v4 · 라이트 고정 · 잉크 면 폐기
 
 웹 TACTILE 토큰 v4.1.0(DS `DESIGN-SYSTEM.md` §5·§11, 2026-10-01). 제품 화면은 라이트 하나이고 검정 면은 강조 다크 구간 두 곳뿐이다.

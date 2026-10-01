@@ -41,6 +41,9 @@ OUT_NAME = "XKSansKR-ksx1001-w400-600.ttf"
 FAMILY = "XK Sans KR"
 POSTSCRIPT = "XKSansKR"
 RESERVED = "Pretendard"
+MANUFACTURER = "XERKONIX"
+MANUFACTURER_URL = "https://xerkonix.com/"
+VENDOR_ID = "XKNX"  # OS/2 achVendID of the Modified Version (4 chars; unregistered)
 OUT = OUT_DIR / OUT_NAME
 SOURCE_TXT = OUT_DIR / "SOURCE.txt"
 LICENSE_TXT = OUT_DIR / "LICENSE.txt"
@@ -104,6 +107,7 @@ def write(source: Path, license_path: Path) -> int:
     subsetter.subset(font)
     font = instancer.instantiateVariableFont(font, {"wght": (WGHT_MIN, WGHT_MAX)})
     rename(font)
+    font["OS/2"].achVendID = VENDOR_ID
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     font.save(str(OUT))
     LICENSE_TXT.write_bytes(license_path.read_bytes())
@@ -131,6 +135,7 @@ def write(source: Path, license_path: Path) -> int:
                 f"bytes: {OUT.stat().st_size}",
                 f"sha256: {sha256_file(OUT)}",
                 "",
+                f"Manufacturer (name ID 8 / OS/2 vendor {VENDOR_ID}): {MANUFACTURER}; designer (ID 9) unchanged.",
                 f"Flutter registers it as family \"{FAMILY}\" via FontLoader",
                 "(tactile_fonts.dart). Consume copies: tools/sync_tactile_fonts.py.",
             ]
@@ -159,6 +164,11 @@ def rename(font) -> None:
             rec.string = f"{POSTSCRIPT}-ksx1001-w{WGHT_MIN}-{WGHT_MAX};{RELEASE}"
         elif rec.nameID == 5:
             rec.string = f"Version {RELEASE};{FAMILY} subset"
+        elif rec.nameID == 8:
+            # Manufacturer of this Modified Version. Designer (ID 9) and the designer URL (12) stay.
+            rec.string = MANUFACTURER
+        elif rec.nameID == 11:
+            rec.string = MANUFACTURER_URL
         elif rec.nameID == 10:
             rec.string = (
                 f"{FAMILY}: Modified Version of Pretendard Variable {RELEASE} (SIL OFL 1.1) — "

@@ -25,6 +25,8 @@ jobs:
         run: python3 tools/sync_tactile_dart.py --selftest
       - name: tactile theme roles
         run: python3 tools/build_tactile_theme_roles.py --check
+      - name: pretendard subset (sha256 · 1MB)
+        run: python3 tools/build_pretendard_subset.py --check && python3 tools/sync_tactile_fonts.py --selftest
 
   flutter:
     runs-on: ubuntu-latest

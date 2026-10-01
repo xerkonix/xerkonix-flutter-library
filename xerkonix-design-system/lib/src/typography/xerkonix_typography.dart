@@ -505,8 +505,8 @@ class NotoSansKR {
 class Pretendard {
   Pretendard._();
 
-  /// Named public API. Face is the stack's loadable fallback, not a
-  /// Pretendard file (that name is absent from current `--font`).
+  /// Named public API. Face is the bundled XK Sans KR (Modified Version of
+  /// Pretendard Variable, [XkTactileFonts]) — tokens v4.1 `--font`.
   static const String fontFamily = XkTactileFonts.family;
   static const String package = '';
 

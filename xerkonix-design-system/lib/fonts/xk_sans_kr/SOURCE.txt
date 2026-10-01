@@ -1,0 +1,22 @@
+XK Sans KR — Modified Version of Pretendard Variable: KS X 1001 subset, wght 400–600 (generated).
+
+OFL 1.1 Reserved Font Name: Pretendard. This file is a Modified Version, so its
+font names are "XK Sans KR" / "XKSansKR"; only the copyright and licence
+notices still mention Pretendard (the OFL requires keeping them).
+
+Release: Pretendard 1.3.9 (https://github.com/orioncactus/pretendard/releases/tag/v1.3.9)
+Input: public/variable/PretendardVariable.ttf
+Input sha256: 3090ccde0442bb347aa7685d9ba8b17436a60682df6e8f92a9a670de14056e22
+License: SIL OFL 1.1 (LICENSE.txt = release LICENSE.txt)
+Generator: tools/build_pretendard_subset.py
+
+Codepoints: 2850 (KS X 1001 Hangul 2,350 + Latin / digits / symbols)
+wght axis: 400–600 (covers 400 · 500 · 600; CSS 450 / 550 via FontVariation)
+Layout features: kern liga calt ccmp locl mark mkmk rlig rvrn; hinting dropped
+
+XKSansKR-ksx1001-w400-600.ttf
+bytes: 794212
+sha256: 3ba2cfc34aedfe2777df2d0a4e82502be6e523b666f8558dcad394d15913e914
+
+Flutter registers it as family "XK Sans KR" via FontLoader
+(tactile_fonts.dart). Consume copies: tools/sync_tactile_fonts.py.

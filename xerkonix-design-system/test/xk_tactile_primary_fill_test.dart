@@ -78,7 +78,7 @@ Future<void> _write(WidgetTester tester, ui.Image image, String name) async {
 
 void main() {
   setUpAll(() async {
-    final File fontFile = File('lib/fonts/noto_sans_cjk_kr/NotoSansKR-VF.ttf');
+    final File fontFile = File(XkTactileFonts.packageFilePath);
     expect(fontFile.existsSync(), isTrue, reason: fontFile.path);
     final bool ok = await XkTactileFonts.loadFromBytes(
       ByteData.sublistView(fontFile.readAsBytesSync()),

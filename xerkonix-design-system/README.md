@@ -38,7 +38,7 @@ dependencies:
 - Dart SDK: `>=3.9.0 <4.0.0`
 - Flutter: `>=3.35.0`
 
-폰트(Pretendard / MaruBuri / IBM Plex Sans KR / IBM Plex Mono)는 패키지에 번들돼 자동 로드된다. 각 폰트의 라이선스는 아래 [라이선스](#라이선스) 절 참고.
+글꼴은 XK Sans KR(Pretendard Variable 의 KS X 1001 서브셋 수정판) 한 파일(`lib/fonts/xk_sans_kr/`)이고 `XkTactileFonts.ensureLoaded()` 로 로드한다. 각 폰트의 라이선스는 아래 [라이선스](#라이선스) 절 참고.
 
 ## 빠른 시작
 
@@ -184,7 +184,7 @@ flutter run -d web-server --web-port=18080
 
 | 폰트 | 저작권 | 라이선스 | 전문 |
 |---|---|---|---|
-| Noto Sans CJK KR VF | Noto CJK / Adobe Source | SIL OFL 1.1 | `lib/fonts/noto_sans_cjk_kr/OFL.txt` |
+| XK Sans KR (Pretendard Variable 의 수정판: KS X 1001 서브셋, wght 400–600 — 예약 이름 때문에 이름을 바꿈) | Kil Hyung-jin / orioncactus | SIL OFL 1.1 | `lib/fonts/xk_sans_kr/LICENSE.txt` |
 
 예약 이름(Reserved Font Name)은 `Pretendard` · `Plex` 다 — 이 폰트를 수정해
 재배포할 때 폰트 선택 이름 필드에 예약 이름을 쓰면 안 된다.

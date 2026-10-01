@@ -80,12 +80,14 @@ int _hamming(Uint8List a, Uint8List b) {
 }
 
 void main() {
-  final File notoFile = File(XkTactileFonts.packageFilePath);
+  final File fontFile = File(XkTactileFonts.packageFilePath);
 
-  test('official Noto CJK KR VF bytes are present', () {
-    expect(notoFile.existsSync(), isTrue, reason: notoFile.path);
-    expect(notoFile.lengthSync(), 10415420);
-    final List<int> head = notoFile.readAsBytesSync().sublist(0, 4);
+  test('XK Sans KR (Pretendard KS X 1001 subset) bytes are present and under 1 MB', () {
+    expect(fontFile.existsSync(), isTrue, reason: fontFile.path);
+    expect(fontFile.lengthSync(), lessThan(1000000));
+    expect(fontFile.lengthSync(), greaterThan(500000));
+    expect(XkTactileFonts.family, 'XK Sans KR');
+    final List<int> head = fontFile.readAsBytesSync().sublist(0, 4);
     expect(head, <int>[0x00, 0x01, 0x00, 0x00]);
   });
 
@@ -155,11 +157,11 @@ void main() {
   });
 
   testWidgets(
-    'loaded Noto VF paints 400/450/550 and is not claimed equal to live 5/6',
+    'loaded XK Sans KR VF paints 400/450/550 and differs from the engine default',
     (WidgetTester tester) async {
       expect(
         await XkTactileFonts.loadFromBytes(
-          ByteData.sublistView(notoFile.readAsBytesSync()),
+          ByteData.sublistView(fontFile.readAsBytesSync()),
         ),
         isTrue,
       );
@@ -226,12 +228,12 @@ void main() {
       expect(
         _hamming(noto['latin-400']!, engineLatin) / engineLatin.length,
         greaterThan(0.02),
-        reason: 'Loaded Noto Latin must differ from the engine default',
+        reason: 'Loaded Pretendard Latin must differ from the engine default',
       );
       expect(
         _hamming(noto['korean-400']!, engineKorean) / engineKorean.length,
         greaterThan(0.02),
-        reason: 'Loaded Noto Korean must differ from the engine default',
+        reason: 'Loaded Pretendard Korean must differ from the engine default',
       );
       expect(
         _hamming(noto['latin-400']!, noto['latin-550']!) /
@@ -290,15 +292,14 @@ void main() {
       expect(
         _hamming(typeBytes, engineKorean) / engineKorean.length,
         greaterThan(0.02),
-        reason: 'XkTactileType.button must paint the loaded Noto face',
+        reason: 'XkTactileType.button must paint the loaded Pretendard face',
       );
 
       final String? dir = Platform.environment['ARTIFACT_DIR'];
       if (dir != null && dir.isNotEmpty) {
         File('$dir/phrase_compare.json').writeAsStringSync(
-          '{"note":"Noto Sans CJK KR VF is the stack loadable fallback. '
-          'Not claimed equal to live design.xerkonix.com .SF NS + '
-          'Apple SD Gothic Neo.","family":"${XkTactileFonts.family}",'
+          '{"note":"XK Sans KR (Pretendard Variable KS X 1001 subset, renamed for the OFL '
+          'Reserved Font Name) is the bundled face.","family":"${XkTactileFonts.family}",'
           '"hamming":{'
           '"latin400_vs_engine":${_hamming(noto['latin-400']!, engineLatin)},'
           '"korean400_vs_engine":${_hamming(noto['korean-400']!, engineKorean)},'

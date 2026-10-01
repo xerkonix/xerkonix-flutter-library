@@ -1,0 +1,18 @@
+Pretendard Variable — KS X 1001 subset, wght 400–600 (generated).
+
+Release: Pretendard 1.3.9 (https://github.com/orioncactus/pretendard/releases/tag/v1.3.9)
+Input: public/variable/PretendardVariable.ttf
+Input sha256: 3090ccde0442bb347aa7685d9ba8b17436a60682df6e8f92a9a670de14056e22
+License: SIL OFL 1.1 (LICENSE.txt = release LICENSE.txt)
+Generator: tools/build_pretendard_subset.py
+
+Codepoints: 2850 (KS X 1001 Hangul 2,350 + Latin / digits / symbols)
+wght axis: 400–600 (covers 400 · 500 · 600; CSS 450 / 550 via FontVariation)
+Layout features: kern liga calt ccmp locl mark mkmk rlig rvrn; hinting dropped
+
+PretendardVariable-ksx1001-w400-600.ttf
+bytes: 794340
+sha256: 3389fb39092bf80595f01c9b6c3b35203c273b00981502a846e2cfbc00e6dbbb
+
+Flutter registers it as family "Pretendard" via FontLoader
+(tactile_fonts.dart). Consume copies: tools/sync_tactile_fonts.py.

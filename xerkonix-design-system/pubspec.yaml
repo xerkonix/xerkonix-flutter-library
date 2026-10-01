@@ -19,10 +19,10 @@ dev_dependencies:
   flutter_lints: ^6.0.0
 
 flutter:
-  # Official stack fallback is Noto CJK KR VF via FontLoader
-  # (tactile_fonts.dart). Not FontManifest — 10MB would block first
-  # paint. Pretendard is not in tokens.css --font.
+  # Stack face is the Pretendard Variable KS X 1001 subset (~0.8MB) via
+  # FontLoader (tactile_fonts.dart). Not FontManifest — first paint does
+  # not wait for it. Generated: tools/build_pretendard_subset.py.
   assets:
-    - lib/fonts/noto_sans_cjk_kr/NotoSansKR-VF.ttf
+    - lib/fonts/pretendard/PretendardVariable-ksx1001-w400-600.ttf
     - assets/brand/wordmark-ink.png
     - assets/brand/wordmark-paper.png

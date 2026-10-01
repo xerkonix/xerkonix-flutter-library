@@ -1,14 +1,20 @@
 {
-  "$comment": "Official Noto CJK KR VF consume copies. Owner is this repo. Independent app-deploy copies are expected. Not a merge block.",
-  "source": "xerkonix-design-system/lib/fonts/noto_sans_cjk_kr",
+  "$comment": "Official Pretendard Variable KS X 1001 subset consume copies. Owner is this repo. Independent app-deploy copies are expected. Not a merge block.",
+  "source": "xerkonix-design-system/lib/fonts/pretendard",
   "files": [
-    "NotoSansKR-VF.ttf",
-    "OFL.txt",
+    "PretendardVariable-ksx1001-w400-600.ttf",
+    "LICENSE.txt",
     "SOURCE.txt"
   ],
   "consumers": {
-    "cotact": ["cosentio_app/assets/fonts/noto_sans_cjk_kr"],
-    "concierge": ["concierge_app/fonts/noto_sans_cjk_kr"],
-    "xerkonix-frontend-boilerplate": ["fonts/noto_sans_cjk_kr"]
+    "cotact": [
+      "cosentio_app/assets/fonts/pretendard"
+    ],
+    "concierge": [
+      "concierge_app/fonts/pretendard"
+    ],
+    "xerkonix-frontend-boilerplate": [
+      "fonts/pretendard"
+    ]
   }
 }

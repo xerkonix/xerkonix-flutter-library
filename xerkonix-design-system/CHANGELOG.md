@@ -1,3 +1,8 @@
+## 미정 — 글꼴 사본의 출처 메타를 자산 폴더 밖으로
+
+- `tools/sync_tactile_fonts.py`: 소비 앱 사본 폴더 `<app>/assets/fonts/xk_sans_kr/` 에는 ttf 와 `LICENSE.txt` 만 두고, 출처(`tactile_fonts.PROVENANCE.json`, 출처 커밋 포함)는 앱 루트에 쓴다. `SOURCE.txt` 는 복사하지 않는다. `--check` 는 pubspec 이 **파일 두 줄**을 등록했는지(폴더째 등록은 실패), 사본 폴더에 다른 파일이 없는지 본다. 이유: Flutter 는 폴더로 등록한 자산을 전부 공개 웹 빌드에 싣는다 — 리포명·도구 경로가 노출됐다(소비 PR 리뷰 지적).
+- `test/xk_tactile_font_contract_test.dart` 소비 앱 모양: 같은 조건을 형제 리포에 대해 단언한다.
+
 ## 4.8.0 — XK Sans KR 제작사 표기 · `Pretendard` 클래스 이름 정리
 
 - 글꼴 name 테이블 ID 8(Manufacturer) `XERKONIX`, ID 11(Vendor URL) `https://xerkonix.com/`, OS/2 `achVendID` `XKNX` — 수정판의 제작사를 우리로 적는다. 디자이너(ID 9)·디자이너 URL(ID 12)·저작권·라이선스 고지는 그대로. 생성기 `tools/build_pretendard_subset.py`, 파일 794,244 B.

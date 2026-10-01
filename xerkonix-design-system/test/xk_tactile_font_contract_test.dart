@@ -82,6 +82,8 @@ void main() {
     expect(XkTactileFonts.assetDir, 'assets/fonts/xk_sans_kr');
     expect(XkTactileFonts.assetPath, '${XkTactileFonts.assetDir}/${XkTactileFonts.fileName}');
     expect((manifest['files'] as List<dynamic>).contains(XkTactileFonts.fileName), isTrue);
+    expect(manifest['files'], <dynamic>[XkTactileFonts.fileName, 'LICENSE.txt'], reason: '사본 파일은 글꼴과 라이선스뿐');
+    expect(manifest['provenance'], 'tactile_fonts.PROVENANCE.json');
     expect(manifest['source'], 'xerkonix-design-system/lib/fonts/xk_sans_kr');
     expect(XkTactileFonts.packageFilePath, 'lib/fonts/xk_sans_kr/${XkTactileFonts.fileName}');
     expect(
@@ -96,10 +98,12 @@ void main() {
         manifest['consumers'] as Map<String, dynamic>;
     final String assetDir = XkTactileFonts.assetDir;
 
-    bool pubspecDeclares(String text) {
+    /// pubspec must list the face (and LICENSE.txt) file by file — never the
+    /// directory, which would ship every file in it (provenance, notes) to the
+    /// public web build.
+    List<String> pubspecEntries(String text) {
       final RegExp item = RegExp(r'^\s*-\s*(\S+)\s*$', multiLine: true);
-      return item.allMatches(text).any((RegExpMatch m) =>
-          m.group(1) == '$assetDir/' || m.group(1) == XkTactileFonts.assetPath);
+      return item.allMatches(text).map((RegExpMatch m) => m.group(1)!).toList();
     }
 
     for (final String consumer in <String>['cotact', 'concierge']) {
@@ -118,11 +122,24 @@ void main() {
         }
         final File pubspec = File('${sibling.path}/pubspec.yaml');
         expect(pubspec.existsSync(), isTrue, reason: pubspec.path);
-        expect(pubspecDeclares(pubspec.readAsStringSync()), isTrue,
-            reason: '$consumer pubspec 에 `$assetDir/` 가 없다');
+        final List<String> entries = pubspecEntries(pubspec.readAsStringSync());
+        expect(entries, isNot(contains('$assetDir/')),
+            reason: '$consumer pubspec 이 폴더째 등록한다 — 메타 파일이 공개 자산으로 나간다');
+        expect(entries, contains(XkTactileFonts.assetPath), reason: '$consumer pubspec 에 글꼴 파일이 없다');
+        expect(entries, contains('$assetDir/LICENSE.txt'), reason: '$consumer pubspec 에 LICENSE.txt 가 없다');
         final File copy = File('${sibling.path}/$assetDir/${XkTactileFonts.fileName}');
         expect(copy.existsSync(), isTrue, reason: copy.path);
         expect(copy.readAsBytesSync(), fontFile.readAsBytesSync(), reason: '$consumer 사본이 원본과 다르다');
+        // 사본 폴더에는 글꼴과 라이선스만 — 출처 메타는 앱 루트 tactile_fonts.PROVENANCE.json 에 있다.
+        final List<String> inDir = Directory('${sibling.path}/$assetDir')
+            .listSync()
+            .whereType<File>()
+            .map((File f) => f.uri.pathSegments.last)
+            .toList()
+          ..sort();
+        expect(inDir, <String>['LICENSE.txt', XkTactileFonts.fileName], reason: '$consumer 사본 폴더에 다른 파일이 있다');
+        expect(File('${sibling.path}/tactile_fonts.PROVENANCE.json').existsSync(), isTrue,
+            reason: '$consumer 출처 파일이 앱 루트에 없다');
       });
     }
   });

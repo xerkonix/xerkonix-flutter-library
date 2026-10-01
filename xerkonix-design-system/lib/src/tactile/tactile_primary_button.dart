@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'tactile_app_surface.dart';
-import 'tactile_theme.dart';
 import 'tactile_tokens.dart';
 import 'tactile_type.dart';
 
@@ -13,9 +12,9 @@ import 'tactile_type.dart';
 /// flat monochrome fill. `min-height` 46, not a fixed
 /// height — text scale / wrap can grow. Not CosentioRaise.sm.
 ///
-/// Inside [XkTactileAppIntro] the face inverts to the ink-plane roles
-/// (`appIntroPrimaryFill` / `appIntroPrimaryText` / `appIntroPrimaryHover`,
-/// focus `appIntroFocusRing`) — web `.app-intro .btn-primary`.
+/// Inside an emphasis-dark band ([XkTactileEmphasisDark]) the face inverts
+/// through the dark token block (`--primary-base` / `--primary-text`) — web
+/// `.app-canvas-focus .btn-primary` / `.app-footer .btn-primary`.
 class XkTactilePrimaryButton extends StatefulWidget {
   const XkTactilePrimaryButton({
     super.key,
@@ -40,15 +39,14 @@ class _XkTactilePrimaryButtonState extends State<XkTactilePrimaryButton> {
   @override
   Widget build(BuildContext context) {
     final XkTactileTokens t = XkTactileTokens.of(Theme.of(context).brightness);
-    final XkTactileAppSurface? ink = XkTactileAppIntro.maybeOf(context);
     final bool enabled = widget.onPressed != null;
     final bool hover = _hover && enabled;
     final bool pressed = _pressed && enabled;
     final bool lifted = hover && !pressed;
-    final Color base = ink?.appIntroPrimaryFill ?? t.primaryBase;
-    final Color hoverFill = ink?.appIntroPrimaryHover ?? t.primaryHoverTop;
-    final Color label = ink?.appIntroPrimaryText ?? t.primaryText;
-    final Color ring = ink?.appIntroFocusRing ?? t.focusRing;
+    final Color base = t.primaryBase;
+    final Color hoverFill = t.primaryHoverTop;
+    final Color label = t.primaryText;
+    final Color ring = t.focusRing;
     final Color fill = hover ? hoverFill : base;
 
     Widget face = ConstrainedBox(

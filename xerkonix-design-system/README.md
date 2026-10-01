@@ -1,3 +1,7 @@
+## 4.7.0 — 제품 화면 버전 v4 · 라이트 고정 · 잉크 면 폐기
+
+패키지 버전 4.7.0. 웹 TACTILE 토큰은 v4.1.0이다. 제품 화면은 라이트 하나다. CanvasKit 글꼴은 XK Sans KR(Pretendard KS X 1001 서브셋, #20)이다. 잉크 첫인상 면(`XkTactileAppIntro`)·브랜드 단어(`XkTactileBrandWord`)·완료 빛은 뺐다. 다크 토큰은 강조 다크 구간 두 곳(`XkTactileEmphasisDark` — 캔버스 집중 패널·푸터)에서만 쓴다. 아래 「제품 화면 버전 v4」 절 참고.
+
 ## 4.6.0 — 제품 화면 버전 6-B 역할
 
 패키지 버전 4.6.0. 웹 TACTILE 토큰은 v3.1.0 그대로다. 앱 첫인상 자리의 잉크 면·브랜드 단어·사람 확인 칸·화면 전환과 Aquamarine 읽기 역할을 `XkTactileAppSurface`로 공급한다. 아래 「제품 화면 버전 6-B」 절 참고.
@@ -32,7 +36,7 @@ XERKONIX Design System 의 Flutter 구현 패키지. 색·타이포·형태·모
 
 ```yaml
 dependencies:
-  xerkonix_design_system: ^4.6.0
+  xerkonix_design_system: ^4.7.0
 ```
 
 - Dart SDK: `>=3.9.0 <4.0.0`
@@ -57,21 +61,21 @@ MaterialApp(
 );
 ```
 
-## 제품 화면 버전 6-B — 앱 역할
+## 제품 화면 버전 v4 — 앱 역할
 
-DS `DESIGN-SYSTEM.md` §11과 `flutter/APP_SURFACE_MAPPING.md`를 따른다. 이름은 그 표에 있는 것만 쓴다. 값은 `XkTactileTokens`의 같은 이름 필드이고, `tools/build_tactile_theme_roles.py --check`가 DS `tactile/app-surface.css`와 대조한다.
+DS `DESIGN-SYSTEM.md` §5·§11과 `flutter/APP_SURFACE_MAPPING.md`를 따른다. 이름은 그 표에 있는 것만 쓴다. 값은 `XkTactileTokens`의 같은 이름 필드이고, `tools/build_tactile_theme_roles.py --check`가 DS `tactile/app-surface.css`와 대조한다.
 
 ```dart
 MaterialApp(
   theme: XkTactileTheme.themeData(Brightness.light),
-  darkTheme: XkTactileTheme.themeData(Brightness.dark),
+  themeMode: ThemeMode.light, // 라이트 고정 — darkTheme·테마 전환 없음
   home: Builder(builder: (BuildContext context) {
     final XkTactileAppSurface s = XkTactileAppSurface.of(context);
     return XkTactileRouteFade(
       child: Column(children: <Widget>[
-        XkTactileAppIntro( // 로그인·빈 상태·대시보드 머리·결제 완료에만
+        XkTactileSurface( // 로그인·빈 상태·대시보드 머리·결제 완료의 머리도 밝은 패널
           child: Column(children: <Widget>[
-            const XkTactileBrandWord('골든셋'), // 화면당 한 곳
+            const Text('골든셋'), // 한 가지 ink, 그라데이션 없음
             XkTactilePrimaryButton(onPressed: () {}, child: const Text('시작')),
           ]),
         ),
@@ -80,16 +84,22 @@ MaterialApp(
           child: Text('확인 필요 · 금액 차이',
               style: TextStyle(color: s.humanReviewLabel)),
         ),
+        XkTactileEmphasisDark( // 강조 다크 구간 두 곳뿐: 캔버스 집중 패널 · 푸터
+          kind: XkTactileEmphasisDarkKind.footer,
+          child: Text('© 2026'),
+        ),
       ]),
     );
   }),
 );
 ```
 
-- 잉크 면(`XkTactileAppIntro`)은 첫인상 네 자리에만 쓴다. 폼·표·카드·결제 중간 단계는 `XkTactileSurface`(정보 면)다. 결제 완료에는 `completion: true`로 완료 빛을 한 번 둔다.
+- 제품 화면은 라이트 고정이다. `darkTheme`·테마 전환·OS 추종을 두지 않는다. `XkTactileTokens.dark`와 `XkTactileTheme.themeData(Brightness.dark)`는 강조 다크 구간의 토큰 묶음이다.
+- 잉크 첫인상 면은 없다(2026-10-01 폐기). 로그인·빈 상태·대시보드 머리·결제 완료의 머리도 `XkTactileSurface`(정보 면)다. 브랜드 단어는 제목과 같은 `ink` 한 가지, 완료 빛 없음.
+- 검정 면은 `XkTactileEmphasisDark` 두 곳(`canvasFocus`·`footer`)뿐이다. 그 안에서는 서브트리가 `[data-theme="dark"]` 토큰 블록(`--canvas` `#111111` · `--ink` `#F5F5F5` · `--accent` `#65C9D9` · `--muted` `#AEB4BD`)을 읽고 주 버튼은 반전 모노크롬이다. 히어로·카드·로그인에 쓰지 않는다.
 - `currentLabel`·`keyMetric`·`humanReviewLabel`·`selectedCue`는 AA 대비의 읽기 글자다. 상태는 글자로도 쓴다. 라이트 원색 `accent`를 읽는 글자·필수 경계에 쓰지 않는다.
 - 선택 컨트롤은 중립(`selectedFill`·`selectedBorder`·`ink`)이다. 탭 바·내비게이션 바·레일은 테마가 그렇게 칠한다. `selectedCue`는 선택된 이름 옆의 작은 보조 글자다.
-- 모션은 `XkTactileRouteFade`(180ms)와 완료 빛(1400ms, 1회)뿐이다. 감속 모드에서는 둘 다 멈춘다. 스크롤 연동·반복 모션을 넣지 않는다.
+- 모션은 `XkTactileRouteFade`(180ms)뿐이다. 감속 모드에서는 0ms. 스크롤 연동·반복 모션을 넣지 않는다.
 
 ## 토큰
 

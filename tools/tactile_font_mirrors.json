@@ -1,10 +1,9 @@
 {
-  "$comment": "Official XK Sans KR (Pretendard Variable KS X 1001 subset) consume copies. Owner is this repo. Every app keeps the copy at <app>/assets/fonts/xk_sans_kr and lists that directory in pubspec assets — the same string as XkTactileFonts.assetDir. Independent app-deploy copies are expected. Not a merge block.",
+  "$comment": "Official XK Sans KR (Pretendard Variable KS X 1001 subset) consume copies. Owner is this repo. Every app keeps ONLY the ttf and LICENSE.txt at <app>/assets/fonts/xk_sans_kr (listed file by file in pubspec assets — never the directory) and the provenance at <app>/tactile_fonts.PROVENANCE.json, outside the asset tree, so no repo name or tool path ships as a public asset. Independent app-deploy copies are expected. Not a merge block.",
   "source": "xerkonix-design-system/lib/fonts/xk_sans_kr",
   "files": [
     "XKSansKR-ksx1001-w400-600.ttf",
-    "LICENSE.txt",
-    "SOURCE.txt"
+    "LICENSE.txt"
   ],
   "asset_dir": "assets/fonts/xk_sans_kr",
   "consumers": {
@@ -17,5 +16,6 @@
     "xerkonix-project-boilerplate": {
       "app": "client-boilerplate/flutter"
     }
-  }
+  },
+  "provenance": "tactile_fonts.PROVENANCE.json"
 }

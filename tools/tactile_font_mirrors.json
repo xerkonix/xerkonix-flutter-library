@@ -1,20 +1,21 @@
 {
-  "$comment": "Official Pretendard Variable KS X 1001 subset consume copies. Owner is this repo. Independent app-deploy copies are expected. Not a merge block.",
-  "source": "xerkonix-design-system/lib/fonts/pretendard",
+  "$comment": "Official XK Sans KR (Pretendard Variable KS X 1001 subset) consume copies. Owner is this repo. Every app keeps the copy at <app>/assets/fonts/xk_sans_kr and lists that directory in pubspec assets — the same string as XkTactileFonts.assetDir. Independent app-deploy copies are expected. Not a merge block.",
+  "source": "xerkonix-design-system/lib/fonts/xk_sans_kr",
   "files": [
-    "PretendardVariable-ksx1001-w400-600.ttf",
+    "XKSansKR-ksx1001-w400-600.ttf",
     "LICENSE.txt",
     "SOURCE.txt"
   ],
+  "asset_dir": "assets/fonts/xk_sans_kr",
   "consumers": {
-    "cotact": [
-      "cosentio_app/assets/fonts/pretendard"
-    ],
-    "concierge": [
-      "concierge_app/fonts/pretendard"
-    ],
-    "xerkonix-frontend-boilerplate": [
-      "fonts/pretendard"
-    ]
+    "cotact": {
+      "app": "cosentio_app"
+    },
+    "concierge": {
+      "app": "concierge_app"
+    },
+    "xerkonix-frontend-boilerplate": {
+      "app": "."
+    }
   }
 }

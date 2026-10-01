@@ -505,8 +505,8 @@ class NotoSansKR {
 class Pretendard {
   Pretendard._();
 
-  /// Named public API. Face is the bundled Pretendard Variable subset
-  /// ([XkTactileFonts], first `--font` entry since tokens v4.1).
+  /// Named public API. Face is the bundled XK Sans KR (Modified Version of
+  /// Pretendard Variable, [XkTactileFonts]) — tokens v4.1 `--font`.
   static const String fontFamily = XkTactileFonts.family;
   static const String package = '';
 

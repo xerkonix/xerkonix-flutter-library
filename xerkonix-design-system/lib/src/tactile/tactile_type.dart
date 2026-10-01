@@ -4,13 +4,13 @@ import 'tactile_fonts.dart';
 
 /// Type scale from tactile `components.css` / `service.css`.
 ///
-/// Family is the bundled first stack entry [XkTactileFonts.family]
-/// (`Pretendard`, Variable subset). Inter / `.SF NS` / Apple SD Gothic Neo
-/// names do not paint in CanvasKit.
+/// Family is the bundled face [XkTactileFonts.family] (`XK Sans KR`, a
+/// Modified Version of Pretendard Variable). Inter / `.SF NS` /
+/// Apple SD Gothic Neo names do not paint in CanvasKit.
 ///
 /// CSS `font-weight: 550` (button, label, eyebrow) and hero `450` are
 /// not [FontWeight] enum values. Paint uses [FontVariation.weight] on
-/// the Pretendard Variable face (axis 400–600). [FontWeight] is the nearest
+/// the XK Sans KR variable face (axis 400–600). [FontWeight] is the nearest
 /// Material enum only (500 for 550, 400 for 450). Apps must call
 /// [XkTactileFonts.ensureLoaded] — a family string without bytes is
 /// the engine default.

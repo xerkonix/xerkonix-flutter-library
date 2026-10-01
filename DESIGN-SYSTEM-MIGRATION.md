@@ -1,11 +1,11 @@
 # Design System Migration
 
-## 2026-10-02 — CanvasKit 글꼴 Pretendard KS X 1001 서브셋
+## 2026-10-02 — CanvasKit 글꼴 XK Sans KR (Pretendard KS X 1001 서브셋)
 
-- 전후: Flutter 웹 면의 글꼴이 엔진 기본(원격 Noto Sans KR 폴백)에서 번들한 Pretendard Variable 서브셋으로 바뀐다. 토큰 `--font` 첫 항목과 같아진다.
-- 변경: `tools/build_pretendard_subset.py`(KS X 1001 2,350자 + 라틴·숫자·기호, wght 400–600, 힌팅 제거, 794,340 bytes < 1MB), `XkTactileFonts`(family `Pretendard`, 앱 사본·패키지 번들 두 경로), Noto 10.4MB 삭제, 폰트 복사기 매니페스트·테스트·CI `--check`.
+- 전후: Flutter 웹 면의 글꼴이 엔진 기본(원격 Noto Sans KR 폴백)에서 번들한 XK Sans KR(Pretendard Variable 의 수정판 서브셋)로 바뀐다. 토큰 `--font` 첫 항목과 같은 글꼴이다.
+- 변경: `tools/build_pretendard_subset.py`(KS X 1001 2,350자 + 라틴·숫자·기호, wght 400–600, 힌팅 제거, name 테이블을 XK Sans KR 로 — OFL 예약 이름, 794,212 bytes < 1MB), `XkTactileFonts`(family `XK Sans KR`, `assetDir` 한 문자열로 앱 사본·pubspec·로더 키 통일, 패키지 번들 경로), Noto 10.4MB 삭제, 폰트 복사기(사본 폴더 모양·pubspec 검사)·소비 앱 모양 테스트·name 테이블 테스트·CI `--check`.
 - 측정: 첫 로드 전송량 전후는 PR 본문. 서브셋 밖 글자(KS X 1001 밖 한글 8,822자·한자·이모지)는 엔진 폴백으로 그려진다.
-- 소비처: coTact·Concierge·frontend-boilerplate 는 `sync_tactile_fonts.py --write --consumer …` 로 `fonts/pretendard/` 사본을 받고 pubspec `assets` 경로를 바꾼다(별도 PR).
+- 소비처: coTact·Concierge·frontend-boilerplate 는 `sync_tactile_fonts.py --write --consumer …` 로 `<app>/assets/fonts/xk_sans_kr/` 사본을 받고 pubspec `assets` 에 `assets/fonts/xk_sans_kr/` 를 적는다(별도 PR).
 - 상태: 라이브러리 PR. 패키지 게시·앱 반영·라이브 확인은 하지 않았다.
 
 ## 2026-09-25 — 제품 화면 버전 6-B 역할 (패키지 4.6.0)

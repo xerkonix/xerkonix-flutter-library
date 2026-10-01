@@ -19,10 +19,10 @@ dev_dependencies:
   flutter_lints: ^6.0.0
 
 flutter:
-  # Stack face is the Pretendard Variable KS X 1001 subset (~0.8MB) via
-  # FontLoader (tactile_fonts.dart). Not FontManifest — first paint does
+  # Stack face is XK Sans KR (Pretendard Variable KS X 1001 subset, ~0.8MB)
+  # via FontLoader (tactile_fonts.dart). Not FontManifest — first paint does
   # not wait for it. Generated: tools/build_pretendard_subset.py.
   assets:
-    - lib/fonts/pretendard/PretendardVariable-ksx1001-w400-600.ttf
+    - lib/fonts/xk_sans_kr/XKSansKR-ksx1001-w400-600.ttf
     - assets/brand/wordmark-ink.png
     - assets/brand/wordmark-paper.png

@@ -1,12 +1,18 @@
 #!/usr/bin/env python3
-"""Build the CanvasKit face: Pretendard Variable, KS X 1001 subset, wght 400–600.
+"""Build the CanvasKit face "XK Sans KR": Pretendard Variable, KS X 1001 subset, wght 400–600.
 
 Owner: xerkonix-flutter-library
 Input: Pretendard release `public/variable/PretendardVariable.ttf` (1.3.9, OFL 1.1)
 Output (generated — do not hand-edit):
-  xerkonix-design-system/lib/fonts/pretendard/PretendardVariable-ksx1001-w400-600.ttf
-  xerkonix-design-system/lib/fonts/pretendard/SOURCE.txt
-  xerkonix-design-system/lib/fonts/pretendard/LICENSE.txt   (copied from the release)
+  xerkonix-design-system/lib/fonts/xk_sans_kr/XKSansKR-ksx1001-w400-600.ttf
+  xerkonix-design-system/lib/fonts/xk_sans_kr/SOURCE.txt
+  xerkonix-design-system/lib/fonts/xk_sans_kr/LICENSE.txt   (copied from the release)
+
+OFL 1.1 Reserved Font Name: the Pretendard licence reserves the name
+"Pretendard", and a subset is a Modified Version, so the font's own names
+(name table IDs 1 / 3 / 4 / 6 / 16 / 17) are rewritten to "XK Sans KR" and
+nothing in the name table says "Pretendard" except the copyright / licence
+notices the OFL requires us to keep. The provenance is written to SOURCE.txt.
 
 Glyph set: KS X 1001 Hangul syllables (2,350) + Hangul compatibility jamo +
 Basic Latin + Latin-1 Supplement + general punctuation / currency / arrows /
@@ -30,8 +36,11 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 LIB_ROOT = HERE.parent
-OUT_DIR = LIB_ROOT / "xerkonix-design-system" / "lib" / "fonts" / "pretendard"
-OUT_NAME = "PretendardVariable-ksx1001-w400-600.ttf"
+OUT_DIR = LIB_ROOT / "xerkonix-design-system" / "lib" / "fonts" / "xk_sans_kr"
+OUT_NAME = "XKSansKR-ksx1001-w400-600.ttf"
+FAMILY = "XK Sans KR"
+POSTSCRIPT = "XKSansKR"
+RESERVED = "Pretendard"
 OUT = OUT_DIR / OUT_NAME
 SOURCE_TXT = OUT_DIR / "SOURCE.txt"
 LICENSE_TXT = OUT_DIR / "LICENSE.txt"
@@ -94,6 +103,7 @@ def write(source: Path, license_path: Path) -> int:
     subsetter.populate(unicodes=codepoints())
     subsetter.subset(font)
     font = instancer.instantiateVariableFont(font, {"wght": (WGHT_MIN, WGHT_MAX)})
+    rename(font)
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     font.save(str(OUT))
     LICENSE_TXT.write_bytes(license_path.read_bytes())
@@ -101,7 +111,11 @@ def write(source: Path, license_path: Path) -> int:
     SOURCE_TXT.write_text(
         "\n".join(
             [
-                "Pretendard Variable — KS X 1001 subset, wght 400–600 (generated).",
+                f"{FAMILY} — Modified Version of Pretendard Variable: KS X 1001 subset, wght 400–600 (generated).",
+                "",
+                "OFL 1.1 Reserved Font Name: Pretendard. This file is a Modified Version, so its",
+                f"font names are \"{FAMILY}\" / \"{POSTSCRIPT}\"; only the copyright and licence",
+                "notices still mention Pretendard (the OFL requires keeping them).",
                 "",
                 f"Release: Pretendard {RELEASE} ({RELEASE_URL})",
                 "Input: public/variable/PretendardVariable.ttf",
@@ -117,7 +131,7 @@ def write(source: Path, license_path: Path) -> int:
                 f"bytes: {OUT.stat().st_size}",
                 f"sha256: {sha256_file(OUT)}",
                 "",
-                "Flutter registers it as family \"Pretendard\" via FontLoader",
+                f"Flutter registers it as family \"{FAMILY}\" via FontLoader",
                 "(tactile_fonts.dart). Consume copies: tools/sync_tactile_fonts.py.",
             ]
         )
@@ -126,6 +140,42 @@ def write(source: Path, license_path: Path) -> int:
     )
     print(f"wrote {OUT} ({OUT.stat().st_size} bytes)")
     return check()
+
+
+def rename(font) -> None:
+    """Rewrite the name table so no font name carries the Reserved Font Name."""
+    name = font["name"]
+    keep = {0, 7, 13, 14}  # copyright, trademark, licence text, licence URL
+    for rec in list(name.names):
+        if rec.nameID in keep:
+            continue
+        if rec.nameID in (1, 16):
+            rec.string = FAMILY
+        elif rec.nameID == 4:
+            rec.string = FAMILY
+        elif rec.nameID == 6:
+            rec.string = POSTSCRIPT
+        elif rec.nameID == 3:
+            rec.string = f"{POSTSCRIPT}-ksx1001-w{WGHT_MIN}-{WGHT_MAX};{RELEASE}"
+        elif rec.nameID == 5:
+            rec.string = f"Version {RELEASE};{FAMILY} subset"
+        elif rec.nameID == 10:
+            rec.string = (
+                f"{FAMILY}: Modified Version of Pretendard Variable {RELEASE} (SIL OFL 1.1) — "
+                f"KS X 1001 subset, wght {WGHT_MIN}-{WGHT_MAX}. Not an official Pretendard release."
+            )
+        elif RESERVED.lower() in rec.toUnicode().lower():
+            # e.g. ID 25 "PretendardVariable" (variations PostScript prefix), ID 264 "PretendardVariable-Medium"
+            rec.string = (
+                rec.toUnicode()
+                .replace("PretendardVariable", POSTSCRIPT)
+                .replace("Pretendard Variable", FAMILY)
+                .replace(RESERVED, FAMILY)
+            )
+    for rec in name.names:
+        if rec.nameID in keep or rec.nameID == 10:
+            continue
+        assert RESERVED.lower() not in rec.toUnicode().lower(), (rec.nameID, rec.toUnicode())
 
 
 def check() -> int:

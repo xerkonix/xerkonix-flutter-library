@@ -82,11 +82,11 @@ int _hamming(Uint8List a, Uint8List b) {
 void main() {
   final File fontFile = File(XkTactileFonts.packageFilePath);
 
-  test('Pretendard Variable KS X 1001 subset bytes are present and under 1 MB', () {
+  test('XK Sans KR (Pretendard KS X 1001 subset) bytes are present and under 1 MB', () {
     expect(fontFile.existsSync(), isTrue, reason: fontFile.path);
     expect(fontFile.lengthSync(), lessThan(1000000));
     expect(fontFile.lengthSync(), greaterThan(500000));
-    expect(XkTactileFonts.family, 'Pretendard');
+    expect(XkTactileFonts.family, 'XK Sans KR');
     final List<int> head = fontFile.readAsBytesSync().sublist(0, 4);
     expect(head, <int>[0x00, 0x01, 0x00, 0x00]);
   });
@@ -157,7 +157,7 @@ void main() {
   });
 
   testWidgets(
-    'loaded Pretendard VF paints 400/450/550 and differs from the engine default',
+    'loaded XK Sans KR VF paints 400/450/550 and differs from the engine default',
     (WidgetTester tester) async {
       expect(
         await XkTactileFonts.loadFromBytes(
@@ -298,8 +298,8 @@ void main() {
       final String? dir = Platform.environment['ARTIFACT_DIR'];
       if (dir != null && dir.isNotEmpty) {
         File('$dir/phrase_compare.json').writeAsStringSync(
-          '{"note":"Pretendard Variable KS X 1001 subset is the bundled '
-          'first --font entry.","family":"${XkTactileFonts.family}",'
+          '{"note":"XK Sans KR (Pretendard Variable KS X 1001 subset, renamed for the OFL '
+          'Reserved Font Name) is the bundled face.","family":"${XkTactileFonts.family}",'
           '"hamming":{'
           '"latin400_vs_engine":${_hamming(noto['latin-400']!, engineLatin)},'
           '"korean400_vs_engine":${_hamming(noto['korean-400']!, engineKorean)},'

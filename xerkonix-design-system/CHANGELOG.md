@@ -1,11 +1,12 @@
-## 미정(머지 순서에 따라 번호 확정) — CanvasKit 글꼴을 Pretendard 서브셋으로
+## 미정(머지 순서에 따라 번호 확정) — CanvasKit 글꼴 XK Sans KR (Pretendard KS X 1001 서브셋)
 
-토큰 v4.1 `--font` 의 첫 항목 Pretendard 를 CanvasKit 면에서도 쓴다(CEO 결정 2026-10-02). 전체 Variable(6.7MB)이 아니라 **KS X 1001 서브셋**이다.
+토큰 v4.1 `--font` 의 첫 항목 Pretendard 를 CanvasKit 면에서도 쓴다(CEO 결정 2026-10-02). 전체 Variable(6.7MB)이 아니라 **KS X 1001 서브셋**이고, OFL 예약 이름 때문에 글꼴 이름은 **XK Sans KR** 이다.
 
-- `lib/fonts/pretendard/PretendardVariable-ksx1001-w400-600.ttf`(794,340 bytes): Pretendard Variable 1.3.9(OFL 1.1), KS X 1001 한글 2,350자 + 라틴·숫자·기호(총 2,850 코드포인트), wght 축 400–600(400·500·600 과 CSS 450·550 을 덮는다), 힌팅 제거. 전체 범위 서브셋은 1.06–1.11MB 로 1MB 를 넘어 축을 400–600 으로 줄였다(정적 3웨이트는 3×~0.49MB 로 더 크다). 생성기 `tools/build_pretendard_subset.py`(`--write` 는 fonttools, `--check` 는 sha256·1MB 상한, CI).
-- `XkTactileFonts.family` = `Pretendard`, `assetPath` = `fonts/pretendard/…`(앱 사본), 새 `packageAssetPath`(패키지 번들 `packages/xerkonix_design_system/lib/fonts/…`). `ensureLoaded` 는 앱 사본 → 패키지 번들 순으로 시도한다 — 이전에는 예제 앱에서 Noto 파일을 찾지 못해 조용히 false 를 돌려주고 엔진 기본 글꼴(원격 Noto Sans KR 폴백)로 그렸다.
-- Noto Sans CJK KR VF(10.4MB) 와 `lib/fonts/noto_sans_cjk_kr/` 삭제. `tools/tactile_font_mirrors.json`·`sync_tactile_fonts.py` 는 `lib/fonts/pretendard/` 3개 파일(ttf·LICENSE.txt·SOURCE.txt)을 소비처 `…/fonts/pretendard/` 로 복사한다.
-- Flutter 웹 첫 로드 전송량(예제 앱, 압축 없는 정적 서버, `#/app-surface?spot=login`)은 PR 본문의 표를 따른다.
+- `lib/fonts/xk_sans_kr/XKSansKR-ksx1001-w400-600.ttf`(794,212 bytes): Pretendard Variable 1.3.9(OFL 1.1)의 수정판 — KS X 1001 한글 2,350자 + 라틴·숫자·기호(총 2,850 코드포인트), wght 축 400–600(400·500·600 과 CSS 450·550 을 덮는다), 힌팅 제거. 전체 범위 서브셋은 1.06–1.11MB 로 1MB 를 넘어 축을 400–600 으로 줄였다(정적 3웨이트는 3×~0.49MB 로 더 크다). 생성기 `tools/build_pretendard_subset.py`(`--write` 는 fonttools, `--check` 는 sha256·1MB 상한, CI).
+- **OFL 예약 이름.** Pretendard LICENSE 첫 줄이 「with Reserved Font Name Pretendard」다. 서브셋은 OFL 의 Modified Version 이므로 name 테이블(ID 1·3·4·6·16·17·25·fvar 인스턴스)을 `XK Sans KR` / `XKSansKR` 로 바꿨다. 저작권(0)·상표(7)·설명(10)·라이선스(13·14) 고지는 유지한다. `test/xk_tactile_font_contract_test.dart` 가 name 테이블을 직접 읽어 잠근다.
+- **로더 경로 = 소비 사본 위치.** `XkTactileFonts.assetDir` = `assets/fonts/xk_sans_kr` 한 문자열이 pubspec `assets:`·로더 키·복사기 매니페스트 `asset_dir` 에 같이 쓰인다. `ensureLoaded` 는 앱 사본(`assets/fonts/xk_sans_kr/…`) → 패키지 번들(`packages/xerkonix_design_system/lib/fonts/xk_sans_kr/…`) 순. `sync_tactile_fonts.py --check` 가 사본 폴더 모양과 앱 pubspec 선언을 검사하고, Dart 소비 앱 모양 테스트가 cotact·concierge 두 모양을 본다(형제 리포가 있으면 사본·pubspec 까지).
+- Noto Sans CJK KR VF(10.4MB) 와 `lib/fonts/noto_sans_cjk_kr/` 삭제. 이전에는 예제 앱에서 Noto 파일을 찾지 못해 조용히 false 를 돌려주고 엔진 기본 글꼴(원격 Noto Sans KR 폴백)로 그렸다.
+- Flutter 웹 첫 로드 전송량(예제 앱, 압축 없는 정적 서버)은 PR 본문의 표를 따른다.
 
 ## 4.6.0 — 제품 화면 버전 6-B 역할
 

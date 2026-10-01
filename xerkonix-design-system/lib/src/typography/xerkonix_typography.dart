@@ -502,8 +502,13 @@ class NotoSansKR {
   );
 }
 
-class Pretendard {
-  Pretendard._();
+/// Old public name of [XkSansKr]. Kept as an alias so app code compiles;
+/// new code uses [XkSansKr] (the bundled face is XK Sans KR, not Pretendard).
+@Deprecated('Use XkSansKr — the bundled face is XK Sans KR (4.8.0)')
+typedef Pretendard = XkSansKr;
+
+class XkSansKr {
+  XkSansKr._();
 
   /// Named public API. Face is the bundled XK Sans KR (Modified Version of
   /// Pretendard Variable, [XkTactileFonts]) — tokens v4.1 `--font`.

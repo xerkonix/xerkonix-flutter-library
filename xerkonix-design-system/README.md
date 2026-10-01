@@ -36,7 +36,7 @@ XERKONIX Design System 의 Flutter 구현 패키지. 색·타이포·형태·모
 
 ```yaml
 dependencies:
-  xerkonix_design_system: ^4.7.0
+  xerkonix_design_system: ^4.8.0
 ```
 
 - Dart SDK: `>=3.9.0 <4.0.0`

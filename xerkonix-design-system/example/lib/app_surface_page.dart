@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:xerkonix_design_system/xerkonix_design_system.dart';
 
-/// Product screen 6-B first-impression spots for review captures.
+/// Product screen v4 first-impression spots for review captures.
 ///
 /// `#/app-surface?spot=login|empty|dashboard|complete&theme=light|dark`.
 /// The page builds its own [XkTactileTheme] so the legacy example theme does
@@ -113,10 +113,14 @@ class _AppSurfacePageState extends State<AppSurfacePage> {
     );
   }
 
-  // A block-width ink plane, like the web `.app-intro`.
-  Widget _wide({required Widget child, bool completion = false}) => SizedBox(
+  // A block-width panel head, like the web `.panel` — the ink plane
+  // (`.app-intro`) was retired on 2026-10-01.
+  Widget _wide({required Widget child}) => SizedBox(
         width: double.infinity,
-        child: XkTactileAppIntro(completion: completion, child: child),
+        child: XkTactileSurface(
+          padding: const EdgeInsets.all(24),
+          child: child,
+        ),
       );
 
   Widget _spot(BuildContext context) {
@@ -132,21 +136,18 @@ class _AppSurfacePageState extends State<AppSurfacePage> {
     }
   }
 
-  TextStyle _title(BuildContext context) => XkTactileType.display(
-        color: XkTactileAppSurface.of(context).onAppIntro,
-      );
+  XkTactileTokens _t(BuildContext context) =>
+      XkTactileTokens.of(Theme.of(context).brightness);
+
+  TextStyle _title(BuildContext context) =>
+      XkTactileType.display(color: _t(context).ink);
 
   Widget _label(BuildContext context, String text) {
-    final XkTactileAppSurface s = XkTactileAppSurface.of(context);
-    return Text(
-      text,
-      style: XkTactileType.label(color: s.onAppIntroAccent),
-    );
+    return Text(text, style: XkTactileType.label(color: _t(context).muted));
   }
 
   Widget _body(BuildContext context, String text) {
-    final XkTactileAppSurface s = XkTactileAppSurface.of(context);
-    return Text(text, style: XkTactileType.body(color: s.appIntroBody));
+    return Text(text, style: XkTactileType.body(color: _t(context).muted));
   }
 
   Widget _login(BuildContext context) {
@@ -154,20 +155,15 @@ class _AppSurfacePageState extends State<AppSurfacePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        XkTactileAppIntro(
+        _wide(
           child: Builder(
             builder: (BuildContext context) => Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 _label(context, '로그인'),
                 const SizedBox(height: 12),
-                Wrap(
-                  crossAxisAlignment: WrapCrossAlignment.end,
-                  children: <Widget>[
-                    Text('환영합니다 ', style: _title(context)),
-                    XkTactileBrandWord('XERKONIX', style: _title(context)),
-                  ],
-                ),
+                // One ink colour; no brand-word gradient (retired).
+                Text('환영합니다 XERKONIX', style: _title(context)),
                 const SizedBox(height: 12),
                 _body(context, '계정으로 계속합니다.'),
                 const SizedBox(height: 24),
@@ -264,7 +260,7 @@ class _AppSurfacePageState extends State<AppSurfacePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        XkTactileAppIntro(
+        _wide(
           child: Builder(
             builder: (BuildContext context) => Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -328,13 +324,36 @@ class _AppSurfacePageState extends State<AppSurfacePage> {
             ],
           ),
         ),
+        const SizedBox(height: 16),
+        // One of the two emphasis-dark bands (DS §5): the footer.
+        XkTactileEmphasisDark(
+          kind: XkTactileEmphasisDarkKind.footer,
+          child: Builder(
+            builder: (BuildContext context) {
+              const XkTactileTokens d = XkTactileTokens.dark;
+              return Wrap(
+                spacing: 16,
+                runSpacing: 12,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: <Widget>[
+                  Text('XERKONIX', style: XkTactileType.label(color: d.ink)),
+                  Text('© 2026', style: XkTactileType.body(color: d.muted)),
+                  XkTactilePrimaryButton(
+                    onPressed: () {},
+                    child: const Text('문의'),
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
       ],
     );
   }
 
   Widget _complete(BuildContext context) {
+    // Payment completion is a plain panel head too — no completion light.
     return _wide(
-      completion: true,
       child: Builder(
         builder: (BuildContext context) => Column(
           crossAxisAlignment: CrossAxisAlignment.start,

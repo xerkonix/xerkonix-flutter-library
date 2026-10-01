@@ -1,4 +1,16 @@
-## 미정(머지 순서에 따라 번호 확정) — CanvasKit 글꼴 XK Sans KR (Pretendard KS X 1001 서브셋)
+## 4.7.0 — 제품 화면 버전 v4 · 라이트 고정 · 잉크 면 폐기
+
+웹 TACTILE 토큰 v4.1.0(DS `DESIGN-SYSTEM.md` §5·§11, 2026-10-01). 제품 화면은 라이트 하나이고 검정 면은 강조 다크 구간 두 곳뿐이다.
+
+- **뺀 것.** `XkTactileAppIntro`·`XkTactileBrandWord`·완료 빛(`completion`, `completionSheenDuration`)과 `XkTactileAppSurface`/`XkTactileTokens`의 잉크 면 역할 11개(`appIntroSurface`·`onAppIntro`·`appIntroBody`·`appIntroPrimaryFill/Text/Hover`·`appIntroFocusRing`·`onAppIntroAccent`·`appIntroLink`·`appIntroBrandWord`·`completionSheen`). 로그인·빈 상태·대시보드 머리·결제 완료의 머리는 `XkTactileSurface`(정보 면)다. 깨지는 변경 — 소비 앱은 같은 이름을 함께 지운다.
+- **새 위젯.** `XkTactileEmphasisDark(kind: canvasFocus | footer)` — 웹 `.app-canvas-focus[data-theme=dark]`·`.app-footer[data-theme=dark]`(대응표 `emphasisDarkCanvas`·`emphasisDarkFooter`). 서브트리에 `XkTactileTheme.themeData(Brightness.dark)`를 깔아 `[data-theme="dark"]` 토큰 블록만 읽는다(캔버스 `#111111`·잉크 `#F5F5F5`·액센트 `#65C9D9`·보조 `#AEB4BD`). 주 버튼은 그 안에서 반전 모노크롬. 여백은 CSS와 같다(집중 패널 24, 푸터 `clamp(32px,5vw,56px) clamp(24px,5vw,56px)`).
+- **버튼.** `XkTactilePrimaryButton`·`XkTactileButton`은 더 이상 잉크 면 문맥을 읽지 않는다. 포커스 링은 항상 `focusRing`, `text`는 밑줄 없음.
+- **남은 역할.** `currentLabel`·`keyMetric`·`humanReviewLabel`·`selectedCue`·`humanReviewSurface`·`humanReviewBorder`·`XkTactileHumanReview`·`XkTactileRouteFade`(180ms)는 그대로다. 값은 바뀌지 않았다.
+- **생성기.** `tools/build_tactile_theme_roles.py`는 v4.1 `app-surface.css`를 읽는다 — 다크 범위는 `.app-surface[data-theme="dark"]`, `.app-intro`/`.app-completion` 이 있으면 실패, `emphasisDark` 절(다크 토큰 4개)과 `routeFade` 모션만. `tools/tactile_theme_roles.json` 재생성. `test/fixtures/tokens.css`를 DS v4.1로 갱신.
+- 라이트 고정: 앱은 `MaterialApp(theme: light, themeMode: ThemeMode.light)`로 쓴다. `XkTactileTokens.dark`·`themeData(Brightness.dark)`는 강조 구간용으로 남는다.
+- 서체: 토큰 `--font`가 Pretendard Variable을 앞세우지만 CanvasKit 면의 글꼴(`XkTactileFonts`, Noto Sans CJK KR)은 이 판에서 바꾸지 않았다 — 별도 결정.
+
+### 같은 판에 포함 — CanvasKit 글꼴 XK Sans KR (Pretendard KS X 1001 서브셋, #20)
 
 토큰 v4.1 `--font` 의 첫 항목 Pretendard 를 CanvasKit 면에서도 쓴다(CEO 결정 2026-10-02). 전체 Variable(6.7MB)이 아니라 **KS X 1001 서브셋**이고, OFL 예약 이름 때문에 글꼴 이름은 **XK Sans KR** 이다.
 

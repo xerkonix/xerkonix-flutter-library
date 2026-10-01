@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'tactile_app_surface.dart';
-import 'tactile_theme.dart';
 import 'tactile_tokens.dart';
 import 'tactile_type.dart';
 
@@ -11,12 +10,9 @@ import 'tactile_type.dart';
 /// `:active` `translateY(0)`, focus outline 3/4 (no layout growth),
 /// disabled 40%. Values from `tactile/tokens.css` — not aqua glass-ctl.
 ///
-/// Inside [XkTactileAppIntro] the faces read the ink-plane roles so they do
-/// not sink into it: `text` paints `appIntroLink` (underlined, web
-/// `.app-ink-link`), `quiet` paints `onAppIntro` on the plane with the
-/// [XkTactileAppIntro.borderOf] edge (that same edge fills the hover), and
-/// every kind — `secondary` and semantic faces included — uses
-/// `appIntroFocusRing` for keyboard focus.
+/// Inside an emphasis-dark band ([XkTactileEmphasisDark]) the faces read the
+/// dark token block through the theme brightness; there is no other inverted
+/// context (the ink first-impression plane was retired).
 enum XkTactileButtonKind { secondary, quiet, text }
 
 class XkTactileButton extends StatefulWidget {
@@ -55,7 +51,6 @@ class _XkTactileButtonState extends State<XkTactileButton> {
   @override
   Widget build(BuildContext context) {
     final XkTactileTokens t = XkTactileTokens.of(Theme.of(context).brightness);
-    final XkTactileAppSurface? ink = XkTactileAppIntro.maybeOf(context);
     final bool enabled = widget.onPressed != null;
     final bool hover = _hover && enabled;
     final bool pressed = _pressed && enabled;
@@ -65,7 +60,6 @@ class _XkTactileButtonState extends State<XkTactileButton> {
     final Color border;
     final List<BoxShadow> shadows;
     final Color label;
-    bool underline = false;
     final Color? semantic = widget.semanticFill;
     if (semantic != null) {
       fill = hover ? Color.lerp(semantic, t.controlMark, 0.10)! : semantic;
@@ -80,23 +74,15 @@ class _XkTactileButtonState extends State<XkTactileButton> {
           shadows = enabled ? t.secondaryShadow : const <BoxShadow>[];
           label = t.ink;
         case XkTactileButtonKind.quiet:
-          if (ink != null) {
-            final Color edge = XkTactileAppIntro.borderOf(ink);
-            fill = hover ? edge : XkTactileTokens.clear;
-            border = edge;
-            label = ink.onAppIntro;
-          } else {
-            fill = hover ? t.controlHover : XkTactileTokens.clear;
-            border = t.line;
-            label = t.ink;
-          }
+          fill = hover ? t.controlHover : XkTactileTokens.clear;
+          border = t.line;
+          label = t.ink;
           shadows = const <BoxShadow>[];
         case XkTactileButtonKind.text:
           fill = XkTactileTokens.clear;
           border = XkTactileTokens.clear;
           shadows = const <BoxShadow>[];
-          label = ink?.appIntroLink ?? t.ink;
-          underline = ink != null;
+          label = t.ink;
       }
     }
 
@@ -125,12 +111,7 @@ class _XkTactileButtonState extends State<XkTactileButton> {
               ? const EdgeInsets.symmetric(horizontal: 2, vertical: 11)
               : const EdgeInsets.symmetric(horizontal: 20, vertical: 11),
           child: DefaultTextStyle.merge(
-            style: underline
-                ? XkTactileType.button(color: label).copyWith(
-                    decoration: TextDecoration.underline,
-                    decorationColor: label,
-                  )
-                : XkTactileType.button(color: label),
+            style: XkTactileType.button(color: label),
             child: IconTheme(
               data: IconThemeData(color: label, size: 16),
               child: Center(
@@ -169,7 +150,7 @@ class _XkTactileButtonState extends State<XkTactileButton> {
                     XkTactileTokens.controlRadius + outset,
                   ),
                   border: Border.all(
-                    color: ink?.appIntroFocusRing ?? t.focusRing,
+                    color: t.focusRing,
                     width: XkTactileTokens.focusOutlineWidth,
                   ),
                 ),

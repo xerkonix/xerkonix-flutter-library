@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
-/// Values from DS `tactile/tokens.css` v3.1.0.
+/// Values from DS `tactile/tokens.css` v4.1.0.
 /// Do not invent hex here. Light `:root` and dark `[data-theme=dark]`.
 ///
-/// Product screen 6-B roles (`appIntroSurface` … `humanReviewBorder`) come
+/// Product screen v4 roles (`currentLabel` … `humanReviewBorder`) come
 /// from DS `tactile/app-surface.css` through `flutter/APP_SURFACE_MAPPING.md`.
+/// Light is the product theme; the dark block is the emphasis-dark band
+/// token set (`[data-theme="dark"]` scoped to an element, two places only).
 /// `color-mix(in srgb, …)` values are computed by
 /// `tools/build_tactile_theme_roles.py` into `tools/tactile_theme_roles.json`
 /// and checked against the constants below — edit the CSS, not these.
@@ -56,17 +58,6 @@ class XkTactileTokens {
     required this.controlTrack,
     required this.controlMark,
     required this.selectedFill,
-    required this.appIntroSurface,
-    required this.onAppIntro,
-    required this.appIntroBody,
-    required this.appIntroPrimaryFill,
-    required this.appIntroPrimaryText,
-    required this.appIntroPrimaryHover,
-    required this.appIntroFocusRing,
-    required this.onAppIntroAccent,
-    required this.appIntroLink,
-    required this.appIntroBrandWord,
-    required this.completionSheen,
     required this.currentLabel,
     required this.keyMetric,
     required this.humanReviewLabel,
@@ -121,39 +112,6 @@ class XkTactileTokens {
   final Color controlTrack;
   final Color controlMark;
   final Color selectedFill;
-
-  /// Ink first-impression plane (`.app-intro` background, `--app-ink`).
-  final Color appIntroSurface;
-
-  /// Heading and body text on [appIntroSurface] (`--app-ink-text`).
-  final Color onAppIntro;
-
-  /// Secondary copy on [appIntroSurface] (`.app-intro-copy`).
-  final Color appIntroBody;
-
-  /// Primary button fill inside [appIntroSurface] only.
-  final Color appIntroPrimaryFill;
-
-  /// Primary button label inside [appIntroSurface] only.
-  final Color appIntroPrimaryText;
-
-  /// Primary button hover fill and border inside [appIntroSurface].
-  final Color appIntroPrimaryHover;
-
-  /// Keyboard focus outline on [appIntroSurface] (3px, offset 4px).
-  final Color appIntroFocusRing;
-
-  /// Aquamarine label on [appIntroSurface] (`.app-intro-label`).
-  final Color onAppIntroAccent;
-
-  /// Link on [appIntroSurface] (`.app-ink-link`, underline offset 3px).
-  final Color appIntroLink;
-
-  /// Single-hue brand word gradient stops on [appIntroSurface].
-  final List<Color> appIntroBrandWord;
-
-  /// One-pass completion light tint (`.app-completion`).
-  final Color completionSheen;
 
   /// Current place / active state text (`.app-current`).
   final Color currentLabel;
@@ -233,17 +191,6 @@ class XkTactileTokens {
     controlTrack: Color(0xFFCFD3DA),
     controlMark: Color(0xFFFFFFFF),
     selectedFill: Color(0x14111111),
-    appIntroSurface: Color(0xFF111111),
-    onAppIntro: Color(0xFFF5F5F5),
-    appIntroBody: Color(0xFFCED4D6),
-    appIntroPrimaryFill: Color(0xFFF5F5F5),
-    appIntroPrimaryText: Color(0xFF111111),
-    appIntroPrimaryHover: Color(0xFFDEDEDE),
-    appIntroFocusRing: Color(0xFFF5F5F5),
-    onAppIntroAccent: Color(0xFF65C9D9),
-    appIntroLink: Color(0xFF65C9D9),
-    appIntroBrandWord: <Color>[Color(0xFF65C9D9), Color(0xFF53A1AD)],
-    completionSheen: Color(0x4065C9D9),
     currentLabel: Color(0xFF1C5D67),
     keyMetric: Color(0xFF1C5D67),
     humanReviewLabel: Color(0xFF1C5D67),
@@ -313,17 +260,6 @@ class XkTactileTokens {
     controlTrack: Color(0xFF383D45),
     controlMark: Color(0xFF111111),
     selectedFill: Color(0x1AF5F5F5),
-    appIntroSurface: Color(0xFF242C31),
-    onAppIntro: Color(0xFFF5F5F5),
-    appIntroBody: Color(0xFFCED4D6),
-    appIntroPrimaryFill: Color(0xFFF5F5F5),
-    appIntroPrimaryText: Color(0xFF242C31),
-    appIntroPrimaryHover: Color(0xFFDEDEDE),
-    appIntroFocusRing: Color(0xFFF5F5F5),
-    onAppIntroAccent: Color(0xFF65C9D9),
-    appIntroLink: Color(0xFF65C9D9),
-    appIntroBrandWord: <Color>[Color(0xFF65C9D9), Color(0xFF53A1AD)],
-    completionSheen: Color(0x4065C9D9),
     currentLabel: Color(0xFF65C9D9),
     keyMetric: Color(0xFF65C9D9),
     humanReviewLabel: Color(0xFF65C9D9),

@@ -92,7 +92,7 @@ void main() {
     );
   });
 
-  group('product screen 6-B roles (XkTactileAppSurface)', () {
+  group('product screen v4 roles (XkTactileAppSurface)', () {
     final Map<String, dynamic> rolesJson =
         jsonDecode(File('../tools/tactile_theme_roles.json').readAsStringSync())
             as Map<String, dynamic>;
@@ -101,16 +101,6 @@ void main() {
     Color hex(String v) => Color(int.parse(v.substring(2), radix: 16));
 
     Map<String, Color> rolesOf(XkTactileAppSurface s) => <String, Color>{
-      'appIntroSurface': s.appIntroSurface,
-      'onAppIntro': s.onAppIntro,
-      'appIntroBody': s.appIntroBody,
-      'appIntroPrimaryFill': s.appIntroPrimaryFill,
-      'appIntroPrimaryText': s.appIntroPrimaryText,
-      'appIntroPrimaryHover': s.appIntroPrimaryHover,
-      'appIntroFocusRing': s.appIntroFocusRing,
-      'onAppIntroAccent': s.onAppIntroAccent,
-      'appIntroLink': s.appIntroLink,
-      'completionSheen': s.completionSheen,
       'currentLabel': s.currentLabel,
       'keyMetric': s.keyMetric,
       'humanReviewLabel': s.humanReviewLabel,
@@ -119,16 +109,20 @@ void main() {
       'humanReviewBorder': s.humanReviewBorder,
     };
 
-    // CSS Color 5 color-mix(in srgb, a p, b) — premultiplied, 8-bit round.
+    /// CSS `color-mix(in srgb, a p%, b)` — premultiplied, 8-bit rounded.
     Color srgbMix(Color a, double p, Color b) {
-      final double aa = a.a * p + b.a * (1 - p);
-      int ch(double x, double y) =>
-          ((x * a.a * p + y * b.a * (1 - p)) / aa * 255 + 0.5).floor();
+      final double alpha = a.a * p + b.a * (1 - p);
+      if (alpha == 0) {
+        return const Color(0x00000000);
+      }
+      double ch(double x, double y) =>
+          (x * a.a * p + y * b.a * (1 - p)) / alpha;
+      int q(double v) => (v * 255 + 0.5).floor().clamp(0, 255);
       return Color.fromARGB(
-        (aa * 255 + 0.5).floor(),
-        ch(a.r, b.r),
-        ch(a.g, b.g),
-        ch(a.b, b.b),
+        q(alpha),
+        q(ch(a.r, b.r)),
+        q(ch(a.g, b.g)),
+        q(ch(a.b, b.b)),
       );
     }
 
@@ -136,16 +130,45 @@ void main() {
       final Color top = Color.alphaBlend(fg, bg);
       final double l1 = top.computeLuminance();
       final double l2 = bg.computeLuminance();
-      return (math.max(l1, l2) + 0.05) / (math.min(l1, l2) + 0.05);
+      final double hi = math.max(l1, l2);
+      final double lo = math.min(l1, l2);
+      return (hi + 0.05) / (lo + 0.05);
     }
 
     test('names are exactly the DS mapping table roles', () {
       final Set<String> want = (app['roles'] as Map<String, dynamic>).keys
           .toSet();
-      expect(<String>{
-        ...rolesOf(XkTactileAppSurface.light).keys,
-        'appIntroBrandWord',
-      }, want);
+      expect(rolesOf(XkTactileAppSurface.light).keys.toSet(), want);
+      // Retired 2026-10-01: no ink plane, brand word or completion light.
+      expect(want.where((String n) => n.contains('Intro')), isEmpty);
+      expect(want, isNot(contains('completionSheen')));
+      expect(app.containsKey('derived'), isFalse);
+    });
+
+    test('emphasis-dark bands read the [data-theme=dark] token block', () {
+      final Map<String, dynamic> band =
+          app['emphasisDark'] as Map<String, dynamic>;
+      expect(band['kinds'], <String>['canvasFocus', 'footer']);
+      expect(
+        XkTactileEmphasisDarkKind.values.map((XkTactileEmphasisDarkKind k) => k.name),
+        band['kinds'],
+      );
+      final Map<String, dynamic> tokens = band['tokens'] as Map<String, dynamic>;
+      final XkTactileTokens d = XkTactileTokens.dark;
+      final Map<String, Color> got = <String, Color>{
+        'canvas': d.canvas,
+        'ink': d.ink,
+        'accent': d.accent,
+        'muted': d.muted,
+      };
+      expect(tokens.keys.toSet(), got.keys.toSet());
+      got.forEach((String name, Color c) {
+        expect(c, hex((tokens[name] as Map<String, dynamic>)['dark'] as String), reason: name);
+      });
+      expect(d.canvas, const Color(0xFF111111));
+      expect(d.ink, const Color(0xFFF5F5F5));
+      expect(d.accent, const Color(0xFF65C9D9));
+      expect(d.muted, const Color(0xFFAEB4BD));
     });
 
     for (final Brightness b in Brightness.values) {
@@ -163,20 +186,6 @@ void main() {
             reason: role,
           );
         });
-        final List<dynamic> stops =
-            (spec['appIntroBrandWord'] as Map<String, dynamic>)[kind]
-                as List<dynamic>;
-        expect(
-          s.appIntroBrandWord,
-          stops.map((dynamic v) => hex(v as String)).toList(),
-        );
-        final Map<String, dynamic> border =
-            (app['derived'] as Map<String, dynamic>)['appIntroSurface.border']
-                as Map<String, dynamic>;
-        expect(
-          XkTactileAppIntro.borderOf(s).toARGB32(),
-          hex(border[kind] as String).toARGB32(),
-        );
       });
 
       test('$kind derived roles follow the mapping formulas', () {
@@ -198,15 +207,6 @@ void main() {
           s.humanReviewSurface,
           srgbMix(t.accent, b == Brightness.dark ? 0.13 : 0.11, t.surface),
         );
-        expect(s.appIntroBrandWord.first, const Color(0xFF65C9D9));
-        expect(
-          s.appIntroBrandWord.last,
-          srgbMix(const Color(0xFF65C9D9), 0.78, ink),
-        );
-        expect(
-          s.completionSheen,
-          srgbMix(const Color(0xFF65C9D9), 0.25, const Color(0x00000000)),
-        );
       });
 
       test('$kind reading roles keep AA contrast', () {
@@ -220,14 +220,9 @@ void main() {
           'selectedCue/canvas': (s.selectedCue, t.canvas),
           'humanReviewLabel/wash': (s.humanReviewLabel, s.humanReviewSurface),
           'ink/wash': (t.ink, s.humanReviewSurface),
-          'onAppIntro/ink': (s.onAppIntro, s.appIntroSurface),
-          'appIntroBody/ink': (s.appIntroBody, s.appIntroSurface),
-          'onAppIntroAccent/ink': (s.onAppIntroAccent, s.appIntroSurface),
-          'appIntroLink/ink': (s.appIntroLink, s.appIntroSurface),
-          'brandWord.start/ink': (s.appIntroBrandWord.first, s.appIntroSurface),
-          'brandWord.end/ink': (s.appIntroBrandWord.last, s.appIntroSurface),
-          'primaryText/fill': (s.appIntroPrimaryText, s.appIntroPrimaryFill),
-          'primaryText/hover': (s.appIntroPrimaryText, s.appIntroPrimaryHover),
+          'ink/canvas': (t.ink, t.canvas),
+          'muted/canvas': (t.muted, t.canvas),
+          'primaryText/primary': (t.primaryText, t.primaryBase),
           'ink/selectedFill': (
             t.ink,
             Color.alphaBlend(t.selectedFill, t.canvas),
@@ -240,11 +235,8 @@ void main() {
             reason: '$kind $name',
           );
         });
-        // Focus ring on the ink plane is a required edge: 3:1.
-        expect(
-          contrast(s.appIntroFocusRing, s.appIntroSurface),
-          greaterThanOrEqualTo(3),
-        );
+        // Focus ring is a required edge on the canvas: 3:1.
+        expect(contrast(t.focusRing, t.canvas), greaterThanOrEqualTo(3));
       });
 
       test('$kind Material stays monochrome; indicators are neutral', () {
@@ -293,7 +285,8 @@ void main() {
           ),
         ),
       );
-      expect(got.appIntroSurface, XkTactileTokens.dark.appIntroSurface);
+      expect(got.currentLabel, XkTactileTokens.dark.currentLabel);
+      expect(got.humanReviewSurface, XkTactileTokens.dark.humanReviewSurface);
     });
 
     test('lerp reaches the other theme', () {
@@ -301,8 +294,9 @@ void main() {
         XkTactileAppSurface.dark,
         1,
       );
-      expect(end.appIntroSurface, XkTactileTokens.dark.appIntroSurface);
-      expect(end.appIntroBrandWord, XkTactileTokens.dark.appIntroBrandWord);
+      expect(end.currentLabel, XkTactileTokens.dark.currentLabel);
+      expect(end.humanReviewBorder, XkTactileTokens.dark.humanReviewBorder);
+      expect(end, XkTactileAppSurface.dark);
     });
 
     testWidgets('NavigationBar selected destination paints the neutral face', (

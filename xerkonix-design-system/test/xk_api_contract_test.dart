@@ -409,123 +409,30 @@ void main() {
     expect(n, 1);
   });
 
-  group('product screen 6-B widgets', () {
+  group('product screen v4 widgets', () {
     Widget app(Brightness b, Widget child) => MaterialApp(
       theme: XkTactileTheme.themeData(b),
       home: Scaffold(body: Center(child: child)),
     );
 
     for (final Brightness b in Brightness.values) {
-      testWidgets('XkTactileAppIntro paints the ink plane ($b)', (
+      testWidgets('primary button paints the theme monochrome pair ($b)', (
         WidgetTester tester,
       ) async {
         final XkTactileTokens t = XkTactileTokens.of(b);
         await tester.pumpWidget(
-          app(
-            b,
-            XkTactileAppIntro(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  const Text('제목'),
-                  XkTactilePrimaryButton(
-                    onPressed: () {},
-                    child: const Text('시작'),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          app(b, XkTactilePrimaryButton(onPressed: () {}, child: const Text('go'))),
         );
-        final DecoratedBox plane = tester.widget<DecoratedBox>(
-          find.byKey(const ValueKey<String>('xk-tactile-app-intro')),
-        );
-        final BoxDecoration d = plane.decoration as BoxDecoration;
-        expect(d.color, t.appIntroSurface);
-        expect(
-          (d.border! as Border).top.color,
-          XkTactileAppIntro.borderOf(XkTactileAppSurface.fromTokens(t)),
-        );
-        final RichText title = tester.widget<RichText>(
-          find.descendant(of: find.text('제목'), matching: find.byType(RichText)),
-        );
-        expect(title.text.style!.color, t.onAppIntro);
         final DecoratedBox fill = tester.widget<DecoratedBox>(
           find.byKey(const ValueKey<String>('xk-tactile-primary-fill')),
         );
-        expect((fill.decoration as BoxDecoration).color, t.appIntroPrimaryFill);
+        expect((fill.decoration as BoxDecoration).color, t.primaryBase);
+        final TextStyle style = DefaultTextStyle.of(
+          tester.element(find.text('go')),
+        ).style;
+        expect(style.color, t.primaryText);
       });
     }
-
-    testWidgets('primary button outside the ink plane keeps primaryBase', (
-      WidgetTester tester,
-    ) async {
-      await tester.pumpWidget(
-        app(
-          Brightness.dark,
-          XkTactilePrimaryButton(onPressed: () {}, child: const Text('go')),
-        ),
-      );
-      final DecoratedBox fill = tester.widget<DecoratedBox>(
-        find.byKey(const ValueKey<String>('xk-tactile-primary-fill')),
-      );
-      expect(
-        (fill.decoration as BoxDecoration).color,
-        XkTactileTokens.dark.primaryBase,
-      );
-    });
-
-    testWidgets('ink-plane focus ring uses appIntroFocusRing', (
-      WidgetTester tester,
-    ) async {
-      await tester.pumpWidget(
-        app(
-          Brightness.light,
-          XkTactileAppIntro(
-            child: XkTactilePrimaryButton(
-              onPressed: () {},
-              child: const Text('시작'),
-            ),
-          ),
-        ),
-      );
-      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
-      await tester.pump();
-      final DecoratedBox ring = tester.widget<DecoratedBox>(
-        find.byKey(const ValueKey<String>('xk-tactile-primary-focus-ring')),
-      );
-      expect(
-        ((ring.decoration as BoxDecoration).border! as Border).top.color,
-        XkTactileTokens.light.appIntroFocusRing,
-      );
-    });
-
-    testWidgets('XkTactileBrandWord is one Aquamarine hue on the ink plane', (
-      WidgetTester tester,
-    ) async {
-      await tester.pumpWidget(
-        app(
-          Brightness.light,
-          const XkTactileAppIntro(child: XkTactileBrandWord('골든셋')),
-        ),
-      );
-      expect(find.text('골든셋'), findsOneWidget);
-      final ShaderMask mask = tester.widget<ShaderMask>(
-        find.byKey(const ValueKey<String>('xk-tactile-brand-word')),
-      );
-      expect(mask.blendMode, BlendMode.srcIn);
-      final Text text = tester.widget<Text>(find.text('골든셋'));
-      expect(text.style!.color, XkTactileTokens.light.onAppIntroAccent);
-    });
-
-    testWidgets('XkTactileBrandWord outside the ink plane fails in debug', (
-      WidgetTester tester,
-    ) async {
-      await tester.pumpWidget(
-        app(Brightness.light, const XkTactileBrandWord('골든셋')),
-      );
-      expect(tester.takeException(), isA<FlutterError>());
-    });
 
     testWidgets('XkTactileHumanReview paints the review wash and edge', (
       WidgetTester tester,
@@ -547,107 +454,7 @@ void main() {
       );
     });
 
-    double contrastOf(Color fg, Color bg) {
-      final Color top = Color.alphaBlend(fg, bg);
-      final double l1 = top.computeLuminance();
-      final double l2 = bg.computeLuminance();
-      final double hi = l1 > l2 ? l1 : l2;
-      final double lo = l1 > l2 ? l2 : l1;
-      return (hi + 0.05) / (lo + 0.05);
-    }
-
-    for (final Brightness b in Brightness.values) {
-      for (final XkTactileButtonKind kind in XkTactileButtonKind.values) {
-        testWidgets('XkTactileButton ${kind.name} stays readable inside the '
-            'ink plane ($b)', (WidgetTester tester) async {
-          final XkTactileTokens t = XkTactileTokens.of(b);
-          final Color plane = t.appIntroSurface;
-          await tester.pumpWidget(
-            app(
-              b,
-              XkTactileAppIntro(
-                child: XkTactileButton(
-                  kind: kind,
-                  onPressed: () {},
-                  child: const Text('도움말'),
-                ),
-              ),
-            ),
-          );
-          final Finder fillFinder = find.byKey(
-            ValueKey<String>('xk-tactile-${kind.name}-fill'),
-          );
-          Color labelNow() => DefaultTextStyle.of(
-            tester.element(find.text('도움말')),
-          ).style.color!;
-          Color faceNow() => Color.alphaBlend(
-            (tester.widget<DecoratedBox>(fillFinder).decoration
-                    as BoxDecoration)
-                .color!,
-            plane,
-          );
-
-          // Rest.
-          expect(
-            contrastOf(labelNow(), faceNow()),
-            greaterThanOrEqualTo(4.5),
-            reason: 'rest',
-          );
-          switch (kind) {
-            case XkTactileButtonKind.text:
-              expect(labelNow(), t.appIntroLink);
-              expect(
-                DefaultTextStyle.of(
-                  tester.element(find.text('도움말')),
-                ).style.decoration,
-                TextDecoration.underline,
-              );
-            case XkTactileButtonKind.quiet:
-              expect(labelNow(), t.onAppIntro);
-              final BoxDecoration d =
-                  tester.widget<DecoratedBox>(fillFinder).decoration
-                      as BoxDecoration;
-              expect(
-                (d.border! as Border).top.color,
-                XkTactileAppIntro.borderOf(
-                  XkTactileAppSurface.of(tester.element(fillFinder)),
-                ),
-              );
-            case XkTactileButtonKind.secondary:
-              expect(labelNow(), t.ink);
-          }
-
-          // Hover.
-          final TestGesture mouse = await tester.createGesture(
-            kind: ui.PointerDeviceKind.mouse,
-          );
-          await mouse.addPointer(location: Offset.zero);
-          addTearDown(mouse.removePointer);
-          await mouse.moveTo(tester.getCenter(fillFinder));
-          await tester.pumpAndSettle();
-          expect(
-            contrastOf(labelNow(), faceNow()),
-            greaterThanOrEqualTo(4.5),
-            reason: 'hover',
-          );
-          await mouse.moveTo(Offset.zero);
-          await tester.pumpAndSettle();
-
-          // Keyboard focus.
-          await tester.sendKeyEvent(LogicalKeyboardKey.tab);
-          await tester.pump();
-          final DecoratedBox ring = tester.widget<DecoratedBox>(
-            find.byKey(const ValueKey<String>('xk-tactile-button-focus-ring')),
-          );
-          final Color ringColor =
-              ((ring.decoration as BoxDecoration).border! as Border).top.color;
-          expect(ringColor, t.appIntroFocusRing);
-          expect(contrastOf(ringColor, plane), greaterThanOrEqualTo(3));
-        });
-      }
-    }
-
-    testWidgets('XkTactileButton outside the ink plane keeps its faces', (
+    testWidgets('XkTactileButton text and quiet keep their light faces', (
       WidgetTester tester,
     ) async {
       await tester.pumpWidget(
@@ -687,35 +494,101 @@ void main() {
       expect((quiet.border! as Border).top.color, XkTactileTokens.light.line);
     });
 
-    testWidgets('Material buttons invert inside the ink plane', (
+    for (final XkTactileEmphasisDarkKind kind in XkTactileEmphasisDarkKind.values) {
+      testWidgets('XkTactileEmphasisDark ${kind.name}: dark token block inside, '
+          'light page outside', (WidgetTester tester) async {
+        final XkTactileTokens dark = XkTactileTokens.dark;
+        late Brightness inner;
+        await tester.pumpWidget(
+          app(
+            Brightness.light,
+            SizedBox(
+              width: 600,
+              child: XkTactileEmphasisDark(
+                kind: kind,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    const Text('band'),
+                    const Icon(Icons.circle, size: 12),
+                    Builder(
+                      builder: (BuildContext context) {
+                        inner = Theme.of(context).brightness;
+                        return XkTactilePrimaryButton(
+                          onPressed: () {},
+                          child: const Text('go'),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+        expect(inner, Brightness.dark);
+        final DecoratedBox box = tester.widget<DecoratedBox>(
+          find.byKey(ValueKey<String>('xk-tactile-emphasis-dark-${kind.name}')),
+        );
+        expect((box.decoration as BoxDecoration).color, dark.canvas);
+        expect(dark.canvas, const Color(0xFF111111));
+        expect(
+          DefaultTextStyle.of(tester.element(find.text('band'))).style.color,
+          dark.ink,
+        );
+        expect(
+          IconTheme.of(tester.element(find.byIcon(Icons.circle))).color,
+          dark.ink,
+        );
+        // The primary button inverts through the dark block: light face, ink label.
+        final DecoratedBox fill = tester.widget<DecoratedBox>(
+          find.byKey(const ValueKey<String>('xk-tactile-primary-fill')),
+        );
+        expect((fill.decoration as BoxDecoration).color, dark.primaryBase);
+        expect(dark.primaryBase, const Color(0xFFF5F5F5));
+        expect(
+          DefaultTextStyle.of(tester.element(find.text('go'))).style.color,
+          dark.primaryText,
+        );
+        // Outside the band the page is still the light theme.
+        expect(
+          Theme.of(tester.element(find.byType(Scaffold))).brightness,
+          Brightness.light,
+        );
+        // Padding follows the CSS: canvas focus 24; footer clamp(32,5vw,56) / clamp(24,5vw,56).
+        final Padding pad = tester.widget<Padding>(
+          find
+              .descendant(
+                of: find.byType(XkTactileEmphasisDark),
+                matching: find.byType(Padding),
+              )
+              .first,
+        );
+        expect(
+          pad.padding,
+          kind == XkTactileEmphasisDarkKind.canvasFocus
+              ? const EdgeInsets.all(24)
+              : const EdgeInsets.symmetric(vertical: 32, horizontal: 30),
+        );
+      });
+    }
+
+    testWidgets('no ink first-impression plane API remains', (
       WidgetTester tester,
     ) async {
+      // The retired widgets must not come back under the old names; a plain
+      // panel head is XkTactileSurface like any other card.
       await tester.pumpWidget(
         app(
           Brightness.light,
-          XkTactileAppIntro(
-            child: FilledButton(onPressed: () {}, child: const Text('go')),
-          ),
+          const XkTactileSurface(child: Text('head')),
         ),
       );
-      final ThemeData inner = Theme.of(
-        tester.element(find.byType(FilledButton)),
-      );
+      expect(find.byType(XkTactileSurface), findsOneWidget);
       expect(
-        inner.filledButtonTheme.style!.backgroundColor!.resolve(
-          <WidgetState>{},
-        ),
-        XkTactileTokens.light.appIntroPrimaryFill,
-      );
-      expect(
-        inner.filledButtonTheme.style!.backgroundColor!.resolve(<WidgetState>{
-          WidgetState.hovered,
-        }),
-        XkTactileTokens.light.appIntroPrimaryHover,
-      );
-      expect(
-        inner.textTheme.titleLarge!.color,
-        XkTactileTokens.light.onAppIntro,
+        XkTactileAppSurface.light.toString(),
+        isNot(contains('appIntro')),
       );
     });
   });

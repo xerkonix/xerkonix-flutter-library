@@ -2,13 +2,17 @@
 """Generate / check Material-slot → TACTILE CSS-var mapping.
 
 Owner: xerkonix-flutter-library
-Source: DS tactile/tokens.css + tactile/app-surface.css (product screen 6-B).
+Source: DS tactile/tokens.css + tactile/app-surface.css (product screen v4).
 Do not hand-edit product _tokens.dart.
 
 App-surface roles (DS flutter/APP_SURFACE_MAPPING.md) are resolved here:
 `var()` and `color-mix(in srgb, …)` are computed with the CSS Color 5
 premultiplied rule and rounded to 8-bit, so the Dart constants in
-tactile_tokens.dart are checked against one computed value per theme.
+tactile_tokens.dart are checked against one computed value per scope.
+"light" is the page scope (`.app-surface`); "dark" is the emphasis-dark band
+scope (`.app-surface[data-theme="dark"]` on top of the `[data-theme="dark"]`
+token block) — two places only. The ink first-impression plane, its brand
+word gradient and the completion light were retired on 2026-10-01.
 
   python3 tools/build_tactile_theme_roles.py --write [--tokens PATH]
   python3 tools/build_tactile_theme_roles.py --check [--tokens PATH]
@@ -90,26 +94,6 @@ APP_SOURCE = "tactile/app-surface.css"
 # DS flutter/APP_SURFACE_MAPPING.md role → (app-surface.css selector, property).
 # Role names come from that table. Do not add names that are not there.
 APP_ROLES: dict[str, tuple[str, str]] = {
-    "appIntroSurface": (".app-surface .app-intro", "background"),
-    "onAppIntro": (".app-surface .app-intro", "color"),
-    "appIntroBody": (".app-surface .app-intro .app-intro-copy", "color"),
-    "appIntroPrimaryFill": (".app-surface .app-intro .btn-primary", "background"),
-    "appIntroPrimaryText": (".app-surface .app-intro .btn-primary", "color"),
-    "appIntroPrimaryHover": (
-        ".app-surface .app-intro .btn-primary:hover:not(:disabled)",
-        "background",
-    ),
-    "appIntroFocusRing": (
-        ".app-surface .app-intro .btn-primary:focus-visible",
-        "outline",
-    ),
-    "onAppIntroAccent": (".app-surface .app-intro .app-intro-label", "color"),
-    "appIntroLink": (".app-surface .app-intro .app-ink-link", "color"),
-    "appIntroBrandWord": (
-        ".app-surface .app-intro .app-brand-gradient",
-        "background",
-    ),
-    "completionSheen": (".app-surface .app-completion::after", "background"),
     "currentLabel": (".app-surface .app-current", "color"),
     "keyMetric": (".app-surface .app-metric-value", "color"),
     "humanReviewLabel": (".app-surface .app-review-label", "color"),
@@ -118,11 +102,18 @@ APP_ROLES: dict[str, tuple[str, str]] = {
     "humanReviewBorder": (".app-surface .app-review", "border"),
 }
 
-# Values the mapping table names as a formula inside a role row, not as a
-# role of its own. Checked by the Dart test, not stored as a token field.
-APP_DERIVED: dict[str, tuple[str, str]] = {
-    "appIntroSurface.border": (".app-surface .app-intro", "border"),
+# Emphasis-dark bands (`emphasisDarkCanvas` / `emphasisDarkFooter`): the
+# subtree reads these `[data-theme="dark"]` token-block values, nothing else.
+EMPHASIS_DARK_VARS: dict[str, str] = {
+    "--canvas": "canvas",
+    "--ink": "ink",
+    "--accent": "accent",
+    "--muted": "muted",
 }
+EMPHASIS_DARK_SELECTORS = (
+    ".app-surface .app-canvas-focus",
+    ".app-surface .app-footer",
+)
 
 
 def find_tokens(explicit: str | None) -> Path | None:
@@ -323,15 +314,7 @@ def _prop_colors(value: str, scope: dict[str, str]) -> list[str]:
     return [_hex(_rgba(value, scope))]
 
 
-def _app_value(role: str, colors: list[str]) -> str | list[str]:
-    if role == "appIntroBrandWord":
-        return colors
-    if role == "completionSheen":
-        # Sweep is transparent → tint → transparent; the role is the tint.
-        tints = [c for c in colors if not c.startswith("0x00")]
-        if len(tints) != 1:
-            raise SystemExit(f"completionSheen expects one tint stop: {colors}")
-        return tints[0]
+def _app_value(role: str, colors: list[str]) -> str:
     if len(colors) != 1:
         raise SystemExit(f"{role} expects one colour: {colors}")
     return colors[0]
@@ -355,9 +338,16 @@ def _cubic(raw: str) -> list[float]:
 def extract_app(app_css: str, light_tokens: dict[str, str], dark_tokens: dict[str, str]) -> dict:
     rules = _rules(app_css)
     base = rules.get(".app-surface")
-    dark_over = rules.get('[data-theme="dark"] .app-surface')
+    dark_over = rules.get('.app-surface[data-theme="dark"]')
     if base is None or dark_over is None:
-        raise SystemExit("app-surface.css: .app-surface / dark blocks missing")
+        raise SystemExit('app-surface.css: .app-surface / .app-surface[data-theme="dark"] blocks missing')
+    for sel in EMPHASIS_DARK_SELECTORS:
+        decls = rules.get(sel) or {}
+        if decls.get("background") != "var(--canvas)" or decls.get("color") != "var(--ink)":
+            raise SystemExit(f"app-surface.css: {sel} must paint var(--canvas) / var(--ink)")
+    for retired in (".app-surface .app-intro", ".app-surface .app-completion::after"):
+        if retired in rules:
+            raise SystemExit(f"app-surface.css: {retired} is retired (2026-10-01)")
     scopes = {
         "light": {**light_tokens, **base},
         "dark": {**dark_tokens, **base, **dark_over},
@@ -375,31 +365,29 @@ def extract_app(app_css: str, light_tokens: dict[str, str], dark_tokens: dict[st
             out[role] = entry
         return out
 
-    sheen = next(
-        (b for sel, b in rules.items() if sel == ".app-surface .app-completion::after"),
-        None,
-    )
-    anim = (sheen or {}).get("animation", "")
-    sheen_ms = re.search(r"([0-9.]+m?s)", anim)
-    if not sheen_ms or " 1 " not in f" {anim} ":
-        raise SystemExit("app-surface.css: .app-completion::after must run once")
+    emphasis = {}
+    for var, field in EMPHASIS_DARK_VARS.items():
+        if var not in dark_tokens:
+            raise SystemExit(f"tokens.css [data-theme=dark] block has no {var}")
+        value = _parse_color(dark_tokens[var])
+        if value is None:
+            raise SystemExit(f"tokens.css {var} is not a plain colour: {dark_tokens[var]}")
+        emphasis[field] = {"css": var, "dark": value}
+
     return {
         "source": APP_SOURCE,
         "roles": resolve(APP_ROLES),
-        "derived": resolve(APP_DERIVED),
+        "emphasisDark": {
+            "css": '[data-theme="dark"] (.app-canvas-focus / .app-footer)',
+            "kinds": ["canvasFocus", "footer"],
+            "tokens": emphasis,
+        },
         "motion": {
             "routeFade": {
                 "css": "--app-view-duration / --app-view-ease",
                 "durationMs": _duration_ms(base["--app-view-duration"]),
                 "cubic": _cubic(base["--app-view-ease"]),
                 "reducedMotionMs": 0,
-            },
-            "completionSheen": {
-                "css": ".app-completion::after animation",
-                "durationMs": _duration_ms(sheen_ms.group(1)),
-                "curve": "ease-in-out" if "ease-in-out" in anim else anim,
-                "iterations": 1,
-                "reducedMotion": "none",
             },
         },
     }
@@ -454,14 +442,6 @@ def dart_hexes(kind: str) -> dict[str, str]:
     return out
 
 
-def dart_color_lists(kind: str) -> dict[str, list[str]]:
-    out: dict[str, list[str]] = {}
-    pattern = r"(\w+):\s*<Color>\[([^\]]*)\]"
-    for m in re.finditer(pattern, _dart_block(kind)):
-        out[m.group(1)] = [_norm(h) for h in re.findall(r"Color\((0x[0-9A-Fa-f]+)\)", m.group(2))]
-    return out
-
-
 def dart_motion() -> dict[str, str]:
     """`static const` motion values in tactile_app_surface.dart."""
     text = DART_APP.read_text(encoding="utf-8") if DART_APP.is_file() else ""
@@ -479,25 +459,32 @@ def check_app(payload: dict) -> int:
     errors = 0
     for kind in ("light", "dark"):
         hexes = dart_hexes(kind)
-        lists = dart_color_lists(kind)
         for role, spec in app["roles"].items():
             want = spec[kind]
-            got = lists.get(role) if isinstance(want, list) else hexes.get(role)
+            got = hexes.get(role)
             if got is None:
                 print(f"FAIL {kind} app role {role} missing in tactile_tokens.dart", file=sys.stderr)
                 errors += 1
-            elif (got != [_norm(w) for w in want]) if isinstance(want, list) else got != _norm(want):
+            elif got != _norm(want):
                 print(f"FAIL {kind} app role {role}: dart {got} ≠ css {want}", file=sys.stderr)
                 errors += 1
+    dark = dart_hexes("dark")
+    for field, spec in app["emphasisDark"]["tokens"].items():
+        got = dark.get(field)
+        if got is None or got != _norm(spec["dark"]):
+            print(f"FAIL emphasis-dark {field}: dart {got} ≠ css {spec['dark']}", file=sys.stderr)
+            errors += 1
     motion = dart_motion()
     fade = app["motion"]["routeFade"]
     want_d = f"milliseconds: {fade['durationMs']}"
     want_c = ", ".join(_dart_num(x) for x in fade["cubic"])
-    sheen = f"milliseconds: {app['motion']['completionSheen']['durationMs']}"
-    for name, want in (("routeFadeDuration", want_d), ("routeFadeCurve", want_c), ("completionSheenDuration", sheen)):
+    for name, want in (("routeFadeDuration", want_d), ("routeFadeCurve", want_c)):
         if motion.get(name) != want:
             print(f"FAIL motion {name}: dart {motion.get(name)!r} ≠ css {want!r}", file=sys.stderr)
             errors += 1
+    if "completionSheenDuration" in motion:
+        print("FAIL motion completionSheenDuration is retired — remove it from tactile_app_surface.dart", file=sys.stderr)
+        errors += 1
     return errors
 
 

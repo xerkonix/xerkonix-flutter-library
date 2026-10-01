@@ -1,355 +1,105 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 
 import 'tactile_theme.dart';
 import 'tactile_tokens.dart';
 
-// Product screen version 6-B widgets (DS `tactile/app-surface.css`,
+// Product screen v4 widgets (DS `tactile/app-surface.css`,
 // `flutter/APP_SURFACE_MAPPING.md`). Colours come from
-// [XkTactileAppSurface]; motion constants are checked by
-// `tools/build_tactile_theme_roles.py` against the CSS.
+// [XkTactileAppSurface] and [XkTactileTokens]; motion constants are checked
+// by `tools/build_tactile_theme_roles.py` against the CSS.
+//
+// The ink first-impression plane (`.app-intro`), the brand-word gradient and
+// the completion light were retired on 2026-10-01 (DS §5 · §11). The only
+// dark faces are the two emphasis-dark bands below.
 
-/// CSS `linear-gradient(100deg, …)`: 90° (to the right) plus 10° clockwise.
-const GradientRotation _cssGradient100deg = GradientRotation(
-  10 * math.pi / 180,
-);
+/// Which of the two emphasis-dark bands (DS §5) a [XkTactileEmphasisDark] is.
+enum XkTactileEmphasisDarkKind {
+  /// The coSchema canvas focus panel — web `.app-canvas-focus[data-theme=dark]`
+  /// (`emphasisDarkCanvas`). Only the working surface is dark; the panels,
+  /// navigation and results around it stay light.
+  canvasFocus,
 
-class _XkAppIntroScope extends InheritedWidget {
-  const _XkAppIntroScope({required this.roles, required super.child});
-
-  final XkTactileAppSurface roles;
-
-  @override
-  bool updateShouldNotify(_XkAppIntroScope oldWidget) =>
-      roles != oldWidget.roles;
+  /// The page footer — web `.app-footer[data-theme=dark]`
+  /// (`emphasisDarkFooter`).
+  footer,
 }
 
-/// Ink first-impression plane — web `.app-intro`.
+/// Emphasis-dark band — web `[data-theme="dark"]` scoped to one element.
 ///
-/// Use only at **login, an empty state, a dashboard head, or payment
-/// completion**, once per screen. Ordinary forms, tables, cards, and
-/// checkout steps stay on [XkTactileSurface] (`.panel`).
+/// **Two places only**: the coSchema canvas focus panel and the footer
+/// (`emphasisDarkCanvas` / `emphasisDarkFooter` in the mapping table). No
+/// other dark face: not a hero, a card, a login or a dashboard head.
 ///
-/// Inside the plane, text and icons read [XkTactileAppSurface.onAppIntro],
-/// [XkTactilePrimaryButton] and Material filled/elevated buttons invert to
-/// `appIntroPrimary*`, Material text buttons and [XkTactileButton] `text`
-/// use `appIntroLink`, [XkTactileButton] `quiet` uses `onAppIntro` with the
-/// [borderOf] edge, [XkTactileButton] `secondary` keeps its light face, and
-/// keyboard focus on all of them uses `appIntroFocusRing`. Use `appIntroBody` for secondary copy and
-/// `onAppIntroAccent` for a short label. [XkTactileBrandWord] may add one
-/// brand word.
-///
-/// No scroll hook, no loop. [completion] adds the single Aquamarine light
-/// pass (`.app-completion`, 1400 ms ease-in-out, once) when the completed
-/// state first appears; with `MediaQuery.disableAnimations` it is not
-/// painted.
-class XkTactileAppIntro extends StatelessWidget {
-  const XkTactileAppIntro({
+/// Inside, the subtree sees [XkTactileTheme.themeData] for
+/// [Brightness.dark], so every TACTILE widget reads the
+/// `[data-theme="dark"]` token block of `tactile/tokens.css` — `--canvas`
+/// `#111111`, `--ink` `#F5F5F5`, `--accent` `#65C9D9`, `--muted` `#AEB4BD` —
+/// and the primary button inverts to the dark monochrome pair. Nothing is
+/// painted that the token block does not name.
+class XkTactileEmphasisDark extends StatelessWidget {
+  const XkTactileEmphasisDark({
     super.key,
+    required this.kind,
     required this.child,
     this.padding,
-    this.completion = false,
   });
 
+  final XkTactileEmphasisDarkKind kind;
   final Widget child;
 
-  /// Defaults to CSS `clamp(24px, 5vw, 56px)` on every side.
+  /// Defaults: canvas focus 24 on every side (CSS `padding: 24px`); footer
+  /// CSS `clamp(32px, 5vw, 56px) clamp(24px, 5vw, 56px)` resolved from the
+  /// layout width.
   final EdgeInsetsGeometry? padding;
 
-  /// Payment completion or another completed first impression. The light
-  /// plays once when this becomes true.
-  final bool completion;
-
-  /// `.app-completion::after` animation length.
-  static const Duration completionSheenDuration = Duration(milliseconds: 1400);
-
-  /// `--radius-md`.
-  static const double radius = 16;
-
-  /// Ink-plane roles when [context] is inside an [XkTactileAppIntro].
-  static XkTactileAppSurface? maybeOf(BuildContext context) {
-    return context
-        .dependOnInheritedWidgetOfExactType<_XkAppIntroScope>()
-        ?.roles;
-  }
-
-  /// `.app-intro` border — `color-mix(in srgb, --app-ink-text 14%, --app-ink)`.
-  /// A formula inside the `appIntroSurface` row, not a separate role.
-  static Color borderOf(XkTactileAppSurface roles) {
-    return Color.lerp(roles.appIntroSurface, roles.onAppIntro, 0.14)!;
-  }
-
-  static ThemeData _inkTheme(ThemeData base, XkTactileAppSurface s) {
-    const Color clear = XkTactileTokens.clear;
-    final ButtonStyle primary = ButtonStyle(
-      backgroundColor: WidgetStateProperty.resolveWith((Set<WidgetState> st) {
-        if (st.contains(WidgetState.disabled)) {
-          return s.appIntroPrimaryFill.withValues(
-            alpha: XkTactileTokens.disabledOpacity,
-          );
-        }
-        return st.contains(WidgetState.hovered)
-            ? s.appIntroPrimaryHover
-            : s.appIntroPrimaryFill;
-      }),
-      foregroundColor: WidgetStatePropertyAll<Color>(s.appIntroPrimaryText),
-      overlayColor: const WidgetStatePropertyAll<Color>(clear),
-      elevation: const WidgetStatePropertyAll<double>(0),
-      shadowColor: const WidgetStatePropertyAll<Color>(clear),
-      side: WidgetStateProperty.resolveWith((Set<WidgetState> st) {
-        if (st.contains(WidgetState.focused)) {
-          return BorderSide(
-            color: s.appIntroFocusRing,
-            width: XkTactileTokens.focusOutlineWidth,
-          );
-        }
-        return BorderSide(
-          color: st.contains(WidgetState.hovered)
-              ? s.appIntroPrimaryHover
-              : s.appIntroPrimaryFill,
+  static EdgeInsets _defaultPadding(XkTactileEmphasisDarkKind kind, double w) {
+    switch (kind) {
+      case XkTactileEmphasisDarkKind.canvasFocus:
+        return const EdgeInsets.all(24);
+      case XkTactileEmphasisDarkKind.footer:
+        final double vw = w * 0.05;
+        return EdgeInsets.symmetric(
+          vertical: vw.clamp(32.0, 56.0),
+          horizontal: vw.clamp(24.0, 56.0),
         );
-      }),
-      minimumSize: const WidgetStatePropertyAll<Size>(
-        Size(48, XkTactileTokens.controlHeight),
-      ),
-      shape: WidgetStatePropertyAll<OutlinedBorder>(
-        RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(XkTactileTokens.controlRadius),
-        ),
-      ),
-    );
-    return base.copyWith(
-      colorScheme: base.colorScheme.copyWith(
-        primary: s.appIntroPrimaryFill,
-        onPrimary: s.appIntroPrimaryText,
-        secondary: s.onAppIntro,
-        onSecondary: s.appIntroSurface,
-        surface: s.appIntroSurface,
-        onSurface: s.onAppIntro,
-        outline: borderOf(s),
-      ),
-      textTheme: base.textTheme.apply(
-        bodyColor: s.onAppIntro,
-        displayColor: s.onAppIntro,
-      ),
-      iconTheme: base.iconTheme.copyWith(color: s.onAppIntro),
-      focusColor: clear,
-      filledButtonTheme: FilledButtonThemeData(style: primary),
-      elevatedButtonTheme: ElevatedButtonThemeData(style: primary),
-      textButtonTheme: TextButtonThemeData(
-        style: ButtonStyle(
-          foregroundColor: WidgetStatePropertyAll<Color>(s.appIntroLink),
-          overlayColor: const WidgetStatePropertyAll<Color>(clear),
-          side: WidgetStateProperty.resolveWith(
-            (Set<WidgetState> st) => st.contains(WidgetState.focused)
-                ? BorderSide(
-                    color: s.appIntroFocusRing,
-                    width: XkTactileTokens.focusOutlineWidth,
-                  )
-                : BorderSide.none,
-          ),
-          textStyle: WidgetStatePropertyAll<TextStyle>(
-            (base.textTheme.labelLarge ?? const TextStyle()).copyWith(
-              decoration: TextDecoration.underline,
-              decorationColor: s.appIntroLink,
-            ),
-          ),
-          minimumSize: const WidgetStatePropertyAll<Size>(
-            Size(44, XkTactileTokens.controlHeight),
-          ),
-        ),
-      ),
-      iconButtonTheme: IconButtonThemeData(
-        style: ButtonStyle(
-          foregroundColor: WidgetStatePropertyAll<Color>(s.onAppIntro),
-          overlayColor: const WidgetStatePropertyAll<Color>(clear),
-        ),
-      ),
-    );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final XkTactileAppSurface s = XkTactileAppSurface.of(context);
-    final ThemeData base = Theme.of(context);
-    final double width = MediaQuery.maybeSizeOf(context)?.width ?? 480;
-    final EdgeInsetsGeometry pad =
-        padding ?? EdgeInsets.all((width * 0.05).clamp(24.0, 56.0));
-    final BorderRadius r = BorderRadius.circular(radius);
-
-    Widget body = Padding(
-      padding: pad,
-      child: DefaultTextStyle.merge(
-        style: TextStyle(color: s.onAppIntro),
-        child: IconTheme.merge(
-          data: IconThemeData(color: s.onAppIntro),
-          child: child,
-        ),
-      ),
-    );
-    // Always a Stack, so flipping [completion] only adds or removes the
-    // light layer and never remounts [child] (its state survives).
-    // passthrough keeps the parent constraints on [child].
-    body = Stack(
-      fit: StackFit.passthrough,
-      children: <Widget>[
-        body,
-        if (completion)
-          Positioned.fill(
-            child: IgnorePointer(
-              child: _CompletionSheen(tint: s.completionSheen),
-            ),
-          ),
-      ],
-    );
-
-    return _XkAppIntroScope(
-      roles: s,
-      child: Theme(
-        data: _inkTheme(base, s),
-        child: DecoratedBox(
-          key: const ValueKey<String>('xk-tactile-app-intro'),
-          decoration: BoxDecoration(
-            color: s.appIntroSurface,
-            borderRadius: r,
-            border: Border.all(color: borderOf(s)),
-          ),
-          child: ClipRRect(borderRadius: r, child: body),
-        ),
-      ),
-    );
-  }
-}
-
-/// One pass of the Aquamarine completion light. Matches the CSS keyframes:
-/// translateX −100% → 100% over the whole run, opacity 0 → 1 (25%) → 1
-/// (70%) → 0, ease-in-out per keyframe segment, `fill-mode: both`.
-class _CompletionSheen extends StatefulWidget {
-  const _CompletionSheen({required this.tint});
-
-  final Color tint;
-
-  @override
-  State<_CompletionSheen> createState() => _CompletionSheenState();
-}
-
-class _CompletionSheenState extends State<_CompletionSheen>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _c = AnimationController(
-    vsync: this,
-    duration: XkTactileAppIntro.completionSheenDuration,
-  );
-  bool _started = false;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final bool reduce = MediaQuery.maybeDisableAnimationsOf(context) ?? false;
-    if (reduce) {
-      // Reduced motion: no light at all, stopped at the end state.
-      _c.value = 1;
-      _started = true;
-    } else if (!_started) {
-      _started = true;
-      _c.forward(from: 0);
-    }
-  }
-
-  @override
-  void dispose() {
-    _c.dispose();
-    super.dispose();
-  }
-
-  static double _opacity(double v) {
-    const Curve ease = Curves.easeInOut;
-    if (v < 0.25) {
-      return ease.transform(v / 0.25);
-    }
-    if (v < 0.70) {
-      return 1;
-    }
-    return 1 - ease.transform((v - 0.70) / 0.30);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _c,
-      builder: (BuildContext context, Widget? _) {
-        final double v = _c.value;
-        if (v <= 0 || v >= 1) {
-          return const SizedBox.expand();
-        }
-        final double x = -1 + 2 * Curves.easeInOut.transform(v);
-        return FractionalTranslation(
-          key: const ValueKey<String>('xk-tactile-completion-sheen'),
-          translation: Offset(x, 0),
-          child: Opacity(
-            opacity: _opacity(v).clamp(0.0, 1.0),
+    final XkTactileTokens t = XkTactileTokens.dark;
+    final ThemeData dark = XkTactileTheme.themeData(Brightness.dark);
+    final BorderRadius radius = kind == XkTactileEmphasisDarkKind.canvasFocus
+        ? BorderRadius.circular(XkTactileTokens.panelRadius)
+        : BorderRadius.zero;
+    return Theme(
+      data: dark,
+      child: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints box) {
+          final double w = box.hasBoundedWidth
+              ? box.maxWidth
+              : MediaQuery.sizeOf(context).width;
+          return ClipRRect(
+            borderRadius: radius,
             child: DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  transform: _cssGradient100deg,
-                  // Transparent stops keep the tint hue (CSS interpolates
-                  // premultiplied; transparent black would grey the edge).
-                  colors: <Color>[
-                    widget.tint.withValues(alpha: 0),
-                    widget.tint,
-                    widget.tint.withValues(alpha: 0),
-                  ],
-                  stops: const <double>[0.28, 0.50, 0.72],
+              key: ValueKey<String>('xk-tactile-emphasis-dark-${kind.name}'),
+              decoration: BoxDecoration(color: t.canvas, borderRadius: radius),
+              child: Material(
+                type: MaterialType.transparency,
+                child: DefaultTextStyle.merge(
+                  style: TextStyle(color: t.ink),
+                  child: IconTheme.merge(
+                    data: IconThemeData(color: t.ink),
+                    child: Padding(
+                      padding: padding ?? _defaultPadding(kind, w),
+                      child: child,
+                    ),
+                  ),
                 ),
               ),
-              child: const SizedBox.expand(),
             ),
-          ),
-        );
-      },
-    );
-  }
-}
-
-/// Single-hue brand word — web `.app-brand-gradient`.
-///
-/// **One place per screen**, a short word inside [XkTactileAppIntro] only.
-/// One Aquamarine hue (`appIntroBrandWord` stops); no multi-colour or
-/// background gradient. Both stops keep AA contrast on the ink plane.
-/// Outside the ink plane this asserts in debug builds.
-class XkTactileBrandWord extends StatelessWidget {
-  const XkTactileBrandWord(this.text, {super.key, this.style});
-
-  final String text;
-  final TextStyle? style;
-
-  @override
-  Widget build(BuildContext context) {
-    final XkTactileAppSurface? roles = XkTactileAppIntro.maybeOf(context);
-    assert(() {
-      if (roles == null) {
-        throw FlutterError.fromParts(<DiagnosticsNode>[
-          ErrorSummary('XkTactileBrandWord must sit inside XkTactileAppIntro.'),
-          ErrorDescription(
-            'The brand word gradient is for the ink first-impression plane '
-            'only (login, empty state, dashboard head, payment completion).',
-          ),
-        ]);
-      }
-      return true;
-    }());
-    final XkTactileAppSurface s = roles ?? XkTactileAppSurface.of(context);
-    return ShaderMask(
-      key: const ValueKey<String>('xk-tactile-brand-word'),
-      blendMode: BlendMode.srcIn,
-      shaderCallback: (Rect bounds) => LinearGradient(
-        transform: _cssGradient100deg,
-        colors: s.appIntroBrandWord,
-      ).createShader(bounds),
-      child: Text(
-        text,
-        // Solid fallback is the first stop (CSS `color: --app-ink-accent`).
-        style: (style ?? const TextStyle()).copyWith(color: s.onAppIntroAccent),
+          );
+        },
       ),
     );
   }

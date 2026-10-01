@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'tactile_app_surface.dart';
@@ -51,7 +50,7 @@ class XkTactileChrome {
   Color get selectedBorder => tokens.selectedBorder;
 }
 
-/// Product screen version 6-B roles for Flutter apps.
+/// Product screen v4 roles for Flutter apps.
 ///
 /// Names follow DS `flutter/APP_SURFACE_MAPPING.md`; values are the
 /// [XkTactileTokens] constants checked by
@@ -59,9 +58,6 @@ class XkTactileChrome {
 /// [XkTactileTheme.themeData] installs this extension. Read it with
 /// [XkTactileAppSurface.of].
 ///
-/// - Ink plane roles (`appIntro*`, `onAppIntro*`) belong to
-///   [XkTactileAppIntro] — login, an empty state, a dashboard head, or
-///   payment completion only.
 /// - [currentLabel], [keyMetric], [humanReviewLabel], [selectedCue] are the
 ///   dark-derived Aquamarine reading text (AA on canvas and surface). Say the
 ///   state in words too. Do not use light raw `accent` for reading text or a
@@ -69,20 +65,13 @@ class XkTactileChrome {
 /// - Selected controls stay neutral: `selectedFill` / `selectedBorder` /
 ///   `ink` on [XkTactileTokens]. [selectedCue] is the small text beside the
 ///   selected label, never the control fill.
+/// - There is no ink first-impression plane (retired 2026-10-01). Login, an
+///   empty state, a dashboard head and payment completion sit on
+///   [XkTactileSurface] like every other panel. The only dark faces are the
+///   two emphasis-dark bands, [XkTactileEmphasisDark].
 @immutable
 class XkTactileAppSurface extends ThemeExtension<XkTactileAppSurface> {
   const XkTactileAppSurface({
-    required this.appIntroSurface,
-    required this.onAppIntro,
-    required this.appIntroBody,
-    required this.appIntroPrimaryFill,
-    required this.appIntroPrimaryText,
-    required this.appIntroPrimaryHover,
-    required this.appIntroFocusRing,
-    required this.onAppIntroAccent,
-    required this.appIntroLink,
-    required this.appIntroBrandWord,
-    required this.completionSheen,
     required this.currentLabel,
     required this.keyMetric,
     required this.humanReviewLabel,
@@ -93,17 +82,6 @@ class XkTactileAppSurface extends ThemeExtension<XkTactileAppSurface> {
 
   factory XkTactileAppSurface.fromTokens(XkTactileTokens t) {
     return XkTactileAppSurface(
-      appIntroSurface: t.appIntroSurface,
-      onAppIntro: t.onAppIntro,
-      appIntroBody: t.appIntroBody,
-      appIntroPrimaryFill: t.appIntroPrimaryFill,
-      appIntroPrimaryText: t.appIntroPrimaryText,
-      appIntroPrimaryHover: t.appIntroPrimaryHover,
-      appIntroFocusRing: t.appIntroFocusRing,
-      onAppIntroAccent: t.onAppIntroAccent,
-      appIntroLink: t.appIntroLink,
-      appIntroBrandWord: t.appIntroBrandWord,
-      completionSheen: t.completionSheen,
       currentLabel: t.currentLabel,
       keyMetric: t.keyMetric,
       humanReviewLabel: t.humanReviewLabel,
@@ -128,19 +106,6 @@ class XkTactileAppSurface extends ThemeExtension<XkTactileAppSurface> {
         (theme.brightness == Brightness.dark ? dark : light);
   }
 
-  final Color appIntroSurface;
-  final Color onAppIntro;
-  final Color appIntroBody;
-  final Color appIntroPrimaryFill;
-  final Color appIntroPrimaryText;
-  final Color appIntroPrimaryHover;
-  final Color appIntroFocusRing;
-  final Color onAppIntroAccent;
-  final Color appIntroLink;
-
-  /// Two stops of one Aquamarine hue. One place per screen, on the ink plane.
-  final List<Color> appIntroBrandWord;
-  final Color completionSheen;
   final Color currentLabel;
   final Color keyMetric;
   final Color humanReviewLabel;
@@ -149,63 +114,30 @@ class XkTactileAppSurface extends ThemeExtension<XkTactileAppSurface> {
   final Color humanReviewBorder;
 
   // Value equality keeps ThemeData equal across rebuilds, so AnimatedTheme
-  // does not start a lerp and the ink-plane scope does not notify.
+  // does not start a lerp.
   @override
   bool operator ==(Object other) {
     return other is XkTactileAppSurface &&
-        other.appIntroSurface == appIntroSurface &&
-        other.onAppIntro == onAppIntro &&
-        other.appIntroBody == appIntroBody &&
-        other.appIntroPrimaryFill == appIntroPrimaryFill &&
-        other.appIntroPrimaryText == appIntroPrimaryText &&
-        other.appIntroPrimaryHover == appIntroPrimaryHover &&
-        other.appIntroFocusRing == appIntroFocusRing &&
-        other.onAppIntroAccent == onAppIntroAccent &&
-        other.appIntroLink == appIntroLink &&
-        other.completionSheen == completionSheen &&
         other.currentLabel == currentLabel &&
         other.keyMetric == keyMetric &&
         other.humanReviewLabel == humanReviewLabel &&
         other.selectedCue == selectedCue &&
         other.humanReviewSurface == humanReviewSurface &&
-        other.humanReviewBorder == humanReviewBorder &&
-        listEquals(other.appIntroBrandWord, appIntroBrandWord);
+        other.humanReviewBorder == humanReviewBorder;
   }
 
   @override
   int get hashCode => Object.hash(
-    appIntroSurface,
-    onAppIntro,
-    appIntroBody,
-    appIntroPrimaryFill,
-    appIntroPrimaryText,
-    appIntroPrimaryHover,
-    appIntroFocusRing,
-    onAppIntroAccent,
-    appIntroLink,
-    completionSheen,
     currentLabel,
     keyMetric,
     humanReviewLabel,
     selectedCue,
     humanReviewSurface,
     humanReviewBorder,
-    Object.hashAll(appIntroBrandWord),
   );
 
   @override
   XkTactileAppSurface copyWith({
-    Color? appIntroSurface,
-    Color? onAppIntro,
-    Color? appIntroBody,
-    Color? appIntroPrimaryFill,
-    Color? appIntroPrimaryText,
-    Color? appIntroPrimaryHover,
-    Color? appIntroFocusRing,
-    Color? onAppIntroAccent,
-    Color? appIntroLink,
-    List<Color>? appIntroBrandWord,
-    Color? completionSheen,
     Color? currentLabel,
     Color? keyMetric,
     Color? humanReviewLabel,
@@ -214,17 +146,6 @@ class XkTactileAppSurface extends ThemeExtension<XkTactileAppSurface> {
     Color? humanReviewBorder,
   }) {
     return XkTactileAppSurface(
-      appIntroSurface: appIntroSurface ?? this.appIntroSurface,
-      onAppIntro: onAppIntro ?? this.onAppIntro,
-      appIntroBody: appIntroBody ?? this.appIntroBody,
-      appIntroPrimaryFill: appIntroPrimaryFill ?? this.appIntroPrimaryFill,
-      appIntroPrimaryText: appIntroPrimaryText ?? this.appIntroPrimaryText,
-      appIntroPrimaryHover: appIntroPrimaryHover ?? this.appIntroPrimaryHover,
-      appIntroFocusRing: appIntroFocusRing ?? this.appIntroFocusRing,
-      onAppIntroAccent: onAppIntroAccent ?? this.onAppIntroAccent,
-      appIntroLink: appIntroLink ?? this.appIntroLink,
-      appIntroBrandWord: appIntroBrandWord ?? this.appIntroBrandWord,
-      completionSheen: completionSheen ?? this.completionSheen,
       currentLabel: currentLabel ?? this.currentLabel,
       keyMetric: keyMetric ?? this.keyMetric,
       humanReviewLabel: humanReviewLabel ?? this.humanReviewLabel,
@@ -244,29 +165,6 @@ class XkTactileAppSurface extends ThemeExtension<XkTactileAppSurface> {
     }
     Color mix(Color a, Color b) => Color.lerp(a, b, t)!;
     return XkTactileAppSurface(
-      appIntroSurface: mix(appIntroSurface, other.appIntroSurface),
-      onAppIntro: mix(onAppIntro, other.onAppIntro),
-      appIntroBody: mix(appIntroBody, other.appIntroBody),
-      appIntroPrimaryFill: mix(appIntroPrimaryFill, other.appIntroPrimaryFill),
-      appIntroPrimaryText: mix(appIntroPrimaryText, other.appIntroPrimaryText),
-      appIntroPrimaryHover: mix(
-        appIntroPrimaryHover,
-        other.appIntroPrimaryHover,
-      ),
-      appIntroFocusRing: mix(appIntroFocusRing, other.appIntroFocusRing),
-      onAppIntroAccent: mix(onAppIntroAccent, other.onAppIntroAccent),
-      appIntroLink: mix(appIntroLink, other.appIntroLink),
-      appIntroBrandWord: <Color>[
-        for (int i = 0; i < appIntroBrandWord.length; i++)
-          mix(
-            appIntroBrandWord[i],
-            other.appIntroBrandWord[i.clamp(
-              0,
-              other.appIntroBrandWord.length - 1,
-            )],
-          ),
-      ],
-      completionSheen: mix(completionSheen, other.completionSheen),
       currentLabel: mix(currentLabel, other.currentLabel),
       keyMetric: mix(keyMetric, other.keyMetric),
       humanReviewLabel: mix(humanReviewLabel, other.humanReviewLabel),

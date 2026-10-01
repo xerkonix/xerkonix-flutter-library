@@ -14,8 +14,8 @@
     "concierge": {
       "app": "concierge_app"
     },
-    "xerkonix-frontend-boilerplate": {
-      "app": "."
+    "xerkonix-project-boilerplate": {
+      "app": "client-boilerplate/flutter"
     }
   }
 }

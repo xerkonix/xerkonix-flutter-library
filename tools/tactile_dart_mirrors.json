@@ -15,8 +15,14 @@
     "tactile_type.dart"
   ],
   "consumers": {
-    "cotact": ["cosentio_app/lib/src/tactile"],
-    "concierge": ["concierge_app/lib/src/tactile"],
-    "xerkonix-frontend-boilerplate": ["lib/src/tactile"]
+    "cotact": [
+      "cosentio_app/lib/src/tactile"
+    ],
+    "concierge": [
+      "concierge_app/lib/src/tactile"
+    ],
+    "xerkonix-project-boilerplate": [
+      "client-boilerplate/flutter/lib/src/tactile"
+    ]
   }
 }

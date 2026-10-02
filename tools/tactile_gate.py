@@ -77,7 +77,7 @@ LIGHT: dict[str, str] = {
     "--fs-page": "32px", "--fs-page-mobile": "28px",
     "--fs-title": "22px", "--fs-title-mobile": "20px",
     "--fs-body": "17px", "--fs-body-mobile": "16px",
-    "--fs-small": "15px", "--fs-caption": "13px", "--fs-label": "11px",
+    "--fs-small": "15px", "--fs-caption": "13px", "--fs-label": "12px",
     "--leading-body": "1.6", "--leading-heading": "1.2",
     "--content-width": "1160px", "--reading-width": "760px",
     "--section-space": "72px", "--section-space-mobile": "40px",

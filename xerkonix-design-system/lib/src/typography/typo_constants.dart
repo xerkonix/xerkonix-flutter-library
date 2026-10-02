@@ -16,7 +16,7 @@ class XkFontSize {
   static const double bodyMobile = 16;
   static const double small = 15;
   static const double caption = 13;
-  static const double label = 11;
+  static const double label = 12;
 }
 
 class TypoConst {

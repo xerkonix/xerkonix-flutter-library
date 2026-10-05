@@ -51,3 +51,10 @@ app.*.map.json
 .env
 *.tfvars
 .venv/
+
+# 임시 산출물 — 캡처·테스트 결과는 커밋하지 않는다 (2026-10-05 정리)
+__pycache__/
+*.noindex/
+test-results/
+playwright-report/
+**/DESIGN-SYSTEM-MIGRATION/screens/

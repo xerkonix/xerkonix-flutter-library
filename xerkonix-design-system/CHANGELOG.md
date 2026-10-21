@@ -1,3 +1,14 @@
+## 미정 — 카드 재질 · 카드·보조 버튼 경계 3:1 (DS #115)
+
+DS `8cb881f`(2026-10-21) `tactile/tokens.css`·`components.css` 의 카드 재질을 Dart 에 옮긴다. 흰 24% 면 · 검정 10% 테였던 카드와 흰 테 보조 버튼이 캔버스와 1.08~1.64:1 로 바탕에 묻혔다.
+
+- **토큰.** `panelFill` 흰 64%(다크 `rgba(42,47,54,.64)`) · 새 `panelBorder` `#757A82`(다크 `#6B717A`) · 새 `panelShadow` · 새 `glassRing`(`--glass-ring`) · `panelBlur` 20 / `panelBlurMobile` 16(폭 700 이하) · `glassSaturate` 1.5. `secondaryFill` 흰 82%(다크 `rgba(207,211,218,.08)`) · `secondaryBorder` = `panelBorder` · `secondaryShadow` 없음(DS `none`). 카드 안 구분선 `line` 은 그대로.
+- **`XkTactileSurface`.** 정보 면(`.panel`)은 면 + 흐림 20(좁은 화면 16)·채도 150% + 바깥 테 `panelBorder` + 안쪽 1px 흰 링 + `panelShadow`. 유리(`.glass`)도 바깥 테 `panelBorder` 와 같은 링을 쓴다(위쪽 한 변 inset 하이라이트는 뺐다). 그림자는 면 밑이 아니라 바깥에만 그린다 — 반투명 면이 자기 그림자를 비추지 않는다. 플랫폼 고대비(`MediaQuery.highContrast`)에서는 불투명 면 `glassFallback`·흐림 없음, 테·링·깊이는 그대로(Flutter 에는 투명도 감소 신호가 없다). 오버레이 역할의 `shadowFloat` 도 이제 바깥에 보인다(전에는 잘렸다).
+- **버튼.** `XkTactileButton` `quiet`(웹 `.btn-quiet` = `.btn-secondary` 옛 이름)의 테도 `secondaryBorder`.
+- **테마.** `cardTheme` 테 `panelBorder`.
+- **생성기.** `tools/build_tactile_theme_roles.py` 가 `--panel-border`·`--glass-ring`·`--secondary-fill`·`--secondary-hover`·`--secondary-border` 색과 `--panel-shadow`·`--secondary-shadow` 그림자 목록까지 Dart 상수와 대조한다. `tools/tactile_theme_roles.json` 재생성.
+- **시험.** `test/xk_tactile_panel_edge_test.dart` — 카드(정보·유리)·보조·quiet 버튼의 네 변 경계 픽셀과 바로 바깥 1·2px 의 대비가 라이트 캔버스·비칠 층(mist 45%)·다크 캔버스에서 3:1 이상(유리 카드의 mist 위는 기록만). 면 가운데가 자기 그림자로 어두워지지 않는지, 390 폭 흐림 16, 고대비 대체도 본다.
+
 ## 미정 — 글꼴 사본의 출처 메타를 자산 폴더 밖으로
 
 - `tools/sync_tactile_fonts.py`: 소비 앱 사본 폴더 `<app>/assets/fonts/xk_sans_kr/` 에는 ttf 와 `LICENSE.txt` 만 두고, 출처(`tactile_fonts.PROVENANCE.json`, 출처 커밋 포함)는 앱 루트에 쓴다. `SOURCE.txt` 는 복사하지 않는다. `--check` 는 pubspec 이 **파일 두 줄**을 등록했는지(폴더째 등록은 실패), 사본 폴더에 다른 파일이 없는지 본다. 이유: Flutter 는 폴더로 등록한 자산을 전부 공개 웹 빌드에 싣는다 — 리포명·도구 경로가 노출됐다(소비 PR 리뷰 지적).

@@ -63,7 +63,7 @@
     "cardTheme.side": {
       "css": "--panel-border",
       "light": "0xFF757A82",
-      "dark": "0xFF6B717A"
+      "dark": "0xFF787D85"
     },
     "card.ring": {
       "css": "--glass-ring",
@@ -83,7 +83,7 @@
     "button.secondary.border": {
       "css": "--secondary-border",
       "light": "0xFF757A82",
-      "dark": "0xFF6B717A"
+      "dark": "0xFF787D85"
     },
     "dialogTheme.backgroundColor": {
       "css": "--overlay-fill",
@@ -207,6 +207,26 @@
     "--secondary-shadow": {
       "light": [],
       "dark": []
+    },
+    "--glass-float-shadow": {
+      "light": [
+        {
+          "x": 0.0,
+          "y": 28.0,
+          "blur": 56.0,
+          "spread": -20.0,
+          "color": "0x29111111"
+        }
+      ],
+      "dark": [
+        {
+          "x": 0.0,
+          "y": 28.0,
+          "blur": 56.0,
+          "spread": -20.0,
+          "color": "0x80000000"
+        }
+      ]
     }
   },
   "app": {
@@ -245,8 +265,8 @@
       "humanReviewBorder": {
         "css": ".app-surface .app-review { border }",
         "expr": "1px solid var(--app-accent-edge)",
-        "light": "0x7D217D8C",
-        "dark": "0x8D7FCBD9"
+        "light": "0xFF578793",
+        "dark": "0xFF709DA8"
       }
     },
     "emphasisDark": {

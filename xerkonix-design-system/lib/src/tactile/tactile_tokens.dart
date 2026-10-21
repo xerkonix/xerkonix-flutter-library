@@ -18,6 +18,7 @@ class XkTactileTokens {
     required this.panelFill,
     required this.panelBorder,
     required this.panelShadow,
+    required this.glassFloatShadow,
     required this.ink,
     required this.muted,
     required this.ice,
@@ -81,6 +82,10 @@ class XkTactileTokens {
   /// Card depth (`--panel-shadow`). Paint it as an outer shadow only
   /// (`XkOuterShadow`) so the translucent [panelFill] does not show it.
   final List<BoxShadow> panelShadow;
+
+  /// Floating glass depth (`--glass-float-shadow`, `.glass` / `.glass-2`).
+  /// Negative spread keeps the pixel just outside the edge at 3:1.
+  final List<BoxShadow> glassFloatShadow;
   final Color ink;
   final Color muted;
   final Color ice;
@@ -163,6 +168,14 @@ class XkTactileTokens {
         spreadRadius: -16,
       ),
     ],
+    glassFloatShadow: <BoxShadow>[
+      BoxShadow(
+        color: Color(0x29111111),
+        offset: Offset(0, 28),
+        blurRadius: 56,
+        spreadRadius: -20,
+      ),
+    ],
     ink: Color(0xFF111111),
     muted: Color(0xFF636365),
     ice: Color(0xFFE9E9E9),
@@ -218,7 +231,7 @@ class XkTactileTokens {
     humanReviewLabel: Color(0xFF1C5D67),
     selectedCue: Color(0xFF1C5D67),
     humanReviewSurface: Color(0xFFE4F1F4),
-    humanReviewBorder: Color(0x7D217D8C),
+    humanReviewBorder: Color(0xFF578793),
   );
 
   static const XkTactileTokens dark = XkTactileTokens._(
@@ -226,7 +239,7 @@ class XkTactileTokens {
     surface: Color(0xFF191B1F),
     surfaceRaised: Color(0xFF22262C),
     panelFill: Color(0xA32A2F36),
-    panelBorder: Color(0xFF6B717A),
+    panelBorder: Color(0xFF787D85),
     panelShadow: <BoxShadow>[
       BoxShadow(
         color: Color(0x57000000),
@@ -234,6 +247,14 @@ class XkTactileTokens {
         blurRadius: 32,
       ),
       BoxShadow(color: Color(0x38000000), offset: Offset(0, 2), blurRadius: 6),
+    ],
+    glassFloatShadow: <BoxShadow>[
+      BoxShadow(
+        color: Color(0x80000000),
+        offset: Offset(0, 28),
+        blurRadius: 56,
+        spreadRadius: -20,
+      ),
     ],
     ink: Color(0xFFF5F5F5),
     muted: Color(0xFFAEB4BD),
@@ -276,7 +297,7 @@ class XkTactileTokens {
     ],
     secondaryFill: Color(0x14CFD3DA),
     secondaryHover: Color(0x1ACFD3DA),
-    secondaryBorder: Color(0xFF6B717A),
+    secondaryBorder: Color(0xFF787D85),
     secondaryShadow: <BoxShadow>[],
     controlHover: Color(0x14CFD3DA),
     faint: Color(0xFF9199A5),
@@ -290,7 +311,7 @@ class XkTactileTokens {
     humanReviewLabel: Color(0xFF65C9D9),
     selectedCue: Color(0xFF65C9D9),
     humanReviewSurface: Color(0xFF233237),
-    humanReviewBorder: Color(0x8D7FCBD9),
+    humanReviewBorder: Color(0xFF709DA8),
   );
 
   static XkTactileTokens of(Brightness brightness) {

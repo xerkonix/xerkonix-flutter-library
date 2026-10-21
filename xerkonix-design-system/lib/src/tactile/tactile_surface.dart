@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -13,7 +14,7 @@ enum XkTactileSurfaceRole {
   information,
 
   /// Floating glass — `.glass`: `--glass-fill`, blur 20, the same outer
-  /// edge `--panel-border` and inner ring, `--shadow-float`.
+  /// edge `--panel-border` and inner ring, `--glass-float-shadow`.
   glass,
 
   /// Dialog / toast — `.dialog` / `.toast` overlay fill.
@@ -75,7 +76,7 @@ class XkTactileSurface extends StatelessWidget {
         fill = opaque ? t.glassFallback : t.glassFill;
         border = t.panelBorder;
         ring = t.glassRing;
-        shadows = t.shadowFloat;
+        shadows = t.glassFloatShadow;
         blur = opaque ? 0 : t.glassBlur;
       case XkTactileSurfaceRole.overlay:
         fill = t.overlayFill;
@@ -87,33 +88,31 @@ class XkTactileSurface extends StatelessWidget {
 
     final Color paintedFill = this.fill ?? fill;
     final Color paintedBorder = borderColor ?? border;
-    final BorderRadiusGeometry radiusGeom = radius ??
+    final BorderRadiusGeometry radiusGeom =
+        radius ??
         BorderRadius.circular(switch (role) {
           XkTactileSurfaceRole.information => XkTactileTokens.panelRadius,
           XkTactileSurfaceRole.glass => XkTactileTokens.surfaceRadius,
           XkTactileSurfaceRole.overlay => XkTactileTokens.overlayRadius,
-        },);
+        });
     final BorderRadius resolved = radiusGeom.resolve(
       Directionality.maybeOf(context) ?? TextDirection.ltr,
     );
 
-    Widget content =
-        padding == null ? child : Padding(padding: padding!, child: child);
+    Widget content = padding == null
+        ? child
+        : Padding(padding: padding!, child: child);
     // ListTile / InkWell ink must hit a Material between this fill and the
     // control. Without it, a panel DecoratedBox hides splashes and asserts.
     content = Material(type: MaterialType.transparency, child: content);
-    if (ring != null) {
-      content = CustomPaint(
-        painter: _XkTactileRingPainter(borderRadius: resolved, color: ring),
-        child: content,
-      );
-    }
 
+    // Face: fill and the inner ring, inside the blur clip.
     Widget body = DecoratedBox(
+      key: const ValueKey<String>('xk-tactile-surface-face'),
       decoration: BoxDecoration(
         color: paintedFill,
         borderRadius: radiusGeom,
-        border: Border.all(color: paintedBorder),
+        border: XkTactileEdge(color: XkTactileTokens.clear, ring: ring),
       ),
       child: content,
     );
@@ -129,6 +128,18 @@ class XkTactileSurface extends StatelessWidget {
               child: body,
             )
           : body,
+    );
+
+    // Outer edge on top, outside the anti-aliased clip: at a fractional
+    // position the clip would otherwise thin the edge pixel.
+    body = DecoratedBox(
+      key: const ValueKey<String>('xk-tactile-surface-edge'),
+      position: DecorationPosition.foreground,
+      decoration: BoxDecoration(
+        borderRadius: radiusGeom,
+        border: XkTactileEdge(color: paintedBorder),
+      ),
+      child: body,
     );
 
     // Outer depth only. A BoxDecoration shadow is painted under the whole
@@ -183,36 +194,6 @@ ColorFilter _saturate(double s) {
   ]);
 }
 
-/// `inset 0 0 0 1px <ring>` — one even ring just inside the 1px edge,
-/// under the content.
-class _XkTactileRingPainter extends CustomPainter {
-  const _XkTactileRingPainter({
-    required this.borderRadius,
-    required this.color,
-  });
-
-  final BorderRadius borderRadius;
-  final Color color;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final RRect ring = borderRadius.toRRect(Offset.zero & size).deflate(1.5);
-    canvas.drawRRect(
-      ring,
-      Paint()
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 1
-        ..color = color,
-    );
-  }
-
-  @override
-  bool shouldRepaint(_XkTactileRingPainter oldDelegate) {
-    return oldDelegate.borderRadius != borderRadius ||
-        oldDelegate.color != color;
-  }
-}
-
 /// CSS outer `box-shadow`: paints [shadows], then removes the box itself
 /// (`dstOut`) so the face shows the ground, not its own shadow.
 class _XkTactileOuterShadowPainter extends CustomPainter {
@@ -253,4 +234,135 @@ class _XkTactileOuterShadowPainter extends CustomPainter {
     return oldDelegate.borderRadius != borderRadius ||
         oldDelegate.shadows != shadows;
   }
+}
+
+/// Card and control edge: one 1px side colour, and an optional even inner
+/// ring (`inset 0 0 0 1px <ring>`) painted under it.
+///
+/// A plain [Border] is anti-aliased. At a fractional position on a 1x screen
+/// it splits the 1px line over two device pixels at about half strength each,
+/// and the edge falls to 1.5–2.6:1 against the ground. Browsers snap borders
+/// to device pixels; this does the same for the straight sides by painting
+/// them without anti-aliasing, so each side is always whole device pixels of
+/// [color] (one at 1x, two at 2x). Rounded corners stay anti-aliased.
+///
+/// It is still a [Border]: `top.color` etc. read as before.
+class XkTactileEdge extends Border {
+  XkTactileEdge({required Color color, this.ring})
+    : super(
+        top: BorderSide(color: color),
+        right: BorderSide(color: color),
+        bottom: BorderSide(color: color),
+        left: BorderSide(color: color),
+      );
+
+  /// Inner ring colour, or null for none.
+  final Color? ring;
+
+  @override
+  void paint(
+    Canvas canvas,
+    Rect rect, {
+    TextDirection? textDirection,
+    BoxShape shape = BoxShape.rectangle,
+    BorderRadius? borderRadius,
+  }) {
+    if (shape != BoxShape.rectangle) {
+      super.paint(
+        canvas,
+        rect,
+        textDirection: textDirection,
+        shape: shape,
+        borderRadius: borderRadius,
+      );
+      return;
+    }
+    final double w = top.width;
+    final RRect outer = (borderRadius ?? BorderRadius.zero)
+        .toRRect(rect)
+        .scaleRadii();
+    final Color? ringColor = ring;
+    if (ringColor != null && ringColor.a > 0) {
+      canvas.drawRRect(
+        outer.deflate(w + 0.5),
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 1
+          ..color = ringColor,
+      );
+    }
+    final Color c = top.color;
+    if (c.a == 0 || w <= 0 || top.style == BorderStyle.none) {
+      return;
+    }
+    final double l = rect.left;
+    final double t = rect.top;
+    final double r = rect.right;
+    final double b = rect.bottom;
+    final Paint side = Paint()
+      ..color = c
+      ..isAntiAlias = false;
+    canvas
+      ..drawRect(
+        Rect.fromLTRB(l + outer.tlRadiusX, t, r - outer.trRadiusX, t + w),
+        side,
+      )
+      ..drawRect(
+        Rect.fromLTRB(l + outer.blRadiusX, b - w, r - outer.brRadiusX, b),
+        side,
+      )
+      ..drawRect(
+        Rect.fromLTRB(
+          l,
+          t + math.max(outer.tlRadiusY, w),
+          l + w,
+          b - math.max(outer.blRadiusY, w),
+        ),
+        side,
+      )
+      ..drawRect(
+        Rect.fromLTRB(
+          r - w,
+          t + math.max(outer.trRadiusY, w),
+          r,
+          b - math.max(outer.brRadiusY, w),
+        ),
+        side,
+      );
+    final Path corners = Path();
+    void corner(double x, double y, double cw, double ch) {
+      if (cw > 0 && ch > 0) {
+        corners.addRect(Rect.fromLTWH(x, y, cw, ch));
+      }
+    }
+
+    corner(l, t, outer.tlRadiusX, outer.tlRadiusY);
+    corner(r - outer.trRadiusX, t, outer.trRadiusX, outer.trRadiusY);
+    corner(l, b - outer.blRadiusY, outer.blRadiusX, outer.blRadiusY);
+    corner(
+      r - outer.brRadiusX,
+      b - outer.brRadiusY,
+      outer.brRadiusX,
+      outer.brRadiusY,
+    );
+    canvas
+      ..save()
+      ..clipPath(corners)
+      ..drawRRect(
+        outer.deflate(w / 2),
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = w
+          ..color = c,
+      )
+      ..restore();
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is XkTactileEdge && other.ring == ring && super == other;
+  }
+
+  @override
+  int get hashCode => Object.hash(super.hashCode, ring);
 }

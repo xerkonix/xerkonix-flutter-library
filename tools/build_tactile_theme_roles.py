@@ -103,6 +103,7 @@ DART_FIELDS = {
 SHADOW_FIELDS = {
     "--panel-shadow": "panelShadow",
     "--secondary-shadow": "secondaryShadow",
+    "--glass-float-shadow": "glassFloatShadow",
 }
 
 APP_SOURCE = "tactile/app-surface.css"

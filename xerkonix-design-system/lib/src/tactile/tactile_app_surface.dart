@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'tactile_surface.dart';
 import 'tactile_theme.dart';
 import 'tactile_tokens.dart';
 
@@ -128,7 +129,7 @@ class XkTactileHumanReview extends StatelessWidget {
       decoration: BoxDecoration(
         color: s.humanReviewSurface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: s.humanReviewBorder),
+        border: XkTactileEdge(color: s.humanReviewBorder),
       ),
       child: Padding(padding: padding, child: child),
     );

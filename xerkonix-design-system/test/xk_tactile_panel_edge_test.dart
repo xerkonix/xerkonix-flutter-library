@@ -1,9 +1,13 @@
-// DS `.panel` 카드 재질(2026-10-21)과 보조 버튼 경계를 실제 픽셀로 잰다.
+// DS `.panel` 카드 재질(DS #115·#116)과 보조 버튼 경계를 실제 픽셀로 잰다.
 //
 // 기준: 카드·보조 버튼 바깥 경계는 바로 바깥 바탕과 3:1 이상이다
-// (DS DESIGN-SYSTEM.md §2·§7). 네 변 가운데에서 경계 픽셀과 바로 바깥
-// 1px·2px 픽셀의 WCAG 대비를 잰다. 그림자를 켠 채(debugDisableShadows=false)
-// 그리므로 아래 변은 그림자가 깔린 바깥과 비교한다.
+// (DS DESIGN-SYSTEM.md §2·§7). 그림자를 켠 채(debugDisableShadows=false)
+// 그리고, 네 변 가운데에서 장치 픽셀 단위로 잰다:
+//   경계 띠 = 1 논리 px 테가 걸친 장치 픽셀들.
+//   띠의 픽셀 q 마다 바깥쪽 바로 옆 두 픽셀(q-1, q-2, 중심이 테 밖)과의
+//   WCAG 대비 중 낮은 값을 구하고, 띠에서 가장 좋은 값을 그 변의 값으로 한다.
+// 위치·크기가 소수인 배치(DPR 1·2)를 함께 잰다 — 1배 화면에서 테가 두
+// 픽셀로 나뉘어 옅어지지 않는지 본다(XkTactileEdge).
 //
 // EDGE_REPORT=<파일> 이면 잰 숫자를 그 파일에 덧붙인다.
 // ARTIFACT_DIR=<폴더> 이면 잰 장면 PNG 를 남긴다.
@@ -21,20 +25,20 @@ import 'package:xerkonix_design_system/xerkonix_design_system.dart';
 const Key _stage = ValueKey<String>('edge-stage');
 const Key _target = ValueKey<String>('edge-target');
 
-double _lum(int r, int g, int b) {
+double _lum(List<int> c) {
   double ch(int v) {
-    final double c = v / 255;
-    return c <= 0.04045
-        ? c / 12.92
-        : math.pow((c + 0.055) / 1.055, 2.4).toDouble();
+    final double x = v / 255;
+    return x <= 0.04045
+        ? x / 12.92
+        : math.pow((x + 0.055) / 1.055, 2.4).toDouble();
   }
 
-  return 0.2126 * ch(r) + 0.7152 * ch(g) + 0.0722 * ch(b);
+  return 0.2126 * ch(c[0]) + 0.7152 * ch(c[1]) + 0.0722 * ch(c[2]);
 }
 
 double _contrast(List<int> a, List<int> b) {
-  final double la = _lum(a[0], a[1], a[2]);
-  final double lb = _lum(b[0], b[1], b[2]);
+  final double la = _lum(a);
+  final double lb = _lum(b);
   return (math.max(la, lb) + 0.05) / (math.min(la, lb) + 0.05);
 }
 
@@ -46,30 +50,48 @@ List<int> _px(Uint8List rgba, int w, int x, int y) {
 String _hex(List<int> c) =>
     '#${c.map((int v) => v.toRadixString(16).padLeft(2, '0')).join().toUpperCase()}';
 
-/// Light ground with the DS `.glass-stage` mist light laid flat on canvas.
-Color _mistStage() => Color.alphaBlend(
-  const Color(0x73CFD3DA), // --backdrop-tint-mist rgba(207,211,218,.45)
-  XkTactileTokens.light.canvas,
-);
+/// A DS `.glass-stage` mist light laid flat on the canvas (its strongest
+/// point): `--backdrop-tint-mist` light rgba(207,211,218,.45) /
+/// dark rgba(56,61,69,.55).
+Color _mist(Brightness b) => b == Brightness.light
+    ? Color.alphaBlend(const Color(0x73CFD3DA), XkTactileTokens.light.canvas)
+    : Color.alphaBlend(const Color(0x8C383D45), XkTactileTokens.dark.canvas);
 
-class _Edge {
-  _Edge(this.side, this.edge, this.out1, this.out2);
-  final String side;
+class _Side {
+  _Side(this.name, this.value, this.edge, this.out);
+  final String name;
+  final double value;
   final List<int> edge;
-  final List<int> out1;
-  final List<int> out2;
-  double get worst => math.min(_contrast(edge, out1), _contrast(edge, out2));
+  final List<int> out;
 }
 
-Future<List<_Edge>> _measure(
+class _Placement {
+  const _Placement(this.name, this.dpr, this.dx, this.dy);
+  final String name;
+  final double dpr;
+  final double dx;
+  final double dy;
+}
+
+class _Subject {
+  const _Subject(this.name, this.viewWidth, this.build);
+  final String name;
+  final double viewWidth;
+  final Widget Function() build;
+}
+
+Future<List<_Side>> _measure(
   WidgetTester tester, {
   required Brightness brightness,
   required Color ground,
-  required Widget child,
+  required _Subject subject,
+  required _Placement at,
   required String artifact,
 }) async {
-  tester.view.physicalSize = const Size(480, 320);
-  tester.view.devicePixelRatio = 1;
+  final Size view = Size(subject.viewWidth, 280);
+  final double d = at.dpr;
+  tester.view.physicalSize = view * d;
+  tester.view.devicePixelRatio = d;
   addTearDown(tester.view.resetPhysicalSize);
   addTearDown(tester.view.resetDevicePixelRatio);
   final bool previous = debugDisableShadows;
@@ -84,14 +106,13 @@ Future<List<_Edge>> _measure(
             key: _stage,
             child: ColoredBox(
               color: ground,
-              child: SizedBox(
-                width: 480,
-                height: 320,
+              child: SizedBox.fromSize(
+                size: view,
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(40, 40, 40, 80),
-                    child: KeyedSubtree(key: _target, child: child),
+                    padding: EdgeInsets.only(left: at.dx, top: at.dy),
+                    child: KeyedSubtree(key: _target, child: subject.build()),
                   ),
                 ),
               ),
@@ -104,7 +125,9 @@ Future<List<_Edge>> _measure(
     final RenderRepaintBoundary boundary = tester.renderObject(
       find.byKey(_stage),
     );
-    final ui.Image image = (await tester.runAsync(() => boundary.toImage()))!;
+    final ui.Image image = (await tester.runAsync(
+      () => boundary.toImage(pixelRatio: d),
+    ))!;
     final Uint8List rgba = (await tester.runAsync<ByteData?>(
       () => image.toByteData(format: ui.ImageByteFormat.rawRgba),
     ))!.buffer.asUint8List();
@@ -122,36 +145,76 @@ Future<List<_Edge>> _measure(
     image.dispose();
     final Offset origin = tester.getTopLeft(find.byKey(_stage));
     final Rect r = tester.getRect(find.byKey(_target)).shift(-origin);
-    final int left = r.left.round();
-    final int top = r.top.round();
-    final int right = r.right.round() - 1;
-    final int bottom = r.bottom.round() - 1;
-    final int cx = ((left + right) / 2).round();
-    final int cy = ((top + bottom) / 2).round();
-    return <_Edge>[
-      _Edge(
+    final double l = r.left * d;
+    final double t = r.top * d;
+    final double rt = r.right * d;
+    final double b = r.bottom * d;
+    final int cx = ((l + rt) / 2).floor();
+    final int cy = ((t + b) / 2).floor();
+
+    // Band pixel index along one axis, outward step, and whether a pixel's
+    // centre lies outside the 1 logical px border.
+    _Side side(
+      String name,
+      int from,
+      int to,
+      int step,
+      bool Function(int) outside,
+      List<int> Function(int) at,
+    ) {
+      double best = 0;
+      List<int> bestEdge = at(from);
+      List<int> bestOut = at(from - step);
+      for (int q = from; q <= to; q++) {
+        if (!outside(q - step) || !outside(q - 2 * step)) {
+          continue;
+        }
+        final double c = math.min(
+          _contrast(at(q), at(q - step)),
+          _contrast(at(q), at(q - 2 * step)),
+        );
+        if (c > best) {
+          best = c;
+          bestEdge = at(q);
+          bestOut = at(q - step);
+        }
+      }
+      return _Side(name, best, bestEdge, bestOut);
+    }
+
+    return <_Side>[
+      side(
         'top',
-        _px(rgba, w, cx, top),
-        _px(rgba, w, cx, top - 1),
-        _px(rgba, w, cx, top - 2),
+        t.floor(),
+        (t + d).ceil() - 1,
+        1,
+        (int y) => y + 0.5 <= t,
+        (int y) => _px(rgba, w, cx, y),
       ),
-      _Edge(
-        'right',
-        _px(rgba, w, right, cy),
-        _px(rgba, w, right + 1, cy),
-        _px(rgba, w, right + 2, cy),
-      ),
-      _Edge(
-        'bottom',
-        _px(rgba, w, cx, bottom),
-        _px(rgba, w, cx, bottom + 1),
-        _px(rgba, w, cx, bottom + 2),
-      ),
-      _Edge(
+      side(
         'left',
-        _px(rgba, w, left, cy),
-        _px(rgba, w, left - 1, cy),
-        _px(rgba, w, left - 2, cy),
+        l.floor(),
+        (l + d).ceil() - 1,
+        1,
+        (int x) => x + 0.5 <= l,
+        (int x) => _px(rgba, w, x, cy),
+      ),
+      // bottom / right: walk with negative step so q - step is outward.
+      side(
+        'bottom',
+        -(b.ceil() - 1),
+        -(b - d).floor(),
+        1,
+        (int ny) => -ny + 0.5 >= b,
+        (int ny) => _px(rgba, w, cx, -ny),
+      ),
+      side(
+        'right',
+        -(rt.ceil() - 1),
+        -(rt - d).floor(),
+        1,
+        (int nx) => -nx + 0.5 >= rt,
+        (int nx) => _px(rgba, w, -nx, cy),
       ),
     ];
   } finally {
@@ -159,11 +222,11 @@ Future<List<_Edge>> _measure(
   }
 }
 
-void _report(String label, List<_Edge> edges) {
-  final double worst = edges.map((_Edge e) => e.worst).reduce(math.min);
+void _report(String label, List<_Side> sides) {
+  final double worst = sides.map((_Side e) => e.value).reduce(math.min);
   final String line =
       '$label  min ${worst.toStringAsFixed(2)}:1  '
-      '${edges.map((_Edge e) => '${e.side} ${_hex(e.edge)}/${_hex(e.out1)} ${e.worst.toStringAsFixed(2)}').join(' · ')}';
+      '${sides.map((_Side e) => '${e.name} ${_hex(e.edge)}/${_hex(e.out)} ${e.value.toStringAsFixed(2)}').join(' · ')}';
   // ignore: avoid_print
   print('EDGE $line');
   final String? path = Platform.environment['EDGE_REPORT'];
@@ -173,71 +236,104 @@ void _report(String label, List<_Edge> edges) {
 }
 
 void main() {
-  final Map<String, Widget> subjects = <String, Widget>{
-    'card(information)': const SizedBox(
-      width: 240,
-      height: 120,
-      child: XkTactileSurface(child: SizedBox.expand()),
-    ),
-    'card(glass)': const SizedBox(
-      width: 240,
-      height: 120,
-      child: XkTactileSurface(
-        role: XkTactileSurfaceRole.glass,
-        child: SizedBox.expand(),
+  final List<_Subject> subjects = <_Subject>[
+    _Subject(
+      'card(information)',
+      480,
+      () => const SizedBox(
+        width: 240.4,
+        height: 120.6,
+        child: XkTactileSurface(child: SizedBox.expand()),
       ),
     ),
-    'secondary button': Builder(
-      builder: (BuildContext context) =>
-          XkTactileButton(onPressed: () {}, child: const Text('보조')),
+    _Subject(
+      'card(glass)',
+      480,
+      () => const SizedBox(
+        width: 240.4,
+        height: 120.6,
+        child: XkTactileSurface(
+          role: XkTactileSurfaceRole.glass,
+          child: SizedBox.expand(),
+        ),
+      ),
     ),
-    'quiet button': Builder(
-      builder: (BuildContext context) => XkTactileButton(
+    // Mobile: a 390 wide view, card across the width (blur 16 path).
+    _Subject(
+      'card(information) 390',
+      390,
+      () => const SizedBox(
+        width: 357.4,
+        height: 120.6,
+        child: XkTactileSurface(child: SizedBox.expand()),
+      ),
+    ),
+    _Subject(
+      'secondary button',
+      480,
+      () => XkTactileButton(onPressed: () {}, child: const Text('보조')),
+    ),
+    _Subject(
+      'quiet button',
+      480,
+      () => XkTactileButton(
         kind: XkTactileButtonKind.quiet,
         onPressed: () {},
         child: const Text('보조'),
       ),
     ),
-  };
-  final List<(String, Brightness, Color)> grounds =
-      <(String, Brightness, Color)>[
-        ('light canvas', Brightness.light, XkTactileTokens.light.canvas),
-        ('light mist stage', Brightness.light, _mistStage()),
-        ('dark canvas', Brightness.dark, XkTactileTokens.dark.canvas),
-      ];
+    _Subject(
+      'human review',
+      480,
+      () => const SizedBox(
+        width: 240.4,
+        child: XkTactileHumanReview(child: Text('확인 필요')),
+      ),
+    ),
+  ];
+  const List<_Placement> placements = <_Placement>[
+    _Placement('dpr1 int', 1, 40, 40),
+    _Placement('dpr1 frac.3/.7', 1, 40.3, 40.7),
+    _Placement('dpr1 frac.5', 1, 40.5, 40.5),
+    _Placement('dpr2 int', 2, 40, 40),
+    _Placement('dpr2 frac.25/.75', 2, 40.25, 40.75),
+  ];
+  final List<(String, Brightness)> grounds = <(String, Brightness)>[
+    ('light canvas', Brightness.light),
+    ('light mist', Brightness.light),
+    ('dark canvas', Brightness.dark),
+    ('dark mist', Brightness.dark),
+  ];
 
-  for (final (String groundName, Brightness brightness, Color ground)
-      in grounds) {
-    for (final MapEntry<String, Widget> subject in subjects.entries) {
-      testWidgets('${subject.key} edge is 3:1 or more on $groundName', (
-        WidgetTester tester,
-      ) async {
-        final String artifact =
-            'edge-${subject.key.replaceAll(RegExp(r'[^a-z]+'), '-')}-${groundName.replaceAll(' ', '-')}';
-        final List<_Edge> edges = await _measure(
-          tester,
-          brightness: brightness,
-          ground: ground,
-          child: subject.value,
-          artifact: artifact,
-        );
-        _report('${subject.key} · $groundName', edges);
-        // `.glass` keeps DS `--shadow-float`; on the flat 45% mist light its
-        // bottom side reads about 2.9:1. DS EDGE does not hold `.glass` to
-        // 3:1 either (it checks `.panel` … `.glass-2`). Reported, not gated.
-        if (subject.key == 'card(glass)' && groundName == 'light mist stage') {
-          return;
-        }
-        for (final _Edge e in edges) {
-          expect(
-            e.worst,
-            greaterThanOrEqualTo(3.0),
-            reason:
-                '${subject.key} $groundName ${e.side}: edge ${_hex(e.edge)} '
-                'vs outside ${_hex(e.out1)} / ${_hex(e.out2)}',
+  for (final (String groundName, Brightness brightness) in grounds) {
+    final Color ground = groundName.endsWith('mist')
+        ? _mist(brightness)
+        : XkTactileTokens.of(brightness).canvas;
+    for (final _Subject subject in subjects) {
+      for (final _Placement at in placements) {
+        final String label = '${subject.name} · $groundName · ${at.name}';
+        testWidgets('$label: edge 3:1 or more', (WidgetTester tester) async {
+          final String artifact = 'edge-${subject.name}-$groundName-${at.name}'
+              .replaceAll(RegExp(r'[^A-Za-z0-9]+'), '-');
+          final List<_Side> sides = await _measure(
+            tester,
+            brightness: brightness,
+            ground: ground,
+            subject: subject,
+            at: at,
+            artifact: artifact,
           );
-        }
-      });
+          _report(label, sides);
+          for (final _Side e in sides) {
+            expect(
+              e.value,
+              greaterThanOrEqualTo(3.0),
+              reason:
+                  '$label ${e.name}: edge ${_hex(e.edge)} vs outside ${_hex(e.out)}',
+            );
+          }
+        });
+      }
     }
   }
 
@@ -332,18 +428,21 @@ void main() {
     final BoxDecoration face =
         tester
                 .widget<DecoratedBox>(
-                  find
-                      .descendant(
-                        of: find.byType(XkTactileSurface),
-                        matching: find.byType(DecoratedBox),
-                      )
-                      .first,
+                  find.byKey(const ValueKey<String>('xk-tactile-surface-face')),
                 )
                 .decoration
             as BoxDecoration;
     expect(face.color, XkTactileTokens.light.panelFill);
+    final BoxDecoration edge =
+        tester
+                .widget<DecoratedBox>(
+                  find.byKey(const ValueKey<String>('xk-tactile-surface-edge')),
+                )
+                .decoration
+            as BoxDecoration;
+    expect(edge.border, isA<XkTactileEdge>());
     expect(
-      (face.border! as Border).top.color,
+      (edge.border! as Border).top.color,
       XkTactileTokens.light.panelBorder,
     );
     expect(
@@ -375,18 +474,21 @@ void main() {
     final BoxDecoration face =
         tester
                 .widget<DecoratedBox>(
-                  find
-                      .descendant(
-                        of: find.byType(XkTactileSurface),
-                        matching: find.byType(DecoratedBox),
-                      )
-                      .first,
+                  find.byKey(const ValueKey<String>('xk-tactile-surface-face')),
                 )
                 .decoration
             as BoxDecoration;
     expect(face.color, XkTactileTokens.dark.glassFallback);
+    final BoxDecoration edge =
+        tester
+                .widget<DecoratedBox>(
+                  find.byKey(const ValueKey<String>('xk-tactile-surface-edge')),
+                )
+                .decoration
+            as BoxDecoration;
+    expect(edge.border, isA<XkTactileEdge>());
     expect(
-      (face.border! as Border).top.color,
+      (edge.border! as Border).top.color,
       XkTactileTokens.dark.panelBorder,
     );
   });

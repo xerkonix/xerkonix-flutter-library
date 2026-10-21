@@ -47,6 +47,11 @@ ROLES: dict[str, str] = {
     "colorScheme.inverseSurface": "--overlay-fill",
     "appBarTheme.backgroundColor": "--header-fill",
     "cardTheme.color": "--panel-fill",
+    "cardTheme.side": "--panel-border",
+    "card.ring": "--glass-ring",
+    "button.secondary.fill": "--secondary-fill",
+    "button.secondary.hover": "--secondary-hover",
+    "button.secondary.border": "--secondary-border",
     "dialogTheme.backgroundColor": "--overlay-fill",
     "popupMenuTheme.color": "--overlay-fill",
     "bottomSheetTheme.backgroundColor": "--overlay-fill",
@@ -77,6 +82,11 @@ DART_FIELDS = {
     "--ice": "ice",
     "--accent": "accent",
     "--panel-fill": "panelFill",
+    "--panel-border": "panelBorder",
+    "--glass-ring": "glassRing",
+    "--secondary-fill": "secondaryFill",
+    "--secondary-hover": "secondaryHover",
+    "--secondary-border": "secondaryBorder",
     "--overlay-fill": "overlayFill",
     "--header-fill": "headerFill",
     "--primary-base": "primaryBase",
@@ -87,6 +97,13 @@ DART_FIELDS = {
     "--selected-fill": "selectedFill",
     "--selected-border": "selectedBorder",
     "--selected-text": "ink",
+}
+
+# CSS box-shadow list → Dart `List<BoxShadow>` field. Outer shadows only.
+SHADOW_FIELDS = {
+    "--panel-shadow": "panelShadow",
+    "--secondary-shadow": "secondaryShadow",
+    "--glass-float-shadow": "glassFloatShadow",
 }
 
 APP_SOURCE = "tactile/app-surface.css"
@@ -398,6 +415,44 @@ def find_app_css(tokens: Path) -> Path | None:
     return path if path.is_file() else None
 
 
+def _px(raw: str) -> float:
+    m = re.fullmatch(r"(-?[0-9.]+)(px)?", raw.strip())
+    if not m:
+        raise SystemExit(f"bad shadow length {raw}")
+    return float(m.group(1))
+
+
+def _parse_shadow(raw: str) -> list[dict] | None:
+    """`0 20px 40px -16px rgba(…)` list → [{offset, blur, spread, color}]."""
+    if raw.strip() == "none":
+        return []
+    out = []
+    for one in _split_top(raw):
+        bits = _split_top(one, " ")
+        if not bits or bits[0] == "inset":
+            return None
+        color = _parse_color(bits[-1])
+        if color is None:
+            return None
+        nums = [_px(b) for b in bits[:-1]]
+        while len(nums) < 4:
+            nums.append(0.0)
+        out.append(
+            {"x": nums[0], "y": nums[1], "blur": nums[2], "spread": nums[3], "color": color}
+        )
+    return out
+
+
+def extract_shadows(light: dict[str, str], dark: dict[str, str]) -> dict:
+    out = {}
+    for var in SHADOW_FIELDS:
+        out[var] = {
+            "light": _parse_shadow(light[var]) if var in light else None,
+            "dark": _parse_shadow(dark[var]) if var in dark else None,
+        }
+    return out
+
+
 def extract(css_path: Path) -> dict:
     css = css_path.read_text(encoding="utf-8")
     light = _decls(_block(css, ":root"))
@@ -415,6 +470,7 @@ def extract(css_path: Path) -> dict:
         "generator": "tools/build_tactile_theme_roles.py",
         "not": "product _tokens.dart / tokens.css v4 ledger",
         "roles": roles,
+        "shadows": extract_shadows(light, dark),
     }
     app_css = find_app_css(css_path)
     if app_css is None:
@@ -440,6 +496,49 @@ def dart_hexes(kind: str) -> dict[str, str]:
     for m in re.finditer(r"(\w+):\s*Color\((0x[0-9A-Fa-f]+)\)", _dart_block(kind)):
         out[m.group(1)] = _norm(m.group(2))
     return out
+
+
+def dart_shadows(kind: str, field: str) -> list[dict] | None:
+    block = _dart_block(kind)
+    i = block.find(f"{field}: <BoxShadow>[")
+    if i < 0:
+        return None
+    j = block.find("],", i)
+    out = []
+    for m in re.finditer(r"BoxShadow\((.*?)\)\s*,?\s*(?=BoxShadow|$)", block[i:j], flags=re.S):
+        body = m.group(1)
+        color = re.search(r"color:\s*Color\((0x[0-9A-Fa-f]+)\)", body)
+        off = re.search(r"offset:\s*Offset\(([-0-9.]+),\s*([-0-9.]+)\)", body)
+        blur = re.search(r"blurRadius:\s*([-0-9.]+)", body)
+        spread = re.search(r"spreadRadius:\s*([-0-9.]+)", body)
+        out.append(
+            {
+                "x": float(off.group(1)) if off else 0.0,
+                "y": float(off.group(2)) if off else 0.0,
+                "blur": float(blur.group(1)) if blur else 0.0,
+                "spread": float(spread.group(1)) if spread else 0.0,
+                "color": _norm(color.group(1)) if color else None,
+            }
+        )
+    return out
+
+
+def check_shadows(payload: dict) -> int:
+    errors = 0
+    for var, spec in payload.get("shadows", {}).items():
+        field = SHADOW_FIELDS[var]
+        for kind in ("light", "dark"):
+            want = spec[kind]
+            if want is None:
+                print(f"FAIL {kind} {var}: CSS shadow not parsed", file=sys.stderr)
+                errors += 1
+                continue
+            got = dart_shadows(kind, field)
+            want_n = [{**w, "color": _norm(w["color"])} for w in want]
+            if got != want_n:
+                print(f"FAIL {kind} {field}: dart {got} ≠ css {want_n}", file=sys.stderr)
+                errors += 1
+    return errors
 
 
 def dart_motion() -> dict[str, str]:
@@ -512,7 +611,7 @@ def check(payload: dict, require_css: bool) -> int:
             if not got:
                 print(f"FAIL {kind} {field} missing in tactile_tokens.dart", file=sys.stderr)
                 errors += 1
-    return errors + check_app(payload)
+    return errors + check_shadows(payload) + check_app(payload)
 
 
 def main() -> int:

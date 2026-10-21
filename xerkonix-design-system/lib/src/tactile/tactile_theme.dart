@@ -26,6 +26,8 @@ class XkTactileChrome {
   Color get surface => tokens.surface;
   Color get surfaceRaised => tokens.surfaceRaised;
   Color get panel => tokens.panelFill;
+  Color get panelBorder => tokens.panelBorder;
+  Color get glassRing => tokens.glassRing;
   Color get overlay => tokens.overlayFill;
   Color get overlayBorder => tokens.overlayBorder;
   Color get overlayBackdrop => tokens.overlayBackdrop;
@@ -273,7 +275,11 @@ class XkTactileTheme {
         elevation: 0,
         shadowColor: clear,
         surfaceTintColor: clear,
-        shape: RoundedRectangleBorder(borderRadius: panelR, side: lineSide),
+        // Card outer edge is `--panel-border` (3:1 on the ground), not `line`.
+        shape: RoundedRectangleBorder(
+          borderRadius: panelR,
+          side: BorderSide(color: c.panelBorder),
+        ),
         margin: EdgeInsets.zero,
       ),
       dialogTheme: DialogThemeData(

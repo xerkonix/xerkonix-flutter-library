@@ -57,8 +57,33 @@
     },
     "cardTheme.color": {
       "css": "--panel-fill",
-      "light": "0x3DFFFFFF",
-      "dark": "0x06CFD3DA"
+      "light": "0xA3FFFFFF",
+      "dark": "0xA32A2F36"
+    },
+    "cardTheme.side": {
+      "css": "--panel-border",
+      "light": "0xFF757A82",
+      "dark": "0xFF787D85"
+    },
+    "card.ring": {
+      "css": "--glass-ring",
+      "light": "0xE6FFFFFF",
+      "dark": "0x30CFD3DA"
+    },
+    "button.secondary.fill": {
+      "css": "--secondary-fill",
+      "light": "0xD1FFFFFF",
+      "dark": "0x14CFD3DA"
+    },
+    "button.secondary.hover": {
+      "css": "--secondary-hover",
+      "light": "0xFFFFFFFF",
+      "dark": "0x1ACFD3DA"
+    },
+    "button.secondary.border": {
+      "css": "--secondary-border",
+      "light": "0xFF757A82",
+      "dark": "0xFF787D85"
     },
     "dialogTheme.backgroundColor": {
       "css": "--overlay-fill",
@@ -151,6 +176,59 @@
       "dark": "0xFFAEB4BD"
     }
   },
+  "shadows": {
+    "--panel-shadow": {
+      "light": [
+        {
+          "x": 0.0,
+          "y": 20.0,
+          "blur": 40.0,
+          "spread": -16.0,
+          "color": "0x1F111111"
+        }
+      ],
+      "dark": [
+        {
+          "x": 0.0,
+          "y": 12.0,
+          "blur": 32.0,
+          "spread": 0.0,
+          "color": "0x57000000"
+        },
+        {
+          "x": 0.0,
+          "y": 2.0,
+          "blur": 6.0,
+          "spread": 0.0,
+          "color": "0x38000000"
+        }
+      ]
+    },
+    "--secondary-shadow": {
+      "light": [],
+      "dark": []
+    },
+    "--glass-float-shadow": {
+      "light": [
+        {
+          "x": 0.0,
+          "y": 28.0,
+          "blur": 56.0,
+          "spread": -36.0,
+          "color": "0x29111111"
+        }
+      ],
+      "dark": [
+        {
+          "x": 0.0,
+          "y": 28.0,
+          "blur": 56.0,
+          "spread": -20.0,
+          "color": "0x80000000"
+        }
+      ]
+    }
+  },
   "app": {
     "source": "tactile/app-surface.css",
     "roles": {
@@ -187,8 +265,8 @@
       "humanReviewBorder": {
         "css": ".app-surface .app-review { border }",
         "expr": "1px solid var(--app-accent-edge)",
-        "light": "0x7D217D8C",
-        "dark": "0x8D7FCBD9"
+        "light": "0xFF578793",
+        "dark": "0xFF709DA8"
       }
     },
     "emphasisDark": {

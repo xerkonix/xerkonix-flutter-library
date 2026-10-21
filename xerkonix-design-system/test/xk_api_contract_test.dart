@@ -491,7 +491,10 @@ void main() {
                   )
                   .decoration
               as BoxDecoration;
-      expect((quiet.border! as Border).top.color, XkTactileTokens.light.line);
+      expect(
+        (quiet.border! as Border).top.color,
+        XkTactileTokens.light.secondaryBorder,
+      );
     });
 
     for (final XkTactileEmphasisDarkKind kind in XkTactileEmphasisDarkKind.values) {

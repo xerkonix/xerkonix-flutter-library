@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'tactile_app_surface.dart';
+import 'tactile_surface.dart';
 import 'tactile_tokens.dart';
 import 'tactile_type.dart';
 
@@ -74,8 +75,9 @@ class _XkTactileButtonState extends State<XkTactileButton> {
           shadows = enabled ? t.secondaryShadow : const <BoxShadow>[];
           label = t.ink;
         case XkTactileButtonKind.quiet:
+          // `.btn-quiet` is the old name of `.btn-secondary`: same 3:1 edge.
           fill = hover ? t.controlHover : XkTactileTokens.clear;
-          border = t.line;
+          border = t.secondaryBorder;
           label = t.ink;
           shadows = const <BoxShadow>[];
         case XkTactileButtonKind.text:
@@ -103,7 +105,7 @@ class _XkTactileButtonState extends State<XkTactileButton> {
                 ? 5
                 : XkTactileTokens.controlRadius,
           ),
-          border: Border.all(color: border),
+          border: XkTactileEdge(color: border),
           boxShadow: shadows,
         ),
         child: Padding(

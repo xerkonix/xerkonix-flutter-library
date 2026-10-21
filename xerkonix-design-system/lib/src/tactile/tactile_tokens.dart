@@ -16,6 +16,9 @@ class XkTactileTokens {
     required this.surface,
     required this.surfaceRaised,
     required this.panelFill,
+    required this.panelBorder,
+    required this.panelShadow,
+    required this.glassFloatShadow,
     required this.ink,
     required this.muted,
     required this.ice,
@@ -24,6 +27,7 @@ class XkTactileTokens {
     required this.line,
     required this.glassFill,
     required this.glassRim,
+    required this.glassRing,
     required this.glassInset,
     required this.glassFallback,
     required this.glassBlur,
@@ -70,6 +74,18 @@ class XkTactileTokens {
   final Color surface;
   final Color surfaceRaised;
   final Color panelFill;
+
+  /// Card outer edge (`--panel-border`). 3:1 or more against the ground.
+  /// Inner dividers keep [line].
+  final Color panelBorder;
+
+  /// Card depth (`--panel-shadow`). Paint it as an outer shadow only
+  /// (`XkOuterShadow`) so the translucent [panelFill] does not show it.
+  final List<BoxShadow> panelShadow;
+
+  /// Floating glass depth (`--glass-float-shadow`, `.glass` / `.glass-2`).
+  /// Negative spread keeps the pixel just outside the edge at 3:1.
+  final List<BoxShadow> glassFloatShadow;
   final Color ink;
   final Color muted;
   final Color ice;
@@ -78,6 +94,10 @@ class XkTactileTokens {
   final Color line;
   final Color glassFill;
   final Color glassRim;
+
+  /// Even 1px inner ring of a card or glass face
+  /// (`inset 0 0 0 1px var(--glass-ring)`).
+  final Color glassRing;
   final Color glassInset;
   final Color glassFallback;
   final double glassBlur;
@@ -138,7 +158,24 @@ class XkTactileTokens {
     canvas: Color(0xFFF5F5F5),
     surface: Color(0xFFFBFBFC),
     surfaceRaised: Color(0xFFFFFFFF),
-    panelFill: Color(0x3DFFFFFF),
+    panelFill: Color(0xA3FFFFFF),
+    panelBorder: Color(0xFF757A82),
+    panelShadow: <BoxShadow>[
+      BoxShadow(
+        color: Color(0x1F111111),
+        offset: Offset(0, 20),
+        blurRadius: 40,
+        spreadRadius: -16,
+      ),
+    ],
+    glassFloatShadow: <BoxShadow>[
+      BoxShadow(
+        color: Color(0x29111111),
+        offset: Offset(0, 28),
+        blurRadius: 56,
+        spreadRadius: -36,
+      ),
+    ],
     ink: Color(0xFF111111),
     muted: Color(0xFF636365),
     ice: Color(0xFFE9E9E9),
@@ -147,6 +184,7 @@ class XkTactileTokens {
     line: Color(0x1A111111),
     glassFill: Color(0x8FFFFFFF),
     glassRim: Color(0xE6FFFFFF),
+    glassRing: Color(0xE6FFFFFF),
     glassInset: Color(0xCCFFFFFF),
     glassFallback: Color(0xFFFBFBFC),
     glassBlur: 20,
@@ -177,13 +215,10 @@ class XkTactileTokens {
       ),
       BoxShadow(color: Color(0x09111111), offset: Offset(0, 3), blurRadius: 8),
     ],
-    secondaryFill: Color(0xB3FFFFFF),
+    secondaryFill: Color(0xD1FFFFFF),
     secondaryHover: Color(0xFFFFFFFF),
-    secondaryBorder: Color(0xF2FFFFFF),
-    secondaryShadow: <BoxShadow>[
-      BoxShadow(color: Color(0x0D111111), offset: Offset(0, 8), blurRadius: 24),
-      BoxShadow(color: Color(0x0A111111), offset: Offset(0, 1), blurRadius: 3),
-    ],
+    secondaryBorder: Color(0xFF757A82),
+    secondaryShadow: <BoxShadow>[],
     controlHover: Color(0xBFFFFFFF),
     faint: Color(0xFF767678),
     headerFill: Color(0xDEF5F5F5),
@@ -196,14 +231,31 @@ class XkTactileTokens {
     humanReviewLabel: Color(0xFF1C5D67),
     selectedCue: Color(0xFF1C5D67),
     humanReviewSurface: Color(0xFFE4F1F4),
-    humanReviewBorder: Color(0x7D217D8C),
+    humanReviewBorder: Color(0xFF578793),
   );
 
   static const XkTactileTokens dark = XkTactileTokens._(
     canvas: Color(0xFF111111),
     surface: Color(0xFF191B1F),
     surfaceRaised: Color(0xFF22262C),
-    panelFill: Color(0x06CFD3DA),
+    panelFill: Color(0xA32A2F36),
+    panelBorder: Color(0xFF787D85),
+    panelShadow: <BoxShadow>[
+      BoxShadow(
+        color: Color(0x57000000),
+        offset: Offset(0, 12),
+        blurRadius: 32,
+      ),
+      BoxShadow(color: Color(0x38000000), offset: Offset(0, 2), blurRadius: 6),
+    ],
+    glassFloatShadow: <BoxShadow>[
+      BoxShadow(
+        color: Color(0x80000000),
+        offset: Offset(0, 28),
+        blurRadius: 56,
+        spreadRadius: -20,
+      ),
+    ],
     ink: Color(0xFFF5F5F5),
     muted: Color(0xFFAEB4BD),
     ice: Color(0xFF303030),
@@ -212,6 +264,7 @@ class XkTactileTokens {
     line: Color(0x21CFD3DA),
     glassFill: Color(0xA32A2F36),
     glassRim: Color(0x30CFD3DA),
+    glassRing: Color(0x30CFD3DA),
     glassInset: Color(0x17FFFFFF),
     glassFallback: Color(0xFF22262C),
     glassBlur: 20,
@@ -242,17 +295,10 @@ class XkTactileTokens {
       ),
       BoxShadow(color: Color(0x29000000), offset: Offset(0, 3), blurRadius: 8),
     ],
-    secondaryFill: Color(0x0ECFD3DA),
+    secondaryFill: Color(0x14CFD3DA),
     secondaryHover: Color(0x1ACFD3DA),
-    secondaryBorder: Color(0x29CFD3DA),
-    secondaryShadow: <BoxShadow>[
-      BoxShadow(color: Color(0x1F000000), offset: Offset(0, 3), blurRadius: 10),
-      BoxShadow(
-        color: Color(0x0BFFFFFF),
-        offset: Offset(0, 1),
-        blurStyle: BlurStyle.inner,
-      ),
-    ],
+    secondaryBorder: Color(0xFF787D85),
+    secondaryShadow: <BoxShadow>[],
     controlHover: Color(0x14CFD3DA),
     faint: Color(0xFF9199A5),
     headerFill: Color(0xE0111111),
@@ -265,7 +311,7 @@ class XkTactileTokens {
     humanReviewLabel: Color(0xFF65C9D9),
     selectedCue: Color(0xFF65C9D9),
     humanReviewSurface: Color(0xFF233237),
-    humanReviewBorder: Color(0x8D7FCBD9),
+    humanReviewBorder: Color(0xFF709DA8),
   );
 
   static XkTactileTokens of(Brightness brightness) {
@@ -279,6 +325,14 @@ class XkTactileTokens {
   static const double panelRadius = 14;
   static const double overlayRadius = 24;
   static const double controlBlur = 12;
+
+  /// Card face blur (`--panel-blur` / `--panel-blur-mobile`, max-width 700).
+  static const double panelBlur = 20;
+  static const double panelBlurMobile = 16;
+  static const double panelBlurMobileMaxWidth = 700;
+
+  /// `saturate(var(--glass-saturate))` behind a card or glass face.
+  static const double glassSaturate = 1.5;
   static const double overlayBlur = 24;
   static const double focusOutlineWidth = 3;
   static const double focusOutlineOffset = 4;

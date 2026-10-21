@@ -7,7 +7,7 @@ DS `8cb881f`(2026-10-21) `tactile/tokens.css`·`components.css` 의 카드 재�
 - **버튼.** `XkTactileButton` `quiet`(웹 `.btn-quiet` = `.btn-secondary` 옛 이름)의 테도 `secondaryBorder`.
 - **테마.** `cardTheme` 테 `panelBorder`.
 - **생성기.** `tools/build_tactile_theme_roles.py` 가 `--panel-border`·`--glass-ring`·`--secondary-fill`·`--secondary-hover`·`--secondary-border` 색과 `--panel-shadow`·`--secondary-shadow` 그림자 목록까지 Dart 상수와 대조한다. `tools/tactile_theme_roles.json` 재생성.
-- **DS #116(`d909208`).** 유리(`.glass`) 그림자 = 새 `glassFloatShadow`(`0 28px 56px -20px`, 라이트 `.16`·다크 `.50`). 다크 `panelBorder`·`secondaryBorder` `#787D85`. `humanReviewBorder` = 아쿠아 38%(다크 42%) + `--panel-border`(라이트 `#578793`·다크 `#709DA8`, 생성기 계산). 고른 칸(`.app-choice`) 테 `--control-on` 은 Dart 위젯이 없어 해당 없음.
+- **DS #116(`d909208`).** 유리(`.glass`) 그림자 = 새 `glassFloatShadow`(라이트 `0 28px 56px -36px .16`(DS #117 `dbc9006`)·다크 `0 28px 56px -20px .50`). 다크 `panelBorder`·`secondaryBorder` `#787D85`. `humanReviewBorder` = 아쿠아 38%(다크 42%) + `--panel-border`(라이트 `#578793`·다크 `#709DA8`, 생성기 계산). 고른 칸(`.app-choice`) 테 `--control-on` 은 Dart 위젯이 없어 해당 없음.
 - **장치 픽셀 맞춤 테 `XkTactileEdge`.** `Border` 하위 클래스. 곧은 네 변을 앤티앨리어싱 없이 칠해 소수 좌표에서도 항상 온전한 장치 픽셀(1배 1개·2배 2개)이 된다 — 1배 화면 소수 좌표에서 1px 테가 두 픽셀로 나뉘어 1.5~2.6:1 로 옅어지던 문제. 둥근 모서리는 앤티앨리어싱 그대로. 카드 테는 흐림 클립 바깥(앞)에 그린다 — 클립 가장자리가 테 픽셀을 깎지 않게. `XkTactileSurface`·`XkTactileButton`·`XkTactileHumanReview` 가 쓴다. `top.color` 로 읽던 시험은 그대로 읽힌다.
 - **시험.** `test/xk_tactile_panel_edge_test.dart` — 정보 카드·유리 카드·390 폭 모바일 카드·보조·quiet·확인 필요 6 요소 × 라이트/다크 캔버스·mist 4 바탕 × DPR 1·2 정수/소수 위치·크기 5 배치, 네 변 장치 픽셀로 3:1 이상. 예외 없음. 면 가운데가 자기 그림자로 어두워지지 않는지, 390 폭 흐림 16, 고대비 대체도 본다.
 

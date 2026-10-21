@@ -173,7 +173,7 @@ class XkTactileTokens {
         color: Color(0x29111111),
         offset: Offset(0, 28),
         blurRadius: 56,
-        spreadRadius: -20,
+        spreadRadius: -36,
       ),
     ],
     ink: Color(0xFF111111),

@@ -18,6 +18,7 @@ import 'dart:io';
 import 'dart:math' as math;
 import 'dart:ui' as ui;
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -90,7 +91,8 @@ class _Subject {
     this.focusByTab = false,
     this.keyboardFocus = false,
     this.scan = false,
-    this.roundAa = false,
+    this.skipRing = false,
+    this.hover = false,
   });
   final String name;
   final double viewWidth;
@@ -112,13 +114,40 @@ class _Subject {
   /// outside it. A faint focus overlay under 1.5:1 is not an edge.
   final bool scan;
 
-  /// Round Material stroke (radio ring, switch track) that Material paints
-  /// anti-aliased and this library cannot snap to device pixels. At a
-  /// fractional position on a 1x screen the 1px just outside is a partial
-  /// fringe of the same stroke; there the check is against the 2px outside.
-  /// The strict 1px value is still reported (`EDGE_REPORT`).
-  final bool roundAa;
+  /// With [scan]: pass the focus ring and its gap, and measure the
+  /// control's own edge against the gap pixels just outside it.
+  final bool skipRing;
+
+  /// Hover the mouse over the target centre before measuring.
+  final bool hover;
 }
+
+/// Known failures, kept as failures (not relaxed). Material paints the
+/// radio ring and the switch track ends anti-aliased; at a fractional
+/// position on a 1x screen the 1px just outside the edge is a partial
+/// fringe of the same round stroke, and edge vs that pixel is under 3:1.
+/// The edge vs 2px outside is 3:1 or more. Each entry asserts the 1px value
+/// is still under 3:1 (so a fix shows up here) and the 2px value is 3:1+.
+/// Values: 1px min (2px min) from the last run.
+const Map<String, String> _knownFailures = <String, String>{
+  'XkSwitch off · light canvas · dpr1 frac.3/.7': '1px 2.71:1 (2px 3.96:1)',
+  'XkSwitch focus edge · light canvas · dpr1 frac.3/.7':
+      '1px 2.71:1 (2px 3.96:1)',
+  'switch off · light canvas · dpr1 frac.3/.7': '1px 2.71:1 (2px 3.96:1)',
+  'XkRadio off · light mist · dpr1 frac.3/.7': '1px 2.73:1 (2px 3.45:1)',
+  'XkSwitch off · light mist · dpr1 frac.3/.7': '1px 2.52:1 (2px 3.45:1)',
+  'XkRadio focus edge · light mist · dpr1 frac.3/.7': '1px 2.73:1 (2px 3.45:1)',
+  'XkSwitch focus edge · light mist · dpr1 frac.3/.7':
+      '1px 2.52:1 (2px 3.45:1)',
+  'radio off · light mist · dpr1 frac.3/.7': '1px 2.73:1 (2px 3.45:1)',
+  'switch off · light mist · dpr1 frac.3/.7': '1px 2.52:1 (2px 3.45:1)',
+  'XkRadio off · dark mist · dpr1 frac.3/.7': '1px 2.68:1 (2px 3.52:1)',
+  'XkSwitch off · dark mist · dpr1 frac.3/.7': '1px 2.37:1 (2px 3.52:1)',
+  'XkRadio focus edge · dark mist · dpr1 frac.3/.7': '1px 2.68:1 (2px 3.52:1)',
+  'XkSwitch focus edge · dark mist · dpr1 frac.3/.7': '1px 2.37:1 (2px 3.52:1)',
+  'radio off · dark mist · dpr1 frac.3/.7': '1px 2.68:1 (2px 3.52:1)',
+  'switch off · dark mist · dpr1 frac.3/.7': '1px 2.37:1 (2px 3.52:1)',
+};
 
 Future<List<_Side>> _measure(
   WidgetTester tester, {
@@ -138,7 +167,8 @@ Future<List<_Side>> _measure(
   debugDisableShadows = false;
   final FocusHighlightStrategy strategy =
       FocusManager.instance.highlightStrategy;
-  if (subject.keyboardFocus || subject.focusByTab) {
+  // Mouse use switches Flutter to the traditional highlight mode too.
+  if (subject.keyboardFocus || subject.focusByTab || subject.hover) {
     FocusManager.instance.highlightStrategy =
         FocusHighlightStrategy.alwaysTraditional;
   }
@@ -174,6 +204,17 @@ Future<List<_Side>> _measure(
       await tester.sendKeyEvent(LogicalKeyboardKey.tab);
       await tester.pump();
       await tester.pump();
+    }
+    if (subject.hover) {
+      final TestGesture mouse = await tester.createGesture(
+        kind: PointerDeviceKind.mouse,
+      );
+      await mouse.addPointer(location: Offset.zero);
+      addTearDown(mouse.removePointer);
+      await tester.pump();
+      await mouse.moveTo(tester.getCenter(find.byKey(_target)));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
     }
     // Let Material toggle / focus overlay animations finish.
     await tester.pump(const Duration(milliseconds: 400));
@@ -226,11 +267,27 @@ Future<List<_Side>> _measure(
             break;
           }
         }
+        if (q0 != null && subject.skipRing) {
+          // Through the focus ring, then its gap, to the control's edge.
+          int q = q0;
+          while (q != to && _contrast(at(q), ground) >= 1.5) {
+            q += step;
+          }
+          while (q != to && _contrast(at(q), ground) < 1.5) {
+            q += step;
+          }
+          q0 = q == to ? null : q;
+        }
         if (q0 == null) {
           return _Side(name, 1, ground, ground);
         }
         final List<int> o1 = at(q0 - step);
-        final List<int> o2 = at(q0 - 2 * step);
+        List<int> o2 = at(q0 - 2 * step);
+        if (subject.skipRing && _contrast(o2, ground) >= 1.5) {
+          // A 2px gap on a 1x screen: the second pixel out is the ring
+          // itself, not the ground the edge meets.
+          o2 = o1;
+        }
         double best = 0;
         double far = 0;
         List<int> edge = at(q0);
@@ -452,9 +509,71 @@ void main() {
       focusByTab: true,
       outset: 5,
     ),
-    // Material toggles and chip through XkTactileTheme: their real painted
-    // state (off · on · focus). No room for a ring apart from the edge, so
-    // focus is a 2px ink edge.
+    // Choice focus: same separate ring as the chip.
+    _Subject(
+      'choice focus',
+      480,
+      () => _material(XkChip(label: '고르기', selected: false, onTap: () {})),
+      focusByTab: true,
+    ),
+    _Subject(
+      'choice focus ring',
+      480,
+      () => _material(XkChip(label: '고르기', selected: false, onTap: () {})),
+      focusByTab: true,
+      outset: 5,
+    ),
+    // XkCheckbox · XkRadio · XkSwitch: real painted state — rest, hover,
+    // checked / on, keyboard focus (edge as rest + separate 2px ink ring
+    // 2px outside it; ring and edge measured apart).
+    for (final (String state, bool on, bool focus, bool hover, bool ring)
+        in <(String, bool, bool, bool, bool)>[
+          ('off', false, false, false, false),
+          ('hover', false, false, true, false),
+          ('on', true, false, false, false),
+          ('focus edge', false, true, false, false),
+          ('focus ring', false, true, false, true),
+        ]) ...<_Subject>[
+      _Subject(
+        'XkCheckbox $state',
+        480,
+        () => _material(
+          XkCheckbox(value: on, autofocus: focus, onChanged: (_) {}),
+        ),
+        keyboardFocus: focus,
+        hover: hover,
+        scan: true,
+        skipRing: focus && !ring,
+      ),
+      _Subject(
+        'XkRadio $state',
+        480,
+        () => _material(
+          RadioGroup<int>(
+            groupValue: on ? 1 : 0,
+            onChanged: (_) {},
+            child: XkRadio<int>(value: 1, autofocus: focus),
+          ),
+        ),
+        keyboardFocus: focus,
+        hover: hover,
+        scan: true,
+        skipRing: focus && !ring,
+      ),
+      _Subject(
+        'XkSwitch $state',
+        480,
+        () =>
+            _material(XkSwitch(value: on, autofocus: focus, onChanged: (_) {})),
+        keyboardFocus: focus,
+        hover: hover,
+        scan: true,
+        skipRing: focus && !ring,
+      ),
+    ],
+    // Plain Material toggles and chip through XkTactileTheme (fallback):
+    // their real painted state (off · on · focus). No room for a ring apart
+    // from the edge, so focus here is an ink edge.
     for (final (String state, bool on, bool focus) in <(String, bool, bool)>[
       ('off', false, false),
       ('on', true, false),
@@ -480,7 +599,6 @@ void main() {
         ),
         keyboardFocus: focus,
         scan: true,
-        roundAa: true,
       ),
       _Subject(
         'switch $state',
@@ -488,7 +606,6 @@ void main() {
         () => _material(Switch(value: on, autofocus: focus, onChanged: (_) {})),
         keyboardFocus: focus,
         scan: true,
-        roundAa: true,
       ),
       _Subject(
         'material chip $state',
@@ -541,11 +658,27 @@ void main() {
             artifact: artifact,
           );
           _report(label, sides);
-          final bool fringe =
-              subject.roundAa && at.dpr == 1 && at.name.contains('frac');
+          final String? known = _knownFailures[label];
+          if (known != null) {
+            // ignore: avoid_print
+            print('KNOWN-FAIL $label  $known');
+            expect(
+              sides.map((_Side e) => e.value).reduce(math.min),
+              lessThan(3.0),
+              reason: '$label now passes at 1px — remove it from the list',
+            );
+            for (final _Side e in sides) {
+              expect(
+                e.far,
+                greaterThanOrEqualTo(3.0),
+                reason: '$label ${e.name} 2px',
+              );
+            }
+            return;
+          }
           for (final _Side e in sides) {
             expect(
-              fringe ? e.far : e.value,
+              e.value,
               greaterThanOrEqualTo(3.0),
               reason:
                   '$label ${e.name}: edge ${_hex(e.edge)} vs outside ${_hex(e.out)}',
@@ -828,6 +961,132 @@ void main() {
         tester.getRect(chip).inflate(5),
         reason: '3px gap + 2px ring',
       );
+    }
+  });
+
+  testWidgets('choice: focusable button with selected state and ring', (
+    WidgetTester tester,
+  ) async {
+    final SemanticsHandle handle = tester.ensureSemantics();
+    int taps = 0;
+    for (final Brightness b in Brightness.values) {
+      final XkTactileTokens t = XkTactileTokens.of(b);
+      await tester.pumpWidget(const SizedBox());
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: XkTactileTheme.themeData(b),
+          home: Scaffold(
+            body: Center(
+              child: XkChip(label: '고르기', selected: true, onTap: () => taps++),
+            ),
+          ),
+        ),
+      );
+      expect(
+        tester.getSemantics(find.text('고르기')),
+        matchesSemantics(
+          label: '고르기',
+          isButton: true,
+          hasSelectedState: true,
+          isSelected: true,
+          hasEnabledState: true,
+          isEnabled: true,
+          isFocusable: true,
+          hasTapAction: true,
+          hasFocusAction: true,
+        ),
+      );
+      final Finder ring = find.byKey(
+        const ValueKey<String>('xk-chip-choice-focus-ring'),
+      );
+      expect(ring, findsNothing);
+      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+      await tester.pump();
+      expect(ring, findsOneWidget);
+      final Finder face = find.byKey(const ValueKey<String>('xk-chip-choice'));
+      final XkTactileEdge edge =
+          (tester.widget<DecoratedBox>(face).decoration as BoxDecoration)
+                  .border!
+              as XkTactileEdge;
+      expect(edge.top.color, t.controlOn, reason: 'edge unchanged on focus');
+      expect(edge.top.width, 1);
+      final XkTactileEdge ringEdge =
+          (tester.widget<DecoratedBox>(ring).decoration as BoxDecoration)
+                  .border!
+              as XkTactileEdge;
+      expect(ringEdge.top.color, t.focusRing);
+      expect(ringEdge.top.width, 2);
+      expect(tester.getRect(ring), tester.getRect(face).inflate(5));
+      final int before = taps;
+      await tester.sendKeyEvent(LogicalKeyboardKey.space);
+      await tester.pump();
+      expect(taps, before + 1, reason: 'keyboard activates the choice');
+    }
+    handle.dispose();
+  });
+
+  testWidgets('XkCheckbox · XkRadio · XkSwitch: ring on keyboard focus, edge '
+      'unchanged', (WidgetTester tester) async {
+    final FocusHighlightStrategy strategy =
+        FocusManager.instance.highlightStrategy;
+    FocusManager.instance.highlightStrategy =
+        FocusHighlightStrategy.alwaysTraditional;
+    addTearDown(() => FocusManager.instance.highlightStrategy = strategy);
+    const Set<WidgetState> focus = <WidgetState>{WidgetState.focused};
+    const Set<WidgetState> hover = <WidgetState>{WidgetState.hovered};
+    const Set<WidgetState> on = <WidgetState>{WidgetState.selected};
+    for (final Brightness b in Brightness.values) {
+      final XkTactileTokens t = XkTactileTokens.of(b);
+      for (final Widget control in <Widget>[
+        XkCheckbox(value: false, onChanged: (_) {}),
+        RadioGroup<int>(
+          groupValue: 0,
+          onChanged: (_) {},
+          child: const XkRadio<int>(value: 1),
+        ),
+        XkSwitch(value: false, onChanged: (_) {}),
+      ]) {
+        await tester.pumpWidget(const SizedBox());
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: XkTactileTheme.themeData(b),
+            home: Scaffold(body: Center(child: control)),
+          ),
+        );
+        final Finder ring = find.byKey(
+          const ValueKey<String>('xk-toggle-focus-ring'),
+        );
+        expect(ring, findsNothing);
+        await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+        await tester.pump();
+        expect(ring, findsOneWidget, reason: '$control');
+      }
+      // Widget-level edge (no focus thickening; hover ink; checked control-on).
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: XkTactileTheme.themeData(b),
+          home: Scaffold(
+            body: Column(
+              children: <Widget>[
+                XkCheckbox(value: false, onChanged: (_) {}),
+                XkSwitch(value: false, onChanged: (_) {}),
+              ],
+            ),
+          ),
+        ),
+      );
+      final Checkbox cb = tester.widget<Checkbox>(find.byType(Checkbox));
+      BorderSide? side(Set<WidgetState> s) =>
+          WidgetStateProperty.resolveAs<BorderSide?>(cb.side, s);
+      expect(side(focus)!.color, t.inputBorder);
+      expect(side(focus)!.width, 1);
+      expect(side(hover)!.color, t.ink);
+      expect(side(on)!.color, t.controlOn);
+      final Switch sw = tester.widget<Switch>(find.byType(Switch));
+      expect(sw.trackOutlineColor!.resolve(focus), t.inputBorder);
+      expect(sw.trackOutlineColor!.resolve(hover), t.ink);
+      expect(sw.trackOutlineColor!.resolve(on), t.controlOn);
+      expect(sw.overlayColor!.resolve(focus), XkTactileTokens.clear);
     }
   });
 

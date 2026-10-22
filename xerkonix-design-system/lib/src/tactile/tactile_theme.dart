@@ -252,6 +252,17 @@ class XkTactileTheme {
       fontWeight: FontWeight.w600,
     );
     final TextStyle navLabelIdle = navLabel.copyWith(color: c.muted);
+    // Toggle / chip edge by state (focus handled by the caller).
+    Color edge(Set<WidgetState> s, Color rest) {
+      if (s.contains(WidgetState.selected)) {
+        return c.controlOn;
+      }
+      if (s.contains(WidgetState.hovered) &&
+          !s.contains(WidgetState.disabled)) {
+        return c.ink;
+      }
+      return rest;
+    }
 
     return ThemeData(
       useMaterial3: true,
@@ -416,8 +427,11 @@ class XkTactileTheme {
       ),
       inputDecorationTheme: XkTactileField.inputThemeOf(brightness),
       // DS #119: checkbox · radio · switch-off edge `--input-border`, chip
-      // edge `--secondary-border`, checked / chosen `--control-on`, all 3:1
-      // on the ground. Focus is a 2px `--focus-ring` (ink) edge.
+      // edge `--secondary-border`, hover ink, checked / chosen
+      // `--control-on`, all 3:1 on the ground. A plain Material toggle has
+      // no room for a ring apart from its edge, so here focus is an ink edge;
+      // XkCheckbox · XkRadio · XkSwitch keep the edge and draw a separate
+      // 2px ring (tactile_controls.dart).
       checkboxTheme: CheckboxThemeData(
         fillColor: WidgetStateProperty.resolveWith(
           (Set<WidgetState> s) =>
@@ -433,11 +447,7 @@ class XkTactileTheme {
               !s.contains(WidgetState.disabled)) {
             return BorderSide(color: c.focusRing, width: 2);
           }
-          return BorderSide(
-            color: s.contains(WidgetState.selected)
-                ? c.controlOn
-                : c.inputBorder,
-          );
+          return BorderSide(color: edge(s, c.inputBorder));
         }),
       ),
       radioTheme: RadioThemeData(
@@ -446,7 +456,7 @@ class XkTactileTheme {
               !s.contains(WidgetState.disabled)) {
             return c.focusRing;
           }
-          return s.contains(WidgetState.selected) ? c.controlOn : c.inputBorder;
+          return edge(s, c.inputBorder);
         }),
       ),
       switchTheme: SwitchThemeData(
@@ -466,7 +476,7 @@ class XkTactileTheme {
               !s.contains(WidgetState.disabled)) {
             return c.focusRing;
           }
-          return s.contains(WidgetState.selected) ? c.controlOn : c.inputBorder;
+          return edge(s, c.inputBorder);
         }),
         // Material draws the outline on the track inset 1px, centred: 2px
         // puts its outer edge on the track edge (1px leaves the pale track
@@ -485,11 +495,7 @@ class XkTactileTheme {
               !s.contains(WidgetState.disabled)) {
             return BorderSide(color: c.focusRing, width: 2);
           }
-          return BorderSide(
-            color: s.contains(WidgetState.selected)
-                ? c.controlOn
-                : c.secondaryBorder,
-          );
+          return BorderSide(color: edge(s, c.secondaryBorder));
         }),
       ),
       progressIndicatorTheme: ProgressIndicatorThemeData(

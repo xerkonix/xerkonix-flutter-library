@@ -288,7 +288,9 @@ class _XkToggleChromeState extends State<_XkToggleChrome> {
         child: Opacity(
           opacity: widget.enabled ? 1 : XkTactileTokens.disabledOpacity,
           child: _XkSnappedChrome(
-            key: show ? const ValueKey<String>('xk-toggle-focus-ring') : null,
+            // No key change here: swapping the key on focus would remount
+            // the Material control below and drop its FocusNode (keyboard
+            // focus lost, Space/Enter dead). The ring is a paint property.
             shape: widget.shape,
             radius: widget.radius,
             outward: widget.outward,
@@ -306,7 +308,6 @@ class _XkToggleChromeState extends State<_XkToggleChrome> {
 
 class _XkSnappedChrome extends SingleChildRenderObjectWidget {
   const _XkSnappedChrome({
-    super.key,
     required this.shape,
     required this.radius,
     required this.outward,
@@ -324,6 +325,14 @@ class _XkSnappedChrome extends SingleChildRenderObjectWidget {
   final Listenable? repaint;
   final _XkEdgePaint? edge;
   final Color? ring;
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    // Read by tests: the focus ring is a paint property, not a key or a
+    // child, so showing it never rebuilds the Material control below.
+    properties.add(ColorProperty('focusRing', ring, defaultValue: null));
+  }
 
   @override
   _RenderXkSnappedChrome createRenderObject(BuildContext context) {

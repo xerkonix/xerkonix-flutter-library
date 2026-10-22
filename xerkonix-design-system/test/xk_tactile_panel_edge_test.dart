@@ -1137,8 +1137,14 @@ void main() {
             home: Scaffold(body: Center(child: control)),
           ),
         );
-        final Finder ring = find.byKey(
-          const ValueKey<String>('xk-toggle-focus-ring'),
+        // The ring is a paint property of the wrapper chrome (no key swap,
+        // which would remount the control and drop its focus).
+        final Finder ring = find.byWidgetPredicate(
+          (Widget w) =>
+              w.runtimeType.toString() == '_XkSnappedChrome' &&
+              w.toDiagnosticsNode().getProperties().any(
+                (DiagnosticsNode p) => p.name == 'focusRing' && p.value != null,
+              ),
         );
         expect(ring, findsNothing);
         await tester.sendKeyEvent(LogicalKeyboardKey.tab);

@@ -1,3 +1,9 @@
+## 미정 — 키보드 포커스 회귀 · 카드 그림자 (DS #121)
+
+- **`XkCheckbox`·`XkRadio`·`XkSwitch`.** 포커스 링을 켤 때 key 를 바꿔 Material 컨트롤이 다시 마운트되고 포커스가 빠지던 회귀를 고쳤다(링은 paint 속성). 회귀 시험 `test/xk_tactile_controls_keyboard_test.dart`.
+- **`XkSelectField`.** 값 key 교체로 키보드 선택 뒤 포커스가 빠지던 회귀를 고쳤다(key 제거, `initialValue` 갱신은 필드가 반영).
+- **카드 그림자.** 라이트 `panelShadow` spread -16 → -20(DS `4a452dd` #121 `--panel-shadow` `0 20px 40px -20px`). 평평한 mist 위 카드 아래 변 바로 바깥 1px 이 2.99 → 3.05:1(linux Flutter 3.44.6). `tools/tactile_theme_roles.json` 재생성.
+
 ## 미정 — 입력 컨트롤 테 3:1 (DS #119)
 
 DS `a923549`(2026-10-22) 입력 컨트롤 경계를 Dart 에 옮긴다. 입력칸 테가 검정 20%(다크 `rgba(207,211,218,.24)`)라 캔버스와 1.1~1.7:1 이었고, 포커스는 옅은 그림자 테(1.2:1 안팎), 칩·고르기 테는 `--rule` 이었다.

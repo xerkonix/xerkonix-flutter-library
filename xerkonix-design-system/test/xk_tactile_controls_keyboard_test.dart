@@ -10,15 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:xerkonix_design_system/xerkonix_design_system.dart';
 
-/// Wrapper chromes whose focus ring is showing (read from diagnostics, not
-/// a key — the ring is a paint property).
-Finder _rings() => find.byWidgetPredicate(
-  (Widget w) =>
-      w.runtimeType.toString() == '_XkSnappedChrome' &&
-      w.toDiagnosticsNode().getProperties().any(
-        (DiagnosticsNode p) => p.name == 'focusRing' && p.value != null,
-      ),
-);
+import 'xk_test_rings.dart';
 
 bool _focusInside(WidgetTester tester, Finder control) {
   final BuildContext? focused = FocusManager.instance.primaryFocus?.context;
@@ -52,8 +44,8 @@ void main() {
 
   for (final Brightness b in Brightness.values) {
     for (final String kind in <String>['XkCheckbox', 'XkRadio', 'XkSwitch']) {
-      testWidgets('$kind ${b.name}: Tab keeps focus, Space/Enter toggles, '
-          'one ring', (WidgetTester tester) async {
+      testWidgets('$kind ${b.name}: Tab keeps focus, Space and Enter each '
+          'call onChanged, one ring', (WidgetTester tester) async {
         final List<Object?> changes = <Object?>[];
         Widget control(bool on) => switch (kind) {
           'XkCheckbox' => XkCheckbox(value: on, onChanged: changes.add),
@@ -75,7 +67,7 @@ void main() {
           'XkSwitch' => find.byType(Switch),
           _ => find.byType(Radio<int>),
         };
-        expect(_rings(), findsNothing);
+        expect(xkFocusRings(), findsNothing);
         await tester.sendKeyEvent(LogicalKeyboardKey.tab);
         await tester.pumpAndSettle();
         expect(
@@ -84,20 +76,19 @@ void main() {
           reason:
               'primaryFocus ${FocusManager.instance.primaryFocus} is not in $kind',
         );
-        expect(_rings(), findsOneWidget);
+        expect(xkFocusRings(), findsOneWidget);
         await tester.sendKeyEvent(LogicalKeyboardKey.space);
         await tester.pumpAndSettle();
         expect(changes, hasLength(1), reason: 'Space');
         expect(_focusInside(tester, target), isTrue, reason: 'after Space');
         await tester.sendKeyEvent(LogicalKeyboardKey.enter);
         await tester.pumpAndSettle();
-        expect(
-          changes.length,
-          greaterThanOrEqualTo(kind == 'XkRadio' ? 1 : 2),
-          reason: 'Enter',
-        );
+        // Enter activates like Space. The test does not feed the new value
+        // back, so each key asks again: checkbox / switch onChanged(true),
+        // radio onChanged(1) (still unselected). Two calls for all three.
+        expect(changes, hasLength(2), reason: 'Enter');
         expect(_focusInside(tester, target), isTrue, reason: 'after Enter');
-        expect(_rings(), findsOneWidget);
+        expect(xkFocusRings(), findsOneWidget);
       });
     }
 
@@ -141,7 +132,7 @@ void main() {
                 '${FocusManager.instance.primaryFocus}',
           );
           expect(
-            _rings(),
+            xkFocusRings(),
             i < 3 ? findsOneWidget : findsNothing,
             reason: 'round $round tab ${i + 1}: rings',
           );
@@ -215,5 +206,53 @@ void main() {
     await tester.pump();
     expect(text.text, '가나');
     expect(_focusInside(tester, find.byType(TextField)), isTrue);
+  });
+
+  testWidgets('XkSelectField: keyboard pick keeps focus and changes value', (
+    WidgetTester tester,
+  ) async {
+    String? value = 'a';
+    final List<String?> picks = <String?>[];
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: XkTactileTheme.themeData(Brightness.light),
+        home: Scaffold(
+          body: StatefulBuilder(
+            builder: (BuildContext context, StateSetter set) =>
+                XkSelectField<String>(
+                  label: '고르기',
+                  value: value,
+                  options: const <XkSelectOption<String>>[
+                    XkSelectOption<String>(value: 'a', label: '가'),
+                    XkSelectOption<String>(value: 'b', label: '나'),
+                    XkSelectOption<String>(value: 'c', label: '다'),
+                  ],
+                  onChanged: (String? v) {
+                    picks.add(v);
+                    set(() => value = v);
+                  },
+                ),
+          ),
+        ),
+      ),
+    );
+    final Finder field = find.byType(DropdownButtonFormField<String>);
+    await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+    await tester.pumpAndSettle();
+    expect(_focusInside(tester, field), isTrue, reason: 'Tab');
+    await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+    await tester.pumpAndSettle();
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+    await tester.pumpAndSettle();
+    await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+    await tester.pumpAndSettle();
+    expect(picks, <String?>['b']);
+    expect(value, 'b');
+    expect(find.text('나'), findsOneWidget, reason: 'shows the new value');
+    expect(
+      _focusInside(tester, field),
+      isTrue,
+      reason: 'focus after pick: ${FocusManager.instance.primaryFocus}',
+    );
   });
 }

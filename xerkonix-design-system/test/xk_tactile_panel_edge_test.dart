@@ -25,6 +25,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:xerkonix_design_system/xerkonix_design_system.dart';
 
+import 'xk_test_rings.dart';
+
 const Key _stage = ValueKey<String>('edge-stage');
 const Key _target = ValueKey<String>('edge-target');
 
@@ -1139,13 +1141,7 @@ void main() {
         );
         // The ring is a paint property of the wrapper chrome (no key swap,
         // which would remount the control and drop its focus).
-        final Finder ring = find.byWidgetPredicate(
-          (Widget w) =>
-              w.runtimeType.toString() == '_XkSnappedChrome' &&
-              w.toDiagnosticsNode().getProperties().any(
-                (DiagnosticsNode p) => p.name == 'focusRing' && p.value != null,
-              ),
-        );
+        final Finder ring = xkFocusRings();
         expect(ring, findsNothing);
         await tester.sendKeyEvent(LogicalKeyboardKey.tab);
         await tester.pump();

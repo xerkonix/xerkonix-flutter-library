@@ -13,13 +13,19 @@ import 'tactile_tokens.dart';
 /// Thin wrappers over the Material widgets, themed by [XkTactileTheme]:
 /// edge `--input-border`, hover ink, checked / on `--control-on`. Keyboard
 /// focus keeps the edge as it is and draws a separate 2px `--focus-ring`
-/// ring 2px outside the painted box (`outline:2px solid var(--focus-ring);
-/// outline-offset:2px`).
+/// ring 2px outside the painted box. This is the input-field ring
+/// (`outline:2px solid var(--focus-ring); outline-offset:2px`), used for all
+/// three on purpose — one ring for every input control; DS draws the web
+/// checkbox ring 2px/3px apart and the switch ring 3px/4px apart. Disabled
+/// controls are dimmed to [XkTactileTokens.disabledOpacity] (3:1 exempt).
 ///
 /// The radio ring and the switch track edge are painted here, not by
 /// Material: the round edge's outer bound is put on device pixel
 /// boundaries, so on a 1x screen at a fractional position the pixel just
-/// outside is the ground, not a half-strength fringe of the edge.
+/// outside is the ground, not a half-strength fringe of the edge. The
+/// alignment is worked out at paint time from the global position; an
+/// enclosing scroll asks for a repaint so it follows the scroll offset (an
+/// ancestor transform animated without a repaint is not followed).
 /// The checkbox edge is [XkTactileEdgeShape] (straight sides on whole
 /// device pixels) from the theme.
 ///
@@ -222,6 +228,11 @@ class _XkToggleChromeState extends State<_XkToggleChrome> {
   bool _hover = false;
   late FocusHighlightMode _mode;
 
+  /// Every enclosing scroll position. A scroll moves a list item's layer
+  /// without a fresh paint; the pixel alignment is worked out at paint time,
+  /// so a scroll asks for a repaint.
+  Listenable? _scrolls;
+
   @override
   void initState() {
     super.initState();
@@ -233,6 +244,18 @@ class _XkToggleChromeState extends State<_XkToggleChrome> {
   void dispose() {
     FocusManager.instance.removeHighlightModeListener(_onMode);
     super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final List<ScrollPosition> positions = <ScrollPosition>[];
+    ScrollableState? s = Scrollable.maybeOf(context);
+    while (s != null) {
+      positions.add(s.position);
+      s = Scrollable.maybeOf(s.context);
+    }
+    _scrolls = positions.isEmpty ? null : Listenable.merge(positions);
   }
 
   void _onMode(FocusHighlightMode mode) {
@@ -260,24 +283,21 @@ class _XkToggleChromeState extends State<_XkToggleChrome> {
       child: MouseRegion(
         onEnter: (_) => setState(() => _hover = true),
         onExit: (_) => setState(() => _hover = false),
-        child: _XkSnappedChrome(
-          key: show ? const ValueKey<String>('xk-toggle-focus-ring') : null,
-          shape: widget.shape,
-          radius: widget.radius,
-          outward: widget.outward,
-          dpr: MediaQuery.devicePixelRatioOf(context),
-          edge: edge == null
-              ? null
-              : _XkEdgePaint(
-                  color: widget.enabled
-                      ? edge.color
-                      : edge.color.withValues(
-                          alpha: XkTactileTokens.disabledOpacity,
-                        ),
-                  dot: edge.dot,
-                ),
-          ring: show ? t.focusRing : null,
-          child: widget.child,
+        // Disabled: dimmed as a whole (DS `input:disabled{opacity:.4}`),
+        // edge, fill, dot and thumb alike. Exempt from 3:1.
+        child: Opacity(
+          opacity: widget.enabled ? 1 : XkTactileTokens.disabledOpacity,
+          child: _XkSnappedChrome(
+            key: show ? const ValueKey<String>('xk-toggle-focus-ring') : null,
+            shape: widget.shape,
+            radius: widget.radius,
+            outward: widget.outward,
+            dpr: MediaQuery.devicePixelRatioOf(context),
+            repaint: _scrolls,
+            edge: edge,
+            ring: show ? t.focusRing : null,
+            child: widget.child,
+          ),
         ),
       ),
     );
@@ -291,6 +311,7 @@ class _XkSnappedChrome extends SingleChildRenderObjectWidget {
     required this.radius,
     required this.outward,
     required this.dpr,
+    required this.repaint,
     required this.edge,
     required this.ring,
     super.child,
@@ -300,12 +321,21 @@ class _XkSnappedChrome extends SingleChildRenderObjectWidget {
   final double radius;
   final bool outward;
   final double dpr;
+  final Listenable? repaint;
   final _XkEdgePaint? edge;
   final Color? ring;
 
   @override
   _RenderXkSnappedChrome createRenderObject(BuildContext context) {
-    return _RenderXkSnappedChrome(shape, radius, outward, dpr, edge, ring);
+    return _RenderXkSnappedChrome(
+      shape,
+      radius,
+      outward,
+      dpr,
+      repaint,
+      edge,
+      ring,
+    );
   }
 
   @override
@@ -318,6 +348,7 @@ class _XkSnappedChrome extends SingleChildRenderObjectWidget {
       ..radius = radius
       ..outward = outward
       ..dpr = dpr
+      ..repaint = repaint
       ..edge = edge
       ..ring = ring;
   }
@@ -329,9 +360,35 @@ class _RenderXkSnappedChrome extends RenderProxyBox {
     this._radius,
     this._outward,
     this._dpr,
+    this._repaint,
     this._edge,
     this._ring,
   );
+
+  Listenable? _repaint;
+  set repaint(Listenable? v) {
+    if (identical(v, _repaint)) {
+      return;
+    }
+    if (attached) {
+      _repaint?.removeListener(markNeedsPaint);
+      v?.addListener(markNeedsPaint);
+    }
+    _repaint = v;
+    markNeedsPaint();
+  }
+
+  @override
+  void attach(PipelineOwner owner) {
+    super.attach(owner);
+    _repaint?.addListener(markNeedsPaint);
+  }
+
+  @override
+  void detach() {
+    _repaint?.removeListener(markNeedsPaint);
+    super.detach();
+  }
 
   Size _shape;
   set shape(Size v) {

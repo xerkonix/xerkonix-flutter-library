@@ -93,6 +93,7 @@ class _Subject {
     this.scan = false,
     this.skipRing = false,
     this.hover = false,
+    this.scroll,
   });
   final String name;
   final double viewWidth;
@@ -120,6 +121,11 @@ class _Subject {
 
   /// Hover the mouse over the target centre before measuring.
   final bool hover;
+
+  /// Put the target in a scrolled [ListView] (its items sit in their own
+  /// repaint boundaries) and jump to this fractional offset: a scroll moves
+  /// the layer without a fresh paint unless the control asks for one.
+  final double? scroll;
 }
 
 /// Known failures, kept as failures (not relaxed) — plain Material path
@@ -129,15 +135,17 @@ class _Subject {
 /// position on a 1x screen the 1px just outside the edge is a partial
 /// fringe of the same round stroke, under 3:1. The wrappers paint that edge
 /// themselves on device pixel bounds and have no entry here. Each entry
-/// asserts the 1px value is still under 3:1 (so a fix shows up here) and
-/// the 2px value is 3:1+. Values: 1px min (2px min) from the last run.
-const Map<String, String> _knownFailures = <String, String>{
-  'switch off · light canvas · dpr1 frac.3/.7': '1px 2.71:1 (2px 3.96:1)',
-  'radio off · light mist · dpr1 frac.3/.7': '1px 2.73:1 (2px 3.45:1)',
-  'switch off · light mist · dpr1 frac.3/.7': '1px 2.52:1 (2px 3.45:1)',
-  'radio off · dark mist · dpr1 frac.3/.7': '1px 2.68:1 (2px 3.52:1)',
-  'switch off · dark mist · dpr1 frac.3/.7': '1px 2.37:1 (2px 3.52:1)',
+/// asserts the recorded values (±[_knownTolerance]): the 1px minimum over
+/// the four sides and the 2px minimum. Any change — better or worse —
+/// fails, and so does an entry that names no scene.
+const Map<String, (double, double)> _knownFailures = <String, (double, double)>{
+  'switch off · light canvas · dpr1 frac.3/.7': (2.71, 3.96),
+  'radio off · light mist · dpr1 frac.3/.7': (2.73, 3.45),
+  'switch off · light mist · dpr1 frac.3/.7': (2.52, 3.45),
+  'radio off · dark mist · dpr1 frac.3/.7': (2.68, 3.52),
+  'switch off · dark mist · dpr1 frac.3/.7': (2.37, 3.52),
 };
+const double _knownTolerance = 0.02;
 
 Future<List<_Side>> _measure(
   WidgetTester tester, {
@@ -162,6 +170,9 @@ Future<List<_Side>> _measure(
     FocusManager.instance.highlightStrategy =
         FocusHighlightStrategy.alwaysTraditional;
   }
+  final ScrollController scroller = ScrollController();
+  addTearDown(scroller.dispose);
+  final Widget target = KeyedSubtree(key: _target, child: subject.build());
   try {
     await tester.pumpWidget(
       MaterialApp(
@@ -178,7 +189,23 @@ Future<List<_Side>> _measure(
                   alignment: Alignment.topLeft,
                   child: Padding(
                     padding: EdgeInsets.only(left: at.dx, top: at.dy),
-                    child: KeyedSubtree(key: _target, child: subject.build()),
+                    child: subject.scroll == null
+                        ? target
+                        : SizedBox(
+                            width: view.width - at.dx - 8,
+                            height: 200,
+                            child: ListView(
+                              controller: scroller,
+                              padding: const EdgeInsets.only(top: 20),
+                              children: <Widget>[
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: target,
+                                ),
+                                const SizedBox(height: 600),
+                              ],
+                            ),
+                          ),
                   ),
                 ),
               ),
@@ -190,6 +217,11 @@ Future<List<_Side>> _measure(
     // Twice: autofocus lands after the first frame, then the chrome rebuilds.
     await tester.pump();
     await tester.pump();
+    if (subject.scroll != null) {
+      // Paint once at offset 0, then scroll to the fraction.
+      scroller.jumpTo(subject.scroll!);
+      await tester.pump();
+    }
     if (subject.focusByTab) {
       await tester.sendKeyEvent(LogicalKeyboardKey.tab);
       await tester.pump();
@@ -561,6 +593,47 @@ void main() {
         skipRing: focus && !ring,
       ),
     ],
+    // Wrappers inside a scrolled list at a fractional offset (pixel
+    // alignment must follow the scroll).
+    for (final double y in <double>[0.3, 0.5, 0.7]) ...<_Subject>[
+      _Subject(
+        'XkCheckbox off scroll $y',
+        480,
+        () => _material(XkCheckbox(value: false, onChanged: (_) {})),
+        scan: true,
+        scroll: y,
+      ),
+      _Subject(
+        'XkRadio off scroll $y',
+        480,
+        () => _material(
+          RadioGroup<int>(
+            groupValue: 0,
+            onChanged: (_) {},
+            child: const XkRadio<int>(value: 1),
+          ),
+        ),
+        scan: true,
+        scroll: y,
+      ),
+      _Subject(
+        'XkSwitch off scroll $y',
+        480,
+        () => _material(XkSwitch(value: false, onChanged: (_) {})),
+        scan: true,
+        scroll: y,
+      ),
+      _Subject(
+        'XkSwitch focus ring scroll $y',
+        480,
+        () => _material(
+          XkSwitch(value: false, autofocus: true, onChanged: (_) {}),
+        ),
+        keyboardFocus: true,
+        scan: true,
+        scroll: y,
+      ),
+    ],
     // Plain Material toggles and chip through XkTactileTheme — not a
     // supported path (use XkCheckbox · XkRadio · XkSwitch · XkChip). Measured
     // to keep its state on record: off · on · focus. No room for a ring apart
@@ -630,6 +703,18 @@ void main() {
     ('dark mist', Brightness.dark),
   ];
 
+  test('known failures: every entry names a measured scene', () {
+    final Set<String> labels = <String>{
+      for (final (String g, Brightness _) in grounds)
+        for (final _Subject subject in subjects)
+          for (final _Placement at in placements)
+            '${subject.name} · $g · ${at.name}',
+    };
+    for (final String key in _knownFailures.keys) {
+      expect(labels, contains(key), reason: 'stale entry: $key');
+    }
+  });
+
   for (final (String groundName, Brightness brightness) in grounds) {
     final Color ground = groundName.endsWith('mist')
         ? _mist(brightness)
@@ -649,22 +734,30 @@ void main() {
             artifact: artifact,
           );
           _report(label, sides);
-          final String? known = _knownFailures[label];
+          final (double, double)? known = _knownFailures[label];
           if (known != null) {
+            final double near = sides
+                .map((_Side e) => e.value)
+                .reduce(math.min);
+            final double far = sides.map((_Side e) => e.far).reduce(math.min);
             // ignore: avoid_print
-            print('KNOWN-FAIL $label  $known');
-            expect(
-              sides.map((_Side e) => e.value).reduce(math.min),
-              lessThan(3.0),
-              reason: '$label now passes at 1px — remove it from the list',
+            print(
+              'KNOWN-FAIL $label  1px ${near.toStringAsFixed(2)} '
+              '(recorded ${known.$1}) · 2px ${far.toStringAsFixed(2)} '
+              '(recorded ${known.$2})',
             );
-            for (final _Side e in sides) {
-              expect(
-                e.far,
-                greaterThanOrEqualTo(3.0),
-                reason: '$label ${e.name} 2px',
-              );
-            }
+            expect(
+              near,
+              closeTo(known.$1, _knownTolerance),
+              reason: '$label 1px value changed — re-measure and update',
+            );
+            expect(
+              far,
+              closeTo(known.$2, _knownTolerance),
+              reason: '$label 2px value changed — re-measure and update',
+            );
+            expect(near, lessThan(3.0));
+            expect(far, greaterThanOrEqualTo(3.0));
             return;
           }
           for (final _Side e in sides) {
@@ -1080,6 +1173,41 @@ void main() {
       expect(sw.trackOutlineColor!.resolve(on), XkTactileTokens.clear);
       expect(sw.overlayColor!.resolve(focus), XkTactileTokens.clear);
     }
+  });
+
+  testWidgets('XkCheckbox · XkRadio · XkSwitch: disabled is dimmed', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: XkTactileTheme.themeData(Brightness.light),
+        home: Scaffold(
+          body: Column(
+            children: <Widget>[
+              const XkCheckbox(value: true, onChanged: null),
+              XkCheckbox(value: true, onChanged: (_) {}),
+              RadioGroup<int>(
+                groupValue: 1,
+                onChanged: (_) {},
+                child: const XkRadio<int>(value: 1, enabled: false),
+              ),
+              const XkSwitch(value: true, onChanged: null),
+            ],
+          ),
+        ),
+      ),
+    );
+    double opacityOf(Finder control) => tester
+        .widget<Opacity>(
+          find.ancestor(of: control, matching: find.byType(Opacity)).first,
+        )
+        .opacity;
+    final Finder boxes = find.byType(Checkbox);
+    expect(opacityOf(boxes.at(0)), XkTactileTokens.disabledOpacity);
+    expect(opacityOf(boxes.at(1)), 1);
+    // The chosen dot is painted inside the dimmed layer too.
+    expect(opacityOf(find.byType(Radio<int>)), XkTactileTokens.disabledOpacity);
+    expect(opacityOf(find.byType(Switch)), XkTactileTokens.disabledOpacity);
   });
 
   test('Material checkbox · radio · switch · chip edges (DS #119)', () {

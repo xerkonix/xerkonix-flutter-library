@@ -1,7 +1,9 @@
-// DS `.panel` 카드 재질(DS #115·#116)과 보조 버튼 경계를 실제 픽셀로 잰다.
+// DS `.panel` 카드 재질(DS #115·#116)과 보조 버튼 경계, 입력 컨트롤 테
+// (DS #119 — 입력칸·오류·포커스 링·칩·고르기)를 실제 픽셀로 잰다.
 //
-// 기준: 카드·보조 버튼 바깥 경계는 바로 바깥 바탕과 3:1 이상이다
-// (DS DESIGN-SYSTEM.md §2·§7). 그림자를 켠 채(debugDisableShadows=false)
+// 기준: 카드·보조 버튼·입력 컨트롤 바깥 경계는 바로 바깥 바탕과 3:1 이상이다
+// (DS DESIGN-SYSTEM.md §2·§7). 포커스 링은 테와 따로 링 바깥 가장자리를
+// 잰다. 그림자를 켠 채(debugDisableShadows=false)
 // 그리고, 네 변 가운데에서 장치 픽셀 단위로 잰다:
 //   경계 띠 = 1 논리 px 테가 걸친 장치 픽셀들.
 //   띠의 픽셀 q 마다 바깥쪽 바로 옆 두 픽셀(q-1, q-2, 중심이 테 밖)과의
@@ -74,10 +76,13 @@ class _Placement {
 }
 
 class _Subject {
-  const _Subject(this.name, this.viewWidth, this.build);
+  const _Subject(this.name, this.viewWidth, this.build, {this.outset = 0});
   final String name;
   final double viewWidth;
   final Widget Function() build;
+
+  /// Measure this far outside the target box (a focus ring drawn outside).
+  final double outset;
 }
 
 Future<List<_Side>> _measure(
@@ -121,6 +126,8 @@ Future<List<_Side>> _measure(
         ),
       ),
     );
+    // Twice: autofocus lands after the first frame, then the chrome rebuilds.
+    await tester.pump();
     await tester.pump();
     final RenderRepaintBoundary boundary = tester.renderObject(
       find.byKey(_stage),
@@ -144,7 +151,10 @@ Future<List<_Side>> _measure(
     final int w = image.width;
     image.dispose();
     final Offset origin = tester.getTopLeft(find.byKey(_stage));
-    final Rect r = tester.getRect(find.byKey(_target)).shift(-origin);
+    final Rect r = tester
+        .getRect(find.byKey(_target))
+        .shift(-origin)
+        .inflate(subject.outset);
     final double l = r.left * d;
     final double t = r.top * d;
     final double rt = r.right * d;
@@ -235,6 +245,22 @@ void _report(String label, List<_Side> sides) {
   }
 }
 
+Widget _material(Widget child) =>
+    Material(type: MaterialType.transparency, child: child);
+
+Widget _field({bool error = false, bool focus = false}) => _material(
+  SizedBox(
+    width: 240.4,
+    child: XkTactileField(
+      error: error,
+      child: TextField(
+        autofocus: focus,
+        decoration: XkTactileField.inputDecoration(hintText: '이메일'),
+      ),
+    ),
+  ),
+);
+
 void main() {
   final List<_Subject> subjects = <_Subject>[
     _Subject(
@@ -289,6 +315,34 @@ void main() {
         width: 240.4,
         child: XkTactileHumanReview(child: Text('확인 필요')),
       ),
+    ),
+    // Input controls (DS #119): `--input-border` field, error, focus ring
+    // (2px `--focus-ring`, 2px away from the edge), chip and choice.
+    _Subject('input field', 480, () => _field()),
+    _Subject('input field error', 480, () => _field(error: true)),
+    _Subject('input field focus', 480, () => _field(focus: true)),
+    _Subject(
+      'input field focus ring',
+      480,
+      () => _field(focus: true),
+      outset: 4,
+    ),
+    _Subject(
+      'input field error focus ring',
+      480,
+      () => _field(error: true, focus: true),
+      outset: 4,
+    ),
+    _Subject('chip', 480, () => _material(XkChip(label: '필터', onTap: () {}))),
+    _Subject(
+      'choice off',
+      480,
+      () => _material(XkChip(label: '고르기', selected: false, onTap: () {})),
+    ),
+    _Subject(
+      'choice on',
+      480,
+      () => _material(XkChip(label: '고르기', selected: true, onTap: () {})),
     ),
   ];
   const List<_Placement> placements = <_Placement>[
@@ -501,6 +555,90 @@ void main() {
         (shape! as RoundedRectangleBorder).side.color,
         XkTactileTokens.of(b).panelBorder,
       );
+    }
+  });
+
+  testWidgets('input field: edge, error inner line, separate focus ring', (
+    WidgetTester tester,
+  ) async {
+    for (final Brightness b in Brightness.values) {
+      final XkTactileTokens t = XkTactileTokens.of(b);
+      // Fresh tree per brightness: a theme change would animate (lerp).
+      await tester.pumpWidget(const SizedBox());
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: XkTactileTheme.themeData(b),
+          home: Scaffold(
+            body: Column(
+              children: <Widget>[
+                _field(),
+                _field(error: true),
+                _field(focus: true),
+              ],
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.pump();
+      final List<XkTactileEdge> edges = tester
+          .widgetList<DecoratedBox>(
+            find.byKey(const ValueKey<String>('xk-tactile-field-chrome')),
+          )
+          .map(
+            (DecoratedBox d) =>
+                (d.decoration as BoxDecoration).border! as XkTactileEdge,
+          )
+          .toList();
+      expect(edges[0].top.color, t.inputBorder);
+      expect(edges[0].ring, isNull);
+      expect(edges[1].top.color, t.accentDeep);
+      expect(edges[1].ring, t.accentDeep, reason: 'error: inner 1px line');
+      expect(edges[2].top.color, t.focusRing);
+      final Finder ring = find.byKey(
+        const ValueKey<String>('xk-tactile-field-focus-ring'),
+      );
+      expect(ring, findsOneWidget);
+      final XkTactileEdge ringEdge =
+          (tester.widget<DecoratedBox>(ring).decoration as BoxDecoration)
+                  .border!
+              as XkTactileEdge;
+      expect(ringEdge.top.color, t.focusRing);
+      expect(ringEdge.top.width, 2);
+      final Rect field = tester.getRect(
+        find.byKey(const ValueKey<String>('xk-tactile-field-chrome')).at(2),
+      );
+      expect(tester.getRect(ring), field.inflate(4), reason: '2px gap + 2px');
+    }
+  });
+
+  test('Material checkbox · radio · switch · chip edges (DS #119)', () {
+    const Set<WidgetState> off = <WidgetState>{};
+    const Set<WidgetState> on = <WidgetState>{WidgetState.selected};
+    const Set<WidgetState> focus = <WidgetState>{WidgetState.focused};
+    for (final Brightness b in Brightness.values) {
+      final XkTactileTokens t = XkTactileTokens.of(b);
+      final ThemeData theme = XkTactileTheme.themeData(b);
+      BorderSide? box(Set<WidgetState> s) =>
+          WidgetStateProperty.resolveAs<BorderSide?>(
+            theme.checkboxTheme.side,
+            s,
+          );
+      expect(box(off)!.color, t.inputBorder);
+      expect(box(on)!.color, t.controlOn);
+      expect(box(focus)!.color, t.focusRing);
+      expect(box(focus)!.width, 2);
+      expect(theme.radioTheme.fillColor!.resolve(off), t.inputBorder);
+      expect(theme.radioTheme.fillColor!.resolve(on), t.controlOn);
+      expect(theme.switchTheme.trackOutlineColor!.resolve(off), t.inputBorder);
+      expect(theme.switchTheme.trackOutlineColor!.resolve(on), t.controlOn);
+      expect(theme.switchTheme.trackOutlineColor!.resolve(focus), t.focusRing);
+      expect(theme.switchTheme.trackOutlineWidth!.resolve(focus), 2);
+      BorderSide? chip(Set<WidgetState> s) =>
+          WidgetStateProperty.resolveAs<BorderSide?>(theme.chipTheme.side, s);
+      expect(chip(off)!.color, t.secondaryBorder);
+      expect(chip(on)!.color, t.controlOn);
+      expect(chip(focus)!.color, t.focusRing);
     }
   });
 }

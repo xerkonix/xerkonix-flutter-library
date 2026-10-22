@@ -1,3 +1,15 @@
+## 미정 — 입력 컨트롤 테 3:1 (DS #119)
+
+DS `a923549`(2026-10-22) 입력 컨트롤 경계를 Dart 에 옮긴다. 입력칸 테가 검정 20%(다크 `rgba(207,211,218,.24)`)라 캔버스와 1.1~1.7:1 이었고, 포커스는 옅은 그림자 테(1.2:1 안팎), 칩·고르기 테는 `--rule` 이었다.
+
+- **토큰.** `inputBorder` `#757A82`(다크 `#787D85`). 새 상수 `inputFocusRingWidth` 2 · `inputFocusRingOffset` 2.
+- **`XkTactileField`.** 테 `XkTactileEdge(inputBorder)`(장치 픽셀 맞춤). 오류는 잉크 테 + 안쪽 1px 잉크 선(`ring`) — 색만으로 구분하지 않는다. 포커스는 잉크 테 + 테와 2px 떨어진 2px `focusRing` 링(`xk-tactile-field-focus-ring`), 옅은 `selectedBorder` 22% 그림자 테는 뺐다. 오류+포커스면 안쪽 선과 링이 함께 남는다. 비활성은 예외(투명도 .4, 테 `inputBorder`).
+- **`XkTactileEdge`.** 선택 인자 `width`(기본 1) — 포커스 링·칩 포커스 2px.
+- **칩·고르기.** 누를 수 있는 `XkTag`(= `XkChip`) 테 `secondaryBorder`, 포커스 2px `focusRing`(전에는 아쿠아). 누를 수 없는 태그·배지는 그대로. `XkChip(selected:)` 고르기는 테 `secondaryBorder`, 고르면 `selectedFill` 면 + 테 `controlOn`(전에는 `XkSelected` 아쿠아 테·안 고르면 테 없음). `XkSelected` 자체(셸 내비)는 그대로.
+- **테마.** 체크박스 테 `inputBorder`(체크 `controlOn`), 라디오 고리 `inputBorder`(고름 `controlOn`), 토글 테 꺼짐 `inputBorder`·켜짐 `controlOn`, Material 칩 테 `secondaryBorder`(고름 `controlOn`, 면 `selectedFill`). 포커스는 테 2px `focusRing`. 전에는 `line`(검정 10%)·Material 기본값.
+- **생성기.** `tools/build_tactile_theme_roles.py` 가 `--input-border`·`--focus-ring` 과 위 Material 슬롯을 Dart 상수와 대조한다. `tools/tactile_theme_roles.json` 재생성.
+- **시험.** `test/xk_tactile_panel_edge_test.dart` 에 입력칸·오류·포커스(테)·포커스 링·오류+포커스 링·칩·고르기 꺼짐·켜짐 8 요소 × 4 바탕 × 5 배치(160 장면), 3:1 미만 0. 입력칸 오류 안쪽 선·링 위치(테 바깥 4px), Material 체크박스·라디오·토글·칩 테 값도 본다. `xk_tactile_bounded_state_test.dart` 포커스 단언을 그림자 → 링으로.
+
 ## 미정 — 카드 재질 · 카드·보조 버튼 경계 3:1 (DS #115)
 
 DS `8cb881f`(2026-10-21) `tactile/tokens.css`·`components.css` 의 카드 재질을 Dart 에 옮긴다. 흰 24% 면 · 검정 10% 테였던 카드와 흰 테 보조 버튼이 캔버스와 1.08~1.64:1 로 바탕에 묻혔다.

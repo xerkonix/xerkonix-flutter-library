@@ -248,12 +248,12 @@ class _XkTactileOuterShadowPainter extends CustomPainter {
 ///
 /// It is still a [Border]: `top.color` etc. read as before.
 class XkTactileEdge extends Border {
-  XkTactileEdge({required Color color, this.ring})
+  XkTactileEdge({required Color color, this.ring, double width = 1})
     : super(
-        top: BorderSide(color: color),
-        right: BorderSide(color: color),
-        bottom: BorderSide(color: color),
-        left: BorderSide(color: color),
+        top: BorderSide(color: color, width: width),
+        right: BorderSide(color: color, width: width),
+        bottom: BorderSide(color: color, width: width),
+        left: BorderSide(color: color, width: width),
       );
 
   /// Inner ring colour, or null for none.

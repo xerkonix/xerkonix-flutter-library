@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'tactile_surface.dart';
 import 'tactile_tokens.dart';
 import 'tactile_type.dart';
 
@@ -164,13 +165,34 @@ class _TactileInputChromeState extends State<_TactileInputChrome> {
   Widget build(BuildContext context) {
     final XkTactileTokens t = widget.tokens;
     final bool focused = _focused && widget.enabled;
-    final Color border = !widget.enabled
-        ? t.inputBorder
-        : widget.error
+    // DS #119: rest edge `--input-border` (3:1 on the ground). Error is an
+    // ink edge plus an inner 1px line (`inset 0 0 0 1px var(--accent-deep)`),
+    // not colour alone. Focus is an ink edge plus a separate 2px
+    // `--focus-ring` outline 2px outside it; with an error both stay.
+    final bool error = widget.error && widget.enabled;
+    final Color border = error
         ? t.accentDeep
         : focused
         ? t.focusRing
         : t.inputBorder;
+    final BorderRadius radius =
+        widget.borderRadius ??
+        BorderRadius.circular(XkTactileTokens.fieldRadius);
+    final Widget chrome = DecoratedBox(
+      key: const ValueKey<String>('xk-tactile-field-chrome'),
+      decoration: BoxDecoration(
+        color: t.inputFill,
+        borderRadius: radius,
+        border: XkTactileEdge(color: border, ring: error ? t.accentDeep : null),
+      ),
+      child: DefaultTextStyle.merge(
+        style: XkTactileType.field(color: t.ink),
+        child: widget.child,
+      ),
+    );
+    const double ringGap =
+        XkTactileTokens.inputFocusRingOffset +
+        XkTactileTokens.inputFocusRingWidth;
     return Focus(
       canRequestFocus: false,
       skipTraversal: true,
@@ -186,26 +208,33 @@ class _TactileInputChromeState extends State<_TactileInputChrome> {
           constraints: const BoxConstraints(
             minHeight: XkTactileTokens.controlHeight,
           ),
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              color: t.inputFill,
-              borderRadius:
-                  widget.borderRadius ??
-                  BorderRadius.circular(XkTactileTokens.fieldRadius),
-              border: Border.all(color: border),
-              boxShadow: focused
-                  ? <BoxShadow>[
-                      BoxShadow(
-                        color: t.selectedBorder.withValues(alpha: 0.22),
-                        spreadRadius: 3,
+          child: Stack(
+            fit: StackFit.passthrough,
+            clipBehavior: Clip.none,
+            children: <Widget>[
+              chrome,
+              if (focused)
+                Positioned(
+                  left: -ringGap,
+                  top: -ringGap,
+                  right: -ringGap,
+                  bottom: -ringGap,
+                  child: IgnorePointer(
+                    child: DecoratedBox(
+                      key: const ValueKey<String>(
+                        'xk-tactile-field-focus-ring',
                       ),
-                    ]
-                  : null,
-            ),
-            child: DefaultTextStyle.merge(
-              style: XkTactileType.field(color: t.ink),
-              child: widget.child,
-            ),
+                      decoration: BoxDecoration(
+                        borderRadius: radius + BorderRadius.circular(ringGap),
+                        border: XkTactileEdge(
+                          color: t.focusRing,
+                          width: XkTactileTokens.inputFocusRingWidth,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+            ],
           ),
         ),
       ),

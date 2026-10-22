@@ -105,6 +105,10 @@ class XkTactileTokens {
   final Color overlayBorder;
   final Color overlayBackdrop;
   final Color inputFill;
+
+  /// Input control edge (`--input-border`): field, multi-line, select,
+  /// checkbox, radio, switch off. 3:1 or more against the ground
+  /// (DS #119). Chips and choices use [secondaryBorder].
   final Color inputBorder;
   final Color primaryText;
   final Color primaryBase;
@@ -192,7 +196,7 @@ class XkTactileTokens {
     overlayBorder: Color(0xF2FFFFFF),
     overlayBackdrop: Color(0x40111111),
     inputFill: Color(0xADFFFFFF),
-    inputBorder: Color(0x33111111),
+    inputBorder: Color(0xFF757A82),
     primaryText: Color(0xFFF5F5F5),
     primaryBase: Color(0xFF111111),
     primaryBorder: Color(0xFF111111),
@@ -272,7 +276,7 @@ class XkTactileTokens {
     overlayBorder: Color(0x30CFD3DA),
     overlayBackdrop: Color(0x94000000),
     inputFill: Color(0xFF191B1F),
-    inputBorder: Color(0x3DCFD3DA),
+    inputBorder: Color(0xFF787D85),
     primaryText: Color(0xFF111111),
     primaryBase: Color(0xFFF5F5F5),
     primaryBorder: Color(0xFFF5F5F5),
@@ -336,6 +340,11 @@ class XkTactileTokens {
   static const double overlayBlur = 24;
   static const double focusOutlineWidth = 3;
   static const double focusOutlineOffset = 4;
+
+  /// Input control focus ring (`outline:2px solid var(--focus-ring);
+  /// outline-offset:2px`): drawn outside the edge, apart from it.
+  static const double inputFocusRingWidth = 2;
+  static const double inputFocusRingOffset = 2;
   static const Duration motion = Duration(milliseconds: 220);
   static const Cubic ease = Cubic(0.22, 1, 0.36, 1);
   static const double disabledOpacity = 0.4;

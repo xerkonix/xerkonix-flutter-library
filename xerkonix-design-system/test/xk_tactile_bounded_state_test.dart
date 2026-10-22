@@ -202,7 +202,13 @@ void main() {
     await tester.pump();
     final BoxDecoration focused = _fieldChrome(tester, fields.at(0));
     expect(focused.border?.top.color, XkTactileTokens.light.focusRing);
-    expect(focused.boxShadow, isNotNull);
+    // DS #119: focus is a separate 2px ring outside the edge, not a pale
+    // shadow halo.
+    expect(focused.boxShadow, isNull);
+    expect(
+      find.byKey(const ValueKey<String>('xk-tactile-field-focus-ring')),
+      findsOneWidget,
+    );
     expect(_editable(tester, inputs.at(0)).label.split('\n').first, '이메일');
     expect(_editable(tester, inputs.at(0)).flagsCollection.isTextField, isTrue);
     handle.dispose();

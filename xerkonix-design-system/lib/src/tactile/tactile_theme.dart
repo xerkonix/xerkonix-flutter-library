@@ -45,6 +45,9 @@ class XkTactileChrome {
   Color get onPrimary => tokens.primaryText;
   Color get ice => tokens.ice;
   Color get accent => tokens.accent;
+  Color get inputBorder => tokens.inputBorder;
+  Color get secondaryBorder => tokens.secondaryBorder;
+  Color get focusRing => tokens.focusRing;
   Color get controlOn => tokens.controlOn;
   Color get controlTrack => tokens.controlTrack;
   Color get controlMark => tokens.controlMark;
@@ -411,18 +414,31 @@ class XkTactileTheme {
         ),
       ),
       inputDecorationTheme: XkTactileField.inputThemeOf(brightness),
+      // DS #119: checkbox · radio · switch-off edge `--input-border`, chip
+      // edge `--secondary-border`, checked / chosen `--control-on`, all 3:1
+      // on the ground. Focus is a 2px `--focus-ring` (ink) edge.
       checkboxTheme: CheckboxThemeData(
         fillColor: WidgetStateProperty.resolveWith(
           (Set<WidgetState> s) =>
               s.contains(WidgetState.selected) ? c.controlOn : clear,
         ),
         checkColor: WidgetStatePropertyAll<Color>(c.controlMark),
-        side: BorderSide(color: c.line),
+        side: WidgetStateBorderSide.resolveWith((Set<WidgetState> s) {
+          if (s.contains(WidgetState.focused) &&
+              !s.contains(WidgetState.disabled)) {
+            return BorderSide(color: c.focusRing, width: 2);
+          }
+          return BorderSide(
+            color: s.contains(WidgetState.selected)
+                ? c.controlOn
+                : c.inputBorder,
+          );
+        }),
       ),
       radioTheme: RadioThemeData(
         fillColor: WidgetStateProperty.resolveWith(
           (Set<WidgetState> s) =>
-              s.contains(WidgetState.selected) ? c.controlOn : c.line,
+              s.contains(WidgetState.selected) ? c.controlOn : c.inputBorder,
         ),
       ),
       switchTheme: SwitchThemeData(
@@ -435,6 +451,37 @@ class XkTactileTheme {
           (Set<WidgetState> s) =>
               s.contains(WidgetState.selected) ? c.controlOn : c.controlTrack,
         ),
+        trackOutlineColor: WidgetStateProperty.resolveWith((
+          Set<WidgetState> s,
+        ) {
+          if (s.contains(WidgetState.focused) &&
+              !s.contains(WidgetState.disabled)) {
+            return c.focusRing;
+          }
+          return s.contains(WidgetState.selected) ? c.controlOn : c.inputBorder;
+        }),
+        trackOutlineWidth: WidgetStateProperty.resolveWith(
+          (Set<WidgetState> s) =>
+              s.contains(WidgetState.focused) &&
+                  !s.contains(WidgetState.disabled)
+              ? 2
+              : 1,
+        ),
+      ),
+      chipTheme: ChipThemeData(
+        selectedColor: c.selectedFill,
+        checkmarkColor: c.ink,
+        side: WidgetStateBorderSide.resolveWith((Set<WidgetState> s) {
+          if (s.contains(WidgetState.focused) &&
+              !s.contains(WidgetState.disabled)) {
+            return BorderSide(color: c.focusRing, width: 2);
+          }
+          return BorderSide(
+            color: s.contains(WidgetState.selected)
+                ? c.controlOn
+                : c.secondaryBorder,
+          );
+        }),
       ),
       progressIndicatorTheme: ProgressIndicatorThemeData(
         color: c.accent,

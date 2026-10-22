@@ -190,9 +190,6 @@ class _TactileInputChromeState extends State<_TactileInputChrome> {
         child: widget.child,
       ),
     );
-    const double ringGap =
-        XkTactileTokens.inputFocusRingOffset +
-        XkTactileTokens.inputFocusRingWidth;
     return Focus(
       canRequestFocus: false,
       skipTraversal: true,
@@ -208,33 +205,13 @@ class _TactileInputChromeState extends State<_TactileInputChrome> {
           constraints: const BoxConstraints(
             minHeight: XkTactileTokens.controlHeight,
           ),
-          child: Stack(
-            fit: StackFit.passthrough,
-            clipBehavior: Clip.none,
-            children: <Widget>[
-              chrome,
-              if (focused)
-                Positioned(
-                  left: -ringGap,
-                  top: -ringGap,
-                  right: -ringGap,
-                  bottom: -ringGap,
-                  child: IgnorePointer(
-                    child: DecoratedBox(
-                      key: const ValueKey<String>(
-                        'xk-tactile-field-focus-ring',
-                      ),
-                      decoration: BoxDecoration(
-                        borderRadius: radius + BorderRadius.circular(ringGap),
-                        border: XkTactileEdge(
-                          color: t.focusRing,
-                          width: XkTactileTokens.inputFocusRingWidth,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-            ],
+          child: XkTactileFocusRing(
+            show: focused,
+            color: t.focusRing,
+            borderRadius: radius,
+            offset: XkTactileTokens.inputFocusRingOffset,
+            ringKey: const ValueKey<String>('xk-tactile-field-focus-ring'),
+            child: chrome,
           ),
         ),
       ),

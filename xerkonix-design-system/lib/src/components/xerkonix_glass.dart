@@ -386,8 +386,9 @@ class _XkTagState extends State<XkTag> {
     final Color ink = widget.flag ? XkColor.aquaDeepOf(b) : XkColor.ink2Of(b);
     final XkTactileTokens t = XkTactileTokens.of(b);
     // A tappable tag is a chip (DS `.chip`): edge `--secondary-border`
-    // (3:1 on the ground, DS #119), focus 2px `--focus-ring`. A static tag
-    // or badge keeps the hairline — it is not a control.
+    // (3:1 on the ground, DS #119). Focus keeps that edge and adds a separate
+    // 2px `--focus-ring` ring 3px outside it (`button:focus-visible`). A
+    // static tag or badge keeps the hairline — it is not a control.
     final bool chip = widget.onTap != null;
     final Color border = chip
         ? t.secondaryBorder
@@ -400,12 +401,7 @@ class _XkTagState extends State<XkTag> {
       decoration: BoxDecoration(
         color: fill,
         borderRadius: XkRadius.tagBorderRadius,
-        border: chip
-            ? XkTactileEdge(
-                color: _focus ? t.focusRing : border,
-                width: _focus ? 2 : 1,
-              )
-            : Border.all(color: border),
+        border: chip ? XkTactileEdge(color: border) : Border.all(color: border),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
@@ -441,7 +437,14 @@ class _XkTagState extends State<XkTag> {
         child: GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: widget.onTap,
-          child: body,
+          child: XkTactileFocusRing(
+            show: _focus,
+            color: t.focusRing,
+            borderRadius: XkRadius.tagBorderRadius,
+            offset: XkTactileTokens.controlFocusRingOffset,
+            ringKey: const ValueKey<String>('xk-tag-focus-ring'),
+            child: body,
+          ),
         ),
       ),
     );

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'tactile_app_surface.dart';
 import 'tactile_field.dart';
 import 'tactile_fonts.dart';
+import 'tactile_surface.dart';
 import 'tactile_tokens.dart';
 
 /// Material slot → TACTILE CSS role. Owner of app ThemeData chrome.
@@ -423,6 +424,10 @@ class XkTactileTheme {
               s.contains(WidgetState.selected) ? c.controlOn : clear,
         ),
         checkColor: WidgetStatePropertyAll<Color>(c.controlMark),
+        // Material default radius 2; edge on whole device pixels.
+        shape: const XkTactileEdgeShape(
+          borderRadius: BorderRadius.all(Radius.circular(2)),
+        ),
         side: WidgetStateBorderSide.resolveWith((Set<WidgetState> s) {
           if (s.contains(WidgetState.focused) &&
               !s.contains(WidgetState.disabled)) {
@@ -436,10 +441,13 @@ class XkTactileTheme {
         }),
       ),
       radioTheme: RadioThemeData(
-        fillColor: WidgetStateProperty.resolveWith(
-          (Set<WidgetState> s) =>
-              s.contains(WidgetState.selected) ? c.controlOn : c.inputBorder,
-        ),
+        fillColor: WidgetStateProperty.resolveWith((Set<WidgetState> s) {
+          if (s.contains(WidgetState.focused) &&
+              !s.contains(WidgetState.disabled)) {
+            return c.focusRing;
+          }
+          return s.contains(WidgetState.selected) ? c.controlOn : c.inputBorder;
+        }),
       ),
       switchTheme: SwitchThemeData(
         thumbColor: WidgetStateProperty.resolveWith(
@@ -460,15 +468,16 @@ class XkTactileTheme {
           }
           return s.contains(WidgetState.selected) ? c.controlOn : c.inputBorder;
         }),
-        trackOutlineWidth: WidgetStateProperty.resolveWith(
-          (Set<WidgetState> s) =>
-              s.contains(WidgetState.focused) &&
-                  !s.contains(WidgetState.disabled)
-              ? 2
-              : 1,
-        ),
+        // Material draws the outline on the track inset 1px, centred: 2px
+        // puts its outer edge on the track edge (1px leaves the pale track
+        // fill outside it).
+        trackOutlineWidth: const WidgetStatePropertyAll<double>(2),
       ),
       chipTheme: ChipThemeData(
+        // Material default radius 8; edge on whole device pixels.
+        shape: const XkTactileEdgeShape(
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+        ),
         selectedColor: c.selectedFill,
         checkmarkColor: c.ink,
         side: WidgetStateBorderSide.resolveWith((Set<WidgetState> s) {

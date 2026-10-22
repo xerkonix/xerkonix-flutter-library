@@ -345,6 +345,10 @@ class XkTactileTokens {
   /// outline-offset:2px`): drawn outside the edge, apart from it.
   static const double inputFocusRingWidth = 2;
   static const double inputFocusRingOffset = 2;
+
+  /// Button-like control focus ring offset (`button:focus-visible`,
+  /// `outline-offset:3px`), e.g. a chip. Width is [inputFocusRingWidth].
+  static const double controlFocusRingOffset = 3;
   static const Duration motion = Duration(milliseconds: 220);
   static const Cubic ease = Cubic(0.22, 1, 0.36, 1);
   static const double disabledOpacity = 0.4;

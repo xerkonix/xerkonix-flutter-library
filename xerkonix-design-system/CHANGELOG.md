@@ -4,11 +4,13 @@ DS `a923549`(2026-10-22) 입력 컨트롤 경계를 Dart 에 옮긴다. 입력�
 
 - **토큰.** `inputBorder` `#757A82`(다크 `#787D85`). 새 상수 `inputFocusRingWidth` 2 · `inputFocusRingOffset` 2.
 - **`XkTactileField`.** 테 `XkTactileEdge(inputBorder)`(장치 픽셀 맞춤). 오류는 잉크 테 + 안쪽 1px 잉크 선(`ring`) — 색만으로 구분하지 않는다. 포커스는 잉크 테 + 테와 2px 떨어진 2px `focusRing` 링(`xk-tactile-field-focus-ring`), 옅은 `selectedBorder` 22% 그림자 테는 뺐다. 오류+포커스면 안쪽 선과 링이 함께 남는다. 비활성은 예외(투명도 .4, 테 `inputBorder`).
-- **`XkTactileEdge`.** 선택 인자 `width`(기본 1) — 포커스 링·칩 포커스 2px.
-- **칩·고르기.** 누를 수 있는 `XkTag`(= `XkChip`) 테 `secondaryBorder`, 포커스 2px `focusRing`(전에는 아쿠아). 누를 수 없는 태그·배지는 그대로. `XkChip(selected:)` 고르기는 테 `secondaryBorder`, 고르면 `selectedFill` 면 + 테 `controlOn`(전에는 `XkSelected` 아쿠아 테·안 고르면 테 없음). `XkSelected` 자체(셸 내비)는 그대로.
-- **테마.** 체크박스 테 `inputBorder`(체크 `controlOn`), 라디오 고리 `inputBorder`(고름 `controlOn`), 토글 테 꺼짐 `inputBorder`·켜짐 `controlOn`, Material 칩 테 `secondaryBorder`(고름 `controlOn`, 면 `selectedFill`). 포커스는 테 2px `focusRing`. 전에는 `line`(검정 10%)·Material 기본값.
+- **`XkTactileEdge`.** 선택 인자 `width`(기본 1) — 포커스 링 2px.
+- **새 `XkTactileFocusRing`.** 테와 떨어진 2px 포커스 링(CSS outline 처럼 자리를 차지하지 않음). 입력칸(간격 2)·칩(간격 3, 새 상수 `controlFocusRingOffset`)이 같이 쓴다.
+- **새 `XkTactileEdgeShape`.** `RoundedRectangleBorder` 하위. 테를 `XkTactileEdge` 처럼 장치 픽셀에 맞춰 칠한다. Material 체크박스·칩 `shape`(반지름은 Material 기본 2·8 그대로).
+- **칩·고르기.** 누를 수 있는 `XkTag`(= `XkChip`) 테 `secondaryBorder`. 포커스는 테를 그대로 두고 테와 3px 떨어진 2px `focusRing` 링을 따로 그린다(DS `.chip`·`button:focus-visible`, 전에는 아쿠아 테 2px). 누를 수 없는 태그·배지는 그대로. `XkChip(selected:)` 고르기는 테 `secondaryBorder`, 고르면 `selectedFill` 면 + 테 `controlOn`(전에는 `XkSelected` 아쿠아 테·안 고르면 테 없음). `XkSelected` 자체(셸 내비)는 그대로.
+- **테마.** 체크박스 테 `inputBorder`(체크 `controlOn`), 라디오 고리 `inputBorder`(고름 `controlOn`), 토글 테 꺼짐 `inputBorder`·켜짐 `controlOn`(폭 2 — Material 은 테를 트랙 안쪽 1px 에 가운데 맞춰 그려 1px 이면 옅은 트랙 면이 테 바깥에 남는다), Material 칩 테 `secondaryBorder`(고름 `controlOn`, 면 `selectedFill`). Material 컨트롤은 테와 떨어진 링을 그릴 자리가 없어 포커스는 테(라디오는 고리) 자체를 `focusRing` 으로. 전에는 `line`(검정 10%)·Material 기본값.
 - **생성기.** `tools/build_tactile_theme_roles.py` 가 `--input-border`·`--focus-ring` 과 위 Material 슬롯을 Dart 상수와 대조한다. `tools/tactile_theme_roles.json` 재생성.
-- **시험.** `test/xk_tactile_panel_edge_test.dart` 에 입력칸·오류·포커스(테)·포커스 링·오류+포커스 링·칩·고르기 꺼짐·켜짐 8 요소 × 4 바탕 × 5 배치(160 장면), 3:1 미만 0. 입력칸 오류 안쪽 선·링 위치(테 바깥 4px), Material 체크박스·라디오·토글·칩 테 값도 본다. `xk_tactile_bounded_state_test.dart` 포커스 단언을 그림자 → 링으로.
+- **시험.** `test/xk_tactile_panel_edge_test.dart` 에 입력칸·오류·포커스(테)·포커스 링·오류+포커스 링·칩·고르기 꺼짐·켜짐 8 요소 × 4 바탕 × 5 배치(160 장면), 3:1 미만 0. 칩 포커스 테·링 2 요소, Material 체크박스·라디오·토글·칩 × 꺼짐·켬·포커스 12 요소(실제 그린 픽셀을 바깥에서 안으로 훑어 첫 테를 잼) 280 장면 추가. 라디오·토글 꺼짐은 Material 이 둥근 선을 앤티앨리어싱으로 그려 1배 화면 소수 위치(.3/.7)에서 바로 바깥 1px 이 같은 선의 번짐이 된다 — 그 5 장면만 2px 바깥과 대조(1px 기준 값도 보고에 남김). 입력칸 오류 안쪽 선·링 위치(테 바깥 4px), Material 체크박스·라디오·토글·칩 테 값도 본다. `xk_tactile_bounded_state_test.dart` 포커스 단언을 그림자 → 링으로.
 
 ## 미정 — 카드 재질 · 카드·보조 버튼 경계 3:1 (DS #115)
 

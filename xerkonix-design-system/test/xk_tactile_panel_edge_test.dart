@@ -1,7 +1,9 @@
-// DS `.panel` 카드 재질(DS #115·#116)과 보조 버튼 경계를 실제 픽셀로 잰다.
+// DS `.panel` 카드 재질(DS #115·#116)과 보조 버튼 경계, 입력 컨트롤 테
+// (DS #119 — 입력칸·오류·포커스 링·칩·고르기)를 실제 픽셀로 잰다.
 //
-// 기준: 카드·보조 버튼 바깥 경계는 바로 바깥 바탕과 3:1 이상이다
-// (DS DESIGN-SYSTEM.md §2·§7). 그림자를 켠 채(debugDisableShadows=false)
+// 기준: 카드·보조 버튼·입력 컨트롤 바깥 경계는 바로 바깥 바탕과 3:1 이상이다
+// (DS DESIGN-SYSTEM.md §2·§7). 포커스 링은 테와 따로 링 바깥 가장자리를
+// 잰다. 그림자를 켠 채(debugDisableShadows=false)
 // 그리고, 네 변 가운데에서 장치 픽셀 단위로 잰다:
 //   경계 띠 = 1 논리 px 테가 걸친 장치 픽셀들.
 //   띠의 픽셀 q 마다 바깥쪽 바로 옆 두 픽셀(q-1, q-2, 중심이 테 밖)과의
@@ -14,11 +16,12 @@
 
 import 'dart:io';
 import 'dart:math' as math;
-import 'dart:typed_data';
 import 'dart:ui' as ui;
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:xerkonix_design_system/xerkonix_design_system.dart';
 
@@ -58,11 +61,17 @@ Color _mist(Brightness b) => b == Brightness.light
     : Color.alphaBlend(const Color(0x8C383D45), XkTactileTokens.dark.canvas);
 
 class _Side {
-  _Side(this.name, this.value, this.edge, this.out);
+  _Side(this.name, this.value, this.edge, this.out, {double? far})
+    : far = far ?? value;
   final String name;
+
+  /// Edge vs the 1px and 2px outside (the lower).
   final double value;
   final List<int> edge;
   final List<int> out;
+
+  /// Edge vs the 2px outside only (past an anti-aliased fringe).
+  final double far;
 }
 
 class _Placement {
@@ -74,11 +83,69 @@ class _Placement {
 }
 
 class _Subject {
-  const _Subject(this.name, this.viewWidth, this.build);
+  const _Subject(
+    this.name,
+    this.viewWidth,
+    this.build, {
+    this.outset = 0,
+    this.focusByTab = false,
+    this.keyboardFocus = false,
+    this.scan = false,
+    this.skipRing = false,
+    this.hover = false,
+    this.scroll,
+  });
   final String name;
   final double viewWidth;
   final Widget Function() build;
+
+  /// Measure this far outside the target box (a focus ring drawn outside).
+  final double outset;
+
+  /// Press Tab once after the first frames (a control without autofocus).
+  final bool focusByTab;
+
+  /// Keyboard focus highlight (Material toggles show focus only then).
+  final bool keyboardFocus;
+
+  /// Material control whose painted shape is smaller than its box
+  /// (checkbox · radio · switch): walk in from outside the box along the
+  /// centre lines to the first pixel that is not the ground (1.5:1 or more
+  /// against it), and measure that edge against the two pixels just
+  /// outside it. A faint focus overlay under 1.5:1 is not an edge.
+  final bool scan;
+
+  /// With [scan]: pass the focus ring and its gap, and measure the
+  /// control's own edge against the gap pixels just outside it.
+  final bool skipRing;
+
+  /// Hover the mouse over the target centre before measuring.
+  final bool hover;
+
+  /// Put the target in a scrolled [ListView] (its items sit in their own
+  /// repaint boundaries) and jump to this fractional offset: a scroll moves
+  /// the layer without a fresh paint unless the control asks for one.
+  final double? scroll;
 }
+
+/// Known failures, kept as failures (not relaxed) — plain Material path
+/// only, which is not supported (use XkCheckbox · XkRadio · XkSwitch).
+/// Material paints the radio ring and the switch track ends anti-aliased
+/// and a theme cannot move them onto device pixels; at a fractional
+/// position on a 1x screen the 1px just outside the edge is a partial
+/// fringe of the same round stroke, under 3:1. The wrappers paint that edge
+/// themselves on device pixel bounds and have no entry here. Each entry
+/// asserts the recorded values (±[_knownTolerance]): the 1px minimum over
+/// the four sides and the 2px minimum. Any change — better or worse —
+/// fails, and so does an entry that names no scene.
+const Map<String, (double, double)> _knownFailures = <String, (double, double)>{
+  'switch off · light canvas · dpr1 frac.3/.7': (2.71, 3.96),
+  'radio off · light mist · dpr1 frac.3/.7': (2.73, 3.45),
+  'switch off · light mist · dpr1 frac.3/.7': (2.52, 3.45),
+  'radio off · dark mist · dpr1 frac.3/.7': (2.68, 3.52),
+  'switch off · dark mist · dpr1 frac.3/.7': (2.37, 3.52),
+};
+const double _knownTolerance = 0.02;
 
 Future<List<_Side>> _measure(
   WidgetTester tester, {
@@ -96,6 +163,16 @@ Future<List<_Side>> _measure(
   addTearDown(tester.view.resetDevicePixelRatio);
   final bool previous = debugDisableShadows;
   debugDisableShadows = false;
+  final FocusHighlightStrategy strategy =
+      FocusManager.instance.highlightStrategy;
+  // Mouse use switches Flutter to the traditional highlight mode too.
+  if (subject.keyboardFocus || subject.focusByTab || subject.hover) {
+    FocusManager.instance.highlightStrategy =
+        FocusHighlightStrategy.alwaysTraditional;
+  }
+  final ScrollController scroller = ScrollController();
+  addTearDown(scroller.dispose);
+  final Widget target = KeyedSubtree(key: _target, child: subject.build());
   try {
     await tester.pumpWidget(
       MaterialApp(
@@ -112,7 +189,23 @@ Future<List<_Side>> _measure(
                   alignment: Alignment.topLeft,
                   child: Padding(
                     padding: EdgeInsets.only(left: at.dx, top: at.dy),
-                    child: KeyedSubtree(key: _target, child: subject.build()),
+                    child: subject.scroll == null
+                        ? target
+                        : SizedBox(
+                            width: view.width - at.dx - 8,
+                            height: 200,
+                            child: ListView(
+                              controller: scroller,
+                              padding: const EdgeInsets.only(top: 20),
+                              children: <Widget>[
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: target,
+                                ),
+                                const SizedBox(height: 600),
+                              ],
+                            ),
+                          ),
                   ),
                 ),
               ),
@@ -121,7 +214,32 @@ Future<List<_Side>> _measure(
         ),
       ),
     );
+    // Twice: autofocus lands after the first frame, then the chrome rebuilds.
     await tester.pump();
+    await tester.pump();
+    if (subject.scroll != null) {
+      // Paint once at offset 0, then scroll to the fraction.
+      scroller.jumpTo(subject.scroll!);
+      await tester.pump();
+    }
+    if (subject.focusByTab) {
+      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+      await tester.pump();
+      await tester.pump();
+    }
+    if (subject.hover) {
+      final TestGesture mouse = await tester.createGesture(
+        kind: PointerDeviceKind.mouse,
+      );
+      await mouse.addPointer(location: Offset.zero);
+      addTearDown(mouse.removePointer);
+      await tester.pump();
+      await mouse.moveTo(tester.getCenter(find.byKey(_target)));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+    }
+    // Let Material toggle / focus overlay animations finish.
+    await tester.pump(const Duration(milliseconds: 400));
     final RenderRepaintBoundary boundary = tester.renderObject(
       find.byKey(_stage),
     );
@@ -144,13 +262,76 @@ Future<List<_Side>> _measure(
     final int w = image.width;
     image.dispose();
     final Offset origin = tester.getTopLeft(find.byKey(_stage));
-    final Rect r = tester.getRect(find.byKey(_target)).shift(-origin);
+    final Rect r = tester
+        .getRect(find.byKey(_target))
+        .shift(-origin)
+        .inflate(subject.outset);
     final double l = r.left * d;
     final double t = r.top * d;
     final double rt = r.right * d;
     final double b = r.bottom * d;
     final int cx = ((l + rt) / 2).floor();
     final int cy = ((t + b) / 2).floor();
+
+    if (subject.scan) {
+      _Side walk(
+        String name,
+        int from,
+        int to,
+        int step,
+        List<int> Function(int) at,
+      ) {
+        final List<int> ground = at(from);
+        int? q0;
+        for (int q = from; step > 0 ? q <= to : q >= to; q += step) {
+          if (_contrast(at(q), ground) >= 1.5) {
+            q0 = q;
+            break;
+          }
+        }
+        if (q0 != null && subject.skipRing) {
+          // Through the focus ring, then its gap, to the control's edge.
+          int q = q0;
+          while (q != to && _contrast(at(q), ground) >= 1.5) {
+            q += step;
+          }
+          while (q != to && _contrast(at(q), ground) < 1.5) {
+            q += step;
+          }
+          q0 = q == to ? null : q;
+        }
+        if (q0 == null) {
+          return _Side(name, 1, ground, ground);
+        }
+        final List<int> o1 = at(q0 - step);
+        List<int> o2 = at(q0 - 2 * step);
+        if (subject.skipRing && _contrast(o2, ground) >= 1.5) {
+          // A 2px gap on a 1x screen: the second pixel out is the ring
+          // itself, not the ground the edge meets.
+          o2 = o1;
+        }
+        double best = 0;
+        double far = 0;
+        List<int> edge = at(q0);
+        for (int k = 0; k < 3; k++) {
+          final List<int> e = at(q0 + k * step);
+          final double c = math.min(_contrast(e, o1), _contrast(e, o2));
+          if (c > best) {
+            best = c;
+            edge = e;
+          }
+          far = math.max(far, _contrast(e, o2));
+        }
+        return _Side(name, best, edge, o1, far: far);
+      }
+
+      return <_Side>[
+        walk('top', t.floor() - 3, cy, 1, (int y) => _px(rgba, w, cx, y)),
+        walk('left', l.floor() - 3, cx, 1, (int x) => _px(rgba, w, x, cy)),
+        walk('bottom', b.ceil() + 2, cy, -1, (int y) => _px(rgba, w, cx, y)),
+        walk('right', rt.ceil() + 2, cx, -1, (int x) => _px(rgba, w, x, cy)),
+      ];
+    }
 
     // Band pixel index along one axis, outward step, and whether a pixel's
     // centre lies outside the 1 logical px border.
@@ -219,6 +400,7 @@ Future<List<_Side>> _measure(
     ];
   } finally {
     debugDisableShadows = previous;
+    FocusManager.instance.highlightStrategy = strategy;
   }
 }
 
@@ -226,7 +408,7 @@ void _report(String label, List<_Side> sides) {
   final double worst = sides.map((_Side e) => e.value).reduce(math.min);
   final String line =
       '$label  min ${worst.toStringAsFixed(2)}:1  '
-      '${sides.map((_Side e) => '${e.name} ${_hex(e.edge)}/${_hex(e.out)} ${e.value.toStringAsFixed(2)}').join(' · ')}';
+      '${sides.map((_Side e) => '${e.name} ${_hex(e.edge)}/${_hex(e.out)} ${e.value.toStringAsFixed(2)}${e.far != e.value ? ' (2px 밖 ${e.far.toStringAsFixed(2)})' : ''}').join(' · ')}';
   // ignore: avoid_print
   print('EDGE $line');
   final String? path = Platform.environment['EDGE_REPORT'];
@@ -234,6 +416,22 @@ void _report(String label, List<_Side> sides) {
     File(path).writeAsStringSync('$line\n', mode: FileMode.append);
   }
 }
+
+Widget _material(Widget child) =>
+    Material(type: MaterialType.transparency, child: child);
+
+Widget _field({bool error = false, bool focus = false}) => _material(
+  SizedBox(
+    width: 240.4,
+    child: XkTactileField(
+      error: error,
+      child: TextField(
+        autofocus: focus,
+        decoration: XkTactileField.inputDecoration(hintText: '이메일'),
+      ),
+    ),
+  ),
+);
 
 void main() {
   final List<_Subject> subjects = <_Subject>[
@@ -290,6 +488,206 @@ void main() {
         child: XkTactileHumanReview(child: Text('확인 필요')),
       ),
     ),
+    // Input controls (DS #119): `--input-border` field, error, focus ring
+    // (2px `--focus-ring`, 2px away from the edge), chip and choice.
+    _Subject('input field', 480, () => _field()),
+    _Subject('input field error', 480, () => _field(error: true)),
+    _Subject('input field focus', 480, () => _field(focus: true)),
+    _Subject(
+      'input field focus ring',
+      480,
+      () => _field(focus: true),
+      outset: 4,
+    ),
+    _Subject(
+      'input field error focus ring',
+      480,
+      () => _field(error: true, focus: true),
+      outset: 4,
+    ),
+    _Subject('chip', 480, () => _material(XkChip(label: '필터', onTap: () {}))),
+    _Subject(
+      'choice off',
+      480,
+      () => _material(XkChip(label: '고르기', selected: false, onTap: () {})),
+    ),
+    _Subject(
+      'choice on',
+      480,
+      () => _material(XkChip(label: '고르기', selected: true, onTap: () {})),
+    ),
+    // Chip focus: the edge stays `--secondary-border`; a separate 2px ink
+    // ring sits 3px outside it (DS `.chip` / `button:focus-visible`).
+    _Subject(
+      'chip focus',
+      480,
+      () => _material(XkChip(label: '필터', onTap: () {})),
+      focusByTab: true,
+    ),
+    _Subject(
+      'chip focus ring',
+      480,
+      () => _material(XkChip(label: '필터', onTap: () {})),
+      focusByTab: true,
+      outset: 5,
+    ),
+    // Choice focus: same separate ring as the chip.
+    _Subject(
+      'choice focus',
+      480,
+      () => _material(XkChip(label: '고르기', selected: false, onTap: () {})),
+      focusByTab: true,
+    ),
+    _Subject(
+      'choice focus ring',
+      480,
+      () => _material(XkChip(label: '고르기', selected: false, onTap: () {})),
+      focusByTab: true,
+      outset: 5,
+    ),
+    // XkCheckbox · XkRadio · XkSwitch: real painted state — rest, hover,
+    // checked / on, keyboard focus (edge as rest + separate 2px ink ring
+    // 2px outside it; ring and edge measured apart).
+    for (final (String state, bool on, bool focus, bool hover, bool ring)
+        in <(String, bool, bool, bool, bool)>[
+          ('off', false, false, false, false),
+          ('hover', false, false, true, false),
+          ('on', true, false, false, false),
+          ('focus edge', false, true, false, false),
+          ('focus ring', false, true, false, true),
+        ]) ...<_Subject>[
+      _Subject(
+        'XkCheckbox $state',
+        480,
+        () => _material(
+          XkCheckbox(value: on, autofocus: focus, onChanged: (_) {}),
+        ),
+        keyboardFocus: focus,
+        hover: hover,
+        scan: true,
+        skipRing: focus && !ring,
+      ),
+      _Subject(
+        'XkRadio $state',
+        480,
+        () => _material(
+          RadioGroup<int>(
+            groupValue: on ? 1 : 0,
+            onChanged: (_) {},
+            child: XkRadio<int>(value: 1, autofocus: focus),
+          ),
+        ),
+        keyboardFocus: focus,
+        hover: hover,
+        scan: true,
+        skipRing: focus && !ring,
+      ),
+      _Subject(
+        'XkSwitch $state',
+        480,
+        () =>
+            _material(XkSwitch(value: on, autofocus: focus, onChanged: (_) {})),
+        keyboardFocus: focus,
+        hover: hover,
+        scan: true,
+        skipRing: focus && !ring,
+      ),
+    ],
+    // Wrappers inside a scrolled list at a fractional offset (pixel
+    // alignment must follow the scroll).
+    for (final double y in <double>[0.3, 0.5, 0.7]) ...<_Subject>[
+      _Subject(
+        'XkCheckbox off scroll $y',
+        480,
+        () => _material(XkCheckbox(value: false, onChanged: (_) {})),
+        scan: true,
+        scroll: y,
+      ),
+      _Subject(
+        'XkRadio off scroll $y',
+        480,
+        () => _material(
+          RadioGroup<int>(
+            groupValue: 0,
+            onChanged: (_) {},
+            child: const XkRadio<int>(value: 1),
+          ),
+        ),
+        scan: true,
+        scroll: y,
+      ),
+      _Subject(
+        'XkSwitch off scroll $y',
+        480,
+        () => _material(XkSwitch(value: false, onChanged: (_) {})),
+        scan: true,
+        scroll: y,
+      ),
+      _Subject(
+        'XkSwitch focus ring scroll $y',
+        480,
+        () => _material(
+          XkSwitch(value: false, autofocus: true, onChanged: (_) {}),
+        ),
+        keyboardFocus: true,
+        scan: true,
+        scroll: y,
+      ),
+    ],
+    // Plain Material toggles and chip through XkTactileTheme — not a
+    // supported path (use XkCheckbox · XkRadio · XkSwitch · XkChip). Measured
+    // to keep its state on record: off · on · focus. No room for a ring apart
+    // from the edge, so focus here is an ink edge.
+    for (final (String state, bool on, bool focus) in <(String, bool, bool)>[
+      ('off', false, false),
+      ('on', true, false),
+      ('focus', false, true),
+    ]) ...<_Subject>[
+      _Subject(
+        'checkbox $state',
+        480,
+        () =>
+            _material(Checkbox(value: on, autofocus: focus, onChanged: (_) {})),
+        keyboardFocus: focus,
+        scan: true,
+      ),
+      _Subject(
+        'radio $state',
+        480,
+        () => _material(
+          RadioGroup<int>(
+            groupValue: on ? 1 : 0,
+            onChanged: (_) {},
+            child: Radio<int>(value: 1, autofocus: focus),
+          ),
+        ),
+        keyboardFocus: focus,
+        scan: true,
+      ),
+      _Subject(
+        'switch $state',
+        480,
+        () => _material(Switch(value: on, autofocus: focus, onChanged: (_) {})),
+        keyboardFocus: focus,
+        scan: true,
+      ),
+      _Subject(
+        'material chip $state',
+        480,
+        () => _material(
+          FilterChip(
+            label: const Text('필터'),
+            selected: on,
+            autofocus: focus,
+            showCheckmark: false,
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            onSelected: (_) {},
+          ),
+        ),
+        keyboardFocus: focus,
+        scan: true,
+      ),
+    ],
   ];
   const List<_Placement> placements = <_Placement>[
     _Placement('dpr1 int', 1, 40, 40),
@@ -304,6 +702,18 @@ void main() {
     ('dark canvas', Brightness.dark),
     ('dark mist', Brightness.dark),
   ];
+
+  test('known failures: every entry names a measured scene', () {
+    final Set<String> labels = <String>{
+      for (final (String g, Brightness _) in grounds)
+        for (final _Subject subject in subjects)
+          for (final _Placement at in placements)
+            '${subject.name} · $g · ${at.name}',
+    };
+    for (final String key in _knownFailures.keys) {
+      expect(labels, contains(key), reason: 'stale entry: $key');
+    }
+  });
 
   for (final (String groundName, Brightness brightness) in grounds) {
     final Color ground = groundName.endsWith('mist')
@@ -324,6 +734,32 @@ void main() {
             artifact: artifact,
           );
           _report(label, sides);
+          final (double, double)? known = _knownFailures[label];
+          if (known != null) {
+            final double near = sides
+                .map((_Side e) => e.value)
+                .reduce(math.min);
+            final double far = sides.map((_Side e) => e.far).reduce(math.min);
+            // ignore: avoid_print
+            print(
+              'KNOWN-FAIL $label  1px ${near.toStringAsFixed(2)} '
+              '(recorded ${known.$1}) · 2px ${far.toStringAsFixed(2)} '
+              '(recorded ${known.$2})',
+            );
+            expect(
+              near,
+              closeTo(known.$1, _knownTolerance),
+              reason: '$label 1px value changed — re-measure and update',
+            );
+            expect(
+              far,
+              closeTo(known.$2, _knownTolerance),
+              reason: '$label 2px value changed — re-measure and update',
+            );
+            expect(near, lessThan(3.0));
+            expect(far, greaterThanOrEqualTo(3.0));
+            return;
+          }
           for (final _Side e in sides) {
             expect(
               e.value,
@@ -501,6 +937,309 @@ void main() {
         (shape! as RoundedRectangleBorder).side.color,
         XkTactileTokens.of(b).panelBorder,
       );
+    }
+  });
+
+  testWidgets('input field: edge, error inner line, separate focus ring', (
+    WidgetTester tester,
+  ) async {
+    for (final Brightness b in Brightness.values) {
+      final XkTactileTokens t = XkTactileTokens.of(b);
+      // Fresh tree per brightness: a theme change would animate (lerp).
+      await tester.pumpWidget(const SizedBox());
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: XkTactileTheme.themeData(b),
+          home: Scaffold(
+            body: Column(
+              children: <Widget>[
+                _field(),
+                _field(error: true),
+                _field(focus: true),
+              ],
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.pump();
+      final List<XkTactileEdge> edges = tester
+          .widgetList<DecoratedBox>(
+            find.byKey(const ValueKey<String>('xk-tactile-field-chrome')),
+          )
+          .map(
+            (DecoratedBox d) =>
+                (d.decoration as BoxDecoration).border! as XkTactileEdge,
+          )
+          .toList();
+      expect(edges[0].top.color, t.inputBorder);
+      expect(edges[0].ring, isNull);
+      expect(edges[1].top.color, t.accentDeep);
+      expect(edges[1].ring, t.accentDeep, reason: 'error: inner 1px line');
+      expect(edges[2].top.color, t.focusRing);
+      final Finder ring = find.byKey(
+        const ValueKey<String>('xk-tactile-field-focus-ring'),
+      );
+      expect(ring, findsOneWidget);
+      final XkTactileEdge ringEdge =
+          (tester.widget<DecoratedBox>(ring).decoration as BoxDecoration)
+                  .border!
+              as XkTactileEdge;
+      expect(ringEdge.top.color, t.focusRing);
+      expect(ringEdge.top.width, 2);
+      final Rect field = tester.getRect(
+        find.byKey(const ValueKey<String>('xk-tactile-field-chrome')).at(2),
+      );
+      expect(tester.getRect(ring), field.inflate(4), reason: '2px gap + 2px');
+    }
+  });
+
+  testWidgets('chip focus: edge stays secondaryBorder, ring 3px apart', (
+    WidgetTester tester,
+  ) async {
+    for (final Brightness b in Brightness.values) {
+      final XkTactileTokens t = XkTactileTokens.of(b);
+      await tester.pumpWidget(const SizedBox());
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: XkTactileTheme.themeData(b),
+          home: Scaffold(
+            body: Center(
+              child: XkChip(label: '필터', onTap: () {}),
+            ),
+          ),
+        ),
+      );
+      final Finder ring = find.byKey(
+        const ValueKey<String>('xk-tag-focus-ring'),
+      );
+      expect(ring, findsNothing);
+      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+      await tester.pump();
+      expect(ring, findsOneWidget);
+      final Finder chip = find
+          .descendant(
+            of: find.byType(XkTag),
+            matching: find.byWidgetPredicate(
+              (Widget w) =>
+                  w is DecoratedBox &&
+                  (w.decoration as BoxDecoration).borderRadius ==
+                      XkRadius.tagBorderRadius,
+            ),
+          )
+          .first;
+      final XkTactileEdge edge =
+          (tester.widget<DecoratedBox>(chip).decoration as BoxDecoration)
+                  .border!
+              as XkTactileEdge;
+      expect(edge.top.color, t.secondaryBorder, reason: 'edge unchanged');
+      expect(edge.top.width, 1);
+      final XkTactileEdge ringEdge =
+          (tester.widget<DecoratedBox>(ring).decoration as BoxDecoration)
+                  .border!
+              as XkTactileEdge;
+      expect(ringEdge.top.color, t.focusRing);
+      expect(ringEdge.top.width, 2);
+      expect(
+        tester.getRect(ring),
+        tester.getRect(chip).inflate(5),
+        reason: '3px gap + 2px ring',
+      );
+    }
+  });
+
+  testWidgets('choice: focusable button with selected state and ring', (
+    WidgetTester tester,
+  ) async {
+    final SemanticsHandle handle = tester.ensureSemantics();
+    int taps = 0;
+    for (final Brightness b in Brightness.values) {
+      final XkTactileTokens t = XkTactileTokens.of(b);
+      await tester.pumpWidget(const SizedBox());
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: XkTactileTheme.themeData(b),
+          home: Scaffold(
+            body: Center(
+              child: XkChip(label: '고르기', selected: true, onTap: () => taps++),
+            ),
+          ),
+        ),
+      );
+      expect(
+        tester.getSemantics(find.text('고르기')),
+        matchesSemantics(
+          label: '고르기',
+          isButton: true,
+          hasSelectedState: true,
+          isSelected: true,
+          hasEnabledState: true,
+          isEnabled: true,
+          isFocusable: true,
+          hasTapAction: true,
+          hasFocusAction: true,
+        ),
+      );
+      final Finder ring = find.byKey(
+        const ValueKey<String>('xk-chip-choice-focus-ring'),
+      );
+      expect(ring, findsNothing);
+      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+      await tester.pump();
+      expect(ring, findsOneWidget);
+      final Finder face = find.byKey(const ValueKey<String>('xk-chip-choice'));
+      final XkTactileEdge edge =
+          (tester.widget<DecoratedBox>(face).decoration as BoxDecoration)
+                  .border!
+              as XkTactileEdge;
+      expect(edge.top.color, t.controlOn, reason: 'edge unchanged on focus');
+      expect(edge.top.width, 1);
+      final XkTactileEdge ringEdge =
+          (tester.widget<DecoratedBox>(ring).decoration as BoxDecoration)
+                  .border!
+              as XkTactileEdge;
+      expect(ringEdge.top.color, t.focusRing);
+      expect(ringEdge.top.width, 2);
+      expect(tester.getRect(ring), tester.getRect(face).inflate(5));
+      final int before = taps;
+      await tester.sendKeyEvent(LogicalKeyboardKey.space);
+      await tester.pump();
+      expect(taps, before + 1, reason: 'keyboard activates the choice');
+    }
+    handle.dispose();
+  });
+
+  testWidgets('XkCheckbox · XkRadio · XkSwitch: ring on keyboard focus, edge '
+      'unchanged', (WidgetTester tester) async {
+    final FocusHighlightStrategy strategy =
+        FocusManager.instance.highlightStrategy;
+    FocusManager.instance.highlightStrategy =
+        FocusHighlightStrategy.alwaysTraditional;
+    addTearDown(() => FocusManager.instance.highlightStrategy = strategy);
+    const Set<WidgetState> focus = <WidgetState>{WidgetState.focused};
+    const Set<WidgetState> hover = <WidgetState>{WidgetState.hovered};
+    const Set<WidgetState> on = <WidgetState>{WidgetState.selected};
+    for (final Brightness b in Brightness.values) {
+      final XkTactileTokens t = XkTactileTokens.of(b);
+      for (final Widget control in <Widget>[
+        XkCheckbox(value: false, onChanged: (_) {}),
+        RadioGroup<int>(
+          groupValue: 0,
+          onChanged: (_) {},
+          child: const XkRadio<int>(value: 1),
+        ),
+        XkSwitch(value: false, onChanged: (_) {}),
+      ]) {
+        await tester.pumpWidget(const SizedBox());
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: XkTactileTheme.themeData(b),
+            home: Scaffold(body: Center(child: control)),
+          ),
+        );
+        final Finder ring = find.byKey(
+          const ValueKey<String>('xk-toggle-focus-ring'),
+        );
+        expect(ring, findsNothing);
+        await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+        await tester.pump();
+        expect(ring, findsOneWidget, reason: '$control');
+      }
+      // Widget-level edge (no focus thickening; hover ink; checked control-on).
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: XkTactileTheme.themeData(b),
+          home: Scaffold(
+            body: Column(
+              children: <Widget>[
+                XkCheckbox(value: false, onChanged: (_) {}),
+                XkSwitch(value: false, onChanged: (_) {}),
+              ],
+            ),
+          ),
+        ),
+      );
+      final Checkbox cb = tester.widget<Checkbox>(find.byType(Checkbox));
+      BorderSide? side(Set<WidgetState> s) =>
+          WidgetStateProperty.resolveAs<BorderSide?>(cb.side, s);
+      expect(side(focus)!.color, t.inputBorder);
+      expect(side(focus)!.width, 1);
+      expect(side(hover)!.color, t.ink);
+      expect(side(on)!.color, t.controlOn);
+      // Switch track edge and radio ring are painted by the wrapper
+      // (pixel-aligned), so Material's own are clear.
+      final Switch sw = tester.widget<Switch>(find.byType(Switch));
+      expect(sw.trackOutlineColor!.resolve(focus), XkTactileTokens.clear);
+      expect(sw.trackOutlineColor!.resolve(on), XkTactileTokens.clear);
+      expect(sw.overlayColor!.resolve(focus), XkTactileTokens.clear);
+    }
+  });
+
+  testWidgets('XkCheckbox · XkRadio · XkSwitch: disabled is dimmed', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: XkTactileTheme.themeData(Brightness.light),
+        home: Scaffold(
+          body: Column(
+            children: <Widget>[
+              const XkCheckbox(value: true, onChanged: null),
+              XkCheckbox(value: true, onChanged: (_) {}),
+              RadioGroup<int>(
+                groupValue: 1,
+                onChanged: (_) {},
+                child: const XkRadio<int>(value: 1, enabled: false),
+              ),
+              const XkSwitch(value: true, onChanged: null),
+            ],
+          ),
+        ),
+      ),
+    );
+    double opacityOf(Finder control) => tester
+        .widget<Opacity>(
+          find.ancestor(of: control, matching: find.byType(Opacity)).first,
+        )
+        .opacity;
+    final Finder boxes = find.byType(Checkbox);
+    expect(opacityOf(boxes.at(0)), XkTactileTokens.disabledOpacity);
+    expect(opacityOf(boxes.at(1)), 1);
+    // The chosen dot is painted inside the dimmed layer too.
+    expect(opacityOf(find.byType(Radio<int>)), XkTactileTokens.disabledOpacity);
+    expect(opacityOf(find.byType(Switch)), XkTactileTokens.disabledOpacity);
+  });
+
+  test('Material checkbox · radio · switch · chip edges (DS #119)', () {
+    const Set<WidgetState> off = <WidgetState>{};
+    const Set<WidgetState> on = <WidgetState>{WidgetState.selected};
+    const Set<WidgetState> focus = <WidgetState>{WidgetState.focused};
+    for (final Brightness b in Brightness.values) {
+      final XkTactileTokens t = XkTactileTokens.of(b);
+      final ThemeData theme = XkTactileTheme.themeData(b);
+      BorderSide? box(Set<WidgetState> s) =>
+          WidgetStateProperty.resolveAs<BorderSide?>(
+            theme.checkboxTheme.side,
+            s,
+          );
+      expect(box(off)!.color, t.inputBorder);
+      expect(box(on)!.color, t.controlOn);
+      expect(box(focus)!.color, t.focusRing);
+      expect(box(focus)!.width, 2);
+      expect(theme.radioTheme.fillColor!.resolve(off), t.inputBorder);
+      expect(theme.radioTheme.fillColor!.resolve(on), t.controlOn);
+      expect(theme.switchTheme.trackOutlineColor!.resolve(off), t.inputBorder);
+      expect(theme.switchTheme.trackOutlineColor!.resolve(on), t.controlOn);
+      expect(theme.switchTheme.trackOutlineColor!.resolve(focus), t.focusRing);
+      expect(theme.switchTheme.trackOutlineWidth!.resolve(focus), 2);
+      expect(theme.radioTheme.fillColor!.resolve(focus), t.focusRing);
+      expect(theme.checkboxTheme.shape, isA<XkTactileEdgeShape>());
+      expect(theme.chipTheme.shape, isA<XkTactileEdgeShape>());
+      BorderSide? chip(Set<WidgetState> s) =>
+          WidgetStateProperty.resolveAs<BorderSide?>(theme.chipTheme.side, s);
+      expect(chip(off)!.color, t.secondaryBorder);
+      expect(chip(on)!.color, t.controlOn);
+      expect(chip(focus)!.color, t.focusRing);
     }
   });
 }

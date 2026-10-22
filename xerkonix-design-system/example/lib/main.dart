@@ -244,7 +244,7 @@ class _Header extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 Text('라이트', style: XkTypo.label),
-                Switch(value: isDark, onChanged: onThemeChanged),
+                XkSwitch(value: isDark, onChanged: onThemeChanged),
                 Text('다크', style: XkTypo.label),
               ],
             ),
@@ -536,9 +536,9 @@ class _Controls extends StatelessWidget {
         const SizedBox(height: 8),
         Row(
           children: <Widget>[
-            Switch(value: on, onChanged: onToggle),
+            XkSwitch(value: on, onChanged: onToggle),
             const SizedBox(width: 8),
-            Checkbox(value: on, onChanged: (bool? v) => onToggle(v ?? false)),
+            XkCheckbox(value: on, onChanged: (bool? v) => onToggle(v ?? false)),
             const Text('선택'),
           ],
         ),
@@ -650,7 +650,7 @@ class StatesPageState extends State<StatesPage> {
                                 ),
                                 const Spacer(),
                                 Text('라이트', style: XkTypo.label),
-                                Switch(
+                                XkSwitch(
                                   value: widget.isDark,
                                   onChanged: widget.onThemeChanged,
                                 ),

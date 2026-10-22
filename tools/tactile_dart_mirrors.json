@@ -6,6 +6,7 @@
     "tactile_app_surface.dart",
     "tactile_button.dart",
     "tactile_company_wordmark.dart",
+    "tactile_controls.dart",
     "tactile_field.dart",
     "tactile_fonts.dart",
     "tactile_primary_button.dart",

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../motion/xerkonix_motion.dart';
 import '../palette/color.dart';
 import '../shape/xerkonix_shape.dart';
+import '../tactile/tactile_surface.dart';
 import '../tactile/tactile_tokens.dart';
 import '../typography/xerkonix_typography.dart';
 
@@ -383,19 +384,24 @@ class _XkTagState extends State<XkTag> {
   Widget build(BuildContext context) {
     final Brightness b = Theme.of(context).brightness;
     final Color ink = widget.flag ? XkColor.aquaDeepOf(b) : XkColor.ink2Of(b);
-    final Color border = widget.flag
-        ? XkColor.aquaOf(b).withValues(alpha: 0.50)
-        : XkColor.ruleOf(b);
+    final XkTactileTokens t = XkTactileTokens.of(b);
+    // A tappable tag is a chip (DS `.chip`): edge `--secondary-border`
+    // (3:1 on the ground, DS #119). Focus keeps that edge and adds a separate
+    // 2px `--focus-ring` ring 3px outside it (`button:focus-visible`). A
+    // static tag or badge keeps the hairline — it is not a control.
+    final bool chip = widget.onTap != null;
+    final Color border = chip
+        ? t.secondaryBorder
+        : widget.flag
+            ? XkColor.aquaOf(b).withValues(alpha: 0.50)
+            : XkColor.ruleOf(b);
     final Color? fill =
         widget.flag ? XkColor.aquaTintOf(b).withValues(alpha: 0.45) : null;
     final Widget body = DecoratedBox(
       decoration: BoxDecoration(
         color: fill,
         borderRadius: XkRadius.tagBorderRadius,
-        border: Border.all(
-          color: _focus ? XkColor.aquaDeepOf(b) : border,
-          width: _focus ? 2 : 1,
-        ),
+        border: chip ? XkTactileEdge(color: border) : Border.all(color: border),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
@@ -431,7 +437,14 @@ class _XkTagState extends State<XkTag> {
         child: GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: widget.onTap,
-          child: body,
+          child: XkTactileFocusRing(
+            show: _focus,
+            color: t.focusRing,
+            borderRadius: XkRadius.tagBorderRadius,
+            offset: XkTactileTokens.controlFocusRingOffset,
+            ringKey: const ValueKey<String>('xk-tag-focus-ring'),
+            child: body,
+          ),
         ),
       ),
     );

@@ -160,6 +160,51 @@
       "light": "0xFF111111",
       "dark": "0xFFF5F5F5"
     },
+    "checkboxTheme.side": {
+      "css": "--input-border",
+      "light": "0xFF757A82",
+      "dark": "0xFF787D85"
+    },
+    "checkboxTheme.sideSelected": {
+      "css": "--control-on",
+      "light": "0xFF111111",
+      "dark": "0xFFF5F5F5"
+    },
+    "radioTheme.fillUnselected": {
+      "css": "--input-border",
+      "light": "0xFF757A82",
+      "dark": "0xFF787D85"
+    },
+    "switchTheme.trackOutline": {
+      "css": "--input-border",
+      "light": "0xFF757A82",
+      "dark": "0xFF787D85"
+    },
+    "switchTheme.trackOutlineSelected": {
+      "css": "--control-on",
+      "light": "0xFF111111",
+      "dark": "0xFFF5F5F5"
+    },
+    "chipTheme.side": {
+      "css": "--secondary-border",
+      "light": "0xFF757A82",
+      "dark": "0xFF787D85"
+    },
+    "chipTheme.sideSelected": {
+      "css": "--control-on",
+      "light": "0xFF111111",
+      "dark": "0xFFF5F5F5"
+    },
+    "inputBorder": {
+      "css": "--input-border",
+      "light": "0xFF757A82",
+      "dark": "0xFF787D85"
+    },
+    "input.focusRing": {
+      "css": "--focus-ring",
+      "light": "0xFF111111",
+      "dark": "0xFFF5F5F5"
+    },
     "inputFill": {
       "css": "--input-fill",
       "light": "0xADFFFFFF",

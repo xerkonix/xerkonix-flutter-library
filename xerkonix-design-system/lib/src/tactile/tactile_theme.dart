@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'tactile_app_surface.dart';
 import 'tactile_field.dart';
 import 'tactile_fonts.dart';
+import 'tactile_surface.dart';
 import 'tactile_tokens.dart';
 
 /// Material slot → TACTILE CSS role. Owner of app ThemeData chrome.
@@ -45,6 +46,9 @@ class XkTactileChrome {
   Color get onPrimary => tokens.primaryText;
   Color get ice => tokens.ice;
   Color get accent => tokens.accent;
+  Color get inputBorder => tokens.inputBorder;
+  Color get secondaryBorder => tokens.secondaryBorder;
+  Color get focusRing => tokens.focusRing;
   Color get controlOn => tokens.controlOn;
   Color get controlTrack => tokens.controlTrack;
   Color get controlMark => tokens.controlMark;
@@ -248,6 +252,17 @@ class XkTactileTheme {
       fontWeight: FontWeight.w600,
     );
     final TextStyle navLabelIdle = navLabel.copyWith(color: c.muted);
+    // Toggle / chip edge by state (focus handled by the caller).
+    Color edge(Set<WidgetState> s, Color rest) {
+      if (s.contains(WidgetState.selected)) {
+        return c.controlOn;
+      }
+      if (s.contains(WidgetState.hovered) &&
+          !s.contains(WidgetState.disabled)) {
+        return c.ink;
+      }
+      return rest;
+    }
 
     return ThemeData(
       useMaterial3: true,
@@ -411,19 +426,38 @@ class XkTactileTheme {
         ),
       ),
       inputDecorationTheme: XkTactileField.inputThemeOf(brightness),
+      // DS #119: checkbox · radio · switch-off edge `--input-border`, chip
+      // edge `--secondary-border`, hover ink, checked / chosen
+      // `--control-on`, all 3:1 on the ground. A plain Material toggle has
+      // no room for a ring apart from its edge, so here focus is an ink edge;
+      // XkCheckbox · XkRadio · XkSwitch keep the edge and draw a separate
+      // 2px ring (tactile_controls.dart).
       checkboxTheme: CheckboxThemeData(
         fillColor: WidgetStateProperty.resolveWith(
           (Set<WidgetState> s) =>
               s.contains(WidgetState.selected) ? c.controlOn : clear,
         ),
         checkColor: WidgetStatePropertyAll<Color>(c.controlMark),
-        side: BorderSide(color: c.line),
+        // Material default radius 2; edge on whole device pixels.
+        shape: const XkTactileEdgeShape(
+          borderRadius: BorderRadius.all(Radius.circular(2)),
+        ),
+        side: WidgetStateBorderSide.resolveWith((Set<WidgetState> s) {
+          if (s.contains(WidgetState.focused) &&
+              !s.contains(WidgetState.disabled)) {
+            return BorderSide(color: c.focusRing, width: 2);
+          }
+          return BorderSide(color: edge(s, c.inputBorder));
+        }),
       ),
       radioTheme: RadioThemeData(
-        fillColor: WidgetStateProperty.resolveWith(
-          (Set<WidgetState> s) =>
-              s.contains(WidgetState.selected) ? c.controlOn : c.line,
-        ),
+        fillColor: WidgetStateProperty.resolveWith((Set<WidgetState> s) {
+          if (s.contains(WidgetState.focused) &&
+              !s.contains(WidgetState.disabled)) {
+            return c.focusRing;
+          }
+          return edge(s, c.inputBorder);
+        }),
       ),
       switchTheme: SwitchThemeData(
         thumbColor: WidgetStateProperty.resolveWith(
@@ -435,6 +469,34 @@ class XkTactileTheme {
           (Set<WidgetState> s) =>
               s.contains(WidgetState.selected) ? c.controlOn : c.controlTrack,
         ),
+        trackOutlineColor: WidgetStateProperty.resolveWith((
+          Set<WidgetState> s,
+        ) {
+          if (s.contains(WidgetState.focused) &&
+              !s.contains(WidgetState.disabled)) {
+            return c.focusRing;
+          }
+          return edge(s, c.inputBorder);
+        }),
+        // Material draws the outline on the track inset 1px, centred: 2px
+        // puts its outer edge on the track edge (1px leaves the pale track
+        // fill outside it).
+        trackOutlineWidth: const WidgetStatePropertyAll<double>(2),
+      ),
+      chipTheme: ChipThemeData(
+        // Material default radius 8; edge on whole device pixels.
+        shape: const XkTactileEdgeShape(
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+        ),
+        selectedColor: c.selectedFill,
+        checkmarkColor: c.ink,
+        side: WidgetStateBorderSide.resolveWith((Set<WidgetState> s) {
+          if (s.contains(WidgetState.focused) &&
+              !s.contains(WidgetState.disabled)) {
+            return BorderSide(color: c.focusRing, width: 2);
+          }
+          return BorderSide(color: edge(s, c.secondaryBorder));
+        }),
       ),
       progressIndicatorTheme: ProgressIndicatorThemeData(
         color: c.accent,

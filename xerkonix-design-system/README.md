@@ -153,6 +153,24 @@ XkTextAreaField(label: 'Brief', maxLines: 4);
 XkTable(columns: [...], rows: [XkTableRowData([XkTableCell(text: '...')])]);
 ```
 
+### 체크박스 · 라디오 · 토글 · 칩 — 래퍼만 지원
+
+```dart
+XkCheckbox(value: on, onChanged: (v) {});
+RadioGroup<int>(groupValue: g, onChanged: (v) {}, child: const XkRadio<int>(value: 1));
+XkSwitch(value: on, onChanged: (v) {});
+XkChip(label: '필터', onTap: () {});                 // 칩
+XkChip(label: '고르기', selected: on, onTap: () {}); // 고르기
+```
+
+입력 컨트롤 테 3:1 · 테와 떨어진 2px 포커스 링(DS #119)을 지키는 것은 이 위젯들뿐이다.
+
+- **지원 안 함: 맨 Material** `Checkbox` · `Radio` · `Switch` · `FilterChip` · `ChoiceChip` · `InputChip` · `CheckboxListTile` · `SwitchListTile` · `RadioListTile`.
+  - `XkTactileTheme` 이 테 색·hover 잉크·켬 색까지는 입힌다.
+  - 하지만 포커스는 테가 잉크로 바뀔 뿐이고, 테와 떨어진 링이 없다.
+  - 라디오 고리와 토글 트랙 끝은 Material 이 둥글게 번지게 그려서, 1배 화면의 소수 위치에서 테 바로 바깥 1px 이 3:1 미만이 된다.
+- 새 코드는 위 래퍼를 쓴다. 맨 Material 을 쓰던 곳은 래퍼로 바꾼다.
+
 각 위젯은 기본값에 회사 토큰을 쓰고, `borderRadius`/`padding`/`color`/`size` 등을 선택적으로 오버라이드할 수 있다.
 
 **v2.1 제품 프리미티브 추가**(additive, 기존 API 비파괴): `XkBrandMark`, `XkBadge`(+ `XkBadge.beta()`), `XkAvatar`, `XkCard`, `XkSkeleton`, `XkLoadingOverlay`, `XkToast`, `XkSectionLabel`, `XkBackButton`, `XkProgressBar`, `XkLoadingPane`/`XkEmptyPane`/`XkErrorPane`.

@@ -236,24 +236,25 @@ class _XkTactileOuterShadowPainter extends CustomPainter {
   }
 }
 
-/// Card and control edge: one 1px side colour, and an optional even inner
-/// ring (`inset 0 0 0 1px <ring>`) painted under it.
+/// Card and control edge: one side colour of [width] (1 logical px unless
+/// given, 2 for a focus ring), and an optional even inner 1px ring
+/// (`inset 0 0 0 1px <ring>`) painted under it.
 ///
 /// A plain [Border] is anti-aliased. At a fractional position on a 1x screen
 /// it splits the 1px line over two device pixels at about half strength each,
 /// and the edge falls to 1.5–2.6:1 against the ground. Browsers snap borders
 /// to device pixels; this does the same for the straight sides by painting
 /// them without anti-aliasing, so each side is always whole device pixels of
-/// [color] (one at 1x, two at 2x). Rounded corners stay anti-aliased.
+/// [color] (`width` × DPR of them). Rounded corners stay anti-aliased.
 ///
 /// It is still a [Border]: `top.color` etc. read as before.
 class XkTactileEdge extends Border {
-  XkTactileEdge({required Color color, this.ring})
+  XkTactileEdge({required Color color, this.ring, double width = 1})
     : super(
-        top: BorderSide(color: color),
-        right: BorderSide(color: color),
-        bottom: BorderSide(color: color),
-        left: BorderSide(color: color),
+        top: BorderSide(color: color, width: width),
+        right: BorderSide(color: color, width: width),
+        bottom: BorderSide(color: color, width: width),
+        left: BorderSide(color: color, width: width),
       );
 
   /// Inner ring colour, or null for none.
@@ -365,4 +366,101 @@ class XkTactileEdge extends Border {
 
   @override
   int get hashCode => Object.hash(super.hashCode, ring);
+}
+
+/// Focus ring apart from a control edge, DS #119: CSS
+/// `outline:2px solid var(--focus-ring)` with `outline-offset` = [offset].
+///
+/// The edge keeps its own colour; this paints a separate 2px [color] ring
+/// [offset] outside [child]'s box, so the ring and the edge each meet 3:1.
+/// The ring does not take layout space, like a CSS outline.
+class XkTactileFocusRing extends StatelessWidget {
+  const XkTactileFocusRing({
+    super.key,
+    required this.show,
+    required this.color,
+    required this.borderRadius,
+    required this.offset,
+    required this.child,
+    this.ringKey,
+  });
+
+  final bool show;
+  final Color color;
+
+  /// Radius of [child]'s edge. The ring adds [offset] + width to it.
+  final BorderRadius borderRadius;
+  final double offset;
+  final Widget child;
+  final Key? ringKey;
+
+  @override
+  Widget build(BuildContext context) {
+    const double width = XkTactileTokens.inputFocusRingWidth;
+    final double gap = offset + width;
+    return Stack(
+      fit: StackFit.passthrough,
+      clipBehavior: Clip.none,
+      children: <Widget>[
+        child,
+        if (show)
+          Positioned(
+            left: -gap,
+            top: -gap,
+            right: -gap,
+            bottom: -gap,
+            child: IgnorePointer(
+              child: DecoratedBox(
+                key: ringKey,
+                decoration: BoxDecoration(
+                  borderRadius: borderRadius + BorderRadius.circular(gap),
+                  border: XkTactileEdge(color: color, width: width),
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+/// [RoundedRectangleBorder] that paints its side like [XkTactileEdge]:
+/// straight sides on whole device pixels, so a 1px `--input-border` /
+/// `--secondary-border` edge is not split into two half-strength pixels on a
+/// 1x screen. For Material checkbox and chip shapes (DS #119).
+class XkTactileEdgeShape extends RoundedRectangleBorder {
+  const XkTactileEdgeShape({super.side, super.borderRadius});
+
+  @override
+  XkTactileEdgeShape copyWith({
+    BorderSide? side,
+    BorderRadiusGeometry? borderRadius,
+  }) {
+    return XkTactileEdgeShape(
+      side: side ?? this.side,
+      borderRadius: borderRadius ?? this.borderRadius,
+    );
+  }
+
+  @override
+  void paint(Canvas canvas, Rect rect, {TextDirection? textDirection}) {
+    if (side.style == BorderStyle.none || side.width == 0) {
+      super.paint(canvas, rect, textDirection: textDirection);
+      return;
+    }
+    XkTactileEdge(color: side.color, width: side.width).paint(
+      canvas,
+      rect,
+      textDirection: textDirection,
+      borderRadius: borderRadius.resolve(textDirection),
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is XkTactileEdgeShape && super == other;
+  }
+
+  @override
+  int get hashCode => Object.hash(XkTactileEdgeShape, super.hashCode);
 }

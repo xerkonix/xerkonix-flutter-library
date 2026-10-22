@@ -143,8 +143,10 @@ class XkSelectField<T> extends StatelessWidget {
       errorText: errorText,
       enabled: enabled,
       borderRadius: borderRadius,
+      // No value key: swapping the key on a new value remounted the field
+      // and dropped keyboard focus after a pick. DropdownButtonFormField
+      // takes a changed initialValue itself (didUpdateWidget → setValue).
       child: DropdownButtonFormField<T>(
-        key: ValueKey<T?>(value),
         initialValue: value,
         isExpanded: true,
         icon: XkIcon(

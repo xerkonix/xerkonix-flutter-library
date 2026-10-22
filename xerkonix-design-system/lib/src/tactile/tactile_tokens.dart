@@ -169,7 +169,7 @@ class XkTactileTokens {
         color: Color(0x1F111111),
         offset: Offset(0, 20),
         blurRadius: 40,
-        spreadRadius: -16,
+        spreadRadius: -20,
       ),
     ],
     glassFloatShadow: <BoxShadow>[

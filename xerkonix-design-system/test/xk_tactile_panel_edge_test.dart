@@ -122,29 +122,19 @@ class _Subject {
   final bool hover;
 }
 
-/// Known failures, kept as failures (not relaxed). Material paints the
-/// radio ring and the switch track ends anti-aliased; at a fractional
+/// Known failures, kept as failures (not relaxed) — plain Material path
+/// only, which is not supported (use XkCheckbox · XkRadio · XkSwitch).
+/// Material paints the radio ring and the switch track ends anti-aliased
+/// and a theme cannot move them onto device pixels; at a fractional
 /// position on a 1x screen the 1px just outside the edge is a partial
-/// fringe of the same round stroke, and edge vs that pixel is under 3:1.
-/// The edge vs 2px outside is 3:1 or more. Each entry asserts the 1px value
-/// is still under 3:1 (so a fix shows up here) and the 2px value is 3:1+.
-/// Values: 1px min (2px min) from the last run.
+/// fringe of the same round stroke, under 3:1. The wrappers paint that edge
+/// themselves on device pixel bounds and have no entry here. Each entry
+/// asserts the 1px value is still under 3:1 (so a fix shows up here) and
+/// the 2px value is 3:1+. Values: 1px min (2px min) from the last run.
 const Map<String, String> _knownFailures = <String, String>{
-  'XkSwitch off · light canvas · dpr1 frac.3/.7': '1px 2.71:1 (2px 3.96:1)',
-  'XkSwitch focus edge · light canvas · dpr1 frac.3/.7':
-      '1px 2.71:1 (2px 3.96:1)',
   'switch off · light canvas · dpr1 frac.3/.7': '1px 2.71:1 (2px 3.96:1)',
-  'XkRadio off · light mist · dpr1 frac.3/.7': '1px 2.73:1 (2px 3.45:1)',
-  'XkSwitch off · light mist · dpr1 frac.3/.7': '1px 2.52:1 (2px 3.45:1)',
-  'XkRadio focus edge · light mist · dpr1 frac.3/.7': '1px 2.73:1 (2px 3.45:1)',
-  'XkSwitch focus edge · light mist · dpr1 frac.3/.7':
-      '1px 2.52:1 (2px 3.45:1)',
   'radio off · light mist · dpr1 frac.3/.7': '1px 2.73:1 (2px 3.45:1)',
   'switch off · light mist · dpr1 frac.3/.7': '1px 2.52:1 (2px 3.45:1)',
-  'XkRadio off · dark mist · dpr1 frac.3/.7': '1px 2.68:1 (2px 3.52:1)',
-  'XkSwitch off · dark mist · dpr1 frac.3/.7': '1px 2.37:1 (2px 3.52:1)',
-  'XkRadio focus edge · dark mist · dpr1 frac.3/.7': '1px 2.68:1 (2px 3.52:1)',
-  'XkSwitch focus edge · dark mist · dpr1 frac.3/.7': '1px 2.37:1 (2px 3.52:1)',
   'radio off · dark mist · dpr1 frac.3/.7': '1px 2.68:1 (2px 3.52:1)',
   'switch off · dark mist · dpr1 frac.3/.7': '1px 2.37:1 (2px 3.52:1)',
 };
@@ -571,8 +561,9 @@ void main() {
         skipRing: focus && !ring,
       ),
     ],
-    // Plain Material toggles and chip through XkTactileTheme (fallback):
-    // their real painted state (off · on · focus). No room for a ring apart
+    // Plain Material toggles and chip through XkTactileTheme — not a
+    // supported path (use XkCheckbox · XkRadio · XkSwitch · XkChip). Measured
+    // to keep its state on record: off · on · focus. No room for a ring apart
     // from the edge, so focus here is an ink edge.
     for (final (String state, bool on, bool focus) in <(String, bool, bool)>[
       ('off', false, false),
@@ -1082,10 +1073,11 @@ void main() {
       expect(side(focus)!.width, 1);
       expect(side(hover)!.color, t.ink);
       expect(side(on)!.color, t.controlOn);
+      // Switch track edge and radio ring are painted by the wrapper
+      // (pixel-aligned), so Material's own are clear.
       final Switch sw = tester.widget<Switch>(find.byType(Switch));
-      expect(sw.trackOutlineColor!.resolve(focus), t.inputBorder);
-      expect(sw.trackOutlineColor!.resolve(hover), t.ink);
-      expect(sw.trackOutlineColor!.resolve(on), t.controlOn);
+      expect(sw.trackOutlineColor!.resolve(focus), XkTactileTokens.clear);
+      expect(sw.trackOutlineColor!.resolve(on), XkTactileTokens.clear);
       expect(sw.overlayColor!.resolve(focus), XkTactileTokens.clear);
     }
   });

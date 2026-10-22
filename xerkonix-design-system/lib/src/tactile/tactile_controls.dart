@@ -1,20 +1,30 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 import 'tactile_surface.dart';
 import 'tactile_tokens.dart';
 
-/// TACTILE checkbox · radio · switch (DS #119).
+/// TACTILE checkbox · radio · switch (DS #119). Use these, not a plain
+/// Material [Checkbox] / [Radio] / [Switch]: only these meet the edge and
+/// focus rules.
 ///
 /// Thin wrappers over the Material widgets, themed by [XkTactileTheme]:
 /// edge `--input-border`, hover ink, checked / on `--control-on`. Keyboard
 /// focus keeps the edge as it is and draws a separate 2px `--focus-ring`
 /// ring 2px outside the painted box (`outline:2px solid var(--focus-ring);
-/// outline-offset:2px`) — the theme alone cannot, because a Material toggle
-/// has no room for a ring apart from its edge. Plain Material widgets still
-/// show focus by an ink edge from the theme.
+/// outline-offset:2px`).
+///
+/// The radio ring and the switch track edge are painted here, not by
+/// Material: the round edge's outer bound is put on device pixel
+/// boundaries, so on a 1x screen at a fractional position the pixel just
+/// outside is the ground, not a half-strength fringe of the edge.
+/// The checkbox edge is [XkTactileEdgeShape] (straight sides on whole
+/// device pixels) from the theme.
 ///
 /// Painted box inside the Material widget (centred): checkbox 18×18 r2,
-/// radio ring outer ⌀20, switch track 52×32 (Material 3, measured).
+/// radio ring outer ⌀20 (2 wide, dot ⌀9), switch track 52×32 (Material 3).
 class XkCheckbox extends StatelessWidget {
   const XkCheckbox({
     super.key,
@@ -36,10 +46,11 @@ class XkCheckbox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final XkTactileTokens t = XkTactileTokens.of(Theme.of(context).brightness);
-    return _XkToggleFocusRing(
+    return _XkToggleChrome(
       shape: const Size.square(18),
       radius: 2,
       enabled: onChanged != null,
+      edge: null,
       child: Checkbox(
         value: value,
         tristate: tristate,
@@ -74,19 +85,27 @@ class XkRadio<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final XkTactileTokens t = XkTactileTokens.of(Theme.of(context).brightness);
-    return _XkToggleFocusRing(
+    final bool on = RadioGroup.maybeOf<T>(context)?.groupValue == value;
+    final bool live = enabled ?? (RadioGroup.maybeOf<T>(context) != null);
+    return _XkToggleChrome(
       shape: const Size.square(20),
       radius: 10,
-      enabled: enabled ?? true,
+      enabled: live,
+      edge: (bool hover) => _XkEdgePaint(
+        color: _edge(t, <WidgetState>{
+          if (on) WidgetState.selected,
+          if (hover) WidgetState.hovered,
+        }),
+        dot: on ? t.controlOn : null,
+      ),
       child: Radio<T>(
         value: value,
         enabled: enabled,
         autofocus: autofocus,
         focusNode: focusNode,
         overlayColor: _noOverlay,
-        fillColor: WidgetStateProperty.resolveWith(
-          (Set<WidgetState> s) => _edge(t, s),
-        ),
+        // Ring and dot are painted by the wrapper (pixel-aligned).
+        fillColor: const WidgetStatePropertyAll<Color>(XkTactileTokens.clear),
       ),
     );
   }
@@ -110,20 +129,27 @@ class XkSwitch extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final XkTactileTokens t = XkTactileTokens.of(Theme.of(context).brightness);
-    return _XkToggleFocusRing(
+    return _XkToggleChrome(
       shape: const Size(52, 32),
       radius: 16,
       enabled: onChanged != null,
+      outward: true,
+      edge: (bool hover) => _XkEdgePaint(
+        color: _edge(t, <WidgetState>{
+          if (value) WidgetState.selected,
+          if (hover) WidgetState.hovered,
+        }),
+      ),
       child: Switch(
         value: value,
         onChanged: onChanged,
         autofocus: autofocus,
         focusNode: focusNode,
         overlayColor: _noOverlay,
-        trackOutlineColor: WidgetStateProperty.resolveWith(
-          (Set<WidgetState> s) => _edge(t, s),
+        // The track edge is painted by the wrapper (pixel-aligned).
+        trackOutlineColor: const WidgetStatePropertyAll<Color>(
+          XkTactileTokens.clear,
         ),
-        trackOutlineWidth: const WidgetStatePropertyAll<double>(2),
       ),
     );
   }
@@ -146,27 +172,54 @@ Color _edge(XkTactileTokens t, Set<WidgetState> s) {
   return t.inputBorder;
 }
 
-/// Tracks keyboard focus inside [child] and paints the separate ring
-/// around the centred painted box.
-class _XkToggleFocusRing extends StatefulWidget {
-  const _XkToggleFocusRing({
+class _XkEdgePaint {
+  const _XkEdgePaint({required this.color, this.dot});
+
+  final Color color;
+
+  /// Radio dot colour when chosen.
+  final Color? dot;
+
+  @override
+  bool operator ==(Object other) =>
+      other is _XkEdgePaint && other.color == color && other.dot == dot;
+
+  @override
+  int get hashCode => Object.hash(color, dot);
+}
+
+/// Tracks keyboard focus and hover inside [child]; paints the wrapper's own
+/// edge (when [edge] is set) and the separate focus ring around the centred
+/// painted box, both with the outer bound on device pixel boundaries.
+class _XkToggleChrome extends StatefulWidget {
+  const _XkToggleChrome({
     required this.shape,
     required this.radius,
     required this.enabled,
+    required this.edge,
     required this.child,
+    this.outward = false,
   });
 
   final Size shape;
   final double radius;
   final bool enabled;
+
+  /// Own edge by hover state, or null when Material paints the edge.
+  final _XkEdgePaint Function(bool hover)? edge;
+
+  /// Snap the edge box outward (contains Material's own fill) instead of to
+  /// the nearest device pixel.
+  final bool outward;
   final Widget child;
 
   @override
-  State<_XkToggleFocusRing> createState() => _XkToggleFocusRingState();
+  State<_XkToggleChrome> createState() => _XkToggleChromeState();
 }
 
-class _XkToggleFocusRingState extends State<_XkToggleFocusRing> {
+class _XkToggleChromeState extends State<_XkToggleChrome> {
   bool _focused = false;
+  bool _hover = false;
   late FocusHighlightMode _mode;
 
   @override
@@ -194,6 +247,7 @@ class _XkToggleFocusRingState extends State<_XkToggleFocusRing> {
     // Ring on keyboard focus only (`:focus-visible`).
     final bool show =
         _focused && widget.enabled && _mode == FocusHighlightMode.traditional;
+    final _XkEdgePaint? edge = widget.edge?.call(_hover && widget.enabled);
     return Focus(
       canRequestFocus: false,
       skipTraversal: true,
@@ -203,52 +257,204 @@ class _XkToggleFocusRingState extends State<_XkToggleFocusRing> {
           setState(() => _focused = next);
         }
       },
-      child: CustomPaint(
-        key: show ? const ValueKey<String>('xk-toggle-focus-ring') : null,
-        foregroundPainter: show
-            ? _CentredRingPainter(
-                shape: widget.shape,
-                radius: widget.radius,
-                color: t.focusRing,
-              )
-            : null,
-        child: widget.child,
+      child: MouseRegion(
+        onEnter: (_) => setState(() => _hover = true),
+        onExit: (_) => setState(() => _hover = false),
+        child: _XkSnappedChrome(
+          key: show ? const ValueKey<String>('xk-toggle-focus-ring') : null,
+          shape: widget.shape,
+          radius: widget.radius,
+          outward: widget.outward,
+          dpr: MediaQuery.devicePixelRatioOf(context),
+          edge: edge == null
+              ? null
+              : _XkEdgePaint(
+                  color: widget.enabled
+                      ? edge.color
+                      : edge.color.withValues(
+                          alpha: XkTactileTokens.disabledOpacity,
+                        ),
+                  dot: edge.dot,
+                ),
+          ring: show ? t.focusRing : null,
+          child: widget.child,
+        ),
       ),
     );
   }
 }
 
-class _CentredRingPainter extends CustomPainter {
-  const _CentredRingPainter({
+class _XkSnappedChrome extends SingleChildRenderObjectWidget {
+  const _XkSnappedChrome({
+    super.key,
     required this.shape,
     required this.radius,
-    required this.color,
+    required this.outward,
+    required this.dpr,
+    required this.edge,
+    required this.ring,
+    super.child,
   });
 
   final Size shape;
   final double radius;
-  final Color color;
+  final bool outward;
+  final double dpr;
+  final _XkEdgePaint? edge;
+  final Color? ring;
 
   @override
-  void paint(Canvas canvas, Size size) {
-    const double gap =
-        XkTactileTokens.inputFocusRingOffset +
-        XkTactileTokens.inputFocusRingWidth;
-    final Rect ring = Rect.fromCenter(
-      center: size.center(Offset.zero),
-      width: shape.width + 2 * gap,
-      height: shape.height + 2 * gap,
-    );
-    XkTactileEdge(
-      color: color,
-      width: XkTactileTokens.inputFocusRingWidth,
-    ).paint(canvas, ring, borderRadius: BorderRadius.circular(radius + gap));
+  _RenderXkSnappedChrome createRenderObject(BuildContext context) {
+    return _RenderXkSnappedChrome(shape, radius, outward, dpr, edge, ring);
   }
 
   @override
-  bool shouldRepaint(_CentredRingPainter oldDelegate) {
-    return oldDelegate.shape != shape ||
-        oldDelegate.radius != radius ||
-        oldDelegate.color != color;
+  void updateRenderObject(
+    BuildContext context,
+    _RenderXkSnappedChrome renderObject,
+  ) {
+    renderObject
+      ..shape = shape
+      ..radius = radius
+      ..outward = outward
+      ..dpr = dpr
+      ..edge = edge
+      ..ring = ring;
+  }
+}
+
+class _RenderXkSnappedChrome extends RenderProxyBox {
+  _RenderXkSnappedChrome(
+    this._shape,
+    this._radius,
+    this._outward,
+    this._dpr,
+    this._edge,
+    this._ring,
+  );
+
+  Size _shape;
+  set shape(Size v) {
+    if (v != _shape) {
+      _shape = v;
+      markNeedsPaint();
+    }
+  }
+
+  double _radius;
+  set radius(double v) {
+    if (v != _radius) {
+      _radius = v;
+      markNeedsPaint();
+    }
+  }
+
+  bool _outward;
+  set outward(bool v) {
+    if (v != _outward) {
+      _outward = v;
+      markNeedsPaint();
+    }
+  }
+
+  double _dpr;
+  set dpr(double v) {
+    if (v != _dpr) {
+      _dpr = v;
+      markNeedsPaint();
+    }
+  }
+
+  _XkEdgePaint? _edge;
+  set edge(_XkEdgePaint? v) {
+    if (v != _edge) {
+      _edge = v;
+      markNeedsPaint();
+    }
+  }
+
+  Color? _ring;
+  set ring(Color? v) {
+    if (v != _ring) {
+      _ring = v;
+      markNeedsPaint();
+    }
+  }
+
+  /// [box] (local) moved so its outer bound sits on device pixel
+  /// boundaries: nearest, or outward to contain it.
+  Rect _snap(Rect box, Offset global) {
+    final double d = _dpr;
+    double lo(double v) => _outward ? v.floorToDouble() : v.roundToDouble();
+    double hi(double v) => _outward ? v.ceilToDouble() : v.roundToDouble();
+    final double l = (global.dx + box.left) * d;
+    final double t = (global.dy + box.top) * d;
+    final double w = _outward
+        ? hi((global.dx + box.right) * d) - lo(l)
+        : (box.width * d).roundToDouble();
+    final double h = _outward
+        ? hi((global.dy + box.bottom) * d) - lo(t)
+        : (box.height * d).roundToDouble();
+    return Rect.fromLTWH(
+      lo(l) / d - global.dx,
+      lo(t) / d - global.dy,
+      w / d,
+      h / d,
+    );
+  }
+
+  @override
+  void paint(PaintingContext context, Offset offset) {
+    super.paint(context, offset);
+    final _XkEdgePaint? edge = _edge;
+    final Color? ring = _ring;
+    if (edge == null && ring == null) {
+      return;
+    }
+    final Rect box = Rect.fromCenter(
+      center: size.center(Offset.zero),
+      width: _shape.width,
+      height: _shape.height,
+    );
+    final Rect snapped = _snap(box, localToGlobal(Offset.zero));
+    final Canvas canvas = context.canvas;
+    canvas.save();
+    canvas.translate(offset.dx, offset.dy);
+    const double w = 2;
+    if (edge != null) {
+      final RRect outer = RRect.fromRectAndRadius(
+        snapped,
+        Radius.circular(math.min(_radius, snapped.shortestSide / 2)),
+      );
+      canvas.drawRRect(
+        outer.deflate(w / 2),
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = w
+          ..color = edge.color,
+      );
+      final Color? dot = edge.dot;
+      if (dot != null) {
+        canvas.drawCircle(snapped.center, 4.5, Paint()..color = dot);
+      }
+    }
+    if (ring != null) {
+      const double gap =
+          XkTactileTokens.inputFocusRingOffset +
+          XkTactileTokens.inputFocusRingWidth;
+      final Rect r = snapped.inflate(gap);
+      final RRect outer = RRect.fromRectAndRadius(
+        r,
+        Radius.circular(math.min(_radius + gap, r.shortestSide / 2)),
+      );
+      canvas.drawRRect(
+        outer.deflate(XkTactileTokens.inputFocusRingWidth / 2),
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = XkTactileTokens.inputFocusRingWidth
+          ..color = ring,
+      );
+    }
+    canvas.restore();
   }
 }

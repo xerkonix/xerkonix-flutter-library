@@ -1,10 +1,9 @@
 /* XERKONIX Design System tokens · v3.0.0 — 2026.09
-   무채색 베이스 · 서리 유리 사다리 · 아쿠아마린 산타마리아 톤(행동·강조·글자 세 역할) · 검정 역상 면.
+   강조색 사용처: 제품 UI는 무채색이다. Aquamarine은 즐겨찾기 폴더 표지의 옅은 기운 한 곳에만 쓴다. 버튼·배지·선택·링크·포커스·앱 바탕에는 쓰지 않는다.
    값의 원천은 이 파일만. 시안 HTML의 임시 덮어쓰기 스택을 복제하지 않는다.
    서체 로딩(Pretendard CDN <link> 또는 셀프호스팅 @font-face)은 각 표면의 HTML 이 한다.
    본문·라벨은 v3.1.0 크기. 마케팅 디스플레이·섹션은 v4.5.0에서 한 단계 내림.
-   포인트색(아쿠아)은 애플이 파란색을 쓰는 두 자리 — 주 액션 채움(--aqua-fill)과 텍스트 링크(--aqua-text) — 와
-   선택/토글/포커스 같은 작은 강조에 쓴다. 큰 배경·푸터는 검정 역상 역할. v4 아쿠아 8단계 이름은 별칭으로 남긴다(v6 제거). */
+   기존 소비자가 쓰는 값과 이름을 유지한다. */
 :root{
   --font:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo",system-ui,sans-serif;
   --canvas:#F5F5F5; --ground-hi:#FFFFFF; --solid:#FFFFFF;

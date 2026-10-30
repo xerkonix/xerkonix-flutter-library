@@ -2,7 +2,7 @@
    강조색 사용처: 제품 화면의 포인트 색은 화면당 1~2곳이다(0곳도 허용). Aquamarine은 사람 확인 칸·현재 위치·핵심 숫자·즐겨찾기 폴더 뒷판 기운에 쓴다. 버튼·배지·링크·포커스·앱 바탕에는 쓰지 않는다.
    공통 화면 토큰. */
 :root {
-  --palette-canvas: #F9FBFB;
+  --palette-canvas: #FAFBFB;
   --palette-surface: #FBFBFC;
   --palette-white: #FFFFFF;
   --palette-mist: #CFD3DA;
@@ -20,7 +20,7 @@
   --n-500: #767678;
   --n-600: #636365;
   --n-700: #3A3A3C;
-  --n-800: #242727;
+  --n-800: #252727;
   --n-900: #111111;
   --white: #FFFFFF;
   --font: "Pretendard Variable",Pretendard,"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI","Apple SD Gothic Neo","Noto Sans CJK KR","Malgun Gothic",sans-serif;
@@ -107,8 +107,10 @@
   --fs-input-mobile: 16px;
   --fs-dialog-title: 24px;
   --fs-num-feature: 52px;
+  --company-header-scrolled-fill: color-mix(in srgb,var(--overlay-fill) 96%,transparent);
+  --company-header-scrolled-shadow: 0 6px 20px color-mix(in srgb,var(--n-900) 10%,transparent);
   color-scheme: light;
-  --canvas: #F9FBFB;
+  --canvas: #FAFBFB;
   --surface: #FBFBFC;
   --surface-raised: #FFFFFF;
   --ink: #111111;
@@ -136,7 +138,7 @@
   --control-on: #111111;
   --control-mark: #FFFFFF;
   --control-track: #CFD3DA;
-  --input-fill: rgba(231,233,233,.7);
+  --input-fill: rgba(232,233,233,.7);
   --input-border: transparent;
   --primary-text: #F5F5F5;
   --primary-base: #111111;
@@ -184,18 +186,19 @@
   --product-accent-ink: #269DB0;
   --glass-light: linear-gradient(180deg,var(--glass-rim),transparent 2px);
   --input-shadow: none;
-  --plate-fill: linear-gradient(180deg,rgba(255,255,255,.62) 0%,rgba(255,255,255,.92) 62%,rgba(255,255,255,.98) 100%);
+  --plate-fill: linear-gradient(180deg,rgba(var(--plate-rgb),.62) 0%,rgba(var(--plate-rgb),.92) 62%,rgba(var(--plate-rgb),.98) 100%);
   --plate-haze: radial-gradient(120% 70% at 10% 0%,var(--plate-haze-color) 0%,transparent 70%);
   --canvas-light: var(--canvas);
-  --sidebar-fill: #F4F6F6;
+  --sidebar-fill: #F5F6F6;
   --accent-readable: #176575;
   --plate-haze-color: rgba(205,214,214,.35);
+  --plate-rgb: 255,255,255;
 }
 [data-theme="dark"] {
   color-scheme: dark;
   --canvas: #101111;
-  --surface: #1A1C1C;
-  --surface-raised: #242727;
+  --surface: #1B1C1C;
+  --surface-raised: #252727;
   --ink: #F5F5F5;
   --muted: #AEB4BD;
   --faint: #9199A5;
@@ -210,7 +213,7 @@
   --glass-fill: rgba(44,48,48,.64);
   --glass-rim: rgba(207,211,218,.19);
   --glass-inset: transparent;
-  --glass-fallback: #242727;
+  --glass-fallback: #252727;
   --focus-ring: #F5F5F5;
   --selected-fill: rgba(245,245,245,.10);
   --selected-hover: rgba(245,245,245,.15);
@@ -221,7 +224,7 @@
   --control-on: #F5F5F5;
   --control-mark: #111111;
   --control-track: var(--n-700);
-  --input-fill: #1A1C1C;
+  --input-fill: #1B1C1C;
   --input-border: transparent;
   --primary-text: #111111;
   --primary-base: #F5F5F5;
@@ -229,13 +232,13 @@
   --primary-hover: #DEDEDE;
   --primary-border: #F5F5F5;
   --primary-shadow: none;
-  --secondary-fill: rgba(60,63,63,.64);
+  --secondary-fill: rgba(61,63,63,.64);
   --secondary-hover: var(--n-700);
   --secondary-border: transparent;
   --secondary-shadow: 0 1px 2px rgba(17,17,17,.4),0 6px 16px rgba(17,17,17,.35);
   --disabled-fill: rgba(245,245,245,.06);
   --segment-track: rgba(17,17,17,.20);
-  --segment-selected: #313535;
+  --segment-selected: #323535;
   --segment-shadow: 0 1px 4px rgba(17,17,17,.15);
   --overlay-fill: var(--n-800);
   --overlay-border: transparent;
@@ -269,12 +272,13 @@
   --product-accent-ink: var(--accent);
   --input-shadow: none;
   --glass-light: linear-gradient(180deg,var(--glass-rim),transparent 2px);
-  --plate-fill: linear-gradient(180deg,rgba(44,48,48,.40) 0%,rgba(44,48,48,.78) 62%,rgba(44,48,48,.90) 100%);
+  --plate-fill: linear-gradient(180deg,rgba(var(--plate-rgb),.40) 0%,rgba(var(--plate-rgb),.78) 62%,rgba(var(--plate-rgb),.90) 100%);
   --plate-haze: radial-gradient(120% 70% at 10% 0%,var(--plate-haze-color) 0%,transparent 70%);
   --canvas-light: var(--canvas);
-  --sidebar-fill: #242727;
+  --sidebar-fill: #252727;
   --accent-readable: var(--accent);
   --plate-haze-color: rgba(207,213,213,.10);
+  --plate-rgb: 45,48,48;
 }
 html, body {
   background: var(--canvas);

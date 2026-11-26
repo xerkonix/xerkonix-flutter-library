@@ -1,14 +1,24 @@
-/* XERKONIX TACTILE tokens · v4.4.0
+/* XERKONIX TACTILE tokens · v4.5.0
    강조색 사용처: 제품 화면의 포인트 색은 화면당 1~2곳이다(0곳도 허용). Aquamarine은 사람 확인 칸·현재 위치·핵심 숫자·즐겨찾기 폴더 뒷판 기운에 쓴다. 버튼·배지·링크·포커스·앱 바탕에는 쓰지 않는다.
    공통 화면 토큰. */
 :root {
   --palette-canvas: #FAFBFB;
-  --palette-surface: #FBFBFC;
+  --palette-surface: var(--n-50);
   --palette-white: #FFFFFF;
-  --palette-mist: #CFD3DA;
-  --palette-ice: #E9E9E9;
-  --palette-aquamarine-light: #269DB0;
-  --palette-aquamarine-dark: #65C9D9;
+  --palette-mist: var(--n-300);
+  --palette-ice: var(--n-200);
+  --palette-aquamarine-300: #65C9D9;
+  --palette-aquamarine-500: #269DB0;
+  --palette-aquamarine-700: #176575;
+  --palette-green-300: #63C394;
+  --palette-green-700: #28734B;
+  --palette-amber-300: #E0A24A;
+  --palette-amber-700: #94570A;
+  --palette-red-300: #F08A80;
+  --palette-red-700: #B83A30;
+  /* 옛 이름 — 한 판 동안 새 이름을 가리킨다(light·dark 는 테마가 아니라 밝기 반대였다). */
+  --palette-aquamarine-light: var(--palette-aquamarine-500);
+  --palette-aquamarine-dark: var(--palette-aquamarine-300);
   --palette-ink: #111111;
   --palette-on-ink: #F5F5F5;
   --n-0: #FFFFFF;
@@ -22,7 +32,7 @@
   --n-700: #3A3A3C;
   --n-800: #252727;
   --n-900: #111111;
-  --white: #FFFFFF;
+  --white: var(--palette-white);
   --font: "Pretendard Variable",Pretendard,"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI","Apple SD Gothic Neo","Noto Sans CJK KR","Malgun Gothic",sans-serif;
   --mono: "SFMono-Regular",Consolas,"Liberation Mono",monospace;
   --radius-sm: 6px;
@@ -41,8 +51,8 @@
   --glass-blur: 20px;
   --radius-pill: 999px;
   --radius-input: 8px;
-  --radius-card: 12px;
-  --radius-panel: 16px;
+  --radius-card: var(--radius-md);
+  --radius-panel: var(--radius-lg);
   --radius-circle: 50%;
   --space-9: 96px;
   --space-10: 128px;
@@ -79,7 +89,7 @@
   --glass-1-blur: 16px;
   --glass-2-blur: 28px;
   --glass-2-blur-mobile: 16px;
-  --panel-blur: 20px;
+  --panel-blur: var(--glass-blur);
   --panel-blur-mobile: 16px;
   --glass-3-blur: 32px;
   --glass-saturate: 1;
@@ -117,7 +127,7 @@
   --muted: #636365;
   --faint: #767678;
   --accent: #65C9D9;
-  --accent-deep: #111111;
+  --accent-deep: var(--ink);
   --ice: #E9E9E9;
   --mist: #CFD3DA;
   --line: rgba(17,17,17,.10);
@@ -163,7 +173,7 @@
   --panel-border: transparent;
   --panel-shadow: var(--depth-2);
   --glass-float-shadow: var(--depth-3);
-  --stage-fill: rgba(251,251,252,.60);
+  --stage-fill: color-mix(in srgb,var(--n-900) 5%,var(--canvas));
   --shadow: var(--depth-2);
   --shadow-float: var(--depth-3);
   --glass-1-fill: rgba(255,255,255,.58);
@@ -183,16 +193,22 @@
   --product-light-white: var(--backdrop-tint-white);
   --product-profile-fill: var(--selected-fill);
   --relationship-line: var(--n-500);
-  --product-accent-ink: #269DB0;
+  --product-accent-ink: var(--accent-text-large);
   --glass-light: linear-gradient(180deg,var(--glass-rim),transparent 2px);
   --input-shadow: none;
   --plate-fill: linear-gradient(180deg,rgba(var(--plate-rgb),.62) 0%,rgba(var(--plate-rgb),.92) 62%,rgba(var(--plate-rgb),.98) 100%);
   --plate-haze: radial-gradient(120% 70% at 10% 0%,var(--plate-haze-color) 0%,transparent 70%);
   --canvas-light: var(--canvas);
   --sidebar-fill: #F5F6F6;
-  --accent-readable: #176575;
+  --accent-readable: var(--accent-text);
   --plate-haze-color: rgba(205,214,214,.35);
   --plate-rgb: 255,255,255;
+  --accent-text: var(--palette-aquamarine-700);
+  --accent-text-large: var(--palette-aquamarine-500);
+  --status-success: var(--palette-green-700);
+  --status-warning: var(--palette-amber-700);
+  --status-danger: var(--palette-red-700);
+  --status-info: var(--palette-aquamarine-700);
 }
 [data-theme="dark"] {
   color-scheme: dark;
@@ -203,7 +219,7 @@
   --muted: #AEB4BD;
   --faint: #9199A5;
   --accent: #65C9D9;
-  --accent-deep: #F5F5F5;
+  --accent-deep: var(--ink);
   --ice: #303030;
   --mist: var(--n-700);
   --line: rgba(207,211,218,.13);
@@ -249,7 +265,7 @@
   --panel-border: transparent;
   --panel-shadow: var(--depth-2);
   --glass-float-shadow: var(--depth-3);
-  --stage-fill: var(--surface);
+  --stage-fill: var(--n-800);
   --shadow: var(--depth-2);
   --shadow-float: var(--depth-3);
   --glass-1-fill: rgba(44,48,48,.58);
@@ -269,16 +285,22 @@
   --product-light-white: var(--backdrop-tint-white);
   --product-profile-fill: var(--selected-fill);
   --relationship-line: var(--n-500);
-  --product-accent-ink: var(--accent);
+  --product-accent-ink: var(--accent-text-large);
   --input-shadow: none;
   --glass-light: linear-gradient(180deg,var(--glass-rim),transparent 2px);
   --plate-fill: linear-gradient(180deg,rgba(var(--plate-rgb),.40) 0%,rgba(var(--plate-rgb),.78) 62%,rgba(var(--plate-rgb),.90) 100%);
   --plate-haze: radial-gradient(120% 70% at 10% 0%,var(--plate-haze-color) 0%,transparent 70%);
   --canvas-light: var(--canvas);
   --sidebar-fill: #252727;
-  --accent-readable: var(--accent);
+  --accent-readable: var(--accent-text);
   --plate-haze-color: rgba(207,213,213,.10);
   --plate-rgb: 45,48,48;
+  --accent-text: var(--palette-aquamarine-300);
+  --accent-text-large: var(--palette-aquamarine-300);
+  --status-success: var(--palette-green-300);
+  --status-warning: var(--palette-amber-300);
+  --status-danger: var(--palette-red-300);
+  --status-info: var(--palette-aquamarine-300);
 }
 html, body {
   background: var(--canvas);

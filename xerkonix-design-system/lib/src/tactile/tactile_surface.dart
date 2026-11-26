@@ -8,8 +8,8 @@ import 'tactile_tokens.dart';
 /// TACTILE surface roles. Not every card is `.glass`.
 enum XkTactileSurfaceRole {
   /// Information card — `.panel` (DS 2026-10-21): `--panel-fill` face,
-  /// `--panel-blur` 20 (16 at 700 wide or less) with saturate 150%, outer
-  /// edge `--panel-border` (3:1 or more on the ground), even inner ring
+  /// `--panel-blur` 20 (16 at 700 wide or less), outer
+  /// edge `--panel-border` and even inner ring (currently transparent),
   /// `--glass-ring`, depth `--panel-shadow`. Inner dividers keep `line`.
   information,
 
@@ -106,11 +106,26 @@ class XkTactileSurface extends StatelessWidget {
     // control. Without it, a panel DecoratedBox hides splashes and asserts.
     content = Material(type: MaterialType.transparency, child: content);
 
+    // CSS paints the first background on top. The radial haze is behind the
+    // linear plate, and both remain translucent over the backdrop filter.
+    // Explicit fill and reduced transparency deliberately use one flat face.
+    final bool plate =
+        role == XkTactileSurfaceRole.information &&
+        !opaque &&
+        this.fill == null;
+    if (plate) {
+      content = DecoratedBox(
+        key: const ValueKey<String>('xk-tactile-plate-linear'),
+        decoration: BoxDecoration(gradient: t.panelGradient),
+        child: content,
+      );
+    }
     // Face: fill and the inner ring, inside the blur clip.
     Widget body = DecoratedBox(
       key: const ValueKey<String>('xk-tactile-surface-face'),
       decoration: BoxDecoration(
-        color: paintedFill,
+        color: plate ? null : paintedFill,
+        gradient: plate ? t.panelHaze : null,
         borderRadius: radiusGeom,
         border: XkTactileEdge(color: XkTactileTokens.clear, ring: ring),
       ),

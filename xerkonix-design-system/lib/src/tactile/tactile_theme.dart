@@ -290,7 +290,8 @@ class XkTactileTheme {
         elevation: 0,
         shadowColor: clear,
         surfaceTintColor: clear,
-        // Card outer edge is `--panel-border` (3:1 on the ground), not `line`.
+        // Material accepts one colour (--surface); use XkTactileSurface
+        // for the layered plate. The current panel edge is transparent.
         shape: RoundedRectangleBorder(
           borderRadius: panelR,
           side: BorderSide(color: c.panelBorder),
@@ -447,7 +448,7 @@ class XkTactileTheme {
               !s.contains(WidgetState.disabled)) {
             return BorderSide(color: c.focusRing, width: 2);
           }
-          return BorderSide(color: edge(s, c.inputBorder));
+          return BorderSide(color: edge(s, c.ink));
         }),
       ),
       radioTheme: RadioThemeData(
@@ -456,7 +457,7 @@ class XkTactileTheme {
               !s.contains(WidgetState.disabled)) {
             return c.focusRing;
           }
-          return edge(s, c.inputBorder);
+          return edge(s, c.ink);
         }),
       ),
       switchTheme: SwitchThemeData(
@@ -476,7 +477,7 @@ class XkTactileTheme {
               !s.contains(WidgetState.disabled)) {
             return c.focusRing;
           }
-          return edge(s, c.inputBorder);
+          return edge(s, c.ink);
         }),
         // Material draws the outline on the track inset 1px, centred: 2px
         // puts its outer edge on the track edge (1px leaves the pale track

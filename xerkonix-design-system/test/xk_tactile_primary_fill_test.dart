@@ -106,7 +106,7 @@ void main() {
     expect(decoration.gradient, isNull);
     expect(decoration.boxShadow, isEmpty);
     expect(XkTactileTokens.light.primaryText, const Color(0xFFF5F5F5));
-    expect(XkTactileTokens.light.accent, const Color(0xFF269DB0));
+    expect(XkTactileTokens.light.accent, const Color(0xFF65C9D9));
   });
 
   testWidgets('dark primary reverses the monochrome pair', (

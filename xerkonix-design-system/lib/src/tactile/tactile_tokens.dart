@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
-/// Values from DS `tactile/tokens.css` v4.1.0.
+import 'tactile_plate.dart';
+
+/// Values from DS `tactile/tokens.css` v4.5.0.
 /// Do not invent hex here. Light `:root` and dark `[data-theme=dark]`.
 ///
 /// Product screen v4 roles (`currentLabel` … `humanReviewBorder`) come
@@ -16,6 +18,8 @@ class XkTactileTokens {
     required this.surface,
     required this.surfaceRaised,
     required this.panelFill,
+    required this.panelGradient,
+    required this.panelHaze,
     required this.panelBorder,
     required this.panelShadow,
     required this.glassFloatShadow,
@@ -73,9 +77,14 @@ class XkTactileTokens {
   final Color canvas;
   final Color surface;
   final Color surfaceRaised;
-  final Color panelFill;
 
-  /// Card outer edge (`--panel-border`). 3:1 or more against the ground.
+  /// Flat Material Card fallback (`--surface`). Information surfaces paint
+  /// [panelGradient] over [panelHaze], preserving CSS `--panel-fill` layers.
+  final Color panelFill;
+  final LinearGradient panelGradient;
+  final RadialGradient panelHaze;
+
+  /// Card outer edge (`--panel-border`), transparent in the current CSS.
   /// Inner dividers keep [line].
   final Color panelBorder;
 
@@ -84,7 +93,7 @@ class XkTactileTokens {
   final List<BoxShadow> panelShadow;
 
   /// Floating glass depth (`--glass-float-shadow`, `.glass` / `.glass-2`).
-  /// Negative spread keeps the pixel just outside the edge at 3:1.
+  /// Values follow the current CSS depth token.
   final List<BoxShadow> glassFloatShadow;
   final Color ink;
   final Color muted;
@@ -106,9 +115,9 @@ class XkTactileTokens {
   final Color overlayBackdrop;
   final Color inputFill;
 
-  /// Input control edge (`--input-border`): field, multi-line, select,
-  /// checkbox, radio, switch off. 3:1 or more against the ground
-  /// (DS #119). Chips and choices use [secondaryBorder].
+  /// Borderless text field edge (`--input-border`). Native checkbox,
+  /// radio and switch outlines use [ink] to remain visible while off.
+  /// Chips and choices use [secondaryBorder].
   final Color inputBorder;
   final Color primaryText;
   final Color primaryBase;
@@ -159,44 +168,69 @@ class XkTactileTokens {
   static const Color clear = Color(0x00000000);
 
   static const XkTactileTokens light = XkTactileTokens._(
-    canvas: Color(0xFFF5F5F5),
+    canvas: Color(0xFFFAFBFB),
     surface: Color(0xFFFBFBFC),
     surfaceRaised: Color(0xFFFFFFFF),
-    panelFill: Color(0xA3FFFFFF),
-    panelBorder: Color(0xFF757A82),
+    panelFill: Color(0xFFFBFBFC),
+    panelGradient: LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      colors: <Color>[Color(0x9EFFFFFF), Color(0xEBFFFFFF), Color(0xFAFFFFFF)],
+      stops: <double>[0, 0.62, 1],
+    ),
+    panelHaze: RadialGradient(
+      center: Alignment(-0.8, -1),
+      radius: 1,
+      colors: <Color>[Color(0x59CDD6D6), Color(0x00CDD6D6)],
+      stops: <double>[0, 0.7],
+      transform: XkTactileEllipse(1.2, 0.7, 0.1, 0),
+    ),
+    panelBorder: Color(0x00000000),
     panelShadow: <BoxShadow>[
       BoxShadow(
-        color: Color(0x1F111111),
-        offset: Offset(0, 20),
-        blurRadius: 40,
-        spreadRadius: -20,
+        color: Color(0x0D111111),
+        offset: Offset(0, 1),
+        blurRadius: 2,
+        spreadRadius: 0,
+      ),
+      BoxShadow(
+        color: Color(0x0F111111),
+        offset: Offset(0, 4),
+        blurRadius: 12,
+        spreadRadius: 0,
       ),
     ],
     glassFloatShadow: <BoxShadow>[
       BoxShadow(
-        color: Color(0x29111111),
-        offset: Offset(0, 28),
-        blurRadius: 56,
-        spreadRadius: -36,
+        color: Color(0x0F111111),
+        offset: Offset(0, 2),
+        blurRadius: 6,
+        spreadRadius: 0,
+      ),
+      BoxShadow(
+        color: Color(0x1A111111),
+        offset: Offset(0, 12),
+        blurRadius: 32,
+        spreadRadius: 0,
       ),
     ],
     ink: Color(0xFF111111),
     muted: Color(0xFF636365),
     ice: Color(0xFFE9E9E9),
-    accent: Color(0xFF269DB0),
+    accent: Color(0xFF65C9D9),
     accentDeep: Color(0xFF111111),
     line: Color(0x1A111111),
     glassFill: Color(0x8FFFFFFF),
     glassRim: Color(0xE6FFFFFF),
-    glassRing: Color(0xE6FFFFFF),
-    glassInset: Color(0xCCFFFFFF),
+    glassRing: Color(0x00000000),
+    glassInset: Color(0x00000000),
     glassFallback: Color(0xFFFBFBFC),
     glassBlur: 20,
-    overlayFill: Color(0xF5FBFBFC),
-    overlayBorder: Color(0xF2FFFFFF),
+    overlayFill: Color(0xFFFFFFFF),
+    overlayBorder: Color(0x00000000),
     overlayBackdrop: Color(0x40111111),
-    inputFill: Color(0xADFFFFFF),
-    inputBorder: Color(0xFF757A82),
+    inputFill: Color(0xB3E8E9E9),
+    inputBorder: Color(0x00000000),
     primaryText: Color(0xFFF5F5F5),
     primaryBase: Color(0xFF111111),
     primaryBorder: Color(0xFF111111),
@@ -221,43 +255,81 @@ class XkTactileTokens {
     ],
     secondaryFill: Color(0xD1FFFFFF),
     secondaryHover: Color(0xFFFFFFFF),
-    secondaryBorder: Color(0xFF757A82),
-    secondaryShadow: <BoxShadow>[],
-    controlHover: Color(0xBFFFFFFF),
+    secondaryBorder: Color(0x00000000),
+    secondaryShadow: <BoxShadow>[
+      BoxShadow(
+        color: Color(0x14111111),
+        offset: Offset(0, 1),
+        blurRadius: 2,
+        spreadRadius: 0,
+      ),
+      BoxShadow(
+        color: Color(0x1A111111),
+        offset: Offset(0, 6),
+        blurRadius: 16,
+        spreadRadius: 0,
+      ),
+    ],
+    controlHover: Color(0x0F111111),
     faint: Color(0xFF767678),
-    headerFill: Color(0xDEF5F5F5),
+    headerFill: Color(0xDEFAFBFB),
     controlOn: Color(0xFF111111),
     controlTrack: Color(0xFFCFD3DA),
     controlMark: Color(0xFFFFFFFF),
     selectedFill: Color(0x14111111),
-    currentLabel: Color(0xFF1C5D67),
-    keyMetric: Color(0xFF1C5D67),
-    humanReviewLabel: Color(0xFF1C5D67),
-    selectedCue: Color(0xFF1C5D67),
-    humanReviewSurface: Color(0xFFE4F1F4),
-    humanReviewBorder: Color(0xFF578793),
+    currentLabel: Color(0xFF111111),
+    keyMetric: Color(0xFF111111),
+    humanReviewLabel: Color(0xFF111111),
+    selectedCue: Color(0xFF111111),
+    humanReviewSurface: Color(0x14111111),
+    humanReviewBorder: Color(0x00000000),
   );
 
   static const XkTactileTokens dark = XkTactileTokens._(
-    canvas: Color(0xFF111111),
-    surface: Color(0xFF191B1F),
-    surfaceRaised: Color(0xFF22262C),
-    panelFill: Color(0xA32A2F36),
-    panelBorder: Color(0xFF787D85),
+    canvas: Color(0xFF101111),
+    surface: Color(0xFF1B1C1C),
+    surfaceRaised: Color(0xFF252727),
+    panelFill: Color(0xFF1B1C1C),
+    panelGradient: LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      colors: <Color>[Color(0x662D3030), Color(0xC72D3030), Color(0xE62D3030)],
+      stops: <double>[0, 0.62, 1],
+    ),
+    panelHaze: RadialGradient(
+      center: Alignment(-0.8, -1),
+      radius: 1,
+      colors: <Color>[Color(0x1ACFD5D5), Color(0x00CFD5D5)],
+      stops: <double>[0, 0.7],
+      transform: XkTactileEllipse(1.2, 0.7, 0.1, 0),
+    ),
+    panelBorder: Color(0x00000000),
     panelShadow: <BoxShadow>[
       BoxShadow(
-        color: Color(0x57000000),
-        offset: Offset(0, 12),
-        blurRadius: 32,
+        color: Color(0x80111111),
+        offset: Offset(0, 1),
+        blurRadius: 2,
+        spreadRadius: 0,
       ),
-      BoxShadow(color: Color(0x38000000), offset: Offset(0, 2), blurRadius: 6),
+      BoxShadow(
+        color: Color(0x73111111),
+        offset: Offset(0, 4),
+        blurRadius: 12,
+        spreadRadius: 0,
+      ),
     ],
     glassFloatShadow: <BoxShadow>[
       BoxShadow(
-        color: Color(0x80000000),
-        offset: Offset(0, 28),
-        blurRadius: 56,
-        spreadRadius: -20,
+        color: Color(0x80111111),
+        offset: Offset(0, 2),
+        blurRadius: 6,
+        spreadRadius: 0,
+      ),
+      BoxShadow(
+        color: Color(0x99111111),
+        offset: Offset(0, 12),
+        blurRadius: 32,
+        spreadRadius: 0,
       ),
     ],
     ink: Color(0xFFF5F5F5),
@@ -266,17 +338,17 @@ class XkTactileTokens {
     accent: Color(0xFF65C9D9),
     accentDeep: Color(0xFFF5F5F5),
     line: Color(0x21CFD3DA),
-    glassFill: Color(0xA32A2F36),
+    glassFill: Color(0xA32C3030),
     glassRim: Color(0x30CFD3DA),
-    glassRing: Color(0x30CFD3DA),
-    glassInset: Color(0x17FFFFFF),
-    glassFallback: Color(0xFF22262C),
+    glassRing: Color(0x00000000),
+    glassInset: Color(0x00000000),
+    glassFallback: Color(0xFF252727),
     glassBlur: 20,
-    overlayFill: Color(0xF51D2025),
-    overlayBorder: Color(0x30CFD3DA),
-    overlayBackdrop: Color(0x94000000),
-    inputFill: Color(0xFF191B1F),
-    inputBorder: Color(0xFF787D85),
+    overlayFill: Color(0xFF252727),
+    overlayBorder: Color(0x00000000),
+    overlayBackdrop: Color(0x94111111),
+    inputFill: Color(0xFF1B1C1C),
+    inputBorder: Color(0x00000000),
     primaryText: Color(0xFF111111),
     primaryBase: Color(0xFFF5F5F5),
     primaryBorder: Color(0xFFF5F5F5),
@@ -299,23 +371,36 @@ class XkTactileTokens {
       ),
       BoxShadow(color: Color(0x29000000), offset: Offset(0, 3), blurRadius: 8),
     ],
-    secondaryFill: Color(0x14CFD3DA),
-    secondaryHover: Color(0x1ACFD3DA),
-    secondaryBorder: Color(0xFF787D85),
-    secondaryShadow: <BoxShadow>[],
-    controlHover: Color(0x14CFD3DA),
+    secondaryFill: Color(0xA33D3F3F),
+    secondaryHover: Color(0xFF3A3A3C),
+    secondaryBorder: Color(0x00000000),
+    secondaryShadow: <BoxShadow>[
+      BoxShadow(
+        color: Color(0x66111111),
+        offset: Offset(0, 1),
+        blurRadius: 2,
+        spreadRadius: 0,
+      ),
+      BoxShadow(
+        color: Color(0x59111111),
+        offset: Offset(0, 6),
+        blurRadius: 16,
+        spreadRadius: 0,
+      ),
+    ],
+    controlHover: Color(0x1ACFD3DA),
     faint: Color(0xFF9199A5),
-    headerFill: Color(0xE0111111),
+    headerFill: Color(0xDE101111),
     controlOn: Color(0xFFF5F5F5),
-    controlTrack: Color(0xFF383D45),
+    controlTrack: Color(0xFF3A3A3C),
     controlMark: Color(0xFF111111),
     selectedFill: Color(0x1AF5F5F5),
-    currentLabel: Color(0xFF65C9D9),
-    keyMetric: Color(0xFF65C9D9),
-    humanReviewLabel: Color(0xFF65C9D9),
-    selectedCue: Color(0xFF65C9D9),
-    humanReviewSurface: Color(0xFF233237),
-    humanReviewBorder: Color(0xFF709DA8),
+    currentLabel: Color(0xFFF5F5F5),
+    keyMetric: Color(0xFFF5F5F5),
+    humanReviewLabel: Color(0xFFF5F5F5),
+    selectedCue: Color(0xFFF5F5F5),
+    humanReviewSurface: Color(0x1AF5F5F5),
+    humanReviewBorder: Color(0x00000000),
   );
 
   static XkTactileTokens of(Brightness brightness) {
@@ -336,7 +421,7 @@ class XkTactileTokens {
   static const double panelBlurMobileMaxWidth = 700;
 
   /// `saturate(var(--glass-saturate))` behind a card or glass face.
-  static const double glassSaturate = 1.5;
+  static const double glassSaturate = 1;
   static const double overlayBlur = 24;
   static const double focusOutlineWidth = 3;
   static const double focusOutlineOffset = 4;

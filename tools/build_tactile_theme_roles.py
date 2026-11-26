@@ -46,7 +46,7 @@ ROLES: dict[str, str] = {
     "colorScheme.outline": "--line",
     "colorScheme.inverseSurface": "--overlay-fill",
     "appBarTheme.backgroundColor": "--header-fill",
-    "cardTheme.color": "--panel-fill",
+    "cardTheme.color": "--surface",  # Material accepts Color; XkTactileSurface paints panel layers.
     "cardTheme.side": "--panel-border",
     "card.ring": "--glass-ring",
     "button.secondary.fill": "--secondary-fill",
@@ -68,10 +68,10 @@ ROLES: dict[str, str] = {
     "switchTheme.trackUnselected": "--control-track",
     "checkboxTheme.fillSelected": "--control-on",
     # DS #119: input control edges 3:1, focus ring ink.
-    "checkboxTheme.side": "--input-border",
+    "checkboxTheme.side": "--ink",
     "checkboxTheme.sideSelected": "--control-on",
-    "radioTheme.fillUnselected": "--input-border",
-    "switchTheme.trackOutline": "--input-border",
+    "radioTheme.fillUnselected": "--ink",
+    "switchTheme.trackOutline": "--ink",
     "switchTheme.trackOutlineSelected": "--control-on",
     "chipTheme.side": "--secondary-border",
     "chipTheme.sideSelected": "--control-on",
@@ -91,7 +91,6 @@ DART_FIELDS = {
     "--line": "line",
     "--ice": "ice",
     "--accent": "accent",
-    "--panel-fill": "panelFill",
     "--panel-border": "panelBorder",
     "--glass-ring": "glassRing",
     "--secondary-fill": "secondaryFill",
@@ -109,6 +108,17 @@ DART_FIELDS = {
     "--selected-fill": "selectedFill",
     "--selected-border": "selectedBorder",
     "--selected-text": "ink",
+}
+
+
+# Every colour used by the surface, including Material's documented flat fallback.
+TOKEN_FIELDS = {**DART_FIELDS,
+    "--surface-raised": "surfaceRaised", "--accent-deep": "accentDeep",
+    "--glass-fill": "glassFill", "--glass-rim": "glassRim",
+    "--glass-inset": "glassInset", "--glass-fallback": "glassFallback",
+    "--overlay-border": "overlayBorder", "--overlay-backdrop": "overlayBackdrop",
+    "--primary-border": "primaryBorder", "--control-hover": "controlHover",
+    "--control-mark": "controlMark",
 }
 
 # CSS box-shadow list → Dart `List<BoxShadow>` field. Outer shadows only.
@@ -260,7 +270,7 @@ def _rules(css: str) -> dict[str, dict[str, str]]:
 
 
 def _rgba(raw: str, scope: dict[str, str], depth: int = 0) -> Rgba:
-    raw = raw.strip()
+    raw = _resolve_vars(raw.strip(), scope)
     if depth > 20:
         raise SystemExit(f"var() loop at {raw}")
     if raw == "transparent":
@@ -390,7 +400,10 @@ def extract_app(app_css: str, light_tokens: dict[str, str], dark_tokens: dict[st
                 raise SystemExit(f"app-surface.css: {selector} {{ {prop} }} missing")
             entry: dict = {"css": f"{selector} {{ {prop} }}", "expr": decls[prop]}
             for kind, scope in scopes.items():
-                entry[kind] = _app_value(role, _prop_colors(decls[prop], scope))
+                # A removed border paints no colour; zero is not a CSS colour.
+                colors = (["0x00000000"] if prop == "border" and decls[prop] in ("0", "none")
+                          else _prop_colors(decls[prop], scope))
+                entry[kind] = _app_value(role, colors)
             out[role] = entry
         return out
 
@@ -459,10 +472,54 @@ def extract_shadows(light: dict[str, str], dark: dict[str, str]) -> dict:
     out = {}
     for var in SHADOW_FIELDS:
         out[var] = {
-            "light": _parse_shadow(light[var]) if var in light else None,
-            "dark": _parse_shadow(dark[var]) if var in dark else None,
+            "light": _parse_shadow(_resolve_vars(light[var], light)) if var in light else None,
+            "dark": _parse_shadow(_resolve_vars(dark[var], dark)) if var in dark else None,
         }
     return out
+
+
+def _resolve_vars(raw: str, scope: dict[str, str], depth: int = 0) -> str:
+    if depth > 20:
+        raise SystemExit(f"var() loop at {raw}")
+
+    def replace(match: re.Match) -> str:
+        name = match.group(1)
+        if name not in scope:
+            raise SystemExit(f"unresolved {name}")
+        return _resolve_vars(scope[name], scope, depth + 1)
+
+    return re.sub(r"var\(\s*(--[\w-]+)\s*\)", replace, raw)
+
+
+def extract_panel(scope: dict[str, str]) -> dict:
+    """Preserve CSS background order and geometry, never coerce gradients to Color."""
+    layers = _split_top(_resolve_vars(scope["--panel-fill"], scope))
+    if len(layers) != 2:
+        raise SystemExit("panel-fill requires linear foreground and radial haze")
+    linear = re.fullmatch(r"linear-gradient\((.*)\)", layers[0])
+    radial = re.fullmatch(r"radial-gradient\((.*)\)", layers[1])
+    if not linear or not radial:
+        raise SystemExit("unsupported panel layer order")
+    lin = _split_top(linear.group(1)); rad = _split_top(radial.group(1))
+    if lin.pop(0) != "180deg":
+        raise SystemExit("unsupported panel linear direction")
+    geometry = re.fullmatch(r"([0-9.]+)%\s+([0-9.]+)%\s+at\s+([0-9.]+)%\s+([0-9.]+)%", rad.pop(0))
+    if not geometry:
+        raise SystemExit("unsupported panel radial geometry")
+    def stops(items):
+        colors, positions = [], []
+        for item in items:
+            m = re.fullmatch(r"(.*)\s+([0-9.]+)%", item)
+            if not m:
+                raise SystemExit(f"explicit panel stop required: {item}")
+            colors.append(_hex(_rgba(m.group(1), scope)))
+            positions.append(float(m.group(2)) / 100)
+        if positions != sorted(positions) or len(positions)<2:
+            raise SystemExit("invalid panel stops")
+        return {"colors": colors, "stops": positions}
+    rx, ry, cx, cy = [float(v)/100 for v in geometry.groups()]
+    return {"css": "--panel-fill", "linear": stops(lin),
+            "haze": {**stops(rad), "radii": [rx, ry], "center": [cx, cy]}}
 
 
 def extract(css_path: Path) -> dict:
@@ -472,8 +529,8 @@ def extract(css_path: Path) -> dict:
     dark.update(_decls(_block(css, '[data-theme="dark"]')))
     roles = {}
     for slot, var in ROLES.items():
-        lv = _parse_color(light[var]) if var in light else None
-        dv = _parse_color(dark[var]) if var in dark else None
+        lv = _hex(_rgba(light[var], light)) if var in light else None
+        dv = _hex(_rgba(dark[var], dark)) if var in dark else None
         roles[slot] = {"css": var, "light": lv, "dark": dv}
     payload = {
         "kind": "xerkonix-tactile-theme-roles",
@@ -481,7 +538,11 @@ def extract(css_path: Path) -> dict:
         "source": "tactile/tokens.css",
         "generator": "tools/build_tactile_theme_roles.py",
         "not": "product _tokens.dart / tokens.css v4 ledger",
+        "scalars": {"glassSaturate": float(_resolve_vars(light["--glass-saturate"],light))},
         "roles": roles,
+        "tokens": {kind: {field: _hex(_rgba(scope[var], scope)) for var, field in TOKEN_FIELDS.items()}
+                   for kind, scope in (("light", light), ("dark", dark))},
+        "panel": {"light": extract_panel(light), "dark": extract_panel(dark)},
         "shadows": extract_shadows(light, dark),
     }
     app_css = find_app_css(css_path)
@@ -603,8 +664,58 @@ def _dart_num(x: float) -> str:
     return str(int(x)) if float(x).is_integer() else repr(float(x))
 
 
+def generated_dart(payload: dict) -> str:
+    text = DART.read_text(encoding="utf-8")
+    for kind in ("light", "dark"):
+        block = _dart_block(kind)
+        updated = block
+        colors = {**payload["tokens"][kind],
+                  **{role: spec[kind] for role, spec in payload["app"]["roles"].items()},
+                  "panelFill": payload["tokens"][kind]["surface"]}
+        for field, value in colors.items():
+            updated, count = re.subn(rf"\b{field}: Color\(0x[0-9a-fA-F]+\)", f"{field}: Color({value})", updated)
+            if count != 1: raise SystemExit(f"missing/duplicate Dart colour {kind}.{field}")
+        for var, spec in payload["shadows"].items():
+            field = SHADOW_FIELDS[var]
+            if spec[kind] is None: raise SystemExit(f"unsupported shadow {var}")
+            items = ["BoxShadow(color: Color({color}), offset: Offset({x}, {y}), blurRadius: {blur}, spreadRadius: {spread}),".format(**{k: _dart_num(v) if isinstance(v,(int,float)) else v for k,v in item.items()}) for item in spec[kind]]
+            updated, count = re.subn(rf"{field}: <BoxShadow>\[.*?\],", f"{field}: <BoxShadow>["+"".join(items)+"],", updated, flags=re.S)
+            if count!=1: raise SystemExit(f"missing Dart shadow {field}")
+        panel = payload["panel"][kind]
+        def values(layer):
+            colors = list(layer["colors"])
+            # CSS interpolates premultiplied alpha. Skia's unpremultiplied
+            # gradient must retain the neighbouring RGB at a transparent end
+            # to avoid a dark fringe while its alpha fades to zero.
+            for i, color in enumerate(colors):
+                if int(color, 16) >> 24 == 0:
+                    adjacent = colors[i - 1] if i else colors[i + 1]
+                    colors[i] = f"0x00{int(adjacent, 16) & 0xffffff:06X}"
+            return "colors: <Color>["+", ".join(f"Color({c})" for c in colors)+"], stops: <double>["+", ".join(_dart_num(v) for v in layer["stops"])+"],"
+        linear = "LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, "+values(panel["linear"])+")"
+        haze = panel["haze"]; rx,ry=haze["radii"];cx,cy=haze["center"]
+        radial = "RadialGradient(center: Alignment("+_dart_num(cx*2-1)+", "+_dart_num(cy*2-1)+"), radius: 1, "+values(haze)+f" transform: XkTactileEllipse({_dart_num(rx)}, {_dart_num(ry)}, {_dart_num(cx)}, {_dart_num(cy)}),)"
+        for field, value in (("panelGradient",linear),("panelHaze",radial)):
+            pattern=rf"{field}: (?:LinearGradient|RadialGradient)\(.*?\n    \),"
+            updated,count=re.subn(pattern,f"{field}: {value[:-1]}\n    ),",updated,flags=re.S)
+            if count!=1:raise SystemExit(f"missing Dart gradient {field}")
+        text=text.replace(block,updated)
+    for field,value in payload["scalars"].items():
+        text,count=re.subn(rf"static const double {field} = [0-9.]+;",f"static const double {field} = {_dart_num(value)};",text)
+        if count!=1:raise SystemExit(f"missing scalar {field}")
+    return text
+
+
+def normalized_dart(text: str) -> str:
+    # dart format only changes whitespace and trailing argument commas.
+    return re.sub(r",(?=[)\]])", "", re.sub(r"\s+", "", text))
+
+
 def check(payload: dict, require_css: bool) -> int:
     errors = 0
+    if normalized_dart(generated_dart(payload)) != normalized_dart(DART.read_text()):
+        print("FAIL generated Dart values drift — rerun --write", file=sys.stderr)
+        errors += 1
     for kind in ("light", "dark"):
         dart = dart_hexes(kind)
         for slot, spec in payload["roles"].items():
@@ -639,6 +750,7 @@ def main() -> int:
             print("tokens.css not found", file=sys.stderr)
             return 2
         payload = extract(tokens)
+        DART.write_text(generated_dart(payload), encoding="utf-8")
         OUT.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
         print(f"wrote {OUT} from {tokens}")
         return 0 if check(payload, True) == 0 else 1

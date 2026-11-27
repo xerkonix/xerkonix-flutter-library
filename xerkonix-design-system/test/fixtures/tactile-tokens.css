@@ -16,6 +16,12 @@
   --palette-amber-700: #94570A;
   --palette-red-300: #F08A80;
   --palette-red-700: #B83A30;
+  --palette-violet-300: #8E7CFF;
+  --palette-violet-700: #5B49E0;
+  --palette-rose-300: #FF6FB5;
+  --palette-rose-700: #D93C8C;
+  --palette-orange-300: #FFB86B;
+  --palette-orange-700: #D9822B;
   /* 옛 이름 — 한 판 동안 새 이름을 가리킨다(light·dark 는 테마가 아니라 밝기 반대였다). */
   --palette-aquamarine-light: var(--palette-aquamarine-500);
   --palette-aquamarine-dark: var(--palette-aquamarine-300);
@@ -209,6 +215,10 @@
   --status-warning: var(--palette-amber-700);
   --status-danger: var(--palette-red-700);
   --status-info: var(--palette-aquamarine-700);
+  --spectrum-1: var(--palette-aquamarine-500);
+  --spectrum-2: var(--palette-violet-700);
+  --spectrum-3: var(--palette-rose-700);
+  --spectrum-4: var(--palette-orange-700);
 }
 [data-theme="dark"] {
   color-scheme: dark;
@@ -301,6 +311,10 @@
   --status-warning: var(--palette-amber-300);
   --status-danger: var(--palette-red-300);
   --status-info: var(--palette-aquamarine-300);
+  --spectrum-1: var(--palette-aquamarine-300);
+  --spectrum-2: var(--palette-violet-300);
+  --spectrum-3: var(--palette-rose-300);
+  --spectrum-4: var(--palette-orange-300);
 }
 html, body {
   background: var(--canvas);

@@ -1,8 +1,8 @@
 // DS `.panel` 카드 재질(DS #115·#116)과 보조 버튼 경계, 입력 컨트롤 테
 // (DS #119 — 입력칸·오류·포커스 링·칩·고르기)를 실제 픽셀로 잰다.
 //
-// 기준: 카드·보조 버튼·입력 컨트롤 바깥 경계는 바로 바깥 바탕과 3:1 이상이다
-// (DS DESIGN-SYSTEM.md §2·§7). 포커스 링은 테와 따로 링 바깥 가장자리를
+// 기준: 현행 CSS의 카드·보조 버튼·입력칸은 테가 없는 면을 유지한다.
+// 선택 컨트롤과 포커스 링은 바탕과 3:1 이상이다. 포커스 링은 테와 따로 링 바깥 가장자리를
 // 잰다. 그림자를 켠 채(debugDisableShadows=false)
 // 그리고, 네 변 가운데에서 장치 픽셀 단위로 잰다:
 //   경계 띠 = 1 논리 px 테가 걸친 장치 픽셀들.
@@ -140,13 +140,8 @@ class _Subject {
 /// asserts the recorded values (±[_knownTolerance]): the 1px minimum over
 /// the four sides and the 2px minimum. Any change — better or worse —
 /// fails, and so does an entry that names no scene.
-const Map<String, (double, double)> _knownFailures = <String, (double, double)>{
-  'switch off · light canvas · dpr1 frac.3/.7': (2.71, 3.96),
-  'radio off · light mist · dpr1 frac.3/.7': (2.73, 3.45),
-  'switch off · light mist · dpr1 frac.3/.7': (2.52, 3.45),
-  'radio off · dark mist · dpr1 frac.3/.7': (2.68, 3.52),
-  'switch off · dark mist · dpr1 frac.3/.7': (2.37, 3.52),
-};
+const Map<String, (double, double)> _knownFailures =
+    <String, (double, double)>{};
 const double _knownTolerance = 0.02;
 
 Future<List<_Side>> _measure(
@@ -724,7 +719,9 @@ void main() {
     for (final _Subject subject in subjects) {
       for (final _Placement at in placements) {
         final String label = '${subject.name} · $groundName · ${at.name}';
-        testWidgets('$label: edge 3:1 or more', (WidgetTester tester) async {
+        testWidgets('$label: current surface or control edge', (
+          WidgetTester tester,
+        ) async {
           final String artifact = 'edge-${subject.name}-$groundName-${at.name}'
               .replaceAll(RegExp(r'[^A-Za-z0-9]+'), '-');
           final List<_Side> sides = await _measure(
@@ -736,6 +733,44 @@ void main() {
             artifact: artifact,
           );
           _report(label, sides);
+          // Current CSS removes information-surface, secondary-button and
+          // resting text-field/chip borders. Focus/selected/toggle edges retain
+          // the contrast requirement; a borderless face must not gain an ink rim.
+          if (subject.name == 'material chip off') {
+            final ChipThemeData chip = Theme.of(
+              tester.element(find.byType(FilterChip)),
+            ).chipTheme;
+            expect(
+              WidgetStateProperty.resolveAs<BorderSide?>(
+                chip.side,
+                <WidgetState>{},
+              )!.color.a,
+              0,
+            );
+            return;
+          }
+          final bool borderless =
+              subject.name.startsWith('card(') ||
+              <String>{
+                'secondary button',
+                'quiet button',
+                'human review',
+                'input field',
+                'chip',
+                'choice off',
+                'chip focus',
+                'choice focus',
+              }.contains(subject.name);
+          if (borderless) {
+            for (final _Side side in sides) {
+              expect(
+                side.value,
+                lessThan(3),
+                reason: '$label gained a contrasting rim at ${side.name}',
+              );
+            }
+            return;
+          }
           final (double, double)? known = _knownFailures[label];
           if (known != null) {
             final double near = sides
@@ -818,7 +853,11 @@ void main() {
       );
       image.dispose();
       final Color want = Color.alphaBlend(
-        XkTactileTokens.light.panelFill,
+        Color.lerp(
+          XkTactileTokens.light.panelGradient.colors[0],
+          XkTactileTokens.light.panelGradient.colors[1],
+          .5 / .62,
+        )!,
         XkTactileTokens.light.canvas,
       );
       final int wantR = (want.r * 255).round();
@@ -870,7 +909,16 @@ void main() {
                 )
                 .decoration
             as BoxDecoration;
-    expect(face.color, XkTactileTokens.light.panelFill);
+    expect(face.color, isNull);
+    expect(face.gradient, XkTactileTokens.light.panelHaze);
+    final BoxDecoration plate =
+        tester
+                .widget<DecoratedBox>(
+                  find.byKey(const ValueKey<String>('xk-tactile-plate-linear')),
+                )
+                .decoration
+            as BoxDecoration;
+    expect(plate.gradient, XkTactileTokens.light.panelGradient);
     final BoxDecoration edge =
         tester
                 .widget<DecoratedBox>(
@@ -1164,7 +1212,7 @@ void main() {
       final Checkbox cb = tester.widget<Checkbox>(find.byType(Checkbox));
       BorderSide? side(Set<WidgetState> s) =>
           WidgetStateProperty.resolveAs<BorderSide?>(cb.side, s);
-      expect(side(focus)!.color, t.inputBorder);
+      expect(side(focus)!.color, t.ink);
       expect(side(focus)!.width, 1);
       expect(side(hover)!.color, t.ink);
       expect(side(on)!.color, t.controlOn);
@@ -1224,13 +1272,13 @@ void main() {
             theme.checkboxTheme.side,
             s,
           );
-      expect(box(off)!.color, t.inputBorder);
+      expect(box(off)!.color, t.ink);
       expect(box(on)!.color, t.controlOn);
       expect(box(focus)!.color, t.focusRing);
       expect(box(focus)!.width, 2);
-      expect(theme.radioTheme.fillColor!.resolve(off), t.inputBorder);
+      expect(theme.radioTheme.fillColor!.resolve(off), t.ink);
       expect(theme.radioTheme.fillColor!.resolve(on), t.controlOn);
-      expect(theme.switchTheme.trackOutlineColor!.resolve(off), t.inputBorder);
+      expect(theme.switchTheme.trackOutlineColor!.resolve(off), t.ink);
       expect(theme.switchTheme.trackOutlineColor!.resolve(on), t.controlOn);
       expect(theme.switchTheme.trackOutlineColor!.resolve(focus), t.focusRing);
       expect(theme.switchTheme.trackOutlineWidth!.resolve(focus), 2);

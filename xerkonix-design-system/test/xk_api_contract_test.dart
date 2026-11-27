@@ -535,7 +535,7 @@ void main() {
           find.byKey(ValueKey<String>('xk-tactile-emphasis-dark-${kind.name}')),
         );
         expect((box.decoration as BoxDecoration).color, dark.canvas);
-        expect(dark.canvas, const Color(0xFF111111));
+        expect(dark.canvas, XkTactileTokens.dark.canvas);
         expect(
           DefaultTextStyle.of(tester.element(find.text('band'))).style.color,
           dark.ink,

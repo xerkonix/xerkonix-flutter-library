@@ -1,6 +1,6 @@
 ## 4.7.0 — 제품 화면 버전 v4 · 라이트 고정 · 잉크 면 폐기
 
-패키지 버전 4.7.0. 웹 TACTILE 토큰은 v4.1.0이다. 제품 화면은 라이트 하나다. CanvasKit 글꼴은 XK Sans KR(Pretendard KS X 1001 서브셋, #20)이다. 잉크 첫인상 면(`XkTactileAppIntro`)·브랜드 단어(`XkTactileBrandWord`)·완료 빛은 뺐다. 다크 토큰은 강조 다크 구간 두 곳(`XkTactileEmphasisDark` — 캔버스 집중 패널·푸터)에서만 쓴다. 아래 「제품 화면 버전 v4」 절 참고.
+패키지 버전 4.7.0. 웹 TACTILE 토큰은 v4.5.0이다. 제품 화면은 라이트 하나다. CanvasKit 글꼴은 XK Sans KR(Pretendard KS X 1001 서브셋, #20)이다. 잉크 첫인상 면(`XkTactileAppIntro`)·브랜드 단어(`XkTactileBrandWord`)·완료 빛은 뺐다. 다크 토큰은 강조 다크 구간 두 곳(`XkTactileEmphasisDark` — 캔버스 집중 패널·푸터)에서만 쓴다. 아래 「제품 화면 버전 v4」 절 참고.
 
 ## 4.6.0 — 제품 화면 버전 6-B 역할
 
@@ -96,7 +96,7 @@ MaterialApp(
 
 - 제품 화면은 라이트 고정이다. `darkTheme`·테마 전환·OS 추종을 두지 않는다. `XkTactileTokens.dark`와 `XkTactileTheme.themeData(Brightness.dark)`는 강조 다크 구간의 토큰 묶음이다.
 - 잉크 첫인상 면은 없다(2026-10-01 폐기). 로그인·빈 상태·대시보드 머리·결제 완료의 머리도 `XkTactileSurface`(정보 면)다. 브랜드 단어는 제목과 같은 `ink` 한 가지, 완료 빛 없음.
-- 검정 면은 `XkTactileEmphasisDark` 두 곳(`canvasFocus`·`footer`)뿐이다. 그 안에서는 서브트리가 `[data-theme="dark"]` 토큰 블록(`--canvas` `#111111` · `--ink` `#F5F5F5` · `--accent` `#65C9D9` · `--muted` `#AEB4BD`)을 읽고 주 버튼은 반전 모노크롬이다. 히어로·카드·로그인에 쓰지 않는다.
+- 검정 면은 `XkTactileEmphasisDark` 두 곳(`canvasFocus`·`footer`)뿐이다. 그 안에서는 서브트리가 `[data-theme="dark"]` 토큰 블록(`--canvas` `#101111` · `--ink` `#F5F5F5` · `--accent` `#65C9D9` · `--muted` `#AEB4BD`)을 읽고 주 버튼은 반전 모노크롬이다. 히어로·카드·로그인에 쓰지 않는다.
 - `currentLabel`·`keyMetric`·`humanReviewLabel`·`selectedCue`는 AA 대비의 읽기 글자다. 상태는 글자로도 쓴다. 라이트 원색 `accent`를 읽는 글자·필수 경계에 쓰지 않는다.
 - 선택 컨트롤은 중립(`selectedFill`·`selectedBorder`·`ink`)이다. 탭 바·내비게이션 바·레일은 테마가 그렇게 칠한다. `selectedCue`는 선택된 이름 옆의 작은 보조 글자다.
 - 모션은 `XkTactileRouteFade`(180ms)뿐이다. 감속 모드에서는 0ms. 스크롤 연동·반복 모션을 넣지 않는다.
@@ -153,6 +153,12 @@ XkTextAreaField(label: 'Brief', maxLines: 4);
 XkTable(columns: [...], rows: [XkTableRowData([XkTableCell(text: '...')])]);
 ```
 
+### 현재 웹 토큰과 Flutter 카드
+
+`tools/build_tactile_theme_roles.py --write`는 현재 CSS의 색·그림자·카드 두 배경 층을 Dart와 역할 JSON에 함께 생성한다. `--panel-fill`의 첫 선형 층을 타원형 haze 위에 그리며, 타원의 가로·세로 반지름은 카드 너비·높이를 각각 따른다. 투명 끝점은 CSS의 알파 보간과 같은 색을 유지한다. `XkTactileSurface` 픽셀 회귀가 두 테마와 두 종횡비를 비교한다. 명시한 `fill`이나 고대비 모드는 불투명한 한 면을 사용한다.
+
+Material `CardTheme.color`는 `Color`만 받으므로 `--surface`를 사용한다. 이 값은 반투명 두 층을 대신하지 않으며, 정보 카드 재질은 `XkTactileSurface`가 그린다. `panelFill` 필드는 기존 호출 호환용 단색 값으로 유지한다. 다른 플랫폼 기하 수치까지 모두 동일하게 생성한다는 뜻은 아니다.
+
 ### 체크박스 · 라디오 · 토글 · 칩 — 래퍼만 지원
 
 ```dart
@@ -163,7 +169,7 @@ XkChip(label: '필터', onTap: () {});                 // 칩
 XkChip(label: '고르기', selected: on, onTap: () {}); // 고르기
 ```
 
-입력 컨트롤 테 3:1 · 테와 떨어진 2px 포커스 링(DS #119)을 지키는 것은 이 위젯들뿐이다.
+체크박스·라디오·토글은 중립 잉크(`--ink`) 테로 미선택 상태를 구분하고, 3:1 대비와 테에서 떨어진 2px 포커스 링을 유지한다. 웹 v4.5의 `--input-border: transparent`는 텍스트 입력칸에 적용하며, 이 네이티브 선택 컨트롤의 윤곽에는 적용하지 않는다. 칩·카드·보조 버튼은 현재 CSS의 테 없는 면을 따른다.
 
 - **지원 안 함: 맨 Material** `Checkbox` · `Radio` · `Switch` · `FilterChip` · `ChoiceChip` · `InputChip` · `CheckboxListTile` · `SwitchListTile` · `RadioListTile`.
   - `XkTactileTheme` 이 테 색·hover 잉크·켬 색까지는 입힌다.

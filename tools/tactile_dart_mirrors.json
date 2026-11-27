@@ -9,6 +9,7 @@
     "tactile_controls.dart",
     "tactile_field.dart",
     "tactile_fonts.dart",
+    "tactile_plate.dart",
     "tactile_primary_button.dart",
     "tactile_surface.dart",
     "tactile_theme.dart",

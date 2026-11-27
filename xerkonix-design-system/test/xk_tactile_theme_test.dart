@@ -7,11 +7,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:xerkonix_design_system/xerkonix_design_system.dart';
 
 void main() {
-  test('dark canvas is current TACTILE #111111, not product #141414', () {
-    expect(XkTactileTokens.dark.canvas, const Color(0xFF111111));
+  test('dark canvas is current TACTILE #101111, not product #141414', () {
+    expect(XkTactileTokens.dark.canvas, const Color(0xFF101111));
     expect(
       XkTactileTheme.themeData(Brightness.dark).scaffoldBackgroundColor,
-      const Color(0xFF111111),
+      const Color(0xFF101111),
     );
     expect(
       XkTactileTheme.themeData(Brightness.dark).scaffoldBackgroundColor,
@@ -109,23 +109,6 @@ void main() {
       'humanReviewBorder': s.humanReviewBorder,
     };
 
-    /// CSS `color-mix(in srgb, a p%, b)` — premultiplied, 8-bit rounded.
-    Color srgbMix(Color a, double p, Color b) {
-      final double alpha = a.a * p + b.a * (1 - p);
-      if (alpha == 0) {
-        return const Color(0x00000000);
-      }
-      double ch(double x, double y) =>
-          (x * a.a * p + y * b.a * (1 - p)) / alpha;
-      int q(double v) => (v * 255 + 0.5).floor().clamp(0, 255);
-      return Color.fromARGB(
-        q(alpha),
-        q(ch(a.r, b.r)),
-        q(ch(a.g, b.g)),
-        q(ch(a.b, b.b)),
-      );
-    }
-
     double contrast(Color fg, Color bg) {
       final Color top = Color.alphaBlend(fg, bg);
       final double l1 = top.computeLuminance();
@@ -150,10 +133,13 @@ void main() {
           app['emphasisDark'] as Map<String, dynamic>;
       expect(band['kinds'], <String>['canvasFocus', 'footer']);
       expect(
-        XkTactileEmphasisDarkKind.values.map((XkTactileEmphasisDarkKind k) => k.name),
+        XkTactileEmphasisDarkKind.values.map(
+          (XkTactileEmphasisDarkKind k) => k.name,
+        ),
         band['kinds'],
       );
-      final Map<String, dynamic> tokens = band['tokens'] as Map<String, dynamic>;
+      final Map<String, dynamic> tokens =
+          band['tokens'] as Map<String, dynamic>;
       final XkTactileTokens d = XkTactileTokens.dark;
       final Map<String, Color> got = <String, Color>{
         'canvas': d.canvas,
@@ -163,9 +149,16 @@ void main() {
       };
       expect(tokens.keys.toSet(), got.keys.toSet());
       got.forEach((String name, Color c) {
-        expect(c, hex((tokens[name] as Map<String, dynamic>)['dark'] as String), reason: name);
+        expect(
+          c,
+          hex((tokens[name] as Map<String, dynamic>)['dark'] as String),
+          reason: name,
+        );
       });
-      expect(d.canvas, const Color(0xFF111111));
+      expect(
+        d.canvas,
+        hex((tokens['canvas'] as Map<String, dynamic>)['dark'] as String),
+      );
       expect(d.ink, const Color(0xFFF5F5F5));
       expect(d.accent, const Color(0xFF65C9D9));
       expect(d.muted, const Color(0xFFAEB4BD));
@@ -191,22 +184,16 @@ void main() {
       test('$kind derived roles follow the mapping formulas', () {
         final XkTactileTokens t = XkTactileTokens.of(b);
         final XkTactileAppSurface s = XkTactileAppSurface.fromTokens(t);
-        const Color ink = Color(0xFF111111);
-        final Color accentText = b == Brightness.dark
-            ? t.accent
-            : srgbMix(t.accent, 0.54, ink);
-        for (final Color c in <Color>[
+        for (final Color color in <Color>[
           s.currentLabel,
           s.keyMetric,
           s.humanReviewLabel,
           s.selectedCue,
         ]) {
-          expect(c, accentText);
+          expect(color, t.ink);
         }
-        expect(
-          s.humanReviewSurface,
-          srgbMix(t.accent, b == Brightness.dark ? 0.13 : 0.11, t.surface),
-        );
+        expect(s.humanReviewSurface, t.selectedFill);
+        expect(s.humanReviewBorder.a, 0);
       });
 
       test('$kind reading roles keep AA contrast', () {
@@ -218,8 +205,11 @@ void main() {
           'currentLabel/raised': (s.currentLabel, t.surfaceRaised),
           'keyMetric/surface': (s.keyMetric, t.surface),
           'selectedCue/canvas': (s.selectedCue, t.canvas),
-          'humanReviewLabel/wash': (s.humanReviewLabel, s.humanReviewSurface),
-          'ink/wash': (t.ink, s.humanReviewSurface),
+          'humanReviewLabel/wash': (
+            s.humanReviewLabel,
+            Color.alphaBlend(s.humanReviewSurface, t.canvas),
+          ),
+          'ink/wash': (t.ink, Color.alphaBlend(s.humanReviewSurface, t.canvas)),
           'ink/canvas': (t.ink, t.canvas),
           'muted/canvas': (t.muted, t.canvas),
           'primaryText/primary': (t.primaryText, t.primaryBase),
@@ -245,7 +235,7 @@ void main() {
         final ColorScheme cs = theme.colorScheme;
         for (final Color c in <Color>[cs.primary, cs.secondary, cs.tertiary]) {
           expect(c, isNot(t.accent));
-          expect(c, isNot(theme.extension<XkTactileAppSurface>()!.selectedCue));
+          expect(c, isNot(t.accent));
         }
         expect(cs.primary, t.primaryBase);
         expect(theme.navigationBarTheme.indicatorColor, t.selectedFill);

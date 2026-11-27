@@ -11,7 +11,7 @@ import 'tactile_tokens.dart';
 /// focus rules.
 ///
 /// Thin wrappers over the Material widgets, themed by [XkTactileTheme]:
-/// edge `--input-border`, hover ink, checked / on `--control-on`. Keyboard
+/// edge `--ink`, hover ink, checked / on `--control-on`. Keyboard
 /// focus keeps the edge as it is and draws a separate 2px `--focus-ring`
 /// ring 2px outside the painted box. This is the input-field ring
 /// (`outline:2px solid var(--focus-ring); outline-offset:2px`), used for all
@@ -175,7 +175,8 @@ Color _edge(XkTactileTokens t, Set<WidgetState> s) {
   if (s.contains(WidgetState.hovered) && !s.contains(WidgetState.disabled)) {
     return t.ink;
   }
-  return t.inputBorder;
+  // Native toggles retain an identifiable outline independently of borderless text fields.
+  return t.ink;
 }
 
 class _XkEdgePaint {

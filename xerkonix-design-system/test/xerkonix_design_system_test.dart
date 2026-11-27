@@ -198,7 +198,7 @@ void main() {
       );
       expect(
         XkDarkTheme.themeData.scaffoldBackgroundColor,
-        const Color(0xFF111111),
+        XkTactileTokens.dark.canvas,
       );
       expect(
         XkDarkTheme.themeData.scaffoldBackgroundColor,

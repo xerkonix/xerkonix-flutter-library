@@ -1,5 +1,5 @@
 /* XERKONIX TACTILE tokens · v4.5.0
-   강조색 사용처: 제품 화면의 포인트 색은 화면당 1~2곳이다(0곳도 허용). Aquamarine은 사람 확인 칸·현재 위치·핵심 숫자·즐겨찾기 폴더 뒷판 기운에 쓴다. 버튼·배지·링크·포커스·앱 바탕에는 쓰지 않는다.
+   강조색 사용처: 제품 화면의 포인트 색은 화면당 1~2곳이다(0곳도 허용). 포인트 색은 사람 확인 칸·현재 위치·핵심 숫자·즐겨찾기 폴더 뒷판 기운에 쓴다. 버튼·배지·링크·포커스·앱 바탕에는 쓰지 않는다.
    공통 화면 토큰. */
 :root {
   --palette-canvas: #FAFBFB;
@@ -7,9 +7,9 @@
   --palette-white: #FFFFFF;
   --palette-mist: var(--n-300);
   --palette-ice: var(--n-200);
-  --palette-aquamarine-300: #65C9D9;
-  --palette-aquamarine-500: #269DB0;
-  --palette-aquamarine-700: #176575;
+  --palette-point-300: #7EA2FF;
+  --palette-point-500: #3763EE;
+  --palette-point-700: #1F3FAD;
   --palette-green-300: #63C394;
   --palette-green-700: #28734B;
   --palette-amber-300: #E0A24A;
@@ -23,8 +23,8 @@
   --palette-orange-300: #FFB86B;
   --palette-orange-700: #D9822B;
   /* 옛 이름 — 한 판 동안 새 이름을 가리킨다(light·dark 는 테마가 아니라 밝기 반대였다). */
-  --palette-aquamarine-light: var(--palette-aquamarine-500);
-  --palette-aquamarine-dark: var(--palette-aquamarine-300);
+  --palette-point-light: var(--palette-point-500);
+  --palette-point-dark: var(--palette-point-300);
   --palette-ink: #111111;
   --palette-on-ink: #F5F5F5;
   --n-0: #FFFFFF;
@@ -40,7 +40,7 @@
   --n-900: #111111;
   --white: var(--palette-white);
   --font: "Pretendard Variable",Pretendard,"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI","Apple SD Gothic Neo","Noto Sans CJK KR","Malgun Gothic",sans-serif;
-  --mono: "SFMono-Regular",Consolas,"Liberation Mono",monospace;
+  --mono: var(--font-mono);
   --radius-sm: 6px;
   --radius-md: 12px;
   --radius-lg: 16px;
@@ -52,8 +52,8 @@
   --space-6: 32px;
   --space-7: 48px;
   --space-8: 64px;
-  --ease: cubic-bezier(.22,1,.36,1);
-  --duration: 220ms;
+  --ease: var(--ease-drift);
+  --duration: var(--t-2);
   --glass-blur: 20px;
   --radius-pill: 999px;
   --radius-input: 8px;
@@ -70,7 +70,7 @@
   --fs-body: 15px;
   --fs-small: 13px;
   --fs-label: 12px;
-  --fs-caption: 12px;
+  --fs-caption: 13px;
   --fs-num-xl: 64px;
   --fs-num-lg: 40px;
   --fs-num-md: 28px;
@@ -84,13 +84,13 @@
   --ls-display: -.045em;
   --ls-heading: -.03em;
   --ls-num: -.05em;
-  --t-1: 120ms;
-  --t-2: 200ms;
+  --t-1: 100ms;
+  --t-2: 180ms;
   --t-3: 320ms;
   --t-4: 560ms;
   --t-5: 900ms;
-  --ease-out: cubic-bezier(.22,1,.36,1);
-  --ease-inout: cubic-bezier(.65,0,.35,1);
+  --ease-out: var(--ease-drift);
+  --ease-inout: var(--ease-orbit);
   --press-scale: .97;
   --glass-1-blur: 16px;
   --glass-2-blur: 28px;
@@ -99,11 +99,11 @@
   --panel-blur-mobile: 16px;
   --glass-3-blur: 32px;
   --glass-saturate: 1;
-  --control-h: 48px;
-  --control-h-sm: 36px;
-  --btn-h-sm: 32px;
-  --btn-h-md: 38px;
-  --btn-h-lg: 44px;
+  --control-h: var(--h-lg);
+  --control-h-sm: var(--h-md);
+  --btn-h-sm: var(--h-sm);
+  --btn-h-md: var(--h-md);
+  --btn-h-lg: var(--h-lg);
   --icon-btn-size: 44px;
   --text-to-action: 24px;
   --touch-min: 44px;
@@ -125,6 +125,36 @@
   --fs-num-feature: 52px;
   --company-header-scrolled-fill: color-mix(in srgb,var(--overlay-fill) 96%,transparent);
   --company-header-scrolled-shadow: 0 6px 20px color-mix(in srgb,var(--n-900) 10%,transparent);
+  --font-mono: "Geist Mono", monospace;
+  --ease-drift: cubic-bezier(.16,1,.3,1);
+  --ease-depart: cubic-bezier(.5,0,.84,.3);
+  --ease-orbit: cubic-bezier(.65,0,.35,1);
+  --gutter: 16px;
+  --h-sm: 32px;
+  --h-md: 40px;
+  --h-lg: 48px;
+  --gap-tight: 8px;
+  --gap-item: 16px;
+  --gap-group: 24px;
+  --gap-block: 40px;
+  --gap-section: 64px;
+  --gap-chapter: 104px;
+  --gap-scene: 168px;
+  --data-1: #3763EE;
+  --data-2: #E0782A;
+  --data-3: #D85AA3;
+  --data-4: #4E8514;
+  --data-5: #8A63F2;
+  --data-6: #0C9A8C;
+  --data-seq-1: #E6EEFF;
+  --data-seq-2: #C8D9FF;
+  --data-seq-3: var(--palette-point-300);
+  --data-seq-4: var(--data-1);
+  --data-seq-5: var(--palette-point-700);
+  --data-neg: var(--data-2);
+  --data-mid: var(--n-300);
+  --data-pos: var(--data-1);
+  --data-grid: var(--n-200);
   color-scheme: light;
   --canvas: #FAFBFB;
   --surface: #FBFBFC;
@@ -132,7 +162,7 @@
   --ink: #111111;
   --muted: #636365;
   --faint: #767678;
-  --accent: #65C9D9;
+  --accent: var(--palette-point-300);
   --accent-deep: var(--ink);
   --ice: #E9E9E9;
   --mist: #CFD3DA;
@@ -188,7 +218,7 @@
   --glass-3-ink: #F5F5F5;
   --glass-ring: transparent;
   --glass-edge: transparent;
-  --backdrop-tint-accent: rgba(38,157,176,.14);
+  --backdrop-tint-accent: rgba(55,99,238,.14);
   --backdrop-tint-mist: rgba(207,211,218,.45);
   --backdrop-tint-white: rgba(255,255,255,.90);
   --depth-1: 0 1px 2px rgba(17,17,17,.06);
@@ -209,16 +239,16 @@
   --accent-readable: var(--accent-text);
   --plate-haze-color: rgba(205,214,214,.35);
   --plate-rgb: 255,255,255;
-  --accent-text: var(--palette-aquamarine-700);
-  --accent-text-large: var(--palette-aquamarine-500);
+  --accent-text: var(--palette-point-700);
+  --accent-text-large: var(--palette-point-500);
   --status-success: var(--palette-green-700);
   --status-warning: var(--palette-amber-700);
   --status-danger: var(--palette-red-700);
-  --status-info: var(--palette-aquamarine-700);
-  --spectrum-1: var(--palette-aquamarine-500);
-  --spectrum-2: var(--palette-violet-700);
-  --spectrum-3: var(--palette-rose-700);
-  --spectrum-4: var(--palette-orange-700);
+  --status-info: var(--palette-point-700);
+  --spectrum-1: var(--data-1);
+  --spectrum-2: var(--data-2);
+  --spectrum-3: var(--data-3);
+  --spectrum-4: var(--data-4);
 }
 [data-theme="dark"] {
   color-scheme: dark;
@@ -228,7 +258,7 @@
   --ink: #F5F5F5;
   --muted: #AEB4BD;
   --faint: #9199A5;
-  --accent: #65C9D9;
+  --accent: var(--palette-point-300);
   --accent-deep: var(--ink);
   --ice: #303030;
   --mist: var(--n-700);
@@ -305,17 +335,18 @@
   --accent-readable: var(--accent-text);
   --plate-haze-color: rgba(207,213,213,.10);
   --plate-rgb: 45,48,48;
-  --accent-text: var(--palette-aquamarine-300);
-  --accent-text-large: var(--palette-aquamarine-300);
+  --accent-text: var(--palette-point-300);
+  --accent-text-large: var(--palette-point-300);
   --status-success: var(--palette-green-300);
   --status-warning: var(--palette-amber-300);
   --status-danger: var(--palette-red-300);
-  --status-info: var(--palette-aquamarine-300);
-  --spectrum-1: var(--palette-aquamarine-300);
-  --spectrum-2: var(--palette-violet-300);
-  --spectrum-3: var(--palette-rose-300);
-  --spectrum-4: var(--palette-orange-300);
+  --status-info: var(--palette-point-300);
+  --spectrum-1: var(--data-1);
+  --spectrum-2: var(--data-2);
+  --spectrum-3: var(--data-3);
+  --spectrum-4: var(--data-4);
 }
+@media (min-width:768px) { :root { --gutter:24px; } }
 html, body {
   background: var(--canvas);
   color: var(--ink);
